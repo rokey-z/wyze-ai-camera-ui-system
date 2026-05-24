@@ -236,25 +236,53 @@ is static.
 
 ---
 
-## 7. Layout slot grammar (6 slots)
+## 7. Layout slot grammar (7 slots)
 
-Place modules into six ordered slots, top to bottom. The archetype sets which slot is the
-hero; per-module priority weights order modules within a slot.
+Place modules into seven ordered slots, top to bottom. The archetype sets which slot is
+the hero; per-module priority weights order modules within a slot.
 
 | Slot | Role | Typical occupants |
 |------|------|-------------------|
 | `S0` Status strip | at-a-glance condition, always visible | M-STATE, M-HEALTH badge, alert status |
 | `S1` Hero | the single most important surface | archetype-dependent: M-LIVE / M-SNAP+M-STATE / M-SCORE / M-GALLERY / M-READOUT / M-CAPTURE / M-TIMESHEET |
+| `Sa` **Action strip** (above the fold) | actuating controls whose effect is visible in S0/S1 | M-ACT, M-TALK, M-DETER, M-PLAY, M-SOS |
 | `S2` Primary insight | answers the core question | M-DURATION, M-NIGHTGRAPH, M-VITALS, M-KPI, M-TREND |
 | `S3` Activity | events and time | M-FEED, M-FILTER, M-SCRUB, M-EVTLINE, M-CLIP |
 | `S4` Analytics | aggregate view | M-TREND, M-HEAT, M-RECAP, M-CALENDAR |
-| `S5` Action dock | controls and config | M-ACT, M-TALK, M-DETER, M-PLAY, M-SOS, M-RULES |
+| `S5` Config dock | non-actuating settings | M-RULES, M-ZONE, M-PROMPT, schedule, sharing |
 
 Hero rewiring by archetype: EVENT_WATCHER/LIVE_ASSISTANT → live in S1; STATE_MONITOR →
 M-SNAP+M-STATE fused in S1; WELLBEING → M-SCORE/M-VITALS in S1 with M-LIVE co-hero;
 DISCOVERY → M-GALLERY in S1; INSTRUMENT_READER → M-SNAP+M-READOUT fused in S1;
 CAPTURE_LOGGER → M-CAPTURE in S1; ATTENDANCE_VERIFIER → M-TIMESHEET in S1; OPERATIONS →
 M-GRID in S1.
+
+### 7.1 Action-placement rule (feedback co-location)
+
+**Actuating controls dock directly under their feedback surface.** Any module whose
+press visibly changes S0 (status) or S1 (hero) within ~2 seconds renders in `Sa` —
+the row *immediately* after S1, above the fold on the first screen. The user must
+never scroll past insight or activity panels to reach the control, then scroll back
+to confirm the result.
+
+Routing test for each Family F / SOS module:
+
+| Module | Effect class | Slot | Why |
+|--------|--------------|------|-----|
+| `M-ACT` | mutates the monitored thing (open/close/mute/mark-handled) | `Sa` | feedback in S0 state and/or S1 hero |
+| `M-TALK` | live two-way audio | `Sa` | feedback is the live frame itself |
+| `M-DETER` | siren / lights | `Sa` | feedback is the live frame + subject behavior change |
+| `M-PLAY` | treat toss / laser / recorded call | `Sa` | feedback is the live frame |
+| `M-SOS` | escalation to emergency contact | `Sa` | safety-critical, must be one-tap reachable |
+| `M-RULES` | schedule / threshold / notification policy | `S5` | no live feedback; configuration |
+| `M-ZONE`, `M-PROMPT` | detector setup | `S5` | configuration, infrequent |
+
+If a Family F module has **no** observable effect on S0/S1 (e.g. a control that
+only modifies a downstream report), demote it to `S5`.
+
+Layout consequence: `Sa` is typically a 1-row strip of 2–4 buttons; cap at 4 to
+preserve one-glance scanning. When the strip would exceed 4, keep the top-3 most
+likely actions in `Sa` and move the rest to a "More" sheet — never spill into `S5`.
 
 ---
 
@@ -389,8 +417,8 @@ STAGE 3  archetype=STATE_MONITOR  confidence=0.82  -> proceed
 STAGE 4  modules: M-SNAP(R) M-STATE(R) M-DURATION(R) M-ACT(R) M-RULES(R)
                   + M-PROMPT(C, promoted: novel detection) + M-RECAP(C)
 STAGE 5  vision surface: signal=snapshot treatment=annotated layout=fused-overlay role=proof
-         layout: S0 strip=M-STATE  S1 hero=M-SNAP+M-STATE(fused)  S2=M-DURATION
-                 S5=M-PROMPT,M-RULES,M-ACT
+         layout: S0 strip=M-STATE  S1 hero=M-SNAP+M-STATE(fused)
+                 Sa=M-ACT  S2=M-DURATION  S5=M-PROMPT,M-RULES
 STAGE 6  binding:
   M-STATE/M-SNAP -> Tier 3 VLM prompt "Is a visible flame or glowing hot element on the
                     stovetop?" {boolean,confidence} threshold=0.7 debounce=3 frames
@@ -421,10 +449,10 @@ The builder emits one UI specification object. Shape:
   "layout": [
     { "slot": "S0", "module": "M-STATE", "size": "strip" },
     { "slot": "S1", "module": "M-SNAP", "size": "hero", "fusedWith": "M-STATE" },
+    { "slot": "Sa", "module": "M-ACT", "size": "strip" },
     { "slot": "S2", "module": "M-DURATION", "size": "panel" },
     { "slot": "S5", "module": "M-PROMPT", "size": "panel" },
-    { "slot": "S5", "module": "M-RULES", "size": "compact" },
-    { "slot": "S5", "module": "M-ACT", "size": "compact" }
+    { "slot": "S5", "module": "M-RULES", "size": "compact" }
   ],
   "bindings": [
     { "module": "M-SNAP", "tier": 3, "prompt": "Is a visible flame or glowing hot element on the stovetop?",
