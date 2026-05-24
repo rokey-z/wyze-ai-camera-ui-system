@@ -548,7 +548,11 @@
   .modpop .mpf{font-size:10.5px;color:var(--mut);margin-top:2px;line-height:1.42}
 
   /* ============================================================
-     MOBILE (≤640px) — desktop layout untouched above this block
+     MOBILE (≤640px) — desktop layout untouched above this block.
+     The phone frame is preserved; the whole preview is uniformly
+     scaled via CSS zoom so component ratios and internal layout
+     never change. Only the outer chrome (header, tabs, console)
+     gets denser at narrow widths.
      ============================================================ */
   @media (max-width:640px){
     /* page chrome */
@@ -564,8 +568,18 @@
     .tab{padding:11px 13px;font-size:14px;flex:none;white-space:nowrap}
     .tab .tn{display:none}
 
-    /* 3-column layout collapses (already at 1080px) — tighten the stack */
-    .toprow{margin-top:14px;gap:14px;min-height:0}
+    /* 3-column layout collapses (already at 1080px) — tighten the stack.
+       CRITICAL: re-assert position:static on .console/.phonewrap/.trace.
+       The original @media(max-width:1080px) tries to do this but the desktop
+       sticky rules at .phonewrap/.trace later in the stylesheet have equal
+       specificity, so source order wins and they stay sticky on mobile too,
+       causing the trace section to slide up underneath the preview as you
+       scroll (the "trace overlaps preview" bug). Overriding here from a
+       later block reverses the cascade. */
+    .toprow{margin-top:14px;gap:18px;min-height:0;display:flex;flex-direction:column}
+    .console,.phonewrap,.trace{
+      position:static !important;height:auto !important;overflow:visible !important;
+      top:auto !important}
 
     /* intent picker — single column at narrow widths, denser */
     .console{padding:14px 14px 16px}
@@ -577,20 +591,18 @@
     .chip small{font-size:10px}
     .chiparch{font-size:8px}
 
-    /* PHONE FRAME — dissolve the bezel on real phones.
-       The phone-in-a-phone simulator is in the way; render the prototype
-       edge-to-edge at the device's native size so users can actually use it. */
-    .phonewrap{align-items:stretch;gap:10px}
-    .phone{width:100%;border:0;border-radius:14px;box-shadow:0 8px 24px -10px #000,0 0 0 1px #1c283e}
-    .notch{display:none}
-    .statusbar{display:none}
-    .screen{height:auto;max-height:none;overflow-y:visible}
-    .appbar{padding:14px 14px 10px}
-    .ui{padding:0 12px 18px}
+    /* PHONE FRAME — keep the bezel, notch, status bar, fixed 344px width
+       and 678px screen height. The whole .phone is uniformly scaled via
+       `zoom` when the viewport can't fit 344+18px. zoom (unlike transform)
+       actually reduces the layout box, so the trace section below it
+       stacks naturally with no gap-collapse or overlap. */
+    .phonewrap{gap:14px;width:100%}
     .hint{font-size:11px;padding:8px 10px}
 
-    /* trace panel — keep visible but compact */
-    .trace{padding:13px 13px 14px}
+    /* trace panel — compact but layout & ratios unchanged.
+       Adds a top divider so the preview/trace boundary is visually clear. */
+    .trace{padding:14px 13px 16px;margin-top:4px;
+      border-top:1px solid var(--line)}
     .trace .htitle{font-size:11px;margin-bottom:8px}
     .pipe{gap:4px;margin-bottom:10px}
     .pstep{min-width:48px;padding:5px 4px 6px}
@@ -608,10 +620,16 @@
     pre,code{font-size:11.5px}
     /* prevent any wide table from blowing out the viewport */
     .docview table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
-
-    /* action strip — bigger tap targets on touch */
-    .act{padding:13px 6px;font-size:11.5px;min-height:56px}
   }
+
+  /* Phone uniform-shrink — kicks in only when the viewport can't fit
+     the 344px phone + 18px bezel + 24px wrap padding (~386px). Below
+     each breakpoint we zoom down a step; everything inside the phone
+     keeps its absolute pixel sizes and ratios. */
+  @media (max-width:440px){ .phone{zoom:.95} }
+  @media (max-width:400px){ .phone{zoom:.88} }
+  @media (max-width:360px){ .phone{zoom:.82} }
+  @media (max-width:340px){ .phone{zoom:.76} }
 
   /* very narrow phones — single column chip grid */
   @media (max-width:380px){
