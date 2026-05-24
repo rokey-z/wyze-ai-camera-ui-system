@@ -649,6 +649,11 @@
     color:var(--ink);border-radius:9px;padding:10px 12px;font-size:13px;
     font-family:var(--sans);outline:0;cursor:pointer}
   #playModelSelect:focus{border-color:var(--blue)}
+  #playModelCustom{width:100%;margin-top:7px;background:var(--card);
+    border:1px solid var(--line);color:var(--ink);border-radius:9px;
+    padding:9px 12px;font-size:12.5px;font-family:var(--mono);outline:0}
+  #playModelCustom:focus{border-color:var(--blue)}
+  #playModelCustom::placeholder{color:var(--dim);font-family:var(--sans);font-size:12px}
   .pswarn{font-size:11px;color:#f3cd86;background:#f6b73c12;border:1px solid #f6b73c44;
     border-radius:8px;padding:9px 11px;line-height:1.5;margin:14px 0 0}
   .psactions{display:flex;gap:8px;margin-top:14px;justify-content:flex-end}
@@ -1686,6 +1691,8 @@ EMIT  -&gt; see §13
 
         <label class="pslabel">Model</label>
         <select id="playModelSelect"></select>
+        <input id="playModelCustom" type="text" placeholder="…or paste any model ID (overrides the dropdown)" autocomplete="off" spellcheck="false" />
+        <p class="pshint">If a 404 comes back, the provider may have retired the model. Paste a current ID above &mdash; e.g. <code>claude-opus-4-7</code>, <code>gpt-5.1</code>, <code>gemini-3-pro</code>, <code>grok-4-fast</code>. It overrides the dropdown.</p>
 
         <p class="pswarn">Anyone with access to this browser profile can read this key. Use a key with a strict spend limit; revoke it any time.</p>
         <div class="psactions">
@@ -2964,13 +2971,14 @@ function xScrollDocForFilter(key,val){
     anthropic: {
       label:'Anthropic Claude',
       keyHint:'sk-ant-...',
-      getKeyHelp:()=>'Get a key at <a href="https://console.anthropic.com/" target="_blank" rel="noopener">console.anthropic.com</a>.',
+      getKeyHelp:()=>'Get a key at <a href="https://console.anthropic.com/" target="_blank" rel="noopener">console.anthropic.com</a>. Check <a href="https://docs.anthropic.com/en/docs/about-claude/models" target="_blank" rel="noopener">docs</a> for current model IDs.',
       models:[
-        {id:'claude-sonnet-4-5',name:'Sonnet 4.5 — recommended'},
-        {id:'claude-opus-4-1',name:'Opus 4.1 — most capable'},
+        {id:'claude-opus-4-7',name:'Opus 4.7 — most capable'},
+        {id:'claude-sonnet-4-7',name:'Sonnet 4.7 — recommended'},
+        {id:'claude-sonnet-4-5',name:'Sonnet 4.5 (legacy alias)'},
         {id:'claude-haiku-4-5',name:'Haiku 4.5 — fast & cheap'}
       ],
-      defaultModel:'claude-sonnet-4-5',
+      defaultModel:'claude-sonnet-4-7',
       call: callAnthropic
     },
     openai: {
@@ -3036,6 +3044,9 @@ function xScrollDocForFilter(key,val){
   function getKey(p){ return localStorage.getItem(LS_KEY_PREFIX+(p||getProvider()))||''; }
   function getModel(p){
     p=p||getProvider();
+    /* a saved custom ID (any string not in the provider's dropdown list) takes
+       precedence over the default; saved values come from either dropdown
+       selection or the override text field — both write to the same key */
     return localStorage.getItem(LS_MODEL_PREFIX+p)||PROVIDERS[p].defaultModel;
   }
 
@@ -3104,8 +3115,11 @@ function xScrollDocForFilter(key,val){
   function fillModelOptions(providerId){
     const p=PROVIDERS[providerId];
     const sel=$('playModelSelect');
+    const saved=getModel(providerId);
     sel.innerHTML=p.models.map(m=>'<option value="'+m.id+'">'+escHtml(m.name)+'</option>').join('');
-    sel.value=getModel(providerId);
+    const inList=p.models.some(m=>m.id===saved);
+    if(inList){ sel.value=saved; $('playModelCustom').value=''; }
+    else{ sel.value=p.defaultModel; $('playModelCustom').value=saved; }
   }
   function syncSettingsForProvider(providerId){
     const p=PROVIDERS[providerId];
@@ -3133,11 +3147,14 @@ function xScrollDocForFilter(key,val){
     }else{
       localStorage.removeItem(LS_KEY_PREFIX+prov);
     }
-    localStorage.setItem(LS_MODEL_PREFIX+prov,$('playModelSelect').value);
+    /* custom model ID overrides the dropdown when present */
+    const custom=$('playModelCustom').value.trim();
+    const effective=custom||$('playModelSelect').value;
+    localStorage.setItem(LS_MODEL_PREFIX+prov,effective);
     localStorage.setItem(LS_PROVIDER,prov);
     clearStatus();
     if(v){
-      showStatus('info','Saved. Active provider: <b>'+PROVIDERS[prov].label+'</b> · '+escHtml($('playModelSelect').value)+'.');
+      showStatus('info','Saved. Active: <b>'+PROVIDERS[prov].label+'</b> · '+escHtml(effective)+'.');
     }
     closeSettings();
   }
@@ -3335,7 +3352,8 @@ function xScrollDocForFilter(key,val){
     renderScreenLoading(prov.label,model);
     let raw='';
     try{
-      raw=await prov.call(goal,key,model,false);
+      try{ raw=await prov.call(goal,key,model,false); }
+      catch(e){ if(e) e.attemptedModel=model; throw e; }
       let spec;
       try{ spec=parseSpec(raw); validateSpec(spec); }
       catch(e1){
@@ -3358,8 +3376,13 @@ function xScrollDocForFilter(key,val){
   function handleError(e,raw,prov){
     console.error('Playground error',e,raw);
     const provName=(prov&&prov.label)||'the provider';
+    const model=(e&&e.attemptedModel)||'';
+    const bodyDetails=(label,txt)=>txt?('<details style="margin-top:8px"><summary style="cursor:pointer">'+label+'</summary><pre style="white-space:pre-wrap;font-size:11px;margin-top:6px;max-height:200px;overflow:auto;background:#0c1422;padding:8px;border-radius:6px">'+escHtml(String(txt).slice(0,1200))+'</pre></details>'):'';
     if(e.status===401||e.status===403){
       showStatus('err',provName+' rejected the API key.','Open settings',openSettings);
+    }else if(e.status===404){
+      const msg=provName+' returned 404 &mdash; the model <code>'+escHtml(model||'?')+'</code> is not available on this account / endpoint. Pick a different model in settings, or paste a current model ID into the override field.';
+      showStatus('err',msg+bodyDetails('Provider response',e.body),'Open settings',openSettings);
     }else if(e.status===429){
       showStatus('err','Rate-limited by '+provName+'. Wait a few seconds and try again.','Retry',generate);
     }else if(e.status===529){
@@ -3367,15 +3390,12 @@ function xScrollDocForFilter(key,val){
     }else if(e.status>=500){
       showStatus('err',provName+' returned HTTP '+e.status+'.','Retry',generate);
     }else if(e.status===400){
-      let body='';
-      if(e.body) body='<details style="margin-top:8px"><summary style="cursor:pointer">Provider response</summary><pre style="white-space:pre-wrap;font-size:11px;margin-top:6px;max-height:200px;overflow:auto;background:#0c1422;padding:8px;border-radius:6px">'+escHtml(e.body.slice(0,1200))+'</pre></details>';
-      showStatus('err',provName+' rejected the request (400) — likely an invalid model ID or unsupported parameter.'+body,'Open settings',openSettings);
+      const msg=provName+' rejected the request (400) &mdash; likely the model <code>'+escHtml(model||'?')+'</code> is invalid for this account, or a parameter is unsupported.';
+      showStatus('err',msg+bodyDetails('Provider response',e.body),'Open settings',openSettings);
     }else if(e.name==='TypeError'){
       showStatus('err','Could not reach '+provName+'. Check your network.','Retry',generate);
     }else{
-      let body='';
-      if(raw) body='<details style="margin-top:8px"><summary style="cursor:pointer">Raw response</summary><pre style="white-space:pre-wrap;font-size:11px;margin-top:6px;max-height:200px;overflow:auto;background:#0c1422;padding:8px;border-radius:6px">'+escHtml(raw.slice(0,1200))+'</pre></details>';
-      showStatus('err',(e.message||'Generation failed')+body,'Retry',generate);
+      showStatus('err',(e.message||'Generation failed')+bodyDetails('Raw response',raw),'Retry',generate);
     }
     renderScreenIdle();
   }
