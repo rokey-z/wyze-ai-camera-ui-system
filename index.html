@@ -2984,14 +2984,14 @@ function xScrollDocForFilter(key,val){
     openai: {
       label:'OpenAI GPT',
       keyHint:'sk-...',
-      getKeyHelp:()=>'Get a key at <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">platform.openai.com/api-keys</a>.',
+      getKeyHelp:()=>'Get a key at <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">platform.openai.com/api-keys</a>. Note: GPT-5 needs <a href="https://platform.openai.com/settings/organization/general" target="_blank" rel="noopener">Org Verification</a>.',
       models:[
-        {id:'gpt-5',name:'GPT-5 — recommended'},
-        {id:'gpt-5-mini',name:'GPT-5 mini — fast & cheap'},
+        {id:'gpt-4o',name:'GPT-4o — recommended (no verification needed)'},
         {id:'gpt-4.1',name:'GPT-4.1'},
-        {id:'gpt-4o',name:'GPT-4o (legacy)'}
+        {id:'gpt-5',name:'GPT-5 — needs Org Verification'},
+        {id:'gpt-5-mini',name:'GPT-5 mini — needs Org Verification'}
       ],
-      defaultModel:'gpt-5',
+      defaultModel:'gpt-4o',
       call: callOpenAI
     },
     google: {
@@ -3381,7 +3381,17 @@ function xScrollDocForFilter(key,val){
     if(e.status===401||e.status===403){
       showStatus('err',provName+' rejected the API key.','Open settings',openSettings);
     }else if(e.status===404){
-      const msg=provName+' returned 404 &mdash; the model <code>'+escHtml(model||'?')+'</code> is not available on this account / endpoint. Pick a different model in settings, or paste a current model ID into the override field.';
+      let providerMsg='';
+      try{
+        const j=JSON.parse(e.body||'{}');
+        providerMsg=(j.error&&j.error.message)||(j.message)||'';
+      }catch{}
+      let msg=provName+' returned 404 &mdash; the model <code>'+escHtml(model||'?')+'</code> is not available on this account / endpoint.';
+      if(providerMsg){
+        msg+='<br><br><b>'+provName+' says:</b> '+escHtml(providerMsg);
+      }else{
+        msg+=' Pick a different model in settings, or paste a current model ID into the override field.';
+      }
       showStatus('err',msg+bodyDetails('Provider response',e.body),'Open settings',openSettings);
     }else if(e.status===429){
       showStatus('err','Rate-limited by '+provName+'. Wait a few seconds and try again.','Retry',generate);
