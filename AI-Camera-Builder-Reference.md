@@ -172,14 +172,6 @@ The builder reasons over contracts only; it never renders pixels directly.
 | `M-PLAY` | interaction control (treat toss, laser, recorded call) |
 | `M-ACT` | quick action bound to the monitored thing (open/close, mute, mark-handled) |
 
-**Visual priority for action controls.** Modules in Family F are commit-points — the
-user is choosing to *do something*, not browse. Render them with elevated weight
-relative to surrounding S5 controls: larger touch target (≥56px tall), heavier
-type (≥700), and a single dominant `primary` variant per action group so the
-expected action reads first. `danger` actions carry a tinted shadow; never more
-than one primary in a row. Compact density is reserved for `M-RULES` and config
-chrome — never for the action itself.
-
 ### Family G — Detection & Config (4)
 
 | ID | Function |
