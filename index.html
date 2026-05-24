@@ -1626,6 +1626,11 @@ const SCREENS = {
           <div><div class="fs" style="color:#7eecc4">Closed &middot; secure</div>
           <div class="fsub">Garage cam &middot; annotated snapshot &middot; changed 8:02 AM</div></div></div>
         </div></div>`)}
+   ${slot('M-ACT · Sa',`<div class="actions">
+      <div class="act primary"><span class="ai">${aIcon('<path d="M12 19V5M5 12l7-7 7 7"/>')}</span>Open</div>
+      <div class="act"><span class="ai">${aIcon('<path d="M12 5v14M5 12l7 7 7-7"/>')}</span>Close</div>
+      <div class="act"><span class="ai">${aIcon('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>')}</span>Threshold</div>
+      </div>`)}
    ${slot('M-DURATION · S2',`<div class="panel"><div class="ph"><b>Time in state</b></div>
       <div class="duration"><div class="clock" style="color:#7eecc4">3:42</div>
       <div class="barwrap"><div class="dbar"><i style="width:24%;background:#34d399"></i></div>
@@ -1638,11 +1643,6 @@ const SCREENS = {
         <div class="fm">Today · 7:55 AM</div></div><span class="etag" style="background:#34d39922;color:#7eecc4">PERSON</span></div>
       <div class="feedrow"><div class="thumb"></div><div><div class="ft">Door opened</div>
         <div class="fm">Yesterday · 6:14 PM</div></div><span class="etag" style="background:#f6b73c22;color:#f3cd86">STATE</span></div>
-      </div>`)}
-   ${slot('M-ACT + M-RULES · S5',`<div class="actions">
-      <div class="act primary"><span class="ai">${aIcon('<path d="M12 19V5M5 12l7-7 7 7"/>')}</span>Open</div>
-      <div class="act"><span class="ai">${aIcon('<path d="M12 5v14M5 12l7 7 7-7"/>')}</span>Close</div>
-      <div class="act"><span class="ai">${aIcon('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>')}</span>Threshold</div>
       </div>`)}
   </div>`,
 
@@ -1661,6 +1661,8 @@ const SCREENS = {
       <div class="meta">Above this baby&rsquo;s typical range (79&ndash;84)</div></div></div>`)}
    ${slot('M-LIVE · S1 · vision-as-reassurance',`<div class="hero">${vbox('Crib cam · overhead','02:14',
       '<div style="position:absolute;inset:0;display:grid;place-items:center;color:#3a567f;font-size:11px">night vision</div>')}</div>`)}
+   ${slot('M-SOS · Sa',`<div class="sos"><div class="sb">SOS</div>
+      <div><b>Escalation ready</b><span>Partner &middot; Grandparent &middot; alerts on cry / covered face</span></div></div>`)}
    ${slot('M-NIGHTGRAPH · S2',`<div class="panel"><div class="ph"><b>Night graph</b></div>
       <div class="nightgraph">${nightSegs()}</div>
       <div class="ngkey"><span><i style="background:#4f8ff0"></i>Asleep</span>
@@ -1677,8 +1679,6 @@ const SCREENS = {
       <span class="recap"><span class="ai">AI</span></span></div>
       <div class="recap">Slept 10h 4m with 2 brief wakings. One true-cry at 2:14 AM,
       self-settled in 3 min. No covered-face or rollover events. Sleep onset was 9 min faster than usual.</div></div>`)}
-   ${slot('M-SOS · S5',`<div class="sos"><div class="sb">SOS</div>
-      <div><b>Escalation ready</b><span>Partner &middot; Grandparent &middot; alerts on cry / covered face</span></div></div>`)}
   </div>`,
 
  /* ---- STOVE ---- */
@@ -1710,7 +1710,7 @@ const SCREENS = {
    ${slot('Tier-3 binding',`<div class="conf"><div class="cd">Vision-model confidence &mdash;
       calibrated from 6 confirmations. Tap a detection to correct it.</div>
       <div class="cv">0.94</div></div>`)}
-   ${slot('M-ACT + M-RULES · S5',`<div class="actions">
+   ${slot('M-RULES · S5',`<div class="actions">
       <div class="act danger"><span class="ai">${aIcon('<path d="M12 9v4M12 17h.01M10.3 3.9 2 18a2 2 0 0 0 1.7 3h16.6A2 2 0 0 0 22 18L13.7 3.9a2 2 0 0 0-3.4 0z"/>')}</span>Notify me</div>
       <div class="act"><span class="ai">${aIcon('<path d="M2 12h20"/><circle cx="12" cy="12" r="9"/>')}</span>Calibrate</div>
       <div class="act"><span class="ai">${aIcon('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>')}</span>Threshold</div>
@@ -1728,6 +1728,11 @@ const SCREENS = {
       '<div style="position:absolute;left:50%;top:78%;transform:translateX(-50%);font-size:8px;font-weight:700;background:#f6b73cdd;color:#3a2a05;padding:2px 6px;border-radius:4px">PACKAGE</div>')}</div>`)}
    ${slot('M-STATE · S2',`<div class="strip" style="background:#34d39916;border:1px solid #34d39944;color:#7eecc4">
       <span class="pulse" style="background:#34d399"></span>1 package on the porch &middot; delivered 1:46 PM</div>`)}
+   ${slot('M-TALK + M-DETER · Sa',`<div class="actions">
+      <div class="act primary"><span class="ai">${aIcon('<path d="M12 1a4 4 0 0 0-4 4v6a4 4 0 0 0 8 0V5a4 4 0 0 0-4-4z"/><path d="M5 10v1a7 7 0 0 0 14 0v-1"/>')}</span>Talk</div>
+      <div class="act danger"><span class="ai">${aIcon('<path d="M3 11l18-5v12L3 14v-3zM11 19v-5"/>')}</span>Siren</div>
+      <div class="act"><span class="ai">${aIcon('<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18"/>')}</span>Zones</div>
+      </div>`)}
    ${slot('M-FILTER · S3',`<div class="chips2">
       <span class="fc on">All</span><span class="fc">Package</span>
       <span class="fc">Person</span><span class="fc">Vehicle</span><span class="fc">Familiar</span></div>`)}
@@ -1742,11 +1747,6 @@ const SCREENS = {
       </div>`)}
    ${slot('M-SCRUB · S3',`<div class="panel" style="padding:10px 11px"><div class="ph"><b>Timeline</b>
       <span class="mi">M-SCRUB</span></div>${scrub()}</div>`)}
-   ${slot('M-DETER + M-RULES · S5',`<div class="actions">
-      <div class="act primary"><span class="ai">${aIcon('<path d="M12 1a4 4 0 0 0-4 4v6a4 4 0 0 0 8 0V5a4 4 0 0 0-4-4z"/><path d="M5 10v1a7 7 0 0 0 14 0v-1"/>')}</span>Talk</div>
-      <div class="act danger"><span class="ai">${aIcon('<path d="M3 11l18-5v12L3 14v-3zM11 19v-5"/>')}</span>Siren</div>
-      <div class="act"><span class="ai">${aIcon('<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18"/>')}</span>Zones</div>
-      </div>`)}
   </div>`,
 
  /* ---- BIRD ---- */
@@ -1960,6 +1960,10 @@ const SCREENS = {
           <div><div class="fs" style="color:#f3b78a;font-size:15px">Onions translucent &mdash; add the garlic now</div>
           <div class="fsub">Cooktop cam &middot; annotated live &middot; next cue in ~40s</div></div></div>
       </div></div>`)}
+   ${slot('M-ACT · Sa',`<div class="actions">
+      <div class="act primary"><span class="ai">${aIcon('<path d="M9 6l10 6-10 6z"/>')}</span>Next step</div>
+      <div class="act"><span class="ai">${aIcon('<circle cx="12" cy="13" r="8"/><path d="M12 13V9M9 2h6"/>')}</span>Timer</div>
+      <div class="act"><span class="ai">${aIcon('<path d="M11 5L6 9H2v6h4l5 4zM15 9a5 5 0 0 1 0 6"/>')}</span>Read aloud</div></div>`)}
    ${slot('M-VITALS · S2',`<div class="panel"><div class="ph"><b>Pan temperature</b></div>
       <div class="vitals">
         <div class="vit"><div class="vn">Pan now</div><div class="vv">163<small>&deg;F</small></div></div>
@@ -1970,10 +1974,6 @@ const SCREENS = {
       <div class="nightgraph">${['#34d399','#34d399','#e9844a','#26344f','#26344f'].map((c,i)=>`<div class="ns" style="background:${c};height:${[55,55,100,42,42][i]}%"></div>`).join('')}</div>
       <div class="ngkey"><span><i style="background:#34d399"></i>Done</span>
         <span><i style="background:#e9844a"></i>Now</span><span><i style="background:#26344f"></i>Ahead</span></div></div>`)}
-   ${slot('M-ACT · S5',`<div class="actions">
-      <div class="act primary"><span class="ai">${aIcon('<path d="M9 6l10 6-10 6z"/>')}</span>Next step</div>
-      <div class="act"><span class="ai">${aIcon('<circle cx="12" cy="13" r="8"/><path d="M12 13V9M9 2h6"/>')}</span>Timer</div>
-      <div class="act"><span class="ai">${aIcon('<path d="M11 5L6 9H2v6h4l5 4zM15 9a5 5 0 0 1 0 6"/>')}</span>Read aloud</div></div>`)}
   </div>`,
 
  /* ---- RENTAL · Operations Console ---- */
@@ -2030,6 +2030,8 @@ const SCREENS = {
           <circle cx="12" cy="4" r="3"/><path d="M12 7v9M12 10l-5 3M12 10l5 3M12 16l-4 8M12 16l4 8"/></svg></div>
         <div class="vname">Living room &middot; privacy mode &mdash; pose only</div>
         <div class="vtime">abstracted</div></div></div>`)}
+   ${slot('M-SOS · Sa',`<div class="sos"><div class="sb">SOS</div>
+      <div><b>Escalation ready</b><span>You &middot; sister &middot; neighbor &mdash; auto-calls on a detected fall</span></div></div>`)}
    ${slot('M-EVTLINE · S3',`<div class="panel"><div class="ph"><b>Today&rsquo;s activity</b></div>
       <div class="scrub" style="height:34px">
         ${[15,70,55,20,65,40,18,52].map((h,i)=>`<div class="seg" style="height:${h}%;background:${[1,2,4,5,7].includes(i)?'#34d399':'#26344f'}"></div>`).join('')}
@@ -2039,8 +2041,6 @@ const SCREENS = {
       <span class="recap"><span class="ai">AI</span></span></div>
       <div class="recap">A normal morning &mdash; up at her usual time, breakfast in the kitchen, two
       living-room periods. Activity is in line with her 30-day pattern.</div></div>`)}
-   ${slot('M-SOS · S5',`<div class="sos"><div class="sb">SOS</div>
-      <div><b>Escalation ready</b><span>You &middot; sister &middot; neighbor &mdash; auto-calls on a detected fall</span></div></div>`)}
   </div>`,
 
  /* ---- LEAK · Event Watcher ---- */
