@@ -550,6 +550,118 @@
   .modpop .mpf{font-size:10.5px;color:var(--mut);margin-top:2px;line-height:1.42}
 
   /* ============================================================
+     PLAYGROUND TAB
+     ============================================================ */
+  .playconsole{padding:18px 18px 18px;display:flex;flex-direction:column;gap:10px;overflow-y:auto}
+  .playhead{display:flex;align-items:center;gap:10px;justify-content:space-between}
+  .playhead h2{margin:0;flex:1;font-size:12px;letter-spacing:1.3px;
+    text-transform:uppercase;color:var(--mut);font-weight:700}
+  .playgear{flex:none;width:30px;height:30px;border-radius:9px;background:var(--card);
+    border:1px solid var(--line);color:var(--mut);display:grid;place-items:center;
+    cursor:pointer;transition:.13s}
+  .playgear:hover{color:var(--ink);border-color:var(--blue)}
+  .playprompt{color:var(--dim);font-size:12.5px;line-height:1.5;margin:0}
+  .playinput-wrap{display:flex;flex-direction:column;gap:0;
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    overflow:hidden;transition:border-color .15s}
+  .playinput-wrap:focus-within{border-color:var(--blue)}
+  #playGoal{width:100%;background:transparent;color:var(--ink);border:0;outline:0;
+    padding:13px 14px 10px;font-size:14px;line-height:1.45;font-family:var(--sans);
+    resize:vertical;min-height:78px}
+  #playGoal::placeholder{color:var(--dim)}
+  .playinput-bar{display:flex;align-items:center;gap:8px;padding:8px 10px 10px;
+    border-top:1px solid var(--line);background:#152033}
+  .playflex{flex:1}
+  .playmic{display:inline-flex;align-items:center;gap:6px;padding:7px 11px;
+    background:transparent;color:var(--mut);border:1px solid var(--line);
+    border-radius:9px;cursor:pointer;font-size:12px;font-weight:600;
+    font-family:var(--sans);transition:.13s}
+  .playmic:hover{color:var(--ink);border-color:var(--blue)}
+  .playmic.rec{color:#fff;background:#f25c5c;border-color:#f25c5c;
+    animation:micpulse 1.2s ease-in-out infinite}
+  @keyframes micpulse{0%,100%{box-shadow:0 0 0 0 #f25c5c66}50%{box-shadow:0 0 0 6px #f25c5c00}}
+  .playgen{display:inline-flex;align-items:center;gap:7px;padding:9px 14px;
+    background:var(--blue);color:#fff;border:0;border-radius:9px;cursor:pointer;
+    font-size:13px;font-weight:700;font-family:var(--sans);transition:.13s;
+    box-shadow:0 4px 12px -4px #4f8ff066}
+  .playgen:hover{background:#3d7fe0}
+  .playgen:disabled{opacity:.5;cursor:not-allowed;background:var(--card);box-shadow:none}
+  .playexamples{margin-top:4px}
+  .playexamples .exhead{font-size:10px;letter-spacing:1px;text-transform:uppercase;
+    color:var(--dim);font-weight:700;margin-bottom:7px}
+  .playexamples .exlist{display:flex;flex-wrap:wrap;gap:6px}
+  .exchip{background:var(--card);border:1px solid var(--line);border-radius:7px;
+    padding:6px 9px;font-size:11px;color:var(--mut);cursor:pointer;font-family:var(--sans);
+    transition:.13s;text-align:left}
+  .exchip:hover{color:var(--ink);border-color:var(--blue)}
+  .playstatus{font-size:12px;line-height:1.5;padding:10px 12px;border-radius:9px;
+    border:1px solid;display:flex;gap:8px;align-items:flex-start}
+  .playstatus.err{border-color:#f25c5c66;background:#f25c5c14;color:#ffb0b0}
+  .playstatus.warn{border-color:#f6b73c55;background:#f6b73c12;color:#f3cd86}
+  .playstatus.info{border-color:#4f8ff066;background:#4f8ff012;color:#9cc3f5}
+  .playstatus button{background:transparent;border:1px solid currentColor;color:inherit;
+    border-radius:6px;padding:3px 8px;font-size:11px;cursor:pointer;font-family:var(--sans);
+    margin-left:auto;flex:none}
+
+  /* phone empty state */
+  .playempty{display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:48px 30px;color:var(--mut);gap:14px;min-height:560px}
+  .playempty .loader{width:36px;height:36px;border:3px solid #1c283e;
+    border-top-color:var(--blue);border-radius:50%;animation:plspin 0.8s linear infinite}
+  @keyframes plspin{to{transform:rotate(360deg)}}
+  .playempty .pet{font-size:14px;font-weight:600;color:var(--ink)}
+  .playempty .pes{font-size:12px;line-height:1.55;color:var(--mut);max-width:240px}
+
+  /* trace */
+  .playtrace .playtrace-empty{font-size:12px;color:var(--mut);line-height:1.55;
+    padding:10px 4px;font-style:italic}
+
+  /* settings sheet */
+  .playsheet{position:fixed;inset:0;background:rgba(8,12,22,.72);z-index:200;
+    display:flex;align-items:center;justify-content:center;padding:20px;
+    backdrop-filter:blur(4px)}
+  .playsheet[hidden]{display:none}
+  .playsheet-card{background:#15203b;border:1px solid var(--line);border-radius:16px;
+    padding:20px 22px 18px;max-width:460px;width:100%;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,.6)}
+  .psh{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  .psh b{font-size:14px;font-weight:700;color:var(--ink)}
+  .psclose{background:transparent;border:0;color:var(--mut);font-size:22px;cursor:pointer;
+    line-height:1;padding:0 4px}
+  .psclose:hover{color:var(--ink)}
+  .psp{font-size:12px;color:var(--mut);line-height:1.55;margin:0 0 14px}
+  .psp code{background:#0c1422;padding:1px 5px;border-radius:4px;font-size:11px;color:#cdd9ea}
+  .psp a{color:var(--blue);text-decoration:none}
+  .psp a:hover{text-decoration:underline}
+  .pslabel{display:block;font-size:10px;letter-spacing:1px;text-transform:uppercase;
+    color:var(--dim);font-weight:700;margin:10px 0 6px}
+  .psrow{display:flex;gap:6px}
+  .psrow input{flex:1;background:var(--card);border:1px solid var(--line);border-radius:9px;
+    padding:10px 12px;font-size:13px;color:var(--ink);font-family:var(--mono);outline:0}
+  .psrow input:focus{border-color:var(--blue)}
+  .psshow{background:var(--card);border:1px solid var(--line);color:var(--mut);
+    padding:0 12px;border-radius:9px;font-size:12px;cursor:pointer;font-family:var(--sans)}
+  .psshow:hover{color:var(--ink);border-color:var(--blue)}
+  #playModelSelect{width:100%;background:var(--card);border:1px solid var(--line);
+    color:var(--ink);border-radius:9px;padding:10px 12px;font-size:13px;
+    font-family:var(--sans);outline:0;cursor:pointer}
+  #playModelSelect:focus{border-color:var(--blue)}
+  .pswarn{font-size:11px;color:#f3cd86;background:#f6b73c12;border:1px solid #f6b73c44;
+    border-radius:8px;padding:9px 11px;line-height:1.5;margin:14px 0 0}
+  .psactions{display:flex;gap:8px;margin-top:14px;justify-content:flex-end}
+  .psclear{background:transparent;border:1px solid #f25c5c66;color:#ffb0b0;
+    padding:9px 14px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;
+    font-family:var(--sans)}
+  .psclear:hover{background:#f25c5c1e}
+  .pssave{background:var(--blue);border:0;color:#fff;padding:9px 18px;border-radius:9px;
+    font-size:13px;font-weight:700;cursor:pointer;font-family:var(--sans)}
+  .pssave:hover{background:#3d7fe0}
+
+  /* the play-row reuses .toprow desktop grid but a slightly different ratio
+     (no chip-grid, so left column can be narrower) */
+  .play-row{grid-template-columns:1fr 1.18fr 1fr}
+
+  /* ============================================================
      MOBILE (≤640px) — desktop layout untouched above this block.
      The phone frame is preserved; the whole preview is uniformly
      scaled via CSS zoom so component ratios and internal layout
@@ -653,6 +765,33 @@
   @media (max-width:360px){ .phone{zoom:.82} }
   @media (max-width:340px){ .phone{zoom:.76} }
 
+  /* Playground tab on mobile — does NOT use the collapsible-menu pattern.
+     Override the generic .console mobile rules that the Generator tab uses. */
+  @media (max-width:640px){
+    .playconsole{padding:14px 14px 16px;background:transparent;border-radius:0}
+    .playconsole h2{cursor:default;padding:0;font-size:11px;
+      letter-spacing:1.3px;text-transform:uppercase;color:var(--mut);
+      background:transparent}
+    .playconsole h2::after{display:none}
+    .playconsole h2:active{background:transparent}
+    .playconsole .playhead{margin-bottom:4px}
+    .playconsole .playprompt,
+    .playconsole .playinput-wrap,
+    .playconsole .playexamples,
+    .playconsole .playstatus{display:flex}
+    .playconsole .playprompt{display:block}
+    .playconsole .playinput-wrap{display:flex}
+    .playconsole .playexamples{display:block}
+    /* desktop 3-col → mobile stack handled by the existing .toprow override */
+    .play-row{grid-template-columns:1fr}
+    .playempty{min-height:340px;padding:36px 24px}
+    /* settings sheet: full-width card on mobile */
+    .playsheet-card{max-width:none}
+    /* status block stacks vertically when narrow */
+    .playstatus{flex-direction:column;gap:8px}
+    .playstatus button{margin-left:0;align-self:flex-start}
+  }
+
   /* very narrow phones — single column chip grid */
   @media (max-width:380px){
     .console.open .intents{grid-template-columns:1fr}
@@ -679,6 +818,7 @@
     <div class="tab on" data-tab="gen">Generator<span class="tn">intent &rarr; UI</span></div>
     <div class="tab" data-tab="comp">Library &amp; spec<span class="tn">browse + read</span></div>
     <div class="tab" data-tab="builder">Builder reference<span class="tn">v3 · for the agent</span></div>
+    <div class="tab" data-tab="play">Playground<span class="tn">type or speak a goal</span></div>
   </div>
 
   <div class="tabpane on" id="pane-gen">
@@ -1441,6 +1581,108 @@ EMIT  -&gt; see §13
 <span id="cb3-28"><a href="#cb3-28" aria-hidden="true"></a>  <span class="dt">&quot;capabilityGaps&quot;</span><span class="fu">:</span> <span class="ot">[]</span></span>
 <span id="cb3-29"><a href="#cb3-29" aria-hidden="true"></a><span class="fu">}</span></span></code></pre></div><p>Rules for the emitted object: <code>layout</code> has ≤ 7 main-screen entries (§11.1); exactly one entry has <code>role</code> resolving to the hero slot S1; <code>visionSurface</code> is always present (§11.5); every required module appears in <code>bindings</code> or in <code>capabilityGaps</code> (§11.2).</p><hr /><h2 id="14-quick-routing-cheatsheet">14. Quick routing cheatsheet</h2><table><thead><tr class="header"><th>If the user says…</th><th>signalNature</th><th>archetype</th><th>cadence</th></tr></thead><tbody><tr class="odd"><td>"tell me if X is open/on/left out"</td><td>state</td><td>STATE_MONITOR</td><td>continuous</td></tr><tr class="even"><td>"alert me when X happens / someone does Y"</td><td>event</td><td>EVENT_WATCHER</td><td>continuous</td></tr><tr class="odd"><td>"is my baby/parent/pet OK / safe"</td><td>wellbeing</td><td>WELLBEING_MONITOR</td><td>continuous</td></tr><tr class="even"><td>"show me which birds/animals visit"</td><td>event (low urgency)</td><td>DISCOVERY</td><td>continuous</td></tr><tr class="odd"><td>"guide me / what do I do next"</td><td>—</td><td>LIVE_ASSISTANT</td><td>continuous</td></tr><tr class="even"><td>"across my properties / all my cameras"</td><td>— (multi-site)</td><td>OPERATIONS</td><td>continuous</td></tr><tr class="odd"><td>"read / track the meter / gauge / display"</td><td>value</td><td>INSTRUMENT_READER</td><td>periodic</td></tr><tr class="even"><td>"log / count / what do I have / restock"</td><td>item</td><td>CAPTURE_LOGGER</td><td>on-demand</td></tr><tr class="odd"><td>"did the crew / aide / kid show up / how long"</td><td>presence</td><td>ATTENDANCE_VERIFIER</td><td>window</td></tr><tr class="even"><td>"watch X grow / change over weeks"</td><td>state</td><td>(route by subject)</td><td>time-lapse</td></tr><tr class="odd"><td>anything that matches nothing above</td><td>—</td><td>custom composition §11.4</td><td>infer</td></tr></tbody></table><hr /><p><em>Reference v3 · May 2026 · consolidated from the three-part AI-Generated Camera UI specification. Module count: 46 across 9 families. Archetypes: 9. Cadences: 5.</em></p>
 </div></div>
+
+  <div class="tabpane" id="pane-play">
+    <div class="toprow play-row">
+      <!-- LEFT: input console -->
+      <div class="console playconsole">
+        <div class="playhead">
+          <h2><span class="lbl">Describe a monitoring goal</span></h2>
+          <button class="playgear" id="playSettingsBtn" title="API key &amp; model">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </button>
+        </div>
+        <p class="playprompt">Type or speak a real monitoring intent. Claude decomposes it into the §1&ndash;§13 pipeline and the renderer composes a fresh prototype from the 46-module library.</p>
+
+        <div class="playinput-wrap">
+          <textarea id="playGoal" placeholder="e.g. Watch the chicken coop at night and alert me if a raccoon shows up." rows="3"></textarea>
+          <div class="playinput-bar">
+            <button class="playmic" id="playMic" title="Voice input" hidden>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3"/></svg>
+              <span class="mlbl">Voice</span>
+            </button>
+            <div class="playflex"></div>
+            <button class="playgen" id="playGenerate">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12l4 4L19 6"/></svg>
+              <span>Generate</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- examples (collapsible on mobile) -->
+        <div class="playexamples">
+          <div class="exhead">Try one of these</div>
+          <div class="exlist">
+            <button class="exchip" data-ex="Watch the chicken coop at night and alert me if a raccoon shows up.">Chicken coop &middot; raccoon alert</button>
+            <button class="exchip" data-ex="Did I leave the garage door open?">Garage door state</button>
+            <button class="exchip" data-ex="Is the dog OK and not anxious while I'm at work?">Dog wellbeing</button>
+            <button class="exchip" data-ex="Read the gas meter every hour and flag unusual jumps.">Gas meter reader</button>
+            <button class="exchip" data-ex="Show me which butterflies visit the flower bed each day.">Butterfly visitors</button>
+            <button class="exchip" data-ex="Did the lawn crew show up for their Tuesday window?">Lawn-crew attendance</button>
+          </div>
+        </div>
+
+        <!-- status / errors -->
+        <div class="playstatus" id="playStatus" hidden></div>
+      </div>
+
+      <!-- MIDDLE: phone preview -->
+      <div class="phonewrap playphonewrap">
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="screen" id="playScreen">
+            <div class="statusbar"><span>9:41</span><span>Playground &middot; idle</span><span>5G &#9646;&#9646;&#9646;</span></div>
+            <div class="playempty">
+              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#4f8ff0" stroke-width="1.6" opacity=".75"><path d="M12 2l2.4 6.6L21 9l-5.2 4.2L17.4 21 12 17l-5.4 4 1.6-7.8L3 9l6.6-.4z"/></svg>
+              <div class="pet">Generated UI will appear here</div>
+              <div class="pes">Type a goal, press Generate. Claude decomposes the intent, picks an archetype, selects modules, and composes the layout.</div>
+            </div>
+          </div>
+        </div>
+        <div class="hint">
+          <span class="toggle" id="playTg"><span class="tg"></span></span>
+          Show module overlay
+        </div>
+      </div>
+
+      <!-- RIGHT: generation trace -->
+      <div class="trace playtrace">
+        <div class="htitle">Generation trace</div>
+        <div class="pipe" id="playPipe"></div>
+        <div id="playTraceBody">
+          <div class="playtrace-empty">
+            The intent frame, archetype, modules, and detector bindings will stream in here as Claude responds.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- settings sheet -->
+    <div class="playsheet" id="playSheet" hidden>
+      <div class="playsheet-card">
+        <div class="psh">
+          <b>Anthropic API key &amp; model</b>
+          <button class="psclose" id="playSheetClose" aria-label="Close">&times;</button>
+        </div>
+        <p class="psp">Your key is stored in this browser's <code>localStorage</code> and sent directly to <code>api.anthropic.com</code> &mdash; never to any server I control. Get a key at <a href="https://console.anthropic.com/" target="_blank" rel="noopener">console.anthropic.com</a>.</p>
+        <label class="pslabel">API key</label>
+        <div class="psrow">
+          <input id="playKeyInput" type="password" placeholder="sk-ant-..." autocomplete="off" spellcheck="false" />
+          <button class="psshow" id="playKeyShow" type="button">Show</button>
+        </div>
+        <label class="pslabel">Model</label>
+        <select id="playModelSelect">
+          <option value="claude-sonnet-4-5">Sonnet 4.5 &mdash; recommended</option>
+          <option value="claude-haiku-4-5">Haiku 4.5 &mdash; cheaper, faster</option>
+        </select>
+        <p class="pswarn">Anyone with access to this browser profile can read this key. Use a key with a strict spend limit; revoke it any time.</p>
+        <div class="psactions">
+          <button class="psclear" id="playKeyClear">Clear key</button>
+          <button class="pssave" id="playKeySave">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <footer>
     <b style="color:#93a3bd">How to read this:</b> every region of each generated interface is a
@@ -2696,6 +2938,678 @@ function xScrollDocForFilter(key,val){
     });
     a.addEventListener('mouseleave',function(){pop.style.display='none';});
   });
+})();
+</script>
+
+<script>
+/* ============================================================
+   PLAYGROUND: type/speak a goal → Claude → composed mockup
+   Self-contained; touches only #pane-play elements.
+   ============================================================ */
+(function(){
+  const LS_KEY='wyzemockup_anthropic_key';
+  const LS_MODEL='wyzemockup_anthropic_model';
+  const ENDPOINT='https://api.anthropic.com/v1/messages';
+  const PIPE_STAGES=['Capture','Decompose','Archetype','Select','Layout','Bind'];
+  const ARCH={
+    STATE_MONITOR:{name:'State Monitor',color:'#4f8ff0',q:'What state is it in, and for how long?'},
+    EVENT_WATCHER:{name:'Event Watcher',color:'#f6b73c',q:'Did a noteworthy event occur?'},
+    WELLBEING_MONITOR:{name:'Wellbeing Monitor',color:'#f472b6',q:'Is this person or pet safe and healthy?'},
+    DISCOVERY:{name:'Discovery / Collection',color:'#a78bfa',q:'What appeared &mdash; can I savor and collect it?'},
+    LIVE_ASSISTANT:{name:'Live Assistant',color:'#e9844a',q:"What's happening now and what's my next step?"},
+    OPERATIONS:{name:'Operations Console',color:'#7aa3c8',q:'What needs attention across my sites?'},
+    INSTRUMENT_READER:{name:'Instrument Reader',color:'#38c6db',q:'What does it read right now?'},
+    CAPTURE_LOGGER:{name:'Capture / Logger',color:'#f6b73c',q:'Record this &mdash; what do I have / need?'},
+    ATTENDANCE_VERIFIER:{name:'Attendance Verifier',color:'#34d399',q:'Did the expected person show up &mdash; when, how long?'},
+    CUSTOM:{name:'Custom Composition',color:'#9aa3ad',q:'Custom monitoring goal.'}
+  };
+
+  /* ---------- DOM refs ---------- */
+  const $=id=>document.getElementById(id);
+  const sheet=$('playSheet'), screenEl=$('playScreen'), pipeEl=$('playPipe'),
+        traceBody=$('playTraceBody'), statusEl=$('playStatus'),
+        goalEl=$('playGoal'), genBtn=$('playGenerate'), micBtn=$('playMic');
+
+  /* ---------- spec doc (system prompt) ---------- */
+  let SPEC_MD=null;
+  async function loadSpec(){
+    if(SPEC_MD!==null) return SPEC_MD;
+    try{
+      const r=await fetch('./AI-Camera-Builder-Reference.md');
+      if(!r.ok) throw new Error('spec fetch '+r.status);
+      SPEC_MD=await r.text();
+      return SPEC_MD;
+    }catch(e){
+      SPEC_MD='';
+      console.warn('Spec doc not fetched, falling back to short system prompt',e);
+      return '';
+    }
+  }
+
+  function buildSystemPrompt(){
+    const head=
+'You are the camera-builder agent described in the attached reference. '+
+"Given the user's plain-language monitoring goal, run the §1 STAGE 1-6 "+
+'pipeline and emit ONE JSON object that conforms to the §13 output contract. '+
+'Hard rules:\n'+
+'- Reply with ONE JSON object ONLY. No prose, no markdown fences, no commentary.\n'+
+'- Use the new 7-slot grammar from §7: S0, S1, Sa, S2, S3, S4, S5. Actuating '+
+'controls (M-ACT, M-TALK, M-DETER, M-PLAY, M-SOS) live in Sa (above the fold). '+
+'M-RULES / M-ZONE / M-PROMPT live in S5.\n'+
+'- archetype must be one of: STATE_MONITOR, EVENT_WATCHER, WELLBEING_MONITOR, '+
+'DISCOVERY, LIVE_ASSISTANT, OPERATIONS, INSTRUMENT_READER, CAPTURE_LOGGER, '+
+'ATTENDANCE_VERIFIER, CUSTOM.\n'+
+'- intentFrame must have all 7 fields (subject, condition, question, urgency, '+
+'signalNature, cadence, outputPreference).\n'+
+'- layout must have ≤7 main-screen entries and exactly one entry resolving to '+
+'the S1 hero (or fused hero pair). Use fusedWith for S1 fused pairs '+
+'(M-SNAP+M-STATE for STATE_MONITOR; M-SNAP+M-READOUT for INSTRUMENT_READER).\n'+
+'- bindings: every required module bound to tier 1/2/3 per §9.\n'+
+'- Module IDs must come from the 46-module library in §5.\n\n'+
+'=== REFERENCE BEGINS ===\n';
+    const tail='\n=== REFERENCE ENDS ===';
+    return head + (SPEC_MD||'(spec doc unavailable — work from your knowledge of the v3 framework)') + tail;
+  }
+
+  /* ---------- settings sheet ---------- */
+  function openSettings(){
+    $('playKeyInput').value=localStorage.getItem(LS_KEY)||'';
+    $('playKeyInput').type='password';
+    $('playKeyShow').textContent='Show';
+    $('playModelSelect').value=localStorage.getItem(LS_MODEL)||'claude-sonnet-4-5';
+    sheet.hidden=false;
+    setTimeout(()=>$('playKeyInput').focus(),50);
+  }
+  function closeSettings(){ sheet.hidden=true; }
+  function saveKey(){
+    const v=$('playKeyInput').value.trim();
+    if(v){
+      localStorage.setItem(LS_KEY,v);
+      localStorage.setItem(LS_MODEL,$('playModelSelect').value);
+      clearStatus();
+      showStatus('info','Key saved. Try a goal above.');
+    }else{
+      localStorage.removeItem(LS_KEY);
+    }
+    closeSettings();
+  }
+  function clearKey(){
+    localStorage.removeItem(LS_KEY);
+    $('playKeyInput').value='';
+    showStatus('info','Key cleared.');
+  }
+  function toggleKeyVisibility(){
+    const inp=$('playKeyInput');
+    if(inp.type==='password'){ inp.type='text'; $('playKeyShow').textContent='Hide'; }
+    else{ inp.type='password'; $('playKeyShow').textContent='Show'; }
+  }
+  function getKey(){ return localStorage.getItem(LS_KEY)||''; }
+  function getModel(){ return localStorage.getItem(LS_MODEL)||'claude-sonnet-4-5'; }
+
+  /* ---------- status ---------- */
+  function showStatus(level,html,actionLabel,actionFn){
+    statusEl.hidden=false;
+    statusEl.className='playstatus '+level;
+    let h='<span>'+html+'</span>';
+    if(actionLabel) h+='<button type="button" id="psBtn">'+actionLabel+'</button>';
+    statusEl.innerHTML=h;
+    if(actionFn) $('psBtn').addEventListener('click',actionFn);
+  }
+  function clearStatus(){ statusEl.hidden=true; statusEl.innerHTML=''; }
+
+  /* ---------- pipe / stages ---------- */
+  function renderPipe(){
+    pipeEl.innerHTML=PIPE_STAGES.map((s,i)=>
+      `<div class="pstep" data-stage="${i+1}"><div class="n">STAGE ${i+1}</div><div class="l">${s}</div></div>`).join('');
+  }
+  function resetPipe(){ pipeEl.querySelectorAll('.pstep').forEach(p=>p.classList.remove('active')); }
+  function markStage(n){
+    for(let i=1;i<=n;i++){
+      const el=pipeEl.querySelector('[data-stage="'+i+'"]');
+      if(el) el.classList.add('active');
+    }
+  }
+  function peekStages(acc){
+    if(acc.length>0) markStage(1);
+    if(acc.includes('"intentFrame"')) markStage(2);
+    if(acc.includes('"archetype"')) markStage(3);
+    if(acc.includes('"layout"')) markStage(5);
+    if(acc.includes('"bindings"')) markStage(6);
+  }
+
+  /* ---------- LLM call (streaming SSE) ---------- */
+  async function callClaude(goal,key,retryStricter){
+    await loadSpec();
+    const sys=buildSystemPrompt() +
+      (retryStricter?'\n\nIMPORTANT: previous response was not valid JSON. Reply with a SINGLE JSON object only. No prose. No code fences.':'');
+    const body={
+      model:getModel(),
+      max_tokens:2048,
+      system:[{type:'text',text:sys,cache_control:{type:'ephemeral'}}],
+      messages:[{role:'user',content:`Goal: ${goal}\n\nEmit the §13 output JSON only.`}],
+      stream:true,
+      temperature: retryStricter?0:0.3
+    };
+    const res=await fetch(ENDPOINT,{
+      method:'POST',
+      headers:{
+        'content-type':'application/json',
+        'x-api-key':key,
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-direct-browser-access':'true'
+      },
+      body:JSON.stringify(body)
+    });
+    if(!res.ok){
+      let txt='';
+      try{ txt=await res.text(); }catch{}
+      const err=new Error('api '+res.status);
+      err.status=res.status; err.body=txt;
+      throw err;
+    }
+    const reader=res.body.getReader(), dec=new TextDecoder();
+    let buf='', acc='';
+    while(true){
+      const {done,value}=await reader.read();
+      if(done) break;
+      buf+=dec.decode(value,{stream:true});
+      let lines=buf.split('\n'); buf=lines.pop();
+      for(const line of lines){
+        if(!line.startsWith('data: ')) continue;
+        const d=line.slice(6);
+        if(d==='[DONE]') continue;
+        try{
+          const evt=JSON.parse(d);
+          if(evt.type==='content_block_delta' && evt.delta && evt.delta.text){
+            acc+=evt.delta.text;
+            peekStages(acc);
+          }
+        }catch{}
+      }
+    }
+    return acc;
+  }
+
+  function parseSpec(text){
+    let t=text.trim();
+    t=t.replace(/^```(?:json)?\s*/i,'').replace(/\s*```\s*$/,'');
+    const m=t.match(/\{[\s\S]*\}/);
+    if(!m) throw new Error('No JSON object found in response');
+    return JSON.parse(m[0]);
+  }
+  function validateSpec(s){
+    if(!s||typeof s!=='object') throw new Error('Response is not an object');
+    if(!s.intentFrame) throw new Error('Missing intentFrame');
+    if(!s.archetype) throw new Error('Missing archetype');
+    if(!Array.isArray(s.layout)) throw new Error('Missing layout array');
+  }
+
+  /* ---------- generate flow ---------- */
+  let inFlight=false;
+  async function generate(){
+    if(inFlight) return;
+    clearStatus();
+    const goal=goalEl.value.trim();
+    if(!goal){ showStatus('warn','Type or speak a goal first.'); goalEl.focus(); return; }
+    const key=getKey();
+    if(!key){
+      showStatus('warn','Add an Anthropic API key to generate.','Open settings',openSettings);
+      openSettings();
+      return;
+    }
+    inFlight=true; genBtn.disabled=true; genBtn.querySelector('span').textContent='Generating…';
+    resetPipe(); markStage(1);
+    renderTraceEmpty('Streaming from '+getModel()+'…');
+    renderScreenLoading();
+    let raw='';
+    try{
+      raw=await callClaude(goal,key,false);
+      let spec;
+      try{ spec=parseSpec(raw); validateSpec(spec); }
+      catch(e1){
+        // one retry with stricter prompt + temp 0
+        showStatus('info','Model returned unparseable JSON. Retrying…');
+        raw=await callClaude(goal,key,true);
+        spec=parseSpec(raw); validateSpec(spec);
+        clearStatus();
+      }
+      spec.goal=goal;
+      markStage(6);
+      renderTrace(spec);
+      screenEl.innerHTML=renderGeneratedScene(spec);
+    }catch(e){
+      handleError(e,raw);
+    }finally{
+      inFlight=false; genBtn.disabled=false; genBtn.querySelector('span').textContent='Generate';
+    }
+  }
+
+  function handleError(e,raw){
+    console.error('Playground error',e,raw);
+    if(e.status===401||e.status===403){
+      showStatus('err','Anthropic rejected the API key. Check it at console.anthropic.com.','Open settings',openSettings);
+    }else if(e.status===429){
+      showStatus('err','Rate-limited by Anthropic. Wait a few seconds and try again.','Retry',generate);
+    }else if(e.status===529){
+      showStatus('err','Anthropic API is temporarily overloaded.','Retry',generate);
+    }else if(e.status>=500){
+      showStatus('err','Anthropic API returned '+e.status+'. Try again.','Retry',generate);
+    }else if(e.name==='TypeError'){
+      showStatus('err','Could not reach api.anthropic.com. Check your network.','Retry',generate);
+    }else{
+      let body='';
+      if(raw) body='<details style="margin-top:8px"><summary style="cursor:pointer">Raw response</summary><pre style="white-space:pre-wrap;font-size:11px;margin-top:6px;max-height:200px;overflow:auto;background:#0c1422;padding:8px;border-radius:6px">'+escHtml(raw.slice(0,1200))+'</pre></details>';
+      showStatus('err',(e.message||'Generation failed')+body,'Retry',generate);
+    }
+    renderScreenIdle();
+  }
+
+  /* ---------- voice (Web Speech API) ---------- */
+  function setupVoice(){
+    const R=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!R) return;
+    micBtn.hidden=false;
+    let recog=null, recording=false;
+    micBtn.addEventListener('click',()=>{
+      if(recording){ recog && recog.stop(); return; }
+      recog=new R(); recog.lang='en-US'; recog.continuous=false; recog.interimResults=true;
+      let baseValue=goalEl.value;
+      if(baseValue && !baseValue.endsWith(' ')) baseValue+=' ';
+      recog.onstart=()=>{ recording=true; micBtn.classList.add('rec'); micBtn.querySelector('.mlbl').textContent='Stop'; };
+      recog.onresult=(e)=>{
+        let txt='';
+        for(let i=0;i<e.results.length;i++) txt+=e.results[i][0].transcript;
+        goalEl.value=baseValue+txt;
+      };
+      recog.onerror=(e)=>{ console.warn('SR error',e); };
+      recog.onend=()=>{ recording=false; micBtn.classList.remove('rec'); micBtn.querySelector('.mlbl').textContent='Voice'; };
+      try{ recog.start(); }catch(e){ console.warn(e); }
+    });
+  }
+
+  /* ---------- trace rendering ---------- */
+  function renderTraceEmpty(msg){
+    traceBody.innerHTML='<div class="playtrace-empty">'+escHtml(msg||'')+'</div>';
+  }
+  function renderTrace(spec){
+    const a=ARCH[spec.archetype]||ARCH.CUSTOM;
+    const frame=spec.intentFrame||{};
+    const order=['subject','condition','question','urgency','signalNature','cadence','outputPreference'];
+    const frameHtml=order.map(k=>{
+      let v=frame[k]; if(Array.isArray(v)) v=v.join(', '); if(v===undefined||v==='') v='—';
+      return `<div class="sectlab" style="font-size:9px">${escHtml(k.toUpperCase())}</div><div class="fv" style="font-size:11.5px;margin-bottom:8px;color:var(--ink);font-family:var(--mono)">${escHtml(String(v))}</div>`;
+    }).join('');
+    const modsHtml=(spec.layout||[]).map(m=>{
+      const role=m.size==='hero'?' hero':m.fusedWith?' co-hero':m.size==='strip'?' strip':'';
+      const fused=m.fusedWith?(' + '+escHtml(m.fusedWith)):'';
+      return `<span class="mod">${escHtml(m.module)}<span style="opacity:.55">${escHtml(' · '+(m.slot||'?')+(role?(' '+role):''))}${fused}</span></span>`;
+    }).join('');
+    const tiersHtml=(spec.bindings||[]).map(b=>{
+      const color=b.tier===1?'#34d399':b.tier===2?'#4f8ff0':'#a78bfa';
+      const desc=b.prompt||b.source||(b.threshold!=null?('threshold '+b.threshold):'')||'';
+      return `<div class="tier"><span class="dot" style="background:${color}"></span><b>Tier ${escHtml(String(b.tier||'?'))} · ${escHtml(b.module||'')}</b> ${escHtml(desc)}</div>`;
+    }).join('');
+    const conf=spec.archetypeConfidence!=null?Math.round(spec.archetypeConfidence*100)+'%':'';
+    const policy=spec.alerting?(spec.alerting.delivery||'')+(spec.alerting.throttle?(' · '+spec.alerting.throttle):'')+(spec.alerting.quietHours?(' · quiet hours on'):''):'';
+    traceBody.innerHTML=
+      `<div class="sectlab">Raw goal</div><div style="font-size:12px;color:var(--ink);margin-bottom:12px;font-style:italic">&ldquo;${escHtml(spec.goal||'')}&rdquo;</div>`+
+      `<div class="sectlab">Intent frame</div><div class="framegrid">${frameHtml}</div>`+
+      `<div class="sectlab">Archetype ${conf?'<span style="opacity:.55">· confidence '+conf+'</span>':''}</div>`+
+      `<div class="archbadge" style="background:${a.color}1e;border:1px solid ${a.color}55;color:${a.color};padding:8px 11px;border-radius:9px;font-size:12px;margin-bottom:6px"><b>${a.name}</b></div>`+
+      `<div style="font-size:11.5px;color:var(--mut);margin-bottom:11px">${a.q}</div>`+
+      (policy?`<div class="sectlab">Alerting policy</div><div style="font-size:11.5px;color:var(--ink);margin-bottom:11px">${escHtml(policy)}</div>`:'')+
+      `<div class="sectlab">Modules &amp; layout</div><div class="modlist" style="margin-bottom:11px">${modsHtml}</div>`+
+      (tiersHtml?`<div class="sectlab">Detection binding</div><div>${tiersHtml}</div>`:'')+
+      (spec.notes?`<div class="sectlab" style="margin-top:10px">Notes</div><div style="font-size:11.5px;color:var(--mut)">${escHtml(spec.notes)}</div>`:'');
+  }
+
+  /* ---------- screen state ---------- */
+  function renderScreenLoading(){
+    screenEl.innerHTML=
+      '<div class="statusbar"><span>9:41</span><span>Generating &middot; '+getModel()+'</span><span>5G &#9646;&#9646;&#9646;</span></div>'+
+      '<div class="playempty"><div class="loader"></div><div class="pet">Generating UI&hellip;</div><div class="pes">Claude is decomposing the goal and composing modules. Watch the trace on the right.</div></div>';
+  }
+  function renderScreenIdle(){
+    screenEl.innerHTML=
+      '<div class="statusbar"><span>9:41</span><span>Playground &middot; idle</span><span>5G &#9646;&#9646;&#9646;</span></div>'+
+      '<div class="playempty"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#4f8ff0" stroke-width="1.6" opacity=".75"><path d="M12 2l2.4 6.6L21 9l-5.2 4.2L17.4 21 12 17l-5.4 4 1.6-7.8L3 9l6.6-.4z"/></svg><div class="pet">Generated UI will appear here</div><div class="pes">Type a goal, press Generate. Claude decomposes the intent, picks an archetype, selects modules, and composes the layout.</div></div>';
+  }
+
+  /* ---------- generic scene renderer ---------- */
+  function renderGeneratedScene(spec){
+    const a=ARCH[spec.archetype]||ARCH.CUSTOM;
+    const subj=(spec.intentFrame&&spec.intentFrame.subject)||'Subject';
+    const ctx={
+      spec, arche:a, color:a.color,
+      subject:subj,
+      condition:(spec.intentFrame&&spec.intentFrame.condition)||'',
+      cadence:(spec.intentFrame&&spec.intentFrame.cadence)||'continuous',
+      urgency:(spec.intentFrame&&spec.intentFrame.urgency)||'medium'
+    };
+    /* group by slot */
+    const groups={S0:[],S1:[],Sa:[],S2:[],S3:[],S4:[],S5:[]};
+    (spec.layout||[]).forEach(m=>{
+      const s=groups[m.slot]?m.slot:'S2';
+      groups[s].push(m);
+    });
+    /* Sa cap-4 */
+    if(groups.Sa.length>4){
+      groups.Sa=groups.Sa.slice(0,4);
+    }
+    const order=['S0','S1','Sa','S2','S3','S4','S5'];
+    let body='';
+    for(const s of order){
+      for(const m of groups[s]){
+        const r=MODULE_RENDERERS[m.module]||genericModule;
+        const html=r(m,ctx);
+        if(!html) continue;
+        const label=(m.module||'?')+' · '+s+(m.fusedWith?(' fused '+m.fusedWith):'')+(m.size==='hero'?' · hero':'');
+        body+=playSlot(label,html);
+      }
+    }
+    const gearSvg='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#93a3bd" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>';
+    return '<div class="statusbar"><span>9:41</span><span>Generated UI &#9662;</span><span>5G &#9646;&#9646;&#9646;</span></div>'+
+      '<div class="appbar"><div><div class="ttl">'+escHtml(subj)+'</div>'+
+      '<div class="sub">'+a.name+' &middot; generated UI</div></div>'+
+      '<div class="gear">'+gearSvg+'</div></div>'+
+      '<div class="ui">'+body+'</div>';
+  }
+  function playSlot(label,html){
+    return '<div class="slot"><div class="slotlab">'+escHtml(label)+'</div>'+html+'</div>';
+  }
+
+  /* ============================================================
+     MODULE_RENDERERS — all 46 modules, full fidelity
+     Each: (m, ctx) → htmlString. m=layout entry, ctx={color,subject,condition,cadence,urgency,arche,spec}
+     ============================================================ */
+  function aIcon(c){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2">'+c+'</svg>';}
+  function tint(color,a){ return color+a; }
+  function videobox(label,time,inner,sig){
+    const tag=sig?'<span class="sigtag sig-'+sig+'" style="position:absolute;left:8px;top:8px;font-size:6.5px;padding:2px 5px;border-radius:3px;font-weight:800;letter-spacing:.3px">'+(sig==='live'?'LIVE':sig.toUpperCase())+'</span>':'';
+    return '<div class="videobox" style="background:linear-gradient(165deg,#2c3d5b,#0d1626)">'+
+      tag+(inner||'')+
+      '<div class="vname">'+escHtml(label||'')+'</div><div class="vtime">'+escHtml(time||'')+'</div></div>';
+  }
+  function ring(pct,color,labelTxt){
+    const C=2*Math.PI*38, off=C*(1-pct);
+    return '<svg width="120" height="120" viewBox="0 0 100 100">'+
+      '<circle cx="50" cy="50" r="38" stroke="#23314a" stroke-width="9" fill="none"/>'+
+      '<circle cx="50" cy="50" r="38" stroke="'+color+'" stroke-width="9" fill="none" '+
+        'stroke-dasharray="'+C.toFixed(2)+'" stroke-dashoffset="'+off.toFixed(2)+'" '+
+        'stroke-linecap="round" transform="rotate(-90 50 50)"/>'+
+      '<text x="50" y="56" text-anchor="middle" font-size="26" font-weight="800" fill="#fff" font-family="-apple-system,sans-serif">'+labelTxt+'</text>'+
+      '</svg>';
+  }
+  function panel(title,inner,modTag){
+    const tag=modTag?'<span class="mi">'+escHtml(modTag)+'</span>':'';
+    return '<div class="panel"><div class="ph"><b>'+escHtml(title)+'</b>'+tag+'</div>'+inner+'</div>';
+  }
+  function statePulse(color,text){
+    return '<div class="strip" style="background:'+tint(color,'18')+';border:1px solid '+tint(color,'55')+';color:'+color+'">'+
+      '<span class="pulse" style="background:'+color+'"></span>'+escHtml(text)+'</div>';
+  }
+  function cap1(s){ return s?s.charAt(0).toUpperCase()+s.slice(1):''; }
+
+  /* sensible labels derived from intent */
+  function actionLabelsFor(subject,condition){
+    const sl=(subject||'').toLowerCase(), cl=(condition||'').toLowerCase();
+    if(/door|gate|garage|window/.test(sl)) return [['primary','Open','M12 19V5M5 12l7-7 7 7'],['','Close','M12 5v14M5 12l7 7 7-7']];
+    if(/light|lamp/.test(sl)) return [['primary','Toggle','M12 2v6M4.93 10.93l4.24 4.24M2 18h6M19.07 10.93l-4.24 4.24M22 18h-6M12 16v6']];
+    if(/lock|deadbolt/.test(sl)) return [['primary','Lock','M5 11h14a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2zM7 11V7a5 5 0 0 1 10 0v4'],['','Unlock','M5 11h14v9H5zM7 11V7a5 5 0 0 1 10 0']];
+    if(/mute|noise|sound/.test(sl+cl)) return [['primary','Mute','M11 5L6 9H2v6h4l5 4zM23 9l-6 6M17 9l6 6'],['','Listen','M11 5L6 9H2v6h4l5 4zM19 5a8 8 0 0 1 0 14']];
+    return [['primary','Mark handled','M5 12l5 5L20 7'],['','Snooze','M21 12a9 9 0 1 1-3-6.7M16 2l5 5-5 5']];
+  }
+
+  /* ---------- Family A — Vision (10) ---------- */
+  MODULE_RENDERERS={
+    'M-LIVE':(m,ctx)=>{
+      const fused=m.fusedWith?'<div class="fused"><div><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="'+ctx.color+'" stroke-width="2.4"><path d="M5 12l5 5L20 7"/></svg></div><div><div class="fs" style="color:'+ctx.color+'">'+escHtml(cap1(ctx.condition)||'Live')+'</div><div class="fsub">'+escHtml(ctx.subject)+' cam &middot; live</div></div></div>':'';
+      const ann=m.fusedWith?'':'<div class="annbox" style="left:21%;top:30%;width:58%;height:46%;border-color:'+ctx.color+'"></div><div class="annbadge" style="left:21%;top:30%;background:'+ctx.color+';color:#04222a">'+escHtml((ctx.subject||'').split(' ').slice(0,2).join(' ').toLowerCase()||'subject')+'</div>';
+      return '<div class="hero">'+videobox(ctx.subject+' cam',new Date().toTimeString().slice(0,5),ann+fused,'live')+'</div>';
+    },
+    'M-SNAP':(m,ctx)=>{
+      const fused=m.fusedWith?'<div class="fused"><div><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="'+ctx.color+'" stroke-width="2.4"><path d="M5 12l5 5L20 7"/></svg></div><div><div class="fs" style="color:'+ctx.color+'">'+escHtml(cap1(ctx.condition)||'OK')+'</div><div class="fsub">'+escHtml(ctx.subject)+' cam &middot; annotated snapshot</div></div></div>':'';
+      const ann='<div class="annbox" style="left:21%;top:34%;width:58%;height:42%;border-color:'+ctx.color+'"></div><div class="annbadge" style="left:21%;top:34%;background:'+ctx.color+';color:#04222a">'+escHtml((ctx.subject||'').split(' ').slice(0,2).join(' ').toLowerCase()||'subject')+'</div>';
+      return '<div class="hero">'+videobox(ctx.subject+' cam','snapshot',ann+fused,'snap')+'</div>';
+    },
+    'M-CLIP':(m,ctx)=>{
+      return '<div class="hero">'+videobox(ctx.subject+' cam','clip','<div style="position:absolute;inset:0;display:grid;place-items:center"><div class="pvplay"></div></div><div style="position:absolute;left:50%;bottom:8%;transform:translateX(-50%);font-size:9px;font-weight:700;background:#0008;color:#fff;padding:3px 7px;border-radius:4px">0:22</div>','clip')+'</div>';
+    },
+    'M-FOOTAGE':(m,ctx)=>{
+      return '<div class="hero">'+videobox(ctx.subject+' cam','continuous','','live')+'</div>'+
+        panel('Timeline','<div class="scrub" style="height:46px">'+
+          [12,40,8,55,30,18,62,22,50,15,45,28].map(h=>'<div class="seg" style="height:'+h+'%;background:'+ctx.color+'"></div>').join('')+
+          '<div class="axis"><span>6h ago</span><span>3h</span><span>now</span></div></div>','M-FOOTAGE');
+    },
+    'M-TIMELAPSE':(m,ctx)=>{
+      return '<div class="lapse">'+videobox(ctx.subject+' cam','day 47','<div style="position:absolute;inset:0;display:grid;place-items:center"><svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="'+ctx.color+'" stroke-width="1.6"><path d="M12 21v-9M12 12c0-5 4-8 9-8 0 5-4 8-9 8zM12 14c0-4-4-7-9-7 0 5 4 7 9 7z"/></svg></div>','lapse')+
+        '<div class="lapsebar"><div class="lp">'+aIcon('<path d="M6 4l14 8-14 8z"/>')+'</div><div class="lapsetrack"><i style="width:72%;background:'+ctx.color+'"></i><b style="left:72%;background:'+ctx.color+'"></b></div><div class="ld2">d47 / 47</div></div></div>';
+    },
+    'M-REEL':(m,ctx)=>{
+      return panel("Today's reel",'<div class="gallery" style="grid-template-columns:1fr 1fr 1fr 1fr">'+
+        [0,1,2,3].map(i=>'<div class="gcell" style="aspect-ratio:1;background:linear-gradient(150deg,'+ctx.color+'cc,'+ctx.color+'44)"><span style="font-size:8px">0:'+(15+i*7)+'</span></div>').join('')+
+        '</div>','M-REEL');
+    },
+    'M-GALLERY':(m,ctx)=>{
+      const sample=['New','Visit','Visit','Visit','Visit','New'];
+      const colors=['#b1402f','#3a67c4','#caa23f','#7b5230','#9aa3ad','#c0563f'];
+      return panel("Today's collection",'<div class="gallery">'+
+        sample.map((s,i)=>'<div class="gcell '+(s==='New'?'new':'')+'" style="background:linear-gradient(150deg,'+colors[i%6]+',#1a1a1a)"><span>'+s+'</span></div>').join('')+
+        '</div>','M-GALLERY');
+    },
+    'M-COMPARE':(m,ctx)=>{
+      return panel(escHtml(ctx.subject)+' &mdash; then &amp; now','<div class="compare"><div class="cf"><div class="cimg" style="background:linear-gradient(160deg,'+ctx.color+'44,#0f1d16)"></div><div class="clab">Day 1</div></div><div class="cf"><div class="cimg" style="background:linear-gradient(160deg,'+ctx.color+'cc,#16331f)"></div><div class="clab">Today</div></div></div>','M-COMPARE');
+    },
+    'M-GRID':(m,ctx)=>{
+      return '<div class="hero"><div class="panel" style="border:0;border-radius:15px;padding:11px"><div class="ph"><b>All sites</b><span class="sigtag sig-multi" style="position:static">MULTI-VIEW</span></div><div class="gallery" style="grid-template-columns:1fr 1fr">'+
+        ['Site 1','Site 2 !','Site 3','Site 4'].map((n,i)=>'<div class="gcell" style="aspect-ratio:16/10;background:linear-gradient(150deg,'+(i===1?'#3a2f28':'#2a3b58')+',#0d1626)"><span'+(i===1?' style="background:#f25c5c"':'')+'>'+escHtml(n)+'</span></div>').join('')+
+        '</div></div></div>';
+    },
+    'M-PTZ':(m,ctx)=>{
+      return '<div class="hero">'+videobox(ctx.subject+' cam','PTZ',
+        '<div style="position:absolute;right:8%;bottom:14%;display:grid;grid-template-columns:repeat(3,28px);gap:3px">'+
+        ['','▲','','◀','●','▶','','▼',''].map(c=>'<div style="aspect-ratio:1;background:#0008;color:#fff;display:grid;place-items:center;font-size:11px;border-radius:5px">'+c+'</div>').join('')+
+        '</div>','live')+'</div>';
+    },
+
+  /* ---------- Family B — State & Status (4) ---------- */
+    'M-STATE':(m,ctx)=>statePulse(ctx.color, cap1(ctx.condition)||cap1(ctx.subject+' OK')),
+    'M-DURATION':(m,ctx)=>{
+      return panel('Time in state','<div class="duration"><div class="clock" style="color:'+ctx.color+'">3:42</div><div class="barwrap"><div class="dbar"><i style="width:35%;background:'+ctx.color+'"></i></div><div class="dthresh">Alert if '+escHtml((ctx.condition||'state').toLowerCase())+' &gt; 10 min</div></div></div>','M-DURATION');
+    },
+    'M-VITALS':(m,ctx)=>{
+      return panel('Live monitoring','<div class="vitals"><div class="vit"><div class="vn">Metric A</div><div class="vv">--<small></small></div></div><div class="vit"><div class="vn">Metric B</div><div class="vv">--<small></small></div></div><div class="vit"><div class="vn">Status</div><div class="vv" style="font-size:13px;color:'+ctx.color+'">'+escHtml(cap1(ctx.condition)||'Normal')+'</div></div></div>','M-VITALS');
+    },
+    'M-SCORE':(m,ctx)=>{
+      return '<div class="hero"><div class="bigstate">'+ring(0.84,ctx.color,'84')+'<div class="lab" style="margin-top:8px">'+escHtml(cap1(ctx.subject))+' score</div><div class="val" style="font-size:16px;color:'+ctx.color+'">'+escHtml(cap1(ctx.condition)||'Doing well')+'</div><div class="meta">Above typical range (76&ndash;82)</div></div></div>';
+    },
+
+  /* ---------- Family C — Events (3) ---------- */
+    'M-FEED':(m,ctx)=>{
+      const rows=[
+        ['Latest event detected','1:46 PM',ctx.color,'EVENT'],
+        ['Earlier activity','11:20 AM','#4f8ff0','PERSON'],
+        ['Yesterday','6:14 PM','#f6b73c','STATE']
+      ];
+      return panel('Event feed', rows.map(r=>'<div class="feedrow"><div class="thumb"></div><div><div class="ft">'+escHtml(r[0])+'</div><div class="fm">'+escHtml(r[1])+'</div></div><span class="etag" style="background:'+r[2]+'22;color:'+r[2]+'">'+r[3]+'</span></div>').join(''),'M-FEED');
+    },
+    'M-FILTER':(m,ctx)=>{
+      const chips=['All','Subject','Person','Vehicle','Familiar'];
+      return '<div class="chips2">'+chips.map((c,i)=>'<span class="fc'+(i===0?' on':'')+'">'+escHtml(c)+'</span>').join('')+'</div>';
+    },
+    'M-GROUPS':(m,ctx)=>{
+      const groups=[['Trigger A',8],['Trigger B',5],['Trigger C',2]];
+      return panel('Grouped events', groups.map(g=>'<div class="feedrow"><div class="thumb"></div><div><div class="ft">'+escHtml(g[0])+'</div><div class="fm">'+g[1]+' clips today</div></div><span class="etag" style="background:'+ctx.color+'22;color:'+ctx.color+'">'+g[1]+'</span></div>').join(''),'M-GROUPS');
+    },
+
+  /* ---------- Family D — Timeline (4) ---------- */
+    'M-SCRUB':(m,ctx)=>{
+      const bars=[12,22,8,30,15,42,18,55,28,10,35,20].map(h=>'<div class="seg" style="height:'+h+'%;background:'+ctx.color+'"></div>').join('');
+      return panel('Timeline','<div class="scrub" style="height:46px">'+bars+'<div class="pin"></div><div class="axis"><span>6a</span><span>12p</span><span>now</span></div></div>','M-SCRUB');
+    },
+    'M-EVTLINE':(m,ctx)=>{
+      return panel("Today's activity",'<div class="scrub" style="height:34px">'+
+        [15,70,55,20,65,40,18,52].map((h,i)=>'<div class="seg" style="height:'+h+'%;background:'+([1,2,4,5,7].includes(i)?ctx.color:'#26344f')+'"></div>').join('')+
+        '<div class="axis"><span>6a</span><span>12p</span><span>now</span></div></div>','M-EVTLINE');
+    },
+    'M-NIGHTGRAPH':(m,ctx)=>{
+      return panel('Session graph','<div class="nightgraph">'+
+        Array.from({length:14}).map((_,i)=>'<div class="ns" style="background:'+(i%5===2?'#f6b73c':i%7===0?ctx.color:'#4f8ff0')+';height:'+(40+(i*17)%60)+'%"></div>').join('')+
+        '</div><div class="ngkey"><span><i style="background:#4f8ff0"></i>Calm</span><span><i style="background:#f6b73c"></i>Active</span></div>','M-NIGHTGRAPH');
+    },
+    'M-MAPLINE':(m,ctx)=>{
+      return panel('Across cameras','<div style="position:relative;background:#0c1422;border:1px solid var(--line);border-radius:8px;height:90px;margin-bottom:8px">'+
+        '<div style="position:absolute;left:18%;top:32%;width:9px;height:9px;border-radius:50%;background:'+ctx.color+'"></div>'+
+        '<div style="position:absolute;left:48%;top:55%;width:9px;height:9px;border-radius:50%;background:'+ctx.color+'"></div>'+
+        '<div style="position:absolute;left:78%;top:40%;width:9px;height:9px;border-radius:50%;background:#f25c5c"></div>'+
+        '<svg style="position:absolute;inset:0;width:100%;height:100%" preserveAspectRatio="none" viewBox="0 0 100 100"><path d="M18 32 Q33 60 48 55 T78 40" stroke="'+ctx.color+'55" stroke-width="1.5" fill="none" stroke-dasharray="3 3"/></svg></div>'+
+        '<div style="font-size:10px;color:var(--dim)">Subject path across 3 cameras over the last 2 min</div>','M-MAPLINE');
+    },
+
+  /* ---------- Family E — Analytics (4) ---------- */
+    'M-TREND':(m,ctx)=>{
+      const bars=[40,62,55,78,48,90,70];
+      return panel('Trend &middot; last 7 days','<div class="trendbars">'+
+        bars.map(h=>'<div class="tb" style="height:'+h+'%;background:linear-gradient('+ctx.color+',#26344f)"></div>').join('')+
+        '</div><div class="trendx">'+['M','T','W','T','F','S','S'].map(d=>'<span>'+d+'</span>').join('')+'</div>','M-TREND');
+    },
+    'M-HEAT':(m,ctx)=>{
+      let cells='';
+      for(let i=0;i<28;i++){
+        const op=(0.15+((i*37)%83)/100).toFixed(2);
+        cells+='<i style="background:'+ctx.color+';opacity:'+op+'"></i>';
+      }
+      return panel('Activity heat','<div class="cal">'+cells+'</div>','M-HEAT');
+    },
+    'M-RECAP':(m,ctx)=>{
+      return panel('AI recap','<div class="recap"><span class="ai">AI</span> '+escHtml(cap1(ctx.subject))+' is in line with its typical pattern. '+(ctx.condition?escHtml(ctx.condition)+'.':'')+' No anomalies in the last 24 hours; 2 routine events handled automatically.</div>','M-RECAP');
+    },
+    'M-KPI':(m,ctx)=>{
+      return panel('Today','<div class="vitals"><div class="vit"><div class="vn">Events</div><div class="vv">12</div></div><div class="vit"><div class="vn">Active</div><div class="vv">3<small>/4</small></div></div><div class="vit"><div class="vn">Alerts</div><div class="vv" style="color:#ff9a9a">1</div></div></div>','M-KPI');
+    },
+
+  /* ---------- Family F — Controls & Actions (4) ---------- */
+    'M-TALK':(m,ctx)=>{
+      return '<div class="actions"><div class="act primary"><span class="ai">'+aIcon('<path d="M12 1a4 4 0 0 0-4 4v6a4 4 0 0 0 8 0V5a4 4 0 0 0-4-4z"/><path d="M5 10v1a7 7 0 0 0 14 0v-1M12 19v3"/>')+'</span>Talk</div><div class="act"><span class="ai">'+aIcon('<path d="M11 5L6 9H2v6h4l5 4zM19 5a8 8 0 0 1 0 14"/>')+'</span>Listen</div></div>';
+    },
+    'M-DETER':(m,ctx)=>{
+      return '<div class="actions"><div class="act danger"><span class="ai">'+aIcon('<path d="M3 11l18-5v12L3 14v-3zM11 19v-5"/>')+'</span>Siren</div><div class="act"><span class="ai">'+aIcon('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2"/>')+'</span>Lights</div><div class="act"><span class="ai">'+aIcon('<path d="M21 11V7a2 2 0 0 0-2-2h-7l-2 3H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h14"/>')+'</span>Record</div></div>';
+    },
+    'M-PLAY':(m,ctx)=>{
+      return '<div class="actions"><div class="act primary"><span class="ai">'+aIcon('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/>')+'</span>Treat</div><div class="act"><span class="ai">'+aIcon('<circle cx="12" cy="12" r="2"/><path d="M12 4v4M12 16v4M4 12h4M16 12h4"/>')+'</span>Laser</div><div class="act"><span class="ai">'+aIcon('<path d="M11 5L6 9H2v6h4l5 4z"/>')+'</span>Call</div></div>';
+    },
+    'M-ACT':(m,ctx)=>{
+      const labels=actionLabelsFor(ctx.subject,ctx.condition);
+      return '<div class="actions">'+labels.map(l=>'<div class="act '+l[0]+'"><span class="ai">'+aIcon('<path d="'+l[2]+'"/>')+'</span>'+escHtml(l[1])+'</div>').join('')+'</div>';
+    },
+
+  /* ---------- Family G — Detection & Config (4) ---------- */
+    'M-ZONE':(m,ctx)=>{
+      return panel('Watch zone','<div style="position:relative;background:linear-gradient(165deg,#1c2436,#0c1320);height:104px;border-radius:8px"><div class="annbox" style="left:18%;top:32%;width:64%;height:42%;border-color:'+ctx.color+'"></div><div class="annbadge" style="left:18%;top:32%;background:'+ctx.color+';color:#04222a">tap to edit</div></div>','M-ZONE');
+    },
+    'M-PROMPT':(m,ctx)=>{
+      const p=(ctx.spec.bindings||[]).find(b=>b.module==='M-PROMPT'||b.prompt);
+      const prompt=p&&p.prompt?p.prompt:('Is '+(ctx.condition||'the watched condition')+' present in the '+(ctx.subject||'frame')+'?');
+      return '<div class="promptbox"><div class="pl">Tier-3 detector &middot; M-PROMPT</div><div class="pt">&ldquo;'+escHtml(prompt)+'&rdquo;</div></div>';
+    },
+    'M-IDCARD':(m,ctx)=>{
+      return panel('Identified subject','<div class="idcard"><div class="pic"></div><div><div class="nm">'+escHtml(cap1(ctx.subject))+'</div><div class="sci">Subject of interest</div><div class="meta">Last seen just now &middot; 9th observation this week</div></div></div>','M-IDCARD');
+    },
+    'M-RULES':(m,ctx)=>{
+      return '<div class="actions"><div class="act"><span class="ai">'+aIcon('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>')+'</span>Threshold</div><div class="act"><span class="ai">'+aIcon('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/>')+'</span>Schedule</div><div class="act"><span class="ai">'+aIcon('<path d="M22 16.92V19a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 3.18 2 2 0 0 1 4.11 1h2.08a2 2 0 0 1 2 1.72c.13.81.37 1.6.7 2.34a2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.74-1.35a2 2 0 0 1 2.11-.45c.74.33 1.53.57 2.34.7A2 2 0 0 1 22 16.92z"/>')+'</span>Notify</div></div>';
+    },
+
+  /* ---------- Family H — Fleet & Escalation (5) ---------- */
+    'M-DEVMAP':(m,ctx)=>{
+      return panel('Device map','<div style="position:relative;background:#0c1422;border:1px solid var(--line);border-radius:8px;height:110px">'+
+        ['18%,28%,#34d399','42%,55%,#34d399','70%,32%,#f6b73c','85%,72%,#34d399'].map(p=>{const[a,b,c]=p.split(',');return '<div style="position:absolute;left:'+a+';top:'+b+';width:11px;height:11px;border-radius:50%;background:'+c+';box-shadow:0 0 0 3px '+c+'33"></div>';}).join('')+
+        '</div><div style="font-size:10px;color:var(--dim);margin-top:6px">4 devices online &middot; 1 warning</div>','M-DEVMAP');
+    },
+    'M-HEALTH':(m,ctx)=>{
+      return panel('Device health','<div class="vitals"><div class="vit"><div class="vn">Online</div><div class="vv">12<small>/13</small></div></div><div class="vit"><div class="vn">Battery</div><div class="vv">3<small> low</small></div></div><div class="vit"><div class="vn">Signal</div><div class="vv" style="font-size:13px;color:#7eecc4">Strong</div></div></div>','M-HEALTH');
+    },
+    'M-SOS':(m,ctx)=>{
+      return '<div class="sos"><div class="sb">SOS</div><div><b>Escalation ready</b><span>Primary &middot; secondary &middot; emergency &mdash; auto-calls on '+escHtml(ctx.condition||'critical event')+'</span></div></div>';
+    },
+    'M-TICKET':(m,ctx)=>{
+      return '<div class="sos" style="background:#f6b73c12;border-color:#f6b73c44"><div class="sb" style="background:#f6b73c;color:#3a2a05">#1</div><div><b>Open ticket</b><span>review the latest event &middot; assigned to you</span></div></div>';
+    },
+    'M-JOURNAL':(m,ctx)=>{
+      return panel('Activity journal','<div class="recap">23 of 31 expected observations recorded &middot; newest entry: '+escHtml(cap1(ctx.subject))+'. 2 entries seen only once &mdash; tap to review.</div>','M-JOURNAL');
+    },
+
+  /* ---------- Family I — Readings & Records (8) ---------- */
+    'M-READOUT':(m,ctx)=>{
+      return '<div class="hero">'+videobox(ctx.subject+' cam','reading','<div class="annbox" style="left:15%;top:42%;width:70%;height:22%;border-color:'+ctx.color+'"></div><div class="annbadge" style="left:15%;top:42%;background:'+ctx.color+';color:#04222a">OCR region</div><div class="fusedval"><div class="fv" style="color:'+ctx.color+'">04857.2</div><div class="fl">'+escHtml(ctx.subject)+' &middot; read from snapshot &middot; conf. 0.97</div></div>','snap')+'</div>';
+    },
+    'M-GAUGE':(m,ctx)=>{
+      const pct=0.68, angle=-90+pct*180;
+      return panel('Live reading','<div style="display:flex;align-items:center;gap:14px"><svg width="120" height="74" viewBox="0 0 120 74"><path d="M10 65 A 50 50 0 0 1 110 65" stroke="#23314a" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M10 65 A 50 50 0 0 1 110 65" stroke="'+ctx.color+'" stroke-width="9" fill="none" stroke-linecap="round" stroke-dasharray="157" stroke-dashoffset="'+(157*(1-pct))+'"/><line x1="60" y1="65" x2="'+(60+44*Math.cos(angle*Math.PI/180))+'" y2="'+(65+44*Math.sin(angle*Math.PI/180))+'" stroke="#fff" stroke-width="2"/></svg><div><div style="font-size:22px;font-weight:800">68<small style="font-size:11px;font-weight:600">%</small></div><div style="font-size:11px;color:var(--mut)">'+escHtml(ctx.condition||'reading')+'</div></div></div>','M-GAUGE');
+    },
+    'M-LOG':(m,ctx)=>{
+      const rows=[['Just now','OK','+1.4'],['10 min ago','OK','+1.1'],['20 min ago','OK','+0.9'],['30 min ago','OK','+1.3']];
+      return panel('Log','<div>'+rows.map(r=>'<div class="logrow"><span class="lt">'+escHtml(r[0])+'</span><span class="lv">'+escHtml(r[1])+'</span><span class="ld">'+escHtml(r[2])+'</span></div>').join('')+'</div>','M-LOG');
+    },
+    'M-INVENTORY':(m,ctx)=>{
+      const items=[['Item A','9 left','#7eecc4'],['Item B','2 left','#f3cd86'],['Item C','—','#ff9a9a']];
+      return panel('Inventory',items.map(it=>'<div class="logrow"><span class="lt">'+escHtml(it[0])+'</span><span class="lv">'+escHtml(it[1])+'</span><span class="ld" style="color:'+it[2]+'">'+(it[2]==='#ff9a9a'?'restock':'OK')+'</span></div>').join(''),'M-INVENTORY');
+    },
+    'M-CAPTURE':(m,ctx)=>{
+      return '<div class="capbtn">'+aIcon('<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>')+'<div class="ct">Scan</div><div class="cs">tap to capture '+escHtml((ctx.subject||'item').toLowerCase())+'</div></div>'+
+        panel('Recent captures','<div class="gallery">'+[0,1,2].map(i=>'<div class="gcell" style="background:linear-gradient(150deg,'+ctx.color+'88,#1a1a1a)"><span>'+(i+1)+'h ago</span></div>').join('')+'</div>','M-CAPTURE');
+    },
+    'M-TIMESHEET':(m,ctx)=>{
+      const rows=[['Today','9:12 → 10:05 AM','53m','VERIFIED','#34d399'],['Last week','9:05 → 9:34 AM','29m','SHORT','#f6b73c'],['2 weeks ago','9:20 → 10:18 AM','58m','VERIFIED','#34d399']];
+      return '<div class="hero"><div class="panel" style="border:0;border-radius:15px"><div class="ph"><b>Visit verification</b></div>'+
+        rows.map(r=>'<div class="tsrow"><div class="cliptip" style="background:linear-gradient(150deg,'+r[4]+'66,#13261a)"><span class="ctg" style="background:'+r[4]+';color:#04231a">ARRIVE</span></div><div><div class="tn">'+escHtml(r[0])+'</div><div class="tm">'+escHtml(r[1])+'</div></div><div class="tsdur"><div class="dd" style="color:'+r[4]+'">'+escHtml(r[2])+'</div><div class="ds" style="color:'+r[4]+'">'+escHtml(r[3])+'</div></div></div>').join('')+
+        '</div></div>';
+    },
+    'M-REMINDER':(m,ctx)=>{
+      return panel(escHtml(cap1(ctx.subject))+' last seen','<div class="duration"><div class="clock" style="color:'+ctx.color+'">12d</div><div class="barwrap"><div class="dthresh" style="margin-top:0">Remind me at 14 days</div></div></div>','M-REMINDER');
+    },
+    'M-CALENDAR':(m,ctx)=>{
+      let cells='';
+      for(let i=0;i<28;i++){
+        const hot=[3,10,17,24].includes(i);
+        const op=hot?1:(0.16+((i*37)%83)/100);
+        cells+='<i style="background:'+ctx.color+';opacity:'+op.toFixed(2)+'"></i>';
+      }
+      return panel('Calendar','<div class="cal">'+cells+'</div>','M-CALENDAR');
+    }
+  };
+
+  function genericModule(m,ctx){
+    return panel(m.module||'module','<div style="font-size:11px;color:var(--dim);padding:6px 0">Generic stub for '+escHtml(m.module||'?')+'.</div>',m.module);
+  }
+
+  /* ---------- helpers ---------- */
+  function escHtml(s){
+    if(s==null) return '';
+    return String(s).replace(/[&<>"']/g,c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+  }
+
+  /* ---------- init ---------- */
+  function init(){
+    renderPipe();
+    $('playSettingsBtn').addEventListener('click',openSettings);
+    $('playSheetClose').addEventListener('click',closeSettings);
+    sheet.addEventListener('click',(e)=>{ if(e.target===sheet) closeSettings(); });
+    $('playKeySave').addEventListener('click',saveKey);
+    $('playKeyClear').addEventListener('click',clearKey);
+    $('playKeyShow').addEventListener('click',toggleKeyVisibility);
+    genBtn.addEventListener('click',generate);
+    goalEl.addEventListener('keydown',(e)=>{
+      if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){ e.preventDefault(); generate(); }
+    });
+    document.querySelectorAll('.exchip').forEach(c=>c.addEventListener('click',()=>{
+      goalEl.value=c.dataset.ex; goalEl.focus();
+    }));
+    setupVoice();
+    /* preload spec in background, no error if it fails */
+    loadSpec();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
+  else init();
 })();
 </script>
 </body>
