@@ -642,6 +642,9 @@
   .psshow{background:var(--card);border:1px solid var(--line);color:var(--mut);
     padding:0 12px;border-radius:9px;font-size:12px;cursor:pointer;font-family:var(--sans)}
   .psshow:hover{color:var(--ink);border-color:var(--blue)}
+  .pshint{font-size:11.5px;color:var(--dim);line-height:1.5;margin:6px 0 0}
+  .pshint a{color:var(--blue);text-decoration:none}
+  .pshint a:hover{text-decoration:underline}
   #playModelSelect{width:100%;background:var(--card);border:1px solid var(--line);
     color:var(--ink);border-radius:9px;padding:10px 12px;font-size:13px;
     font-family:var(--sans);outline:0;cursor:pointer}
@@ -1661,23 +1664,32 @@ EMIT  -&gt; see §13
     <div class="playsheet" id="playSheet" hidden>
       <div class="playsheet-card">
         <div class="psh">
-          <b>Anthropic API key &amp; model</b>
+          <b>API provider, key &amp; model</b>
           <button class="psclose" id="playSheetClose" aria-label="Close">&times;</button>
         </div>
-        <p class="psp">Your key is stored in this browser's <code>localStorage</code> and sent directly to <code>api.anthropic.com</code> &mdash; never to any server I control. Get a key at <a href="https://console.anthropic.com/" target="_blank" rel="noopener">console.anthropic.com</a>.</p>
-        <label class="pslabel">API key</label>
+        <p class="psp">Pick a provider, paste your API key, choose a model. Your key is stored in this browser's <code>localStorage</code> and sent <b>directly</b> to the chosen provider &mdash; never to any server I control. Keys are remembered per provider so you can switch back and forth.</p>
+
+        <label class="pslabel">Provider</label>
+        <select id="playProviderSelect">
+          <option value="anthropic">Anthropic &mdash; Claude</option>
+          <option value="openai">OpenAI &mdash; GPT</option>
+          <option value="google">Google &mdash; Gemini</option>
+          <option value="xai">xAI &mdash; Grok</option>
+        </select>
+
+        <label class="pslabel" id="playKeyLabel">API key</label>
         <div class="psrow">
           <input id="playKeyInput" type="password" placeholder="sk-ant-..." autocomplete="off" spellcheck="false" />
           <button class="psshow" id="playKeyShow" type="button">Show</button>
         </div>
+        <p class="pshint" id="playKeyHint">Get a key at <a href="https://console.anthropic.com/" target="_blank" rel="noopener">console.anthropic.com</a>.</p>
+
         <label class="pslabel">Model</label>
-        <select id="playModelSelect">
-          <option value="claude-sonnet-4-5">Sonnet 4.5 &mdash; recommended</option>
-          <option value="claude-haiku-4-5">Haiku 4.5 &mdash; cheaper, faster</option>
-        </select>
+        <select id="playModelSelect"></select>
+
         <p class="pswarn">Anyone with access to this browser profile can read this key. Use a key with a strict spend limit; revoke it any time.</p>
         <div class="psactions">
-          <button class="psclear" id="playKeyClear">Clear key</button>
+          <button class="psclear" id="playKeyClear">Clear this key</button>
           <button class="pssave" id="playKeySave">Save</button>
         </div>
       </div>
@@ -2947,9 +2959,86 @@ function xScrollDocForFilter(key,val){
    Self-contained; touches only #pane-play elements.
    ============================================================ */
 (function(){
-  const LS_KEY='wyzemockup_anthropic_key';
-  const LS_MODEL='wyzemockup_anthropic_model';
-  const ENDPOINT='https://api.anthropic.com/v1/messages';
+  /* ---------- provider catalog ---------- */
+  const PROVIDERS = {
+    anthropic: {
+      label:'Anthropic Claude',
+      keyHint:'sk-ant-...',
+      getKeyHelp:()=>'Get a key at <a href="https://console.anthropic.com/" target="_blank" rel="noopener">console.anthropic.com</a>.',
+      models:[
+        {id:'claude-sonnet-4-5',name:'Sonnet 4.5 — recommended'},
+        {id:'claude-opus-4-1',name:'Opus 4.1 — most capable'},
+        {id:'claude-haiku-4-5',name:'Haiku 4.5 — fast & cheap'}
+      ],
+      defaultModel:'claude-sonnet-4-5',
+      call: callAnthropic
+    },
+    openai: {
+      label:'OpenAI GPT',
+      keyHint:'sk-...',
+      getKeyHelp:()=>'Get a key at <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">platform.openai.com/api-keys</a>.',
+      models:[
+        {id:'gpt-5',name:'GPT-5 — recommended'},
+        {id:'gpt-5-mini',name:'GPT-5 mini — fast & cheap'},
+        {id:'gpt-4.1',name:'GPT-4.1'},
+        {id:'gpt-4o',name:'GPT-4o (legacy)'}
+      ],
+      defaultModel:'gpt-5',
+      call: callOpenAI
+    },
+    google: {
+      label:'Google Gemini',
+      keyHint:'AIza...',
+      getKeyHelp:()=>'Get a key at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>.',
+      models:[
+        {id:'gemini-2.5-pro',name:'Gemini 2.5 Pro — recommended'},
+        {id:'gemini-2.5-flash',name:'Gemini 2.5 Flash — fast & cheap'},
+        {id:'gemini-2.0-flash',name:'Gemini 2.0 Flash (legacy)'}
+      ],
+      defaultModel:'gemini-2.5-pro',
+      call: callGemini
+    },
+    xai: {
+      label:'xAI Grok',
+      keyHint:'xai-...',
+      getKeyHelp:()=>'Get a key at <a href="https://console.x.ai/" target="_blank" rel="noopener">console.x.ai</a>.',
+      models:[
+        {id:'grok-4',name:'Grok 4 — recommended'},
+        {id:'grok-3',name:'Grok 3'},
+        {id:'grok-3-mini',name:'Grok 3 mini — fast & cheap'}
+      ],
+      defaultModel:'grok-4',
+      call: callOpenAICompat.bind(null,'https://api.x.ai/v1/chat/completions')
+    }
+  };
+
+  const LS_PROVIDER='wyzemockup_provider';
+  const LS_KEY_PREFIX='wyzemockup_key_';     /* + provider id */
+  const LS_MODEL_PREFIX='wyzemockup_model_'; /* + provider id */
+  /* backward compat: migrate the old single-key storage to anthropic */
+  (function migrate(){
+    const old=localStorage.getItem('wyzemockup_anthropic_key');
+    if(old && !localStorage.getItem(LS_KEY_PREFIX+'anthropic')){
+      localStorage.setItem(LS_KEY_PREFIX+'anthropic',old);
+      localStorage.removeItem('wyzemockup_anthropic_key');
+    }
+    const oldM=localStorage.getItem('wyzemockup_anthropic_model');
+    if(oldM && !localStorage.getItem(LS_MODEL_PREFIX+'anthropic')){
+      localStorage.setItem(LS_MODEL_PREFIX+'anthropic',oldM);
+      localStorage.removeItem('wyzemockup_anthropic_model');
+    }
+  })();
+
+  function getProvider(){
+    const p=localStorage.getItem(LS_PROVIDER)||'anthropic';
+    return PROVIDERS[p]?p:'anthropic';
+  }
+  function getKey(p){ return localStorage.getItem(LS_KEY_PREFIX+(p||getProvider()))||''; }
+  function getModel(p){
+    p=p||getProvider();
+    return localStorage.getItem(LS_MODEL_PREFIX+p)||PROVIDERS[p].defaultModel;
+  }
+
   const PIPE_STAGES=['Capture','Decompose','Archetype','Select','Layout','Bind'];
   const ARCH={
     STATE_MONITOR:{name:'State Monitor',color:'#4f8ff0',q:'What state is it in, and for how long?'},
@@ -3012,39 +3101,57 @@ function xScrollDocForFilter(key,val){
   }
 
   /* ---------- settings sheet ---------- */
-  function openSettings(){
-    $('playKeyInput').value=localStorage.getItem(LS_KEY)||'';
+  function fillModelOptions(providerId){
+    const p=PROVIDERS[providerId];
+    const sel=$('playModelSelect');
+    sel.innerHTML=p.models.map(m=>'<option value="'+m.id+'">'+escHtml(m.name)+'</option>').join('');
+    sel.value=getModel(providerId);
+  }
+  function syncSettingsForProvider(providerId){
+    const p=PROVIDERS[providerId];
+    $('playKeyInput').value=getKey(providerId);
+    $('playKeyInput').placeholder=p.keyHint;
     $('playKeyInput').type='password';
     $('playKeyShow').textContent='Show';
-    $('playModelSelect').value=localStorage.getItem(LS_MODEL)||'claude-sonnet-4-5';
+    $('playKeyLabel').textContent=p.label+' API key';
+    $('playKeyHint').innerHTML=p.getKeyHelp();
+    fillModelOptions(providerId);
+  }
+  function openSettings(){
+    const prov=getProvider();
+    $('playProviderSelect').value=prov;
+    syncSettingsForProvider(prov);
     sheet.hidden=false;
     setTimeout(()=>$('playKeyInput').focus(),50);
   }
   function closeSettings(){ sheet.hidden=true; }
   function saveKey(){
+    const prov=$('playProviderSelect').value;
     const v=$('playKeyInput').value.trim();
     if(v){
-      localStorage.setItem(LS_KEY,v);
-      localStorage.setItem(LS_MODEL,$('playModelSelect').value);
-      clearStatus();
-      showStatus('info','Key saved. Try a goal above.');
+      localStorage.setItem(LS_KEY_PREFIX+prov,v);
     }else{
-      localStorage.removeItem(LS_KEY);
+      localStorage.removeItem(LS_KEY_PREFIX+prov);
+    }
+    localStorage.setItem(LS_MODEL_PREFIX+prov,$('playModelSelect').value);
+    localStorage.setItem(LS_PROVIDER,prov);
+    clearStatus();
+    if(v){
+      showStatus('info','Saved. Active provider: <b>'+PROVIDERS[prov].label+'</b> · '+escHtml($('playModelSelect').value)+'.');
     }
     closeSettings();
   }
   function clearKey(){
-    localStorage.removeItem(LS_KEY);
+    const prov=$('playProviderSelect').value;
+    localStorage.removeItem(LS_KEY_PREFIX+prov);
     $('playKeyInput').value='';
-    showStatus('info','Key cleared.');
+    showStatus('info','Cleared '+PROVIDERS[prov].label+' key.');
   }
   function toggleKeyVisibility(){
     const inp=$('playKeyInput');
     if(inp.type==='password'){ inp.type='text'; $('playKeyShow').textContent='Hide'; }
     else{ inp.type='password'; $('playKeyShow').textContent='Show'; }
   }
-  function getKey(){ return localStorage.getItem(LS_KEY)||''; }
-  function getModel(){ return localStorage.getItem(LS_MODEL)||'claude-sonnet-4-5'; }
 
   /* ---------- status ---------- */
   function showStatus(level,html,actionLabel,actionFn){
@@ -3077,32 +3184,10 @@ function xScrollDocForFilter(key,val){
     if(acc.includes('"bindings"')) markStage(6);
   }
 
-  /* ---------- LLM call (streaming SSE) ---------- */
-  async function callClaude(goal,key,retryStricter){
-    await loadSpec();
-    const sys=buildSystemPrompt() +
-      (retryStricter?'\n\nIMPORTANT: previous response was not valid JSON. Reply with a SINGLE JSON object only. No prose. No code fences.':'');
-    const body={
-      model:getModel(),
-      max_tokens:2048,
-      system:[{type:'text',text:sys,cache_control:{type:'ephemeral'}}],
-      messages:[{role:'user',content:`Goal: ${goal}\n\nEmit the §13 output JSON only.`}],
-      stream:true,
-      temperature: retryStricter?0:0.3
-    };
-    const res=await fetch(ENDPOINT,{
-      method:'POST',
-      headers:{
-        'content-type':'application/json',
-        'x-api-key':key,
-        'anthropic-version':'2023-06-01',
-        'anthropic-dangerous-direct-browser-access':'true'
-      },
-      body:JSON.stringify(body)
-    });
+  /* ---------- LLM call layer (provider-dispatched) ---------- */
+  async function streamSSE(res, extract){
     if(!res.ok){
-      let txt='';
-      try{ txt=await res.text(); }catch{}
+      let txt=''; try{ txt=await res.text(); }catch{}
       const err=new Error('api '+res.status);
       err.status=res.status; err.body=txt;
       throw err;
@@ -3113,21 +3198,105 @@ function xScrollDocForFilter(key,val){
       const {done,value}=await reader.read();
       if(done) break;
       buf+=dec.decode(value,{stream:true});
-      let lines=buf.split('\n'); buf=lines.pop();
-      for(const line of lines){
-        if(!line.startsWith('data: ')) continue;
-        const d=line.slice(6);
-        if(d==='[DONE]') continue;
-        try{
-          const evt=JSON.parse(d);
-          if(evt.type==='content_block_delta' && evt.delta && evt.delta.text){
-            acc+=evt.delta.text;
-            peekStages(acc);
-          }
-        }catch{}
+      /* SSE events are separated by double-newlines; each event has lines starting with "data: " */
+      let parts=buf.split('\n\n'); buf=parts.pop();
+      for(const part of parts){
+        for(const line of part.split('\n')){
+          if(!line.startsWith('data:')) continue;
+          const d=line.slice(line[5]===' '?6:5);
+          if(d==='[DONE]') continue;
+          try{
+            const evt=JSON.parse(d);
+            const txt=extract(evt);
+            if(txt){ acc+=txt; peekStages(acc); }
+          }catch{}
+        }
       }
     }
     return acc;
+  }
+  function userPrompt(goal){
+    return 'Goal: '+goal+'\n\nEmit the §13 output JSON only.';
+  }
+  function strictReminder(){
+    return '\n\nIMPORTANT: previous response was not valid JSON. Reply with a SINGLE JSON object only. No prose. No code fences.';
+  }
+
+  async function callAnthropic(goal,key,model,retryStricter){
+    await loadSpec();
+    const sys=buildSystemPrompt()+(retryStricter?strictReminder():'');
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{
+        'content-type':'application/json',
+        'x-api-key':key,
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-direct-browser-access':'true'
+      },
+      body:JSON.stringify({
+        model, max_tokens:2048,
+        system:[{type:'text',text:sys,cache_control:{type:'ephemeral'}}],
+        messages:[{role:'user',content:userPrompt(goal)}],
+        stream:true, temperature: retryStricter?0:0.3
+      })
+    });
+    return streamSSE(res, evt =>
+      (evt.type==='content_block_delta' && evt.delta && evt.delta.text) ? evt.delta.text : ''
+    );
+  }
+
+  async function callOpenAI(goal,key,model,retryStricter){
+    return callOpenAICompat('https://api.openai.com/v1/chat/completions',goal,key,model,retryStricter,true);
+  }
+  async function callOpenAICompat(endpoint,goal,key,model,retryStricter,jsonMode){
+    await loadSpec();
+    const sys=buildSystemPrompt()+(retryStricter?strictReminder():'');
+    const body={
+      model,
+      messages:[
+        {role:'system',content:sys},
+        {role:'user',content:userPrompt(goal)}
+      ],
+      stream:true,
+      temperature: retryStricter?0:0.3
+    };
+    if(jsonMode) body.response_format={type:'json_object'};
+    const res=await fetch(endpoint,{
+      method:'POST',
+      headers:{
+        'content-type':'application/json',
+        'authorization':'Bearer '+key
+      },
+      body:JSON.stringify(body)
+    });
+    return streamSSE(res, evt => {
+      const c=evt.choices && evt.choices[0];
+      return (c && c.delta && c.delta.content) ? c.delta.content : '';
+    });
+  }
+
+  async function callGemini(goal,key,model,retryStricter){
+    await loadSpec();
+    const sys=buildSystemPrompt()+(retryStricter?strictReminder():'');
+    const url='https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(model)+':streamGenerateContent?alt=sse&key='+encodeURIComponent(key);
+    const res=await fetch(url,{
+      method:'POST',
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify({
+        systemInstruction:{parts:[{text:sys}]},
+        contents:[{role:'user',parts:[{text:userPrompt(goal)}]}],
+        generationConfig:{
+          temperature: retryStricter?0:0.3,
+          maxOutputTokens:2048,
+          responseMimeType:'application/json'
+        }
+      })
+    });
+    return streamSSE(res, evt => {
+      const c=evt.candidates && evt.candidates[0];
+      if(!c || !c.content || !c.content.parts) return '';
+      return c.content.parts.map(p=>p.text||'').join('');
+    });
   }
 
   function parseSpec(text){
@@ -3151,25 +3320,27 @@ function xScrollDocForFilter(key,val){
     clearStatus();
     const goal=goalEl.value.trim();
     if(!goal){ showStatus('warn','Type or speak a goal first.'); goalEl.focus(); return; }
-    const key=getKey();
+    const provId=getProvider();
+    const prov=PROVIDERS[provId];
+    const key=getKey(provId);
+    const model=getModel(provId);
     if(!key){
-      showStatus('warn','Add an Anthropic API key to generate.','Open settings',openSettings);
+      showStatus('warn','Add a <b>'+prov.label+'</b> API key (or switch provider) to generate.','Open settings',openSettings);
       openSettings();
       return;
     }
     inFlight=true; genBtn.disabled=true; genBtn.querySelector('span').textContent='Generating…';
     resetPipe(); markStage(1);
-    renderTraceEmpty('Streaming from '+getModel()+'…');
-    renderScreenLoading();
+    renderTraceEmpty('Streaming from '+prov.label+' · '+model+'…');
+    renderScreenLoading(prov.label,model);
     let raw='';
     try{
-      raw=await callClaude(goal,key,false);
+      raw=await prov.call(goal,key,model,false);
       let spec;
       try{ spec=parseSpec(raw); validateSpec(spec); }
       catch(e1){
-        // one retry with stricter prompt + temp 0
-        showStatus('info','Model returned unparseable JSON. Retrying…');
-        raw=await callClaude(goal,key,true);
+        showStatus('info','Model returned unparseable JSON. Retrying with stricter prompt…');
+        raw=await prov.call(goal,key,model,true);
         spec=parseSpec(raw); validateSpec(spec);
         clearStatus();
       }
@@ -3178,24 +3349,29 @@ function xScrollDocForFilter(key,val){
       renderTrace(spec);
       screenEl.innerHTML=renderGeneratedScene(spec);
     }catch(e){
-      handleError(e,raw);
+      handleError(e,raw,prov);
     }finally{
       inFlight=false; genBtn.disabled=false; genBtn.querySelector('span').textContent='Generate';
     }
   }
 
-  function handleError(e,raw){
+  function handleError(e,raw,prov){
     console.error('Playground error',e,raw);
+    const provName=(prov&&prov.label)||'the provider';
     if(e.status===401||e.status===403){
-      showStatus('err','Anthropic rejected the API key. Check it at console.anthropic.com.','Open settings',openSettings);
+      showStatus('err',provName+' rejected the API key.','Open settings',openSettings);
     }else if(e.status===429){
-      showStatus('err','Rate-limited by Anthropic. Wait a few seconds and try again.','Retry',generate);
+      showStatus('err','Rate-limited by '+provName+'. Wait a few seconds and try again.','Retry',generate);
     }else if(e.status===529){
-      showStatus('err','Anthropic API is temporarily overloaded.','Retry',generate);
+      showStatus('err',provName+' API is temporarily overloaded.','Retry',generate);
     }else if(e.status>=500){
-      showStatus('err','Anthropic API returned '+e.status+'. Try again.','Retry',generate);
+      showStatus('err',provName+' returned HTTP '+e.status+'.','Retry',generate);
+    }else if(e.status===400){
+      let body='';
+      if(e.body) body='<details style="margin-top:8px"><summary style="cursor:pointer">Provider response</summary><pre style="white-space:pre-wrap;font-size:11px;margin-top:6px;max-height:200px;overflow:auto;background:#0c1422;padding:8px;border-radius:6px">'+escHtml(e.body.slice(0,1200))+'</pre></details>';
+      showStatus('err',provName+' rejected the request (400) — likely an invalid model ID or unsupported parameter.'+body,'Open settings',openSettings);
     }else if(e.name==='TypeError'){
-      showStatus('err','Could not reach api.anthropic.com. Check your network.','Retry',generate);
+      showStatus('err','Could not reach '+provName+'. Check your network.','Retry',generate);
     }else{
       let body='';
       if(raw) body='<details style="margin-top:8px"><summary style="cursor:pointer">Raw response</summary><pre style="white-space:pre-wrap;font-size:11px;margin-top:6px;max-height:200px;overflow:auto;background:#0c1422;padding:8px;border-radius:6px">'+escHtml(raw.slice(0,1200))+'</pre></details>';
@@ -3264,10 +3440,11 @@ function xScrollDocForFilter(key,val){
   }
 
   /* ---------- screen state ---------- */
-  function renderScreenLoading(){
+  function renderScreenLoading(providerLabel,model){
+    const lbl=(providerLabel||'')+(model?(' &middot; '+model):'');
     screenEl.innerHTML=
-      '<div class="statusbar"><span>9:41</span><span>Generating &middot; '+getModel()+'</span><span>5G &#9646;&#9646;&#9646;</span></div>'+
-      '<div class="playempty"><div class="loader"></div><div class="pet">Generating UI&hellip;</div><div class="pes">Claude is decomposing the goal and composing modules. Watch the trace on the right.</div></div>';
+      '<div class="statusbar"><span>9:41</span><span>Generating &middot; '+escHtml(model||'')+'</span><span>5G &#9646;&#9646;&#9646;</span></div>'+
+      '<div class="playempty"><div class="loader"></div><div class="pet">Generating UI&hellip;</div><div class="pes">'+escHtml(providerLabel||'')+' is decomposing the goal and composing modules. Watch the trace on the right.</div></div>';
   }
   function renderScreenIdle(){
     screenEl.innerHTML=
@@ -3597,6 +3774,7 @@ function xScrollDocForFilter(key,val){
     $('playKeySave').addEventListener('click',saveKey);
     $('playKeyClear').addEventListener('click',clearKey);
     $('playKeyShow').addEventListener('click',toggleKeyVisibility);
+    $('playProviderSelect').addEventListener('change',(e)=>syncSettingsForProvider(e.target.value));
     genBtn.addEventListener('click',generate);
     goalEl.addEventListener('keydown',(e)=>{
       if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){ e.preventDefault(); generate(); }
