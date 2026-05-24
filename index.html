@@ -546,6 +546,78 @@
   .modpop .mpv{border-radius:7px;overflow:hidden;background:#0a1019;border:1px solid #1c2940}
   .modpop .mpl{font-family:var(--mono);font-size:11px;color:#9cc3f5;font-weight:700;margin-top:8px}
   .modpop .mpf{font-size:10.5px;color:var(--mut);margin-top:2px;line-height:1.42}
+
+  /* ============================================================
+     MOBILE (≤640px) — desktop layout untouched above this block
+     ============================================================ */
+  @media (max-width:640px){
+    /* page chrome */
+    .wrap{padding:18px 12px 48px}
+    header h1{font-size:21px;letter-spacing:-.2px}
+    header p{font-size:13px;line-height:1.55;margin-top:6px}
+    header .tag{font-size:10px;padding:3px 8px;margin-bottom:10px;letter-spacing:1px}
+
+    /* tabs — horizontal scroll, hide subtitle, tighter */
+    .tabs{margin-top:18px;overflow-x:auto;flex-wrap:nowrap;
+      -webkit-overflow-scrolling:touch;scrollbar-width:none}
+    .tabs::-webkit-scrollbar{display:none}
+    .tab{padding:11px 13px;font-size:14px;flex:none;white-space:nowrap}
+    .tab .tn{display:none}
+
+    /* 3-column layout collapses (already at 1080px) — tighten the stack */
+    .toprow{margin-top:14px;gap:14px;min-height:0}
+
+    /* intent picker — single column at narrow widths, denser */
+    .console{padding:14px 14px 16px}
+    .console h2{font-size:11px;margin-bottom:4px}
+    .promptline{font-size:12px;margin-bottom:10px}
+    .intents{grid-template-columns:1fr 1fr;gap:7px;padding-right:0}
+    .chip{padding:9px 10px 9px;font-size:12px;gap:5px}
+    .chip .ic{width:20px;height:20px}
+    .chip small{font-size:10px}
+    .chiparch{font-size:8px}
+
+    /* PHONE FRAME — dissolve the bezel on real phones.
+       The phone-in-a-phone simulator is in the way; render the prototype
+       edge-to-edge at the device's native size so users can actually use it. */
+    .phonewrap{align-items:stretch;gap:10px}
+    .phone{width:100%;border:0;border-radius:14px;box-shadow:0 8px 24px -10px #000,0 0 0 1px #1c283e}
+    .notch{display:none}
+    .statusbar{display:none}
+    .screen{height:auto;max-height:none;overflow-y:visible}
+    .appbar{padding:14px 14px 10px}
+    .ui{padding:0 12px 18px}
+    .hint{font-size:11px;padding:8px 10px}
+
+    /* trace panel — keep visible but compact */
+    .trace{padding:13px 13px 14px}
+    .trace .htitle{font-size:11px;margin-bottom:8px}
+    .pipe{gap:4px;margin-bottom:10px}
+    .pstep{min-width:48px;padding:5px 4px 6px}
+    .pstep .n{font-size:8px}
+    .pstep .l{font-size:9.5px}
+
+    /* doc viewer (Library/Builder tabs) */
+    .docview{font-size:14px;line-height:1.6;padding:0 2px}
+    .splitview{gap:14px}
+    #docNav{gap:4px}
+    .docbtn{font-size:11px;padding:5px 8px}
+    .docpane .docview{padding:8px 6px 20px}
+    .docbar{flex-wrap:wrap;gap:6px}
+    table{font-size:12px}
+    pre,code{font-size:11.5px}
+    /* prevent any wide table from blowing out the viewport */
+    .docview table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+    /* action strip — bigger tap targets on touch */
+    .act{padding:13px 6px;font-size:11.5px;min-height:56px}
+  }
+
+  /* very narrow phones — single column chip grid */
+  @media (max-width:380px){
+    .intents{grid-template-columns:1fr}
+    .tab{padding:10px 11px;font-size:13.5px}
+  }
 </style>
 </head>
 <body>
