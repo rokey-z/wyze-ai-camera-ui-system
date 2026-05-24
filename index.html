@@ -30,6 +30,8 @@
     display:flex;flex-direction:column;height:calc(100vh - 86px);overflow:hidden}
   .console h2{font-size:12px;letter-spacing:1.3px;text-transform:uppercase;color:var(--mut);
     font-weight:700;margin-bottom:6px}
+  /* selected-intent label inside h2 — hidden on desktop, shown on mobile trigger */
+  .console h2 .cur{display:none}
   .promptline{color:var(--dim);font-size:13px;margin-bottom:14px}
   .intents{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start;
     flex:1;min-height:0;overflow-y:auto;padding-right:4px;margin-top:4px}
@@ -581,11 +583,31 @@
       position:static !important;height:auto !important;overflow:visible !important;
       top:auto !important}
 
-    /* intent picker — single column at narrow widths, denser */
-    .console{padding:14px 14px 16px}
-    .console h2{font-size:11px;margin-bottom:4px}
-    .promptline{font-size:12px;margin-bottom:10px}
-    .intents{grid-template-columns:1fr 1fr;gap:7px;padding-right:0}
+    /* intent picker — collapsible MENU on mobile.
+       Default: only the h2 trigger is visible; the chip grid is hidden.
+       Tap the trigger to expand. Picking a chip auto-closes. */
+    .console{padding:0;background:var(--card);border-radius:13px;overflow:hidden}
+    .console h2{
+      cursor:pointer;display:flex;align-items:center;gap:10px;
+      font-size:13px;text-transform:none;letter-spacing:0;color:var(--ink);
+      font-weight:600;margin:0;padding:14px 16px;
+      -webkit-tap-highlight-color:transparent;user-select:none}
+    .console h2 .lbl{flex:none}
+    .console h2 .cur{display:block;flex:1;min-width:0;
+      color:var(--mut);font-weight:500;font-size:13px;text-align:right;
+      overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+      letter-spacing:0;text-transform:none}
+    .console h2::after{content:'';flex:none;width:8px;height:8px;
+      border-right:2px solid var(--mut);border-bottom:2px solid var(--mut);
+      transform:rotate(45deg) translate(-2px,-2px);
+      transition:transform .18s ease}
+    .console.open h2::after{transform:rotate(-135deg) translate(-1px,-1px)}
+    .console h2:active{background:#22324d}
+    .console .promptline{display:none;padding:0 16px 4px;font-size:12px;margin:0}
+    .console .intents{display:none;padding:8px 14px 16px;
+      grid-template-columns:1fr 1fr;gap:7px}
+    .console.open .promptline{display:block}
+    .console.open .intents{display:grid}
     .chip{padding:9px 10px 9px;font-size:12px;gap:5px}
     .chip .ic{width:20px;height:20px}
     .chip small{font-size:10px}
@@ -633,7 +655,7 @@
 
   /* very narrow phones — single column chip grid */
   @media (max-width:380px){
-    .intents{grid-template-columns:1fr}
+    .console.open .intents{grid-template-columns:1fr}
     .tab{padding:10px 11px;font-size:13.5px}
   }
 </style>
@@ -662,7 +684,7 @@
   <div class="tabpane on" id="pane-gen">
     <div class="toprow">
       <div class="console">
-        <h2>Monitoring intent</h2>
+        <h2 id="intentTrigger"><span class="lbl">Monitoring intent</span><span class="cur" id="curIntent"></span></h2>
         <div class="promptline">&ldquo;I want a camera that&hellip;&rdquo; — pick a goal:</div>
         <div class="intents" id="intents"></div>
       </div>
@@ -2303,8 +2325,25 @@ document.getElementById('intents').innerHTML=Object.entries(CASES).map(([k,c])=>
   +`<div class="txt">${c.label}<small>${c.sub}</small></div>`
   +`<span class="chiparch">${c.arche.name}</span>`
   +`${c.v2?'<span class="v2b">v2</span>':''}</div>`).join('');
+
+/* mobile collapsible menu: tap the trigger to open/close the chip grid.
+   No effect on desktop — the CSS keeps the grid visible regardless of .open. */
+const consoleEl=document.querySelector('.console');
+const curEl=document.getElementById('curIntent');
+function updateCurLabel(){curEl.textContent=CASES[current]?.label||'';}
+document.getElementById('intentTrigger').addEventListener('click',()=>{
+  consoleEl.classList.toggle('open');});
+
 document.querySelectorAll('.chip').forEach(ch=>
-  ch.addEventListener('click',()=>{current=ch.dataset.k;build();}));
+  ch.addEventListener('click',()=>{
+    current=ch.dataset.k;build();updateCurLabel();
+    consoleEl.classList.remove('open');
+    /* on mobile, jump to the preview so the user sees the result */
+    if(window.matchMedia('(max-width:640px)').matches){
+      document.querySelector('.phonewrap')?.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+  }));
+updateCurLabel();
 
 /* overlay toggle */
 let overlay=false;
