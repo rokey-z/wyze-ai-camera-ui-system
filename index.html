@@ -73,13 +73,23 @@
 
   /* ===== Data check tab ===== */
   .dc-cap{font-size:12.5px;color:var(--mut);line-height:1.55;margin:4px 0 14px;max-width:880px}
-  .dc-summary{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:6px}
+  .dc-summary{display:flex;flex-wrap:wrap;gap:9px;
+    position:sticky;top:62px;z-index:30;background:var(--bg);
+    padding:11px 0;margin-bottom:4px;border-bottom:1px solid var(--line)}
   .dc-stat{font-size:12px;color:var(--mut);background:var(--card);
-    border:1px solid var(--line);border-radius:999px;padding:6px 13px}
+    border:1px solid var(--line);border-radius:999px;padding:6px 13px;
+    cursor:pointer;user-select:none;transition:border-color .12s,background .12s,transform .12s}
+  .dc-stat:hover{transform:translateY(-1px)}
   .dc-stat b{font-family:var(--mono);font-size:14px;margin-right:5px;color:var(--ink)}
   .dc-stat.dc-have b{color:#7eecc4}
   .dc-stat.dc-partial b{color:#f3cd86}
   .dc-stat.dc-missing b{color:#ff9a9a}
+  /* active filter chip */
+  .dc-stat.dc-on{box-shadow:0 0 0 1px currentColor inset}
+  .dc-stat.dc-have.dc-on{border-color:#34d39988;background:#34d39912;color:#7eecc4}
+  .dc-stat.dc-partial.dc-on{border-color:#f6b73c88;background:#f6b73c12;color:#f3cd86}
+  .dc-stat.dc-missing.dc-on{border-color:#f25c5c88;background:#f25c5c14;color:#ff9a9a}
+  .dc-stat.dc-total.dc-on{border-color:var(--blue);background:#4f8ff01e;color:#9cc3f5}
   .dc-fam{margin-top:24px}
   .dc-fam:first-child{margin-top:8px}
   .dc-fam h3{font-size:11px;letter-spacing:.8px;text-transform:uppercase;color:var(--blue);
@@ -3070,7 +3080,7 @@ function dcSources(srcs){
 }
 function dcRow(id,fn){
   const d=DATACHECK[id]||{status:'missing',contract:[],sources:[],note:'Not yet mapped.'};
-  return `<div class="dc-row">`
+  return `<div class="dc-row" data-status="${d.status}">`
     +`<div class="dc-left"><div class="modlive">${MODFULL[id]||MODPREV[id]||''}</div>`
       +`<div class="dc-meta"><span class="dc-id">${id}</span><span class="dc-fn">${fn}</span></div></div>`
     +`<div class="dc-card">`
@@ -3087,13 +3097,30 @@ $('dcGrids').innerHTML=FAMILIES.map(([fam,mods])=>
 const dcCnt={have:0,partial:0,missing:0};
 FAMILIES.forEach(([,mods])=>mods.forEach(([id])=>{dcCnt[(DATACHECK[id]||{}).status||'missing']++;}));
 $('dcSummary').innerHTML=
-  `<span class="dc-stat dc-have"><b>${dcCnt.have}</b> Have</span>`
- +`<span class="dc-stat dc-partial"><b>${dcCnt.partial}</b> Partial</span>`
- +`<span class="dc-stat dc-missing"><b>${dcCnt.missing}</b> Missing</span>`
- +`<span class="dc-stat dc-total"><b>${dcCnt.have+dcCnt.partial+dcCnt.missing}</b> of 46 modules</span>`;
+  `<span class="dc-stat dc-have" data-f="have"><b>${dcCnt.have}</b> Have</span>`
+ +`<span class="dc-stat dc-partial" data-f="partial"><b>${dcCnt.partial}</b> Partial</span>`
+ +`<span class="dc-stat dc-missing" data-f="missing"><b>${dcCnt.missing}</b> Missing</span>`
+ +`<span class="dc-stat dc-total dc-on" data-f=""><b>${dcCnt.have+dcCnt.partial+dcCnt.missing}</b> of 46 modules</span>`;
 $('dcOpps').innerHTML=`<div class="famblock dc-fam"><h3>Unused Wyze data &rarr; new component opportunities</h3>`
  +DC_OPPS.map(o=>`<div class="dc-opp"><code class="dc-ep">${o.src}</code><span class="dc-oppidea">${o.idea}</span></div>`).join('')
  +`</div>`;
+
+/* click a summary stat to filter rows by status; click it again (or "of 46 modules") to clear */
+let dcCur='';
+function dcFilter(f){
+  if(f && f===dcCur) f='';            /* toggle the active status off */
+  dcCur=f;
+  document.querySelectorAll('#dcSummary .dc-stat').forEach(s=>
+    s.classList.toggle('dc-on', f ? (s.dataset.f===f) : (s.dataset.f==='')));
+  document.querySelectorAll('#dcGrids .dc-row').forEach(r=>{
+    r.style.display=(!f||r.dataset.status===f)?'':'none';});
+  document.querySelectorAll('#dcGrids .dc-fam').forEach(fam=>{
+    const any=[...fam.querySelectorAll('.dc-row')].some(r=>r.style.display!=='none');
+    fam.style.display=any?'':'none';});
+  $('dcOpps').style.display=f?'none':'';   /* opportunities aren't a per-status result */
+}
+document.querySelectorAll('#dcSummary .dc-stat').forEach(s=>
+  s.addEventListener('click',()=>dcFilter(s.dataset.f||'')));
 
 /* ---------- tab switching ---------- */
 document.querySelectorAll('.tab').forEach(tb=>tb.addEventListener('click',()=>{
