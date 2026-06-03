@@ -96,11 +96,19 @@
   .dc-fam h3{font-size:11px;letter-spacing:.8px;text-transform:uppercase;color:var(--blue);
     font-weight:700;margin:0 0 4px;padding-bottom:7px;border-bottom:1px solid var(--line)}
 
-  .dc-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.18fr);
+  .dc-row{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);
     gap:20px;align-items:start;padding:16px 0;border-top:1px solid var(--line)}
   .dc-fam h3 + .dc-row{border-top:0}
-  .dc-left{max-width:300px}
-  .dc-meta{margin-top:9px}
+  .dc-left{max-width:none}
+  /* v1 | v1.5 side-by-side pair */
+  .dc-pair{display:grid;grid-template-columns:1fr 1fr;gap:13px;align-items:start}
+  .dc-ver{min-width:0}
+  .dc-vlab{display:inline-block;font-family:var(--mono);font-size:8.5px;font-weight:700;
+    letter-spacing:.4px;padding:2px 7px;border-radius:5px;margin-bottom:7px}
+  .dc-vlab.v1{color:#9cc3f5;background:#4f8ff014;border:1px solid #4f8ff033}
+  .dc-vlab.v15{color:#c4b3f0;background:#a78bfa18;border:1px solid #a78bfa44}
+  .dc-ver .modlive{margin-bottom:0}
+  .dc-meta{margin-top:11px}
   .dc-meta .dc-id{font-family:var(--mono);font-size:11.5px;font-weight:700;color:#9cc3f5;display:block}
   .dc-meta .dc-fn{font-size:10.5px;color:var(--mut);margin-top:2px;display:block;line-height:1.4}
 
@@ -128,6 +136,23 @@
   .dc-nosrc{font-size:11px;color:#ff9a9a;font-style:italic}
   .dc-note{font-size:11px;color:var(--mut);line-height:1.55;
     border-top:1px solid var(--line);padding-top:10px}
+  /* v1.5 design affordances */
+  .ghost{position:relative;opacity:.45;outline:1px dashed #f6b73c66;
+    outline-offset:1px;border-radius:6px;filter:grayscale(.3)}
+  .nodata{position:absolute;top:-7px;right:-3px;z-index:4;font-size:6.5px;font-weight:800;
+    letter-spacing:.3px;background:#f6b73c;color:#3a2a05;padding:1px 5px;border-radius:5px;white-space:nowrap}
+  .delta{font-size:9px;font-weight:800;font-family:var(--mono);margin-left:5px}
+  .delta.up{color:#7eecc4}
+  .delta.down{color:#ff9a9a}
+  .fixchip{display:inline-flex;align-items:center;gap:4px;font-size:8px;font-weight:700;
+    color:#c4b3f0;background:#a78bfa14;border:1px solid #a78bfa44;border-radius:5px;padding:2px 6px}
+  /* "v1.5 changes" section inside the data card */
+  .dc-v15{border-top:1px solid var(--line);padding-top:10px;margin-top:2px}
+  .dc-v15 .dc-lab{color:#c4b3f0}
+  .dc-adds{font-size:11px;color:var(--mut);line-height:1.5}
+  .dc-needs{display:flex;gap:7px;align-items:flex-start;margin-top:7px;font-size:10.5px;
+    color:#f3cd86;line-height:1.45}
+  .dc-needs::before{content:'⚠';flex:none}
 
   .dc-opp{display:flex;align-items:flex-start;gap:13px;padding:11px 0;border-top:1px solid var(--line)}
   .dc-opp:first-of-type{border-top:0}
@@ -137,7 +162,7 @@
 
   @media(max-width:880px){
     .dc-row{grid-template-columns:1fr;gap:12px}
-    .dc-left{max-width:360px}
+    .dc-left{max-width:none}
     .dc-opp{flex-direction:column;gap:6px}
     .dc-opp .dc-ep{max-width:100%}
   }
@@ -2906,6 +2931,111 @@ $('famGrids').innerHTML=FAMILIES.map(([fam,mods])=>
   }).join('')+`</div></div>`).join('');
 $('sigRow').innerHTML=SIGNALS.map(([n,d])=>`<span class="sigchip"><b>${n}</b> &mdash; ${d}</span>`).join('');
 
+/* ---------- v1.5 component designs — targeted upgrades over v1 ----------
+   Adds the spec-required affordances v1 omitted (Tier-3 confidence + correct per §9,
+   units/deltas/ranges, states), improves hierarchy/a11y, and where the ideal design
+   needs data Wyze AI One can't supply yet, the element is rendered as a dashed "ghost"
+   with a NO-DATA pill (per design-review decision D3). Shown side-by-side with v1 in
+   the Data check tab only; the Library tab keeps v1. */
+const cf15=(v,t)=>`<div class="conf" style="margin-top:7px;padding:7px 9px"><div class="cd">${t||'VLM confidence · tap a detection to correct'}</div><div class="cv">${v}</div></div>`;
+const MODFULL15={
+ 'M-LIVE':`<div class="hero"><div class="videobox" style="background:linear-gradient(165deg,#1d2d49,#0f1828)">${sigTag('live')}<span style="position:absolute;right:7px;top:7px;font-size:7px;font-weight:800;background:#0009;color:#cfe3ff;padding:2px 6px;border-radius:5px">1080p · &#9679; REC</span><div class="vname">Front cam &middot; online</div><div class="vtime">14:09</div></div></div>`,
+ 'M-SNAP':MODFULL['M-SNAP']+cf15('0.94','AI verdict: Closed &middot; 0.94 &middot; tap to correct'),
+ 'M-CLIP':MODFULL['M-CLIP']+`<div class="scrub" style="height:18px;margin-top:7px"><div style="position:absolute;left:0;top:0;bottom:0;width:38%;background:#4f8ff033"></div><div class="pin" style="left:38%"></div></div>`+cf15('0.91','Trigger: person &middot; 0.91'),
+ 'M-FOOTAGE':`<div class="hero" style="margin-bottom:8px"><div class="videobox" style="background:linear-gradient(165deg,#1c2740,#0c1119)"><div class="sigtag" style="background:#5a6b82dd;color:#fff">EVENTS</div><div class="vname">Activity scrubber</div><div class="vtime">last 24h</div></div></div>`+scrub()+`<div class="ghost" style="display:block;margin-top:8px;padding:8px"><div style="font-size:9px;color:var(--dim);text-align:center">24/7 continuous record</div><span class="nodata">NO DATA</span></div>`,
+ 'M-TIMELAPSE':MODFULL['M-TIMELAPSE']+`<div class="ghost" style="display:block;margin-top:8px;padding:7px 9px"><div style="font-size:9px;color:var(--dim)">Periodic frame store &middot; 1/day</div><span class="nodata">NEEDS STORE</span></div>`,
+ 'M-REEL':MODFULL['M-REEL']+`<div style="display:flex;gap:3px;margin-top:7px">${[0,1,2,3,4,5,6,7].map(i=>`<div style="flex:1;height:4px;border-radius:2px;background:${i<3?'#a78bfa':'#26344f'}"></div>`).join('')}</div><div style="font-size:9px;color:var(--dim);margin-top:5px">8 clips &middot; auto-compiled</div>`,
+ 'M-GALLERY':`<div class="panel"><div class="ph"><b>Today&rsquo;s visitors</b><span class="sigtag sig-coll" style="position:static">6</span></div><div class="chips2" style="margin-bottom:8px"><span class="fc on">All 6</span><span class="fc">New 2</span><span class="fc">Songbirds 4</span></div><div class="gallery"><div class="gcell new" style="background:linear-gradient(150deg,#b1402f,#5a1c14)"><span>Cardinal</span></div><div class="gcell" style="background:linear-gradient(150deg,#3a67c4,#16304f)"><span>Blue Jay</span></div><div class="gcell new" style="background:linear-gradient(150deg,#caa23f,#5c4715)"><span>Robin</span></div></div></div>`,
+ 'M-COMPARE':`<div class="panel"><div class="ph"><b>Then &amp; now</b><span class="delta up">&#9650; 17 cm</span></div><div class="compare"><div class="cf"><div class="cimg" style="background:linear-gradient(160deg,#1f3a2c,#0f1d16)"></div><div class="clab">Day 1 &middot; 41 cm</div></div><div class="cf"><div class="cimg" style="background:linear-gradient(160deg,#2c6b47,#16331f)"></div><div class="clab">Day 47 &middot; 58 cm</div></div></div><div class="ghost" style="display:block;margin-top:7px;padding:6px 9px"><span style="font-size:9px;color:var(--dim)">Time-aligned pair store</span><span class="nodata">NEEDS STORE</span></div></div>`,
+ 'M-GRID':`<div class="panel"><div class="ph"><b>All sites</b><span class="sigtag sig-multi" style="position:static">4 LIVE</span></div><div class="gallery" style="grid-template-columns:1fr 1fr">${[['Lakeside','#2a3b58,#0d1626','#34d399'],['Downtown','#3a2f28,#160f0b','#f25c5c'],['Cabin','#2c5a3e,#13261a','#34d399'],['Midtown','#2f4452,#141d24','#34d399']].map(([n,g,dot])=>`<div class="gcell" style="aspect-ratio:16/10;background:linear-gradient(150deg,${g})"><span style="display:flex;align-items:center;gap:3px"><i style="width:5px;height:5px;border-radius:50%;background:${dot}"></i>${n}</span></div>`).join('')}</div></div>`,
+ 'M-PTZ':`<div class="hero" style="margin-bottom:8px"><div class="videobox" style="background:linear-gradient(165deg,#22345a,#0e1828)">${sigTag('live')}<div class="vname">Driveway cam</div></div></div><div class="ghost" style="display:block;padding:9px"><div style="display:grid;grid-template-columns:repeat(3,24px);gap:3px;justify-content:center">${['','&#9650;','','&#9664;','&#10043;','&#9654;'].map(s=>`<div style="height:24px;border-radius:4px;background:${s?'#26344f':'transparent'};display:grid;place-items:center;color:#9cc3f5;font-size:10px">${s}</div>`).join('')}</div><span class="nodata">NO PTZ API</span></div>`,
+ 'M-STATE':`<div class="strip" style="background:#34d39916;border:1px solid #34d39944;color:#7eecc4"><span class="pulse" style="background:#34d399"></span>Door CLOSED &middot; secure<span style="margin-left:auto;font-size:9px;color:#7eecc4aa;font-weight:600">3h ago</span></div>`+cf15('0.96','State from VLM &middot; tap to correct'),
+ 'M-DURATION':`<div class="panel"><div class="ph"><b>Time in state</b><span style="font-size:9px;color:var(--dim);font-family:var(--mono)">avg 2:10</span></div><div class="duration"><div class="clock" style="color:#7eecc4">3:42</div><div class="barwrap"><div class="dbar"><i style="width:37%;background:#34d399"></i></div><div class="dthresh">Alert at 10:00 &middot; derived from state-change events</div></div></div></div>`,
+ 'M-VITALS':`<div class="panel"><div class="ph"><b>Live monitoring</b></div><div class="vitals"><div class="vit"><div class="vn">Occupancy</div><div class="vv">2<small> ppl</small></div></div><div class="vit ghost"><div class="vn">Breathing</div><div class="vv">38</div><span class="nodata">NO DATA</span></div><div class="vit ghost"><div class="vn">SpO&#8322;</div><div class="vv">97</div><span class="nodata">NO DATA</span></div></div><div style="font-size:9px;color:var(--dim);margin-top:6px">Occupancy from detections &middot; vitals need a sensor</div></div>`,
+ 'M-SCORE':`<div class="hero"><div class="bigstate">${ring(0.87,'#f472b6','87')}<div class="lab" style="margin-top:8px">Sleep score <span class="delta up">&#9650; 4</span></div><div style="display:flex;gap:2px;align-items:flex-end;height:18px;justify-content:center;margin-top:6px">${[60,55,70,65,80,75,87].map(h=>`<div style="width:7px;height:${h}%;border-radius:1px;background:#f472b6aa"></div>`).join('')}</div><div class="ghost" style="display:inline-block;margin-top:7px;padding:3px 9px"><span style="font-size:9px;color:var(--dim)">vs baseline 79&ndash;84</span><span class="nodata">DERIVE</span></div></div></div>`,
+ 'M-FEED':`<div class="panel"><div class="ph"><b>Entry history</b></div><div class="feedrow"><span style="width:6px;height:6px;border-radius:50%;background:#f25c5c;flex:none"></span><div class="thumb"></div><div style="flex:1"><div class="ft">Vehicle departed</div><div class="fm">8:02 AM &middot; &ldquo;a car backs out&rdquo;</div></div><span class="etag" style="background:#4f8ff022;color:#9cc3f5">VEHICLE&middot;92</span></div><div class="feedrow"><span style="width:6px;height:6px;border-radius:50%;background:#34d399;flex:none"></span><div class="thumb"></div><div style="flex:1"><div class="ft">Person entered</div><div class="fm">7:55 AM &middot; &ldquo;someone walks up&rdquo;</div></div><span class="etag" style="background:#34d39922;color:#7eecc4">PERSON&middot;88</span></div></div>`,
+ 'M-FILTER':`<div class="chips2"><span class="fc on">All &middot; 24</span><span class="fc">Person &middot; 11</span><span class="fc">Vehicle &middot; 6</span><span class="fc">Package &middot; 2</span><span class="fc" style="margin-left:auto;color:#9cc3f5;border-color:#4f8ff044">Clear</span></div>`,
+ 'M-GROUPS':`<div class="panel"><div class="ph"><b>Clips by trigger</b></div><div class="feedrow"><div class="thumb"></div><div style="flex:1"><div class="ft">Handle pull <span style="font-size:8px;color:var(--dim)">&#9662;</span></div><div class="fm">latest 2:14 PM</div></div><span class="etag" style="background:#f6b73c22;color:#f3cd86">&times;3</span></div><div class="feedrow"><div class="thumb"></div><div style="flex:1"><div class="ft">Horn honk <span style="font-size:8px;color:var(--dim)">&#9662;</span></div><div class="fm">1:02 PM</div></div><span class="etag" style="background:#4f8ff022;color:#9cc3f5">&times;1</span></div></div>`,
+ 'M-SCRUB':`<div class="panel" style="padding:10px 11px"><div class="ph"><b>Timeline</b><span style="font-size:9px;color:#9cc3f5;font-family:var(--mono)">2:14 PM</span></div>${scrub()}<div class="ngkey" style="margin-top:7px"><span><i style="background:#f6b73c"></i>activity</span><span><i style="background:#26344f"></i>quiet</span></div></div>`,
+ 'M-EVTLINE':`<div class="panel"><div class="ph"><b>Today&rsquo;s activity</b></div><div class="scrub" style="height:34px">${[15,70,55,20,65,40,18,52].map((h,i)=>`<div class="seg" style="height:${h}%;background:${[2,5].includes(i)?'#f25c5c':[1,4,7].includes(i)?'#34d399':'#26344f'}"></div>`).join('')}<div class="axis"><span>6a</span><span>12p</span><span>now</span></div></div><div class="ngkey" style="margin-top:7px"><span><i style="background:#34d399"></i>person</span><span><i style="background:#f25c5c"></i>alert</span></div></div>`,
+ 'M-NIGHTGRAPH':`<div class="panel"><div class="ph"><b>Night graph</b><span style="font-size:9px;color:var(--dim)">6h 12m asleep</span></div><div class="nightgraph">${nightSegs()}</div><div class="ngkey"><span><i style="background:#4f8ff0"></i>Asleep</span><span><i style="background:#f6b73c"></i>Awake</span><span><i style="background:#f472b6"></i>Visit</span></div><div class="ghost" style="display:block;margin-top:7px;padding:5px 8px"><span style="font-size:9px;color:var(--dim)">Sleep-stage segmentation</span><span class="nodata">VLM DERIVE</span></div></div>`,
+ 'M-MAPLINE':`<div class="panel"><div class="ph"><b>Cross-camera path</b></div><div style="display:flex;gap:4px;align-items:center;font-size:8.5px;color:#9cc3f5;font-family:var(--mono);flex-wrap:wrap"><span class="fc on" style="padding:2px 6px">Front 2:01</span>&rarr;<span class="fc" style="padding:2px 6px">Side 2:02</span>&rarr;<span class="fc" style="padding:2px 6px">Yard 2:04</span></div><div class="ghost" style="display:block;margin-top:8px;height:46px;background:#0e1a2c;border-radius:6px"><span class="nodata">NO MAP COORDS</span></div></div>`,
+ 'M-TREND':`<div class="panel"><div class="ph"><b>Visits this week</b><span class="delta up">&#9650; 22%</span></div><div class="trendbars">${[40,62,55,78,48,90,70].map((h,i)=>`<div class="tb" style="height:${h}%;${i===5?'background:linear-gradient(#f472b6,#a23a6f)':''}"></div>`).join('')}</div><div class="trendx">${['M','T','W','T','F','S','S'].map(d=>`<span>${d}</span>`).join('')}</div></div>`,
+ 'M-HEAT':`<div class="panel"><div class="ph"><b>Activity heat map</b></div><div style="position:relative;border-radius:6px;overflow:hidden;background:linear-gradient(165deg,#1d2d49,#0f1828)"><div style="display:grid;grid-template-columns:repeat(10,1fr)">${Array.from({length:30},(_,i)=>`<div style="aspect-ratio:1;background:#f6b73c;opacity:${(0.05+((i*29)%80)/110).toFixed(2)}"></div>`).join('')}</div></div><div style="display:flex;justify-content:space-between;font-size:8px;color:var(--dim);margin-top:5px"><span>low</span><span>from detection boxes</span><span>high</span></div></div>`,
+ 'M-RECAP':`<div class="panel"><div class="ph"><b>Morning recap</b><span class="recap"><span class="ai">AI</span></span></div><span class="pvbadge" style="background:#34d39922;color:#7eecc4;font-size:8px;display:inline-block;margin-bottom:7px">ALL CLEAR</span><div class="recap">Slept 10h 4m, 2 brief wakings. One true-cry at 2:14, self-settled in 3 min.</div><div style="display:flex;gap:5px;margin-top:8px"><span class="fc" style="font-size:8px">2:14 cry &middot; clip</span><span class="fc" style="font-size:8px">night graph</span></div></div>`,
+ 'M-KPI':`<div class="panel"><div class="ph"><b>Across all sites</b></div><div class="vitals"><div class="vit"><div class="vn">Events</div><div class="vv">24<span class="delta up" style="font-size:8px">&#9650;6</span></div></div><div class="vit"><div class="vn">Online</div><div class="vv">3<small>/4</small></div></div><div class="vit" style="border-color:#f25c5c55;background:#f25c5c10"><div class="vn" style="color:#ff9a9a">Alerts</div><div class="vv" style="color:#ff9a9a">1</div></div></div></div>`,
+ 'M-TALK':`<div class="ghost" style="display:block;padding:11px"><div class="act primary" style="margin-bottom:8px"><span class="ai">${aIcon('<path d="M12 1a4 4 0 0 0-4 4v6a4 4 0 0 0 8 0V5a4 4 0 0 0-4-4z"/><path d="M5 10v1a7 7 0 0 0 14 0v-1"/>')}</span>Hold to talk</div><div style="display:flex;gap:2px;align-items:flex-end;height:16px">${[3,6,9,12,8,5,10,14,7,4].map(h=>`<div style="flex:1;height:${h*6}%;background:#4f8ff0;border-radius:1px"></div>`).join('')}</div><span class="nodata">NO 2-WAY AUDIO</span></div>`,
+ 'M-DETER':`<div class="ghost" style="display:block;padding:11px"><div class="actions" style="margin-bottom:8px"><div class="act danger"><span class="ai">${aIcon('<path d="M3 11l18-5v12L3 14v-3zM11 19v-5"/>')}</span>Siren</div><div class="act"><span class="ai">${aIcon('<circle cx="12" cy="10" r="6"/><path d="M9 20h6M10 23h4"/>')}</span>Lights</div></div><label class="toggle on" style="display:flex;justify-content:space-between;width:100%">Auto-escalate on linger<span class="tg"></span></label><span class="nodata">NO DETERRENT API</span></div>`,
+ 'M-PLAY':`<div class="ghost" style="display:block;padding:11px"><div class="actions"><div class="act primary"><span class="ai">${aIcon('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/>')}</span>Laser</div><div class="act"><span class="ai">${aIcon('<path d="M12 3v18M3 12h18"/>')}</span>Treat</div></div><div style="font-size:9px;color:var(--dim);margin-top:7px">Cooldown 30s</div><span class="nodata">NO ACCESSORY API</span></div>`,
+ 'M-ACT':`<div class="actions" style="margin-bottom:8px"><div class="act primary"><span class="ai">${aIcon('<path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"/>')}</span>Power on</div><div class="act"><span class="ai">${aIcon('<path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"/>')}</span>Power off</div></div><div style="font-size:9px;color:#7eecc4;margin-bottom:8px">&#9679; Plug is ON &middot; confirmed 1s ago</div><div class="ghost" style="display:block;padding:7px 9px"><span style="font-size:9px;color:var(--dim)">Open / close / custom commands</span><span class="nodata">POWER ONLY</span></div>`,
+ 'M-ZONE':`<div class="hero" style="margin-bottom:8px"><div class="videobox" style="background:linear-gradient(165deg,#22303f,#0c1119)">${sigTag('live')}<div class="annbox" style="left:14%;top:38%;width:72%;height:42%;border-style:dashed"></div>${[[14,38],[86,38],[14,80],[86,80]].map(([x,y])=>`<div style="position:absolute;left:${x}%;top:${y}%;width:8px;height:8px;border-radius:50%;background:#f6b73c;transform:translate(-50%,-50%)"></div>`).join('')}<div class="annbadge" style="left:14%;top:38%">watch zone</div></div></div><div class="ghost" style="display:flex;gap:8px;align-items:center;padding:7px 9px"><label class="toggle on" style="flex:1;justify-content:space-between;display:flex">Zone enabled<span class="tg"></span></label><span class="nodata">NO ZONE STORE</span></div>`,
+ 'M-PROMPT':`<div class="promptbox"><div class="pl">Tier-3 detector &middot; M-PROMPT</div><div class="pt">&ldquo;Is a visible flame or glowing hot element present on the stovetop?&rdquo;</div></div><div class="conf" style="margin-top:7px;padding:7px 9px"><div class="cd">Threshold &middot; calibrating (4/6 confirmed)</div><div class="cv">0.80</div></div><div style="height:5px;border-radius:3px;background:#0e1726;margin-top:7px;position:relative"><div style="width:80%;height:100%;border-radius:3px;background:#a78bfa"></div><div style="position:absolute;left:80%;top:-3px;width:11px;height:11px;border-radius:50%;background:#fff"></div></div><div style="margin-top:8px"><span class="fixchip">&#9998; correct last detection</span></div>`,
+ 'M-IDCARD':`<div class="panel"><div class="ph"><b>Selected visit</b><span class="pvbadge" style="background:#34d39922;color:#7eecc4;font-size:8px">KNOWN</span></div><div class="idcard"><div class="pic"></div><div><div class="nm">Northern Cardinal</div><div class="sci">Cardinalis cardinalis</div><div class="meta">Last seen 1:52 PM &middot; 9 visits &middot; 2 cams</div></div></div>${cf15('0.93','Match confidence &middot; tap to relabel')}</div>`,
+ 'M-RULES':`<div class="panel"><div class="ph"><b>Thresholds &amp; escalation</b></div><label class="toggle on" style="display:flex;justify-content:space-between;width:100%;padding:6px 0">Notify me<span class="tg"></span></label><div style="padding:6px 0;border-top:1px solid var(--line)"><div style="font-size:10px;color:var(--mut);margin-bottom:5px">Sensitivity &middot; 7/10</div><div style="height:5px;border-radius:3px;background:#0e1726;position:relative"><div style="width:70%;height:100%;border-radius:3px;background:#4f8ff0"></div></div></div><div style="display:flex;gap:5px;padding:6px 0 0;border-top:1px solid var(--line)"><span class="fc">Quiet 10p&ndash;7a</span><span class="fc on">Escalate &rarr; partner</span></div></div>`,
+ 'M-DEVMAP':`<div class="panel"><div class="ph"><b>Devices</b><span style="font-size:9px;color:#7eecc4">3 online</span></div><div class="invrow"><span style="width:6px;height:6px;border-radius:50%;background:#34d399;flex:none"></span><span class="in">Garage cam</span><span class="roletag" style="color:#7eecc4;border-color:#34d39940">online</span></div><div class="invrow"><span style="width:6px;height:6px;border-radius:50%;background:#f25c5c;flex:none"></span><span class="in">Porch cam</span><span class="roletag" style="color:#ff9a9a;border-color:#f25c5c40">offline</span></div><div class="ghost" style="display:block;margin-top:7px;height:40px;background:#0e1a2c;border-radius:6px"><span class="nodata">NO FLOORPLAN</span></div></div>`,
+ 'M-HEALTH':`<div class="panel"><div class="ph"><b>Device health</b></div><div class="invrow"><span class="in">Garage cam</span><span class="roletag" style="color:#7eecc4;border-color:#34d39940;background:#34d39912">online &middot; fw 4.36</span></div><div class="invrow" style="gap:7px"><span class="in">Battery</span><span class="ghost" style="padding:1px 6px;font-size:10px;color:var(--mut)">31%<span class="nodata">NO DATA</span></span><span class="ghost" style="padding:1px 6px;font-size:10px;color:var(--mut)">signal<span class="nodata">NO DATA</span></span></div></div>`,
+ 'M-SOS':`<div class="sos"><div class="sb">SOS</div><div style="flex:1"><b>Escalation ready</b><span>You &middot; sister &middot; neighbor</span><div style="display:flex;gap:5px;margin-top:6px"><span class="fc on" style="font-size:8px">push &#10003;</span><span class="ghost fc" style="font-size:8px;position:relative;padding:2px 8px">call<span class="nodata">NO API</span></span></div></div></div>`,
+ 'M-TICKET':`<div class="sos" style="background:#f6b73c12;border-color:#f6b73c44"><div class="sb" style="background:#f6b73c;color:#3a2a05">#1</div><div style="flex:1"><b>Downtown &mdash; noise</b><span>assigned to you</span><div style="display:flex;gap:4px;margin-top:6px"><span class="fc on" style="font-size:8px">New</span><span class="ghost fc" style="font-size:8px;position:relative;padding:2px 7px">Resolve<span class="nodata">NO WORKFLOW</span></span></div></div></div>`,
+ 'M-JOURNAL':`<div class="panel"><div class="ph"><b>Activity journal</b></div><div class="logrow"><span class="lt">2d ago</span><span class="lv" style="color:#9be0ec">Aide visit</span><span class="ld">53m</span></div><div class="logrow"><span class="lt">May 16</span><span class="lv" style="color:#9be0ec">Med reminder</span><span class="ld">done</span></div><div class="ghost" style="display:block;margin-top:7px;padding:7px 9px"><span style="font-size:9px;color:var(--dim)">+ Add manual entry</span><span class="nodata">NO JOURNAL STORE</span></div></div>`,
+ 'M-READOUT':`<div class="panel"><div class="readout" style="padding:13px"><div class="rn">04857.2</div><div class="ru">m&sup3; &middot; gas meter</div><div class="rl">read 2:00 PM &middot; OCR</div></div>${cf15('0.97','Reading confidence &middot; tap to correct')}<div style="margin-top:8px;display:flex;gap:5px"><span class="fixchip">&#9998; correct</span><span class="fixchip" style="color:#9cc3f5;background:#4f8ff014;border-color:#4f8ff044">read aloud</span></div></div>`,
+ 'M-GAUGE':`<div class="panel"><div class="ph"><b>Pressure</b></div><div style="display:grid;place-items:center;padding:2px 0"><svg width="118" height="70" viewBox="0 0 66 40"><path d="M8 34a25 25 0 0 1 50 0" stroke="#1e2c44" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M8 34a25 25 0 0 1 50 0" stroke="#38c6db" stroke-width="6" fill="none" stroke-linecap="round" stroke-dasharray="79" stroke-dashoffset="30"/><line x1="33" y1="34" x2="47" y2="18" stroke="#e9eef6" stroke-width="2"/><circle cx="33" cy="34" r="3" fill="#e9eef6"/></svg></div><div class="ghost" style="display:block;padding:5px 9px"><span style="font-size:9px;color:var(--dim)">Safe-range band 34&ndash;40</span><span class="nodata">NO BAND CONFIG</span></div>${cf15('0.95','Value via VLM &middot; tap to correct')}</div>`,
+ 'M-LOG':`<div class="panel"><div class="ph"><b>Reading log</b><span class="fixchip" style="color:#9cc3f5;background:#4f8ff014;border-color:#4f8ff044">export</span></div><div class="logrow"><span class="lt">2:00 PM</span><span class="lv">04857.2</span><span class="ld">+1.4</span></div><div class="logrow"><span class="lt">1:00 PM</span><span class="lv">04855.8</span><span class="ld">+1.1</span></div><div class="ghost" style="display:block;margin-top:6px;padding:5px 9px"><span style="font-size:9px;color:var(--dim)">Hourly auto-readings</span><span class="nodata">NEEDS SCHEDULE</span></div></div>`,
+ 'M-INVENTORY':`<div class="panel"><div class="ph"><b>Inventory</b><span class="pvbadge" style="background:#f25c5c22;color:#ff9a9a;font-size:8px">2 LOW</span></div><div class="ghost" style="display:block"><div class="invrow"><div class="invthumb" style="background:linear-gradient(150deg,#52402f,#241b13)"></div><span class="in">Coffee beans</span><div class="stockbar"><i style="width:14%;background:#f25c5c"></i></div><span class="invflag" style="background:#f25c5c22;color:#ff9a9a">RESTOCK</span></div><div class="invrow"><div class="invthumb" style="background:linear-gradient(150deg,#3f5230,#1c2415)"></div><span class="in">Paper towels</span><div class="stockbar"><i style="width:66%;background:#34d399"></i></div><span class="invflag" style="background:#34d39922;color:#7eecc4">OK</span></div><span class="nodata">NEEDS VLM SCAN</span></div></div>`,
+ 'M-CAPTURE':`<div class="capbtn">${aIcon('<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>')}<div class="ct">Scan the shelf</div><div class="cs">AI counts the items</div></div><div class="capstrip" style="margin-top:8px"><i style="background:linear-gradient(150deg,#3f5230,#1c2415)"></i><i style="background:linear-gradient(150deg,#52402f,#241b13)"></i><i style="background:linear-gradient(150deg,#2f4452,#141d24)"></i><div style="display:grid;place-items:center;font-size:10px;color:var(--dim);width:40px">+8</div></div>`,
+ 'M-TIMESHEET':`<div class="panel"><div class="ph"><b>Visit verification</b></div><div class="tsrow"><div class="cliptip" style="background:linear-gradient(150deg,#2c5a3e,#13261a)"><span class="ctg" style="background:#34d399;color:#04231a">CLIP</span></div><div style="flex:1"><div class="tn">Today, Tue</div><div class="tm">9:12 &rarr; 10:05 AM</div></div><div class="tsdur"><div class="dd" style="color:#7eecc4">53m</div><div class="ds" style="color:#7eecc4">VERIFIED</div></div></div><div class="tsrow"><div class="cliptip" style="background:linear-gradient(150deg,#5a4a2c,#26200f)"><span class="ctg" style="background:#f6b73c;color:#3a2a05">CLIP</span></div><div style="flex:1"><div class="tn">Tue, May 13</div><div class="tm">9:05 &rarr; 9:34 AM</div></div><div class="tsdur"><div class="dd" style="color:#f3cd86">29m</div><div class="ds" style="color:#f3cd86">SHORT</div></div></div>${cf15('0.90','Identity match &middot; tap to correct')}</div>`,
+ 'M-REMINDER':`<div class="reminder"><div class="rc">${aIcon('<path d="M12 2s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/>')}</div><div style="flex:1"><b>Water in 2 days</b><span>next check Thu 9 AM</span><div style="display:flex;gap:5px;margin-top:6px"><span class="fc" style="font-size:8px">Snooze</span><span class="fc on" style="font-size:8px">Done</span></div></div></div>`,
+ 'M-CALENDAR':`<div class="panel"><div class="ph"><b>Occurrences</b><span style="font-size:9px;color:var(--dim)">May</span></div><div class="cal">${calCells(28,'#38c6db')}</div><div style="display:flex;justify-content:space-between;font-size:8px;color:var(--dim);margin-top:6px"><span>less</span><span>more</span></div></div>`,
+};
+/* what each v1.5 adds, and any data it needs that we don't have yet */
+const MOD15={
+ 'M-LIVE':{a:'Online + resolution badge, recording indicator.'},
+ 'M-SNAP':{a:'AI verdict confidence + tap-to-correct (§9), capture freshness.'},
+ 'M-CLIP':{a:'Inline scrubber, trigger-tag confidence, VLM caption.'},
+ 'M-FOOTAGE':{a:'Activity-density scrubber from event_ts.',n:'24/7 continuous record index (Cam-Plus).'},
+ 'M-TIMELAPSE':{a:'Progress + scrubber.',n:'Periodic snapshot frame store.'},
+ 'M-REEL':{a:'Chapter ticks + clip count.'},
+ 'M-GALLERY':{a:'Inline category filter + counts + new badges.'},
+ 'M-COMPARE':{a:'Measured before/after delta.',n:'Time-aligned pair store.'},
+ 'M-GRID':{a:'Per-tile online/alert status dot.'},
+ 'M-PTZ':{a:'PTZ pad + presets.',n:'PTZ control API.'},
+ 'M-STATE':{a:'VLM confidence + last-changed time.'},
+ 'M-DURATION':{a:'Threshold marker + average baseline (derived from event_ts).'},
+ 'M-VITALS':{a:'Occupancy from detection count.',n:'Pulse / SpO₂ / temperature — no camera sensor.'},
+ 'M-SCORE':{a:'Trend sparkline + delta.',n:'Composite baseline band.'},
+ 'M-FEED':{a:'Relevance dot, VLM caption, per-tag confidence.'},
+ 'M-FILTER':{a:'Per-category counts + clear.'},
+ 'M-GROUPS':{a:'Counts + expand affordance.'},
+ 'M-SCRUB':{a:'Playhead time + density legend.'},
+ 'M-EVTLINE':{a:'Tag-colored markers + legend.'},
+ 'M-NIGHTGRAPH':{a:'Legend + asleep total.',n:'Session / sleep-stage segmentation.'},
+ 'M-MAPLINE':{a:'Cross-camera appearance timeline (ReID).',n:'Device map coordinates.'},
+ 'M-TREND':{a:'Period-over-period delta + highlighted peak.'},
+ 'M-HEAT':{a:'Frame underlay + intensity legend (from bbox).'},
+ 'M-RECAP':{a:'Tone band + evidence clip links.'},
+ 'M-KPI':{a:'Per-tile delta + exception-flagged alert tile.'},
+ 'M-TALK':{a:'Push-to-talk + level meter.',n:'Two-way audio channel.'},
+ 'M-DETER':{a:'Siren/lights + auto-escalate toggle.',n:'Deterrent control API.'},
+ 'M-PLAY':{a:'Action buttons + cooldown.',n:'Pet-accessory control API.'},
+ 'M-ACT':{a:'State feedback on power actions.',n:'Open/close & custom commands — power only today.'},
+ 'M-ZONE':{a:'Editable zone handles + enable toggle.',n:'Zone polygon storage.'},
+ 'M-PROMPT':{a:'Confidence, threshold slider, calibration “correct” (§9 detection program).'},
+ 'M-IDCARD':{a:'Recognition confidence, known badge, last-seen + coverage.'},
+ 'M-RULES':{a:'Sensitivity slider + schedule + escalation target.'},
+ 'M-DEVMAP':{a:'Per-device online status list.',n:'Floorplan coordinates.'},
+ 'M-HEALTH':{a:'Online + firmware shown real.',n:'Battery / signal / storage / uptime.'},
+ 'M-SOS':{a:'Member tree + push channel.',n:'Call / SMS escalation.'},
+ 'M-TICKET':{a:'Assignee + status chips.',n:'Assign/investigate/resolve workflow store.'},
+ 'M-JOURNAL':{a:'Entries from agent runs.',n:'User-written journal store (add-entry).'},
+ 'M-READOUT':{a:'Confidence + correct + freshness + read-aloud.'},
+ 'M-GAUGE':{a:'Confidence; value via VLM.',n:'Safe-range band config.'},
+ 'M-LOG':{a:'Delta column + export.',n:'Persisted periodic readings.'},
+ 'M-INVENTORY':{a:'Restock flags + stock bars.',n:'Inventory counts — VLM shelf-scan.'},
+ 'M-CAPTURE':{a:'Recent-capture strip + overflow count.'},
+ 'M-TIMESHEET':{a:'Verified/short status + clip link + match confidence.'},
+ 'M-REMINDER':{a:'Next-fire time + snooze/done.'},
+ 'M-CALENDAR':{a:'Month label + legend.'},
+};
+
 /* ---------- DATA CHECK — 46 spec components mapped to real Wyze AI One data ----------
    status: 'have' (doable now) | 'partial' (data exists but needs derive/redesign) | 'missing'
    sources: real REST endpoints + model fields verified against the wyze-ai-one codebase
@@ -3112,8 +3242,14 @@ function dcSources(srcs){
 }
 function dcRow(id,fn){
   const d=DATACHECK[id]||{status:'missing',contract:[],sources:[],note:'Not yet mapped.'};
+  const v1=MODFULL[id]||MODPREV[id]||'';
+  const v15=MODFULL15[id]||v1;
+  const m=MOD15[id]||{a:''};
   return `<div class="dc-row" data-status="${d.status}">`
-    +`<div class="dc-left"><div class="modlive">${MODFULL[id]||MODPREV[id]||''}</div>`
+    +`<div class="dc-left"><div class="dc-pair">`
+      +`<div class="dc-ver"><span class="dc-vlab v1">v1 · current</span><div class="modlive">${v1}</div></div>`
+      +`<div class="dc-ver"><span class="dc-vlab v15">v1.5 · proposed</span><div class="modlive">${v15}</div></div>`
+    +`</div>`
       +`<div class="dc-meta"><span class="dc-id">${id}</span><span class="dc-fn">${fn}</span></div></div>`
     +`<div class="dc-card">`
       +`<div class="dc-head"><b>Data check</b><span class="dc-badge dc-${d.status}">${DC_LABEL[d.status]}</span></div>`
@@ -3122,6 +3258,8 @@ function dcRow(id,fn){
         +`<div class="dc-contract">${d.contract.map(c=>`<span class="dc-c">${c}</span>`).join('')}</div></div>`
       +`<div class="dc-sec"><div class="dc-lab">Wyze AI One source</div>${dcSources(d.sources)}</div>`
       +`<div class="dc-note">${d.note}</div>`
+      +(m.a?`<div class="dc-v15"><div class="dc-lab">v1.5 — what's improved</div><div class="dc-adds">${m.a}</div>`
+        +(m.n?`<div class="dc-needs">Needs data we don't have yet: ${m.n}</div>`:'')+`</div>`:'')
     +`</div></div>`;
 }
 $('dcGrids').innerHTML=FAMILIES.map(([fam,mods])=>
