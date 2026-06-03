@@ -64,6 +64,72 @@
   /* component visual previews — each preview's height fits its purpose */
   .modprev{border-radius:8px;background:#0a1019;border:1px solid #1c2940;
     margin-bottom:9px;overflow:hidden}
+  /* full-fidelity component preview — renders the real generated component */
+  .modlive{background:#070b13;border:1px solid #1c2940;border-radius:10px;
+    padding:12px;margin-bottom:10px;overflow:hidden}
+  .modlive .hero,.modlive .panel,.modlive .strip,.modlive .actions,
+  .modlive .sos,.modlive .reminder,.modlive .promptbox,.modlive .lapse,
+  .modlive .capbtn,.modlive .chips2,.modlive .scrub{margin:0}
+
+  /* ===== Data check tab ===== */
+  .dc-cap{font-size:12.5px;color:var(--mut);line-height:1.55;margin:4px 0 14px;max-width:880px}
+  .dc-summary{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:6px}
+  .dc-stat{font-size:12px;color:var(--mut);background:var(--card);
+    border:1px solid var(--line);border-radius:999px;padding:6px 13px}
+  .dc-stat b{font-family:var(--mono);font-size:14px;margin-right:5px;color:var(--ink)}
+  .dc-stat.dc-have b{color:#7eecc4}
+  .dc-stat.dc-partial b{color:#f3cd86}
+  .dc-stat.dc-missing b{color:#ff9a9a}
+  .dc-fam{margin-top:24px}
+  .dc-fam:first-child{margin-top:8px}
+  .dc-fam h3{font-size:11px;letter-spacing:.8px;text-transform:uppercase;color:var(--blue);
+    font-weight:700;margin:0 0 4px;padding-bottom:7px;border-bottom:1px solid var(--line)}
+
+  .dc-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.18fr);
+    gap:20px;align-items:start;padding:16px 0;border-top:1px solid var(--line)}
+  .dc-fam h3 + .dc-row{border-top:0}
+  .dc-left{max-width:300px}
+  .dc-meta{margin-top:9px}
+  .dc-meta .dc-id{font-family:var(--mono);font-size:11.5px;font-weight:700;color:#9cc3f5;display:block}
+  .dc-meta .dc-fn{font-size:10.5px;color:var(--mut);margin-top:2px;display:block;line-height:1.4}
+
+  .dc-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 15px}
+  .dc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+  .dc-head b{font-size:12.5px;color:var(--ink)}
+  .dc-badge{font-size:9px;font-weight:800;letter-spacing:.6px;padding:3px 9px;
+    border-radius:999px;border:1px solid}
+  .dc-badge.dc-have{color:#7eecc4;border-color:#34d39955;background:#34d39912}
+  .dc-badge.dc-partial{color:#f3cd86;border-color:#f6b73c55;background:#f6b73c12}
+  .dc-badge.dc-missing{color:#ff9a9a;border-color:#f25c5c55;background:#f25c5c12}
+  .dc-sec{margin-bottom:11px}
+  .dc-lab{font-size:8.5px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;
+    color:var(--dim);margin-bottom:6px}
+  .dc-contract{display:flex;flex-wrap:wrap;gap:5px}
+  .dc-c{font-size:10.5px;color:var(--mut);background:#0e1a2c;
+    border:1px solid var(--line);border-radius:6px;padding:3px 8px}
+  .dc-src{margin-bottom:8px}
+  .dc-src:last-child{margin-bottom:0}
+  .dc-ep{display:inline-block;font-family:var(--mono);font-size:10.5px;color:#9cc3f5;
+    background:#0e1a2c;border:1px solid #24405f;border-radius:5px;padding:3px 7px;line-height:1.5}
+  .dc-fields{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+  .dc-f{font-family:var(--mono);font-size:9.5px;color:#7eecc4;
+    background:#34d3990d;border:1px solid #34d39933;border-radius:4px;padding:2px 6px}
+  .dc-nosrc{font-size:11px;color:#ff9a9a;font-style:italic}
+  .dc-note{font-size:11px;color:var(--mut);line-height:1.55;
+    border-top:1px solid var(--line);padding-top:10px}
+
+  .dc-opp{display:flex;align-items:flex-start;gap:13px;padding:11px 0;border-top:1px solid var(--line)}
+  .dc-opp:first-of-type{border-top:0}
+  .dc-opp .dc-ep{flex:none;max-width:46%}
+  .dc-oppidea{font-size:11.5px;color:var(--mut);line-height:1.5}
+  .dc-oppidea b{color:var(--ink);font-weight:700}
+
+  @media(max-width:880px){
+    .dc-row{grid-template-columns:1fr;gap:12px}
+    .dc-left{max-width:360px}
+    .dc-opp{flex-direction:column;gap:6px}
+    .dc-opp .dc-ep{max-width:100%}
+  }
   .pvvid{position:relative;aspect-ratio:16/9}      /* video modules — true 16:9 ratio */
   .pvtag{position:absolute;left:6px;top:6px;font-size:6.5px;font-weight:800;color:#fff;
     padding:2px 5px;border-radius:3px;letter-spacing:.3px;z-index:2}
@@ -519,7 +585,7 @@
   #libScroll .fgitem{padding:4px 9px;font-size:10.5px;border-radius:999px;
     border-color:var(--line);justify-content:flex-start}
   #libScroll .fgitem .cnt{margin-left:1px}
-  #libScroll .modgrid{grid-template-columns:repeat(3,1fr);gap:8px}
+  #libScroll .modgrid{grid-template-columns:repeat(2,1fr);gap:10px;align-items:start}
   #libScroll .compcount{margin-bottom:9px}
   .modcard{cursor:pointer}
   .modcard.xsel{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue) inset}
@@ -827,6 +893,7 @@
     <div class="tab" data-tab="comp">Library &amp; spec<span class="tn">browse + read</span></div>
     <div class="tab" data-tab="builder">Builder reference<span class="tn">v3 · for the agent</span></div>
     <div class="tab" data-tab="play">Playground<span class="tn">type or speak a goal</span></div>
+    <div class="tab" data-tab="data">Data check<span class="tn">spec &rarr; Wyze AI One</span></div>
   </div>
 
   <div class="tabpane on" id="pane-gen">
@@ -1701,6 +1768,16 @@ EMIT  -&gt; see §13
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="tabpane" id="pane-data">
+    <div class="dc-cap">How each of the 46 spec components maps to <b>real data in Wyze AI One</b>.
+      Left: the live component. Right: its spec contract, the concrete API source
+      (endpoint&nbsp;+&nbsp;fields), a feasibility badge, and an achievable path. Endpoints and field
+      names are taken from the Wyze&nbsp;AI&nbsp;One codebase.</div>
+    <div class="dc-summary" id="dcSummary"></div>
+    <div id="dcGrids"></div>
+    <div id="dcOpps"></div>
   </div>
 
   <footer>
@@ -2714,18 +2791,309 @@ const MODPREV={
  'M-CALENDAR':`<div class="pvbox"><div style="display:grid;grid-template-columns:repeat(10,1fr);gap:2px">${Array.from({length:20},(_,i)=>`<div style="aspect-ratio:1;border-radius:1px;background:#34d399;opacity:${(0.13+((i*37)%82)/100).toFixed(2)}"></div>`).join('')}</div></div>`,
 };
 
+/* ---------- full-fidelity component previews — the actual generated components,
+   built from the same CSS vocabulary the Generator phone screens use ---------- */
+const MODFULL={
+ /* A · Vision */
+ 'M-LIVE':`<div class="hero"><div class="videobox" style="background:linear-gradient(165deg,#1d2d49,#0f1828)">${sigTag('live')}<div class="vname">Front cam</div><div class="vtime">14:09</div></div></div>`,
+ 'M-SNAP':`<div class="hero"><div class="videobox" style="background:linear-gradient(165deg,#2c3d5b,#0d1626)">${sigTag('snap')}<div class="annbox" style="left:21%;top:34%;width:58%;height:46%"></div><div class="annbadge" style="left:21%;top:34%">garage door</div><div class="fused"><div><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7eecc4" stroke-width="2.4"><path d="M5 12l5 5L20 7"/></svg></div><div><div class="fs" style="color:#7eecc4;font-size:16px">Closed &middot; secure</div><div class="fsub">annotated snapshot &middot; 8:02 AM</div></div></div></div></div>`,
+ 'M-CLIP':`<div class="hero"><div class="videobox" style="background:linear-gradient(165deg,#243a5e,#0f1a2c)">${sigTag('clip')}<div style="position:absolute;inset:0;display:grid;place-items:center"><div style="border-style:solid;border-width:11px 0 11px 18px;border-color:transparent transparent transparent #fff"></div></div><div class="vname">Person detected &middot; 0:14</div><div class="vtime">2:14 PM</div></div></div>`,
+ 'M-FOOTAGE':`<div class="hero" style="margin-bottom:9px"><div class="videobox" style="background:linear-gradient(165deg,#1c2740,#0c1119)"><div class="sigtag" style="background:#5a6b82dd;color:#fff">24/7</div><div class="vname">Continuous record</div><div class="vtime">all day</div></div></div>`+scrub(),
+ 'M-TIMELAPSE':`<div class="lapse">${vbox('Plant cam','day 47','<div style="position:absolute;inset:0;display:grid;place-items:center"><svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="1.6"><path d="M12 21v-9M12 12c0-5 4-8 9-8 0 5-4 8-9 8zM12 14c0-4-4-7-9-7 0 5 4 7 9 7z"/></svg></div>','lapse')}<div class="lapsebar"><div class="lp">${aIcon('<path d="M6 4l14 8-14 8z"/>')}</div><div class="lapsetrack"><i style="width:72%"></i><b style="left:72%"></b></div><div class="ld2">d47 / 47</div></div></div>`,
+ 'M-REEL':`<div class="hero"><div class="videobox" style="background:linear-gradient(165deg,#2a2440,#13101f)"><div class="sigtag" style="background:#a78bfadd;color:#fff">REEL</div><div style="position:absolute;inset:0;display:grid;place-items:center"><div style="border-style:solid;border-width:11px 0 11px 18px;border-color:transparent transparent transparent #fff"></div></div><div class="vname">Highlight reel &middot; 8 clips</div><div class="vtime">0:45</div></div></div>`,
+ 'M-GALLERY':`<div class="panel"><div class="ph"><b>Today&rsquo;s visitors</b><span class="sigtag sig-coll" style="position:static">COLLECTION</span></div><div class="gallery"><div class="gcell new" style="background:linear-gradient(150deg,#b1402f,#5a1c14)"><span>Cardinal</span></div><div class="gcell" style="background:linear-gradient(150deg,#3a67c4,#16304f)"><span>Blue Jay</span></div><div class="gcell" style="background:linear-gradient(150deg,#caa23f,#5c4715)"><span>Goldfinch</span></div></div></div>`,
+ 'M-COMPARE':`<div class="panel"><div class="ph"><b>Then &amp; now</b></div><div class="compare"><div class="cf"><div class="cimg" style="background:linear-gradient(160deg,#1f3a2c,#0f1d16)"></div><div class="clab">Day 1 &middot; 41 cm</div></div><div class="cf"><div class="cimg" style="background:linear-gradient(160deg,#2c6b47,#16331f)"></div><div class="clab">Day 47 &middot; 58 cm</div></div></div></div>`,
+ 'M-GRID':`<div class="panel"><div class="ph"><b>All sites</b><span class="sigtag sig-multi" style="position:static">4 LIVE</span></div><div class="gallery" style="grid-template-columns:1fr 1fr">${[['Lakeside','#2a3b58,#0d1626',''],['Downtown !','#3a2f28,#160f0b','background:#f25c5c'],['Cabin','#2c5a3e,#13261a',''],['Midtown','#2f4452,#141d24','']].map(([n,g,s])=>`<div class="gcell" style="aspect-ratio:16/10;background:linear-gradient(150deg,${g})"><span style="${s}">${n}</span></div>`).join('')}</div></div>`,
+ 'M-PTZ':`<div class="hero"><div class="videobox" style="background:linear-gradient(165deg,#22345a,#0e1828)">${sigTag('live')}<div style="position:absolute;inset:0;display:grid;place-items:center"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#9cc3f5" stroke-width="2"><path d="M12 3v5M12 16v5M3 12h5M16 12h5"/><circle cx="12" cy="12" r="3"/></svg></div><div class="vname">Pan &middot; tilt &middot; zoom</div></div></div>`,
+ /* B · State & Status */
+ 'M-STATE':`<div class="strip" style="background:#34d39916;border:1px solid #34d39944;color:#7eecc4"><span class="pulse" style="background:#34d399"></span>Door CLOSED &middot; secure</div>`,
+ 'M-DURATION':`<div class="panel"><div class="ph"><b>Time in state</b></div><div class="duration"><div class="clock" style="color:#7eecc4">3:42</div><div class="barwrap"><div class="dbar"><i style="width:24%;background:#34d399"></i></div><div class="dthresh">Alert if open &gt; 10 min</div></div></div></div>`,
+ 'M-VITALS':`<div class="panel"><div class="ph"><b>Live monitoring</b></div><div class="vitals"><div class="vit"><div class="vn">Breathing</div><div class="vv">38<small> /min</small></div></div><div class="vit"><div class="vn">Room temp</div><div class="vv">69<small>&deg;F</small></div></div><div class="vit"><div class="vn">Sound</div><div class="vv" style="font-size:13px;color:#7eecc4">Quiet</div></div></div></div>`,
+ 'M-SCORE':`<div class="hero"><div class="bigstate">${ring(0.87,'#f472b6','87')}<div class="lab" style="margin-top:8px">Last night&rsquo;s sleep</div><div class="val" style="font-size:18px;color:#f9a8d4">Restful night</div><div class="meta">Above typical range (79&ndash;84)</div></div></div>`,
+ /* C · Events */
+ 'M-FEED':`<div class="panel"><div class="ph"><b>Entry history</b></div><div class="feedrow"><div class="thumb"></div><div><div class="ft">Vehicle departed</div><div class="fm">Today &middot; 8:02 AM</div></div><span class="etag" style="background:#4f8ff022;color:#9cc3f5">VEHICLE</span></div><div class="feedrow"><div class="thumb"></div><div><div class="ft">Person entered</div><div class="fm">Today &middot; 7:55 AM</div></div><span class="etag" style="background:#34d39922;color:#7eecc4">PERSON</span></div></div>`,
+ 'M-FILTER':`<div class="chips2"><span class="fc on">All</span><span class="fc">Person</span><span class="fc">Pet</span><span class="fc">Vehicle</span><span class="fc">Package</span></div>`,
+ 'M-GROUPS':`<div class="panel"><div class="ph"><b>Clips by trigger</b></div><div class="feedrow"><div class="thumb"></div><div><div class="ft">Handle pull</div><div class="fm">latest 2:14 PM</div></div><span class="etag" style="background:#f6b73c22;color:#f3cd86">&times;3</span></div><div class="feedrow"><div class="thumb"></div><div><div class="ft">Horn honk</div><div class="fm">1:02 PM</div></div><span class="etag" style="background:#4f8ff022;color:#9cc3f5">&times;1</span></div></div>`,
+ /* D · Timeline */
+ 'M-SCRUB':`<div class="panel" style="padding:10px 11px"><div class="ph"><b>Timeline</b></div>${scrub()}</div>`,
+ 'M-EVTLINE':`<div class="panel"><div class="ph"><b>Today&rsquo;s activity</b></div><div class="scrub" style="height:34px">${[15,70,55,20,65,40,18,52].map((h,i)=>`<div class="seg" style="height:${h}%;background:${[1,2,4,5,7].includes(i)?'#34d399':'#26344f'}"></div>`).join('')}<div class="axis"><span>6a</span><span>9a</span><span>12p</span><span>3p</span><span>now</span></div></div></div>`,
+ 'M-NIGHTGRAPH':`<div class="panel"><div class="ph"><b>Night graph</b></div><div class="nightgraph">${nightSegs()}</div><div class="ngkey"><span><i style="background:#4f8ff0"></i>Asleep</span><span><i style="background:#f6b73c"></i>Awake</span><span><i style="background:#f472b6"></i>Visit</span></div></div>`,
+ 'M-MAPLINE':`<div class="panel"><div class="ph"><b>Cross-camera path</b></div><div style="position:relative;height:64px;background:#0e1a2c;border-radius:8px;overflow:hidden"><svg width="100%" height="100%" viewBox="0 0 100 64" preserveAspectRatio="none"><path d="M10 50 Q38 8 58 34 T92 16" stroke="#4f8ff0" stroke-width="2" fill="none"/></svg><div style="position:absolute;left:85%;top:18%;width:9px;height:9px;border-radius:50%;background:#f25c5c"></div></div></div>`,
+ /* E · Analytics */
+ 'M-TREND':`<div class="panel"><div class="ph"><b>Visits this week</b></div><div class="trendbars">${[40,62,55,78,48,90,70].map(h=>`<div class="tb" style="height:${h}%"></div>`).join('')}</div><div class="trendx">${['M','T','W','T','F','S','S'].map(d=>`<span>${d}</span>`).join('')}</div></div>`,
+ 'M-HEAT':`<div class="panel"><div class="ph"><b>Activity heat map</b></div><div style="display:grid;grid-template-columns:repeat(10,1fr);gap:3px">${Array.from({length:30},(_,i)=>`<div style="aspect-ratio:1;border-radius:2px;background:#f6b73c;opacity:${(0.12+((i*29)%80)/100).toFixed(2)}"></div>`).join('')}</div></div>`,
+ 'M-RECAP':`<div class="panel"><div class="ph"><b>Morning recap</b><span class="recap"><span class="ai">AI</span></span></div><div class="recap">Slept 10h 4m with 2 brief wakings. One true-cry at 2:14 AM, self-settled in 3 min. No covered-face events.</div></div>`,
+ 'M-KPI':`<div class="panel"><div class="ph"><b>Across all sites</b></div><div class="vitals"><div class="vit"><div class="vn">Occupied</div><div class="vv">3<small>/4</small></div></div><div class="vit"><div class="vn">Check-ins</div><div class="vv">2</div></div><div class="vit"><div class="vn">Alerts</div><div class="vv" style="color:#ff9a9a">1</div></div></div></div>`,
+ /* F · Controls & Actions */
+ 'M-TALK':`<div class="actions"><div class="act primary"><span class="ai">${aIcon('<path d="M12 1a4 4 0 0 0-4 4v6a4 4 0 0 0 8 0V5a4 4 0 0 0-4-4z"/><path d="M5 10v1a7 7 0 0 0 14 0v-1"/>')}</span>Talk</div><div class="act"><span class="ai">${aIcon('<path d="M11 5L6 9H2v6h4l5 4zM15 9a5 5 0 0 1 0 6"/>')}</span>Listen</div></div>`,
+ 'M-DETER':`<div class="actions"><div class="act danger"><span class="ai">${aIcon('<path d="M3 11l18-5v12L3 14v-3zM11 19v-5"/>')}</span>Siren</div><div class="act"><span class="ai">${aIcon('<circle cx="12" cy="10" r="6"/><path d="M9 20h6M10 23h4"/>')}</span>Lights</div></div>`,
+ 'M-PLAY':`<div class="actions"><div class="act primary"><span class="ai">${aIcon('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/>')}</span>Laser</div><div class="act"><span class="ai">${aIcon('<path d="M12 3v18M3 12h18"/>')}</span>Toss treat</div></div>`,
+ 'M-ACT':`<div class="actions"><div class="act primary"><span class="ai">${aIcon('<path d="M12 19V5M5 12l7-7 7 7"/>')}</span>Open</div><div class="act"><span class="ai">${aIcon('<path d="M12 5v14M5 12l7 7 7-7"/>')}</span>Close</div><div class="act"><span class="ai">${aIcon('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>')}</span>Hold</div></div>`,
+ /* G · Detection & Config */
+ 'M-ZONE':`<div class="hero"><div class="videobox" style="background:linear-gradient(165deg,#22303f,#0c1119)">${sigTag('live')}<div class="annbox" style="left:14%;top:40%;width:72%;height:40%;border-style:dashed"></div><div class="annbadge" style="left:14%;top:40%">watch zone</div><div class="vname">Edit detection zone</div></div></div>`,
+ 'M-PROMPT':`<div class="promptbox"><div class="pl">Tier-3 detector &middot; M-PROMPT</div><div class="pt">&ldquo;Is a visible flame or glowing hot element present on the stovetop?&rdquo;</div></div>`,
+ 'M-IDCARD':`<div class="panel"><div class="ph"><b>Selected visit</b></div><div class="idcard"><div class="pic"></div><div><div class="nm">Northern Cardinal</div><div class="sci">Cardinalis cardinalis</div><div class="meta">1:52 PM &middot; 41-second stay<br>Adult male &middot; 9th species</div></div></div></div>`,
+ 'M-RULES':`<div class="panel"><div class="ph"><b>Thresholds &amp; escalation</b></div><label class="toggle on" style="display:flex;justify-content:space-between;width:100%;padding:7px 0">Notify me<span class="tg"></span></label><label class="toggle on" style="display:flex;justify-content:space-between;width:100%;padding:7px 0;border-top:1px solid var(--line)">Escalate after 6 min<span class="tg"></span></label><label class="toggle" style="display:flex;justify-content:space-between;width:100%;padding:7px 0;border-top:1px solid var(--line)">Auto-record clip<span class="tg"></span></label></div>`,
+ /* H · Fleet & Escalation */
+ 'M-DEVMAP':`<div class="panel"><div class="ph"><b>Device map</b></div><div style="position:relative;height:72px;background:#0e1a2c;border-radius:8px">${[[20,32],[58,54],[80,22]].map(([x,y])=>`<div style="position:absolute;left:${x}%;top:${y}%;width:12px;height:12px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#4f8ff0;box-shadow:0 0 0 3px #4f8ff033"></div>`).join('')}</div></div>`,
+ 'M-HEALTH':`<div class="panel"><div class="ph"><b>Device health</b></div><div class="invrow"><span class="in">Garage cam</span><span class="roletag" style="color:#7eecc4;border-color:#34d39940;background:#34d39912">98% &middot; online</span></div><div class="invrow"><span class="in">Porch cam</span><span class="roletag" style="color:#f3cd86;border-color:#f6b73c40;background:#f6b73c12">31% &middot; low batt</span></div></div>`,
+ 'M-SOS':`<div class="sos"><div class="sb">SOS</div><div><b>Escalation ready</b><span>You &middot; sister &middot; neighbor &mdash; auto-calls on a detected fall</span></div></div>`,
+ 'M-TICKET':`<div class="sos" style="background:#f6b73c12;border-color:#f6b73c44"><div class="sb" style="background:#f6b73c;color:#3a2a05">#1</div><div><b>Downtown &mdash; noise complaint</b><span>assigned to you &middot; review the 11:24 PM clip</span></div></div>`,
+ 'M-JOURNAL':`<div class="panel"><div class="ph"><b>Backyard lifelist</b></div><div class="recap">23 of 31 expected regional species spotted &middot; newest: American Robin. 2 species seen only once &mdash; tap to review.</div></div>`,
+ /* I · Readings & Records */
+ 'M-READOUT':`<div class="panel"><div class="readout"><div class="rn">04857.2</div><div class="ru">m&sup3; &middot; gas meter</div><div class="rl">read from snapshot &middot; conf. 0.97</div></div></div>`,
+ 'M-GAUGE':`<div class="panel"><div class="ph"><b>Pressure</b></div><div style="display:grid;place-items:center;padding:4px 0"><svg width="124" height="76" viewBox="0 0 66 40"><path d="M8 34a25 25 0 0 1 50 0" stroke="#1e2c44" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M8 34a25 25 0 0 1 50 0" stroke="#38c6db" stroke-width="6" fill="none" stroke-linecap="round" stroke-dasharray="79" stroke-dashoffset="30"/><line x1="33" y1="34" x2="47" y2="18" stroke="#e9eef6" stroke-width="2"/><circle cx="33" cy="34" r="3" fill="#e9eef6"/></svg></div></div>`,
+ 'M-LOG':`<div class="panel"><div class="ph"><b>Reading log</b></div><div class="logrow"><span class="lt">2:00 PM</span><span class="lv">04857.2</span><span class="ld">+1.4</span></div><div class="logrow"><span class="lt">1:00 PM</span><span class="lv">04855.8</span><span class="ld">+1.1</span></div><div class="logrow"><span class="lt">12:00 PM</span><span class="lv">04854.7</span><span class="ld">+0.9</span></div></div>`,
+ 'M-INVENTORY':`<div class="panel"><div class="ph"><b>Inventory</b></div><div class="invrow"><div class="invthumb" style="background:linear-gradient(150deg,#52402f,#241b13)"></div><span class="in">Coffee beans</span><div class="stockbar"><i style="width:14%;background:#f25c5c"></i></div><span class="invflag" style="background:#f25c5c22;color:#ff9a9a">RESTOCK</span></div><div class="invrow"><div class="invthumb" style="background:linear-gradient(150deg,#3f5230,#1c2415)"></div><span class="in">Paper towels</span><div class="stockbar"><i style="width:66%;background:#34d399"></i></div><span class="invflag" style="background:#34d39922;color:#7eecc4">OK</span></div></div>`,
+ 'M-CAPTURE':`<div class="capbtn">${aIcon('<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>')}<div class="ct">Scan the shelf</div><div class="cs">point &amp; capture &mdash; AI counts the items</div></div>`,
+ 'M-TIMESHEET':`<div class="panel"><div class="ph"><b>Visit verification</b></div><div class="tsrow"><div class="cliptip" style="background:linear-gradient(150deg,#2c5a3e,#13261a)"><span class="ctg" style="background:#34d399;color:#04231a">ARRIVE</span></div><div><div class="tn">Today, Tue</div><div class="tm">9:12 &rarr; 10:05 AM</div></div><div class="tsdur"><div class="dd" style="color:#7eecc4">53m</div><div class="ds" style="color:#7eecc4">VERIFIED</div></div></div><div class="tsrow"><div class="cliptip" style="background:linear-gradient(150deg,#5a4a2c,#26200f)"><span class="ctg" style="background:#f6b73c;color:#3a2a05">ARRIVE</span></div><div><div class="tn">Tue, May 13</div><div class="tm">9:05 &rarr; 9:34 AM</div></div><div class="tsdur"><div class="dd" style="color:#f3cd86">29m</div><div class="ds" style="color:#f3cd86">SHORT</div></div></div></div>`,
+ 'M-REMINDER':`<div class="reminder"><div class="rc">${aIcon('<path d="M12 2s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/>')}</div><div><b>Water in 2 days</b><span>Last watered 5 days ago &middot; soil dry on day 46</span></div></div>`,
+ 'M-CALENDAR':`<div class="panel"><div class="ph"><b>Last 4 weeks</b></div><div class="cal">${calCells(28,'#38c6db')}</div></div>`,
+};
+
 $('famGrids').innerHTML=FAMILIES.map(([fam,mods])=>
   `<div class="famblock"><h3>${fam}</h3><div class="modgrid">`
   +mods.map(([id,fn])=>{
     const n=(modUsers[id]||[]).length;
     return `<div class="modcard" data-mod="${id}">`
-      +`<div class="modprev">${MODPREV[id]||''}</div>`
+      +`<div class="modlive">${MODFULL[id]||MODPREV[id]||''}</div>`
       +`<div class="mid">${id}</div>`
       +`<div class="mfn">${fn}</div><div class="mu">`
       +(n?`used by <b>${n}</b> example${n>1?'s':''}`:'in the library · not in these examples')
       +`</div></div>`;
   }).join('')+`</div></div>`).join('');
 $('sigRow').innerHTML=SIGNALS.map(([n,d])=>`<span class="sigchip"><b>${n}</b> &mdash; ${d}</span>`).join('');
+
+/* ---------- DATA CHECK — 46 spec components mapped to real Wyze AI One data ----------
+   status: 'have' (doable now) | 'partial' (data exists but needs derive/redesign) | 'missing'
+   sources: real REST endpoints + model fields verified against the wyze-ai-one codebase
+   (src/backend/api/external/*.py · src/backend/client_model/*.py · storage/models.py).      */
+const DATACHECK={
+ /* A · Vision */
+ 'M-LIVE':{status:'have',contract:['live stream','resolution / fps / codec'],
+   sources:[{ep:'POST /api/devices/{mac}/stream_params',fields:['signaling_url','auth_token','ice_servers']},
+     {ep:'GET /api/devices/{mac}/power_status',fields:['is_on']}],
+   note:'Direct map. WebRTC live feed binds to the hero slot; gate on is_on for online state.'},
+ 'M-SNAP':{status:'have',contract:['still frame','timestamp','annotation boxes (if annotated)'],
+   sources:[{ep:'POST /api/devices/{mac}/capture_snapshot',fields:['url','content_type']},
+     {ep:'POST /api/devices/thumbnails',fields:['thumbnails{mac:url}','captured_at{mac:ts}']}],
+   note:'Raw snapshot is direct. For the annotated/fused treatment, overlay bbox_xywh + video_description from the eventgroup artifact.'},
+ 'M-CLIP':{status:'have',contract:['video clip','start/end','trigger','duration'],
+   sources:[{ep:'POST /api/events/video_url',fields:['url (MP4 / MPD)']},
+     {ep:'POST /api/events/filter',fields:['event_ts','tag_list','video_description']}],
+   note:'Event-triggered clip with playback. tag_list gives the trigger label.'},
+ 'M-FOOTAGE':{status:'partial',contract:['continuous record','scrub position','segmentation'],
+   sources:[{ep:'POST /api/events/filter',fields:['event_ts']}],
+   note:'No 24/7 scrub index is exposed. Achievable: build an activity-density scrubber from event_ts. A true continuous record needs the Cam-Plus recording index, which this API does not surface.'},
+ 'M-TIMELAPSE':{status:'missing',contract:['ordered still sequence','interval','frame index'],
+   sources:[],
+   note:'No frame-sequence store today. Achievable: a scheduled capture_snapshot job (EventBridge scheduler already exists) writing an ordered per-device sequence, played back as time-lapse.'},
+ 'M-REEL':{status:'have',contract:['curated highlight clips','period','theme'],
+   sources:[{ep:'GET /api/eventgroups/{id}/artifact',fields:['gif_url','manifest']},
+     {ep:'POST /api/eventgroups/digest',fields:['highlights','score']}],
+   note:'Auto-compiled montage maps to the event-group GIF; digest supplies the highlight set.'},
+ 'M-GALLERY':{status:'have',contract:['browsable set','groupBy entity/type/time'],
+   sources:[{ep:'GET /api/eventgroups',fields:['ai_tags','thumbnail_url','cameras']},
+     {ep:'GET /api/reid/identities',fields:['entity_type','image_url']}],
+   note:'Strong fit. Group by ai_tags or by recognized identity.'},
+ 'M-COMPARE':{status:'partial',contract:['two aligned visuals','timestamps','split/overlay'],
+   sources:[{ep:'POST /api/devices/{mac}/capture_snapshot',fields:['url']},
+     {ep:'POST /api/devices/thumbnails',fields:['captured_at']}],
+   note:'No stored aligned pairs. Achievable: pick two captures of one device at two times. Growth-over-time comparison depends on the M-TIMELAPSE store.'},
+ 'M-GRID':{status:'have',contract:['multiple synced feeds','layout','focus index'],
+   sources:[{ep:'GET /api/devices',fields:['device_mac','device_name','product_model']},
+     {ep:'POST /api/devices/{mac}/stream_params',fields:['signaling_url']}],
+   note:'Multi-camera tiles from the device list, one live stream per tile.'},
+ 'M-PTZ':{status:'missing',contract:['live stream','pan / tilt / zoom','presets'],
+   sources:[],
+   note:'No PTZ control endpoint exists; only power_on / power_off. Needs a Wyze pan/tilt/zoom control API to be surfaced.'},
+ /* B · State & Status */
+ 'M-STATE':{status:'have',contract:['multi-state value','confidence','timestamp'],
+   sources:[{ep:'GET /api/household/visual-memories',fields:['runs[].status_line']},
+     {ep:'GET /api/devices/{mac}/power_status',fields:['is_on']}],
+   note:'status_line ("Door closed (3h)") is a VLM-derived present-tense state — a strong fit. Device on/off binary is direct.'},
+ 'M-DURATION':{status:'partial',contract:['time in state','start time','threshold'],
+   sources:[{ep:'POST /api/events/filter',fields:['event_ts (state-change deltas)']},
+     {ep:'GET /api/devices/{mac}/profile',fields:['threshold_level']}],
+   note:'No structured time-in-state field. Achievable: compute elapsed time from consecutive state-change event_ts; pull the alert threshold from threshold_level.'},
+ 'M-VITALS':{status:'missing',contract:['live numeric metrics','units','normal range'],
+   sources:[{ep:'GET /api/eventgroups/{id}/artifact',fields:['bbox_xywh (occupancy count only)']}],
+   note:'Cameras expose no pulse / O₂ / temperature. Occupancy count is derivable from detection-chip counts; true vitals are out of scope for camera-only data.'},
+ 'M-SCORE':{status:'partial',contract:['composite score','baseline','trend'],
+   sources:[{ep:'GET /api/eventgroups',fields:['score (1–5)']},
+     {ep:'GET /api/household/visual-memories',fields:['runs[].relevance_score (1–5)']}],
+   note:'Per-event/relevance scores exist but with different semantics. Achievable: define a rolled-up "activity / quiet score" vs a rolling baseline; there is no native sleep/safety score.'},
+ /* C · Events */
+ 'M-FEED':{status:'have',contract:['reverse-chron cards','trigger','thumbnail','entity'],
+   sources:[{ep:'POST /api/events/filter',fields:['event_ts','tag_list','event_resources','video_description']},
+     {ep:'POST /api/events/insights',fields:['description_title','score']}],
+   note:'Core fit — the AI-tagged event feed is exactly this app’s primary data.'},
+ 'M-FILTER':{status:'have',contract:['category chips','active set','count per category'],
+   sources:[{ep:'GET /api/events/tags',fields:['tag definitions (50+)']},
+     {ep:'POST /api/events/filter',fields:['tag_list','device_mac','time range']}],
+   note:'Direct — filter chips bind to the tag catalog and filter params.'},
+ 'M-GROUPS':{status:'have',contract:['clips bucketed by trigger type','count'],
+   sources:[{ep:'GET /api/eventgroups',fields:['ai_tags','event_count','cameras']}],
+   note:'Event groups are already clustered; bucket by ai_tags / tag_list for trigger type.'},
+ /* D · Timeline */
+ 'M-SCRUB':{status:'have',contract:['time axis','activity shading','markers'],
+   sources:[{ep:'POST /api/events/filter',fields:['event_ts']}],
+   note:'Markers are direct from event_ts; activity-density shading is derived by binning timestamps.'},
+ 'M-EVTLINE':{status:'have',contract:['discrete event markers','day axis','day/night shading'],
+   sources:[{ep:'POST /api/events/filter',fields:['event_ts','tag_list']}],
+   note:'Direct — markers on a day axis; day/night shading from the timestamps.'},
+ 'M-NIGHTGRAPH':{status:'missing',contract:['labeled session segments','total duration','legend'],
+   sources:[],
+   note:'No session/state segmentation (e.g. sleep stages) is produced. Achievable: VLM-classify a bounded window into labeled segments using the device user_prompt.'},
+ 'M-MAPLINE':{status:'partial',contract:['cross-camera trajectory','timeline + map'],
+   sources:[{ep:'GET /api/reid/identities/{id}/appearances',fields:['device_mac','timestamp_ms','device_coverage']}],
+   note:'Cross-camera presence timeline is available via ReID appearances. The map/floorplan view is missing — there are no device location coordinates stored.'},
+ /* E · Analytics */
+ 'M-TREND':{status:'partial',contract:['metric over time','baseline comparison'],
+   sources:[{ep:'POST /api/events/filter',fields:['event_ts (counts/day-hour)']},
+     {ep:'GET /api/household/usage',fields:['wits_spent_today']}],
+   note:'Event-count and wits-usage trends are doable by aggregation. An arbitrary sensor metric time-series is not stored.'},
+ 'M-HEAT':{status:'partial',contract:['spatial activity grid','intensity','frame overlay'],
+   sources:[{ep:'GET /api/eventgroups/{id}/artifact',fields:['bbox_xywh','frame_timestamp_ms']}],
+   note:'Strong latent fit. Achievable: accumulate detection-chip bbox centers over a period into a spatial grid overlaid on a reference frame.'},
+ 'M-RECAP':{status:'have',contract:['plain-language summary','period','key events'],
+   sources:[{ep:'GET /api/stories',fields:['narrative','why_it_matters','highlights','tone']},
+     {ep:'POST /api/eventgroups/digest',fields:['highlights']}],
+   note:'Core fit — the Story narrative IS this module.'},
+ 'M-KPI':{status:'have',contract:['headline tiles','status','exception flag'],
+   sources:[{ep:'GET /api/eventgroups',fields:['event_count']},
+     {ep:'GET /api/devices/{mac}/power_status',fields:['is_on (online count)']},
+     {ep:'GET /api/household/usage',fields:['wits_balance']}],
+   note:'Headline-number tiles from counts: events, cameras online, alerts, wits.'},
+ /* F · Controls & Actions */
+ 'M-ACT':{status:'partial',contract:['quick action','command','state feedback'],
+   sources:[{ep:'POST /api/devices/{mac}/power_on',fields:[]},
+     {ep:'POST /api/devices/{mac}/power_off',fields:[]}],
+   note:'Power control for plugs/lights/bulbs is available. Door open/close and other commands are not; map open/close to power for switchable devices.'},
+ 'M-TALK':{status:'missing',contract:['two-way audio','audio state','mic permission'],
+   sources:[],
+   note:'No two-way audio endpoint is exposed (the live stream is one-way).'},
+ 'M-DETER':{status:'missing',contract:['siren / lights / spray','intensity','escalation'],
+   sources:[],
+   note:'No siren/lights deterrent endpoint; only power on/off is available.'},
+ 'M-PLAY':{status:'missing',contract:['treat toss / laser / call','cooldown'],
+   sources:[],
+   note:'No pet-accessory control (treat toss, laser) in the API.'},
+ /* G · Detection & Config */
+ 'M-PROMPT':{status:'have',contract:['VLM prompt string','answer shape','threshold','calibration'],
+   sources:[{ep:'GET/PUT /api/devices/{mac}/profile',fields:['user_prompt (≤4000)','threshold_level']},
+     {ep:'tools/vlm.py',fields:['Gemini 2.5 Flash inference']}],
+   note:'Best fit in the whole library — the device profile user_prompt IS the open-vocabulary VLM detector prompt; threshold_level is the confidence gate.'},
+ 'M-IDCARD':{status:'have',contract:['recognized subject','classification','confidence','last seen'],
+   sources:[{ep:'GET /api/reid/identities',fields:['identity_name','entity_type','image_url','attributes','is_known_identity','last_recognized_ts']}],
+   note:'Direct — ReID identities supply the full identity card.'},
+ 'M-RULES':{status:'have',contract:['thresholds','schedule','sensitivity','escalation target'],
+   sources:[{ep:'GET/PUT /api/devices/{mac}/profile',fields:['threshold_level','user_prompt','personalized_preference']},
+     {ep:'GET /api/agents',fields:['triggers[]','quiet_hours']}],
+   note:'Maps to the device profile (sensitivity/prompt/preferences) plus agent triggers and household quiet hours.'},
+ 'M-ZONE':{status:'missing',contract:['drawn regions','vertices','enabled','priority'],
+   sources:[],
+   note:'No user-drawn zone storage in this app’s API (the profile holds a prompt + threshold, not polygons). Achievable: add zone polygons to the device profile and render them over the current frame.'},
+ /* H · Fleet & Escalation */
+ 'M-DEVMAP':{status:'partial',contract:['devices on map/floorplan','status badges'],
+   sources:[{ep:'GET /api/devices',fields:['device_mac','device_name']},
+     {ep:'GET /api/devices/{mac}/power_status',fields:['is_on']}],
+   note:'Status roll-up is available; the positional map is missing — no device location coordinates are stored.'},
+ 'M-HEALTH':{status:'partial',contract:['battery','signal','storage','uptime'],
+   sources:[{ep:'GET /api/devices',fields:['firmware_ver']},
+     {ep:'GET /api/devices/{mac}/power_status',fields:['is_on (online)']}],
+   note:'Online state + firmware are available now. Battery / signal / storage / uptime are not in the device model and would need extra Wyze telemetry fields.'},
+ 'M-SOS':{status:'partial',contract:['escalation tree','contact methods','active alert'],
+   sources:[{ep:'GET /api/household',fields:['members[]']},
+     {ep:'push subscriptions',fields:['device-bound push tokens']}],
+   note:'An escalation tree over household members + push is achievable. Call/SMS escalation needs a comms integration.'},
+ 'M-TICKET':{status:'partial',contract:['assign / investigate / resolve workflow'],
+   sources:[{ep:'GET /api/eventgroups',fields:['status (pending/confirmed)']},
+     {ep:'/api/signals',fields:['signal status, triage']}],
+   note:'Event-group status and the signals board are the closest primitives. A full assignable ticket workflow on an event would need to extend eventgroup status.'},
+ 'M-JOURNAL':{status:'partial',contract:['logged entries','author','type','text/photo'],
+   sources:[{ep:'GET /api/household/visual-memories',fields:['runs[].summary','created_at']}],
+   note:'Agent-run records and household memories give a chronological log. A user-written care/maintenance journal would need a dedicated entry store.'},
+ /* I · Readings & Records */
+ 'M-READOUT':{status:'have',contract:['numeric/text value','unit','confidence'],
+   sources:[{ep:'POST /api/devices/{mac}/capture_snapshot',fields:['url']},
+     {ep:'tools/vlm.py',fields:['Gemini OCR via user_prompt']}],
+   note:'Read a meter/value on demand: capture a frame, run the VLM OCR prompt. Persisting readouts is the only addition needed for history.'},
+ 'M-GAUGE':{status:'partial',contract:['value','safe range band','needle position'],
+   sources:[{ep:'POST /api/devices/{mac}/capture_snapshot',fields:['url']},
+     {ep:'tools/vlm.py',fields:['VLM numeric extraction']}],
+   note:'Value comes from the VLM (as in M-READOUT). The safe-range band is not stored — define it in the device profile and render the dial in the UI.'},
+ 'M-LOG':{status:'partial',contract:['timestamped reading log','exportable'],
+   sources:[{ep:'POST /api/events/filter',fields:['event_ts (event log)']}],
+   note:'An event history log is available. A periodic reading log is missing — persist scheduled VLM readings to build it.'},
+ 'M-INVENTORY':{status:'missing',contract:['item list','counts','restock flags'],
+   sources:[],
+   note:'No inventory data. Achievable: a VLM shelf-scan (capture + counting prompt) writing item counts to an inventory store.'},
+ 'M-CAPTURE':{status:'have',contract:['scan/capture action','recent captures strip'],
+   sources:[{ep:'POST /api/devices/{mac}/capture_snapshot',fields:['url']},
+     {ep:'POST /api/devices/{mac}/capture_video',fields:['url']},
+     {ep:'POST /api/devices/thumbnails',fields:['thumbnails','captured_at']}],
+   note:'On-demand capture is direct; the recent-captures strip comes from thumbnails.'},
+ 'M-TIMESHEET':{status:'have',contract:['arrival / departure / duration rows','clip per row'],
+   sources:[{ep:'GET /api/reid/identities/{id}/appearances',fields:['device_mac','timestamp_ms','thumbnail_url']},
+     {ep:'POST /api/events/video_url',fields:['url (row clip)']}],
+   note:'Strong fit — derive arrival/departure/duration from a person identity’s appearances; link each row to its clip.'},
+ 'M-REMINDER':{status:'partial',contract:['scheduled / elapsed reminder','next fire'],
+   sources:[{ep:'GET /api/agents',fields:['triggers[] (trigger_type=schedule)']}],
+   note:'Scheduled agent triggers (EventBridge) can surface as reminders; elapsed-time reminders derive from the last event_ts.'},
+ 'M-CALENDAR':{status:'have',contract:['occurrence heatmap','date','count','intensity'],
+   sources:[{ep:'POST /api/eventgroups/digest',fields:['per-date counts']},
+     {ep:'POST /api/events/filter',fields:['event_ts (counts/day)']}],
+   note:'Direct — occurrence density per day from event counts.'},
+};
+
+/* Wyze AI One data with no current spec component → new component opportunities */
+const DC_OPPS=[
+ {src:'GET /api/stories — tone, why_it_matters, evidence',idea:'<b>Story / tone card</b> — narrative with an all-clear / routine / notable / alert tone band. Richer than M-RECAP.'},
+ {src:'GET /api/household/visual-memories — runs[]',idea:'<b>Agent-activity card</b> — what each monitoring agent noticed, with status_line + relevance_score + feedback.'},
+ {src:'DynamoDB device-scene-profiles (no public route yet)',idea:'<b>Scene-profile card</b> — per-camera location, scene composition, light/clarity, and suggested AI features.'},
+ {src:'household_memories store',idea:'<b>Learnings card</b> — what the home has learned (preferences, patterns) with edit/forget.'},
+ {src:'GET /api/household/usage + /usage/agents',idea:'<b>Usage / cost card</b> — plan, wits balance, spent today, and per-agent cost breakdown.'},
+ {src:'GET /api/reid/identities/{id}/gallery',idea:'<b>Identity manager</b> — prototype gallery with merge / label / rename, beyond a single M-IDCARD.'},
+ {src:'POST /api/events/search (NL video_search)',idea:'<b>Semantic search</b> — natural-language "find when…" over the event history.'},
+ {src:'AskHome chat + suggestion chips',idea:'<b>Assistant + suggestions</b> — conversational layer with action / config / insight / memory / feedback chips.'},
+ {src:'feedback / signals',idea:'<b>Feedback loop</b> — thumbs + comment + relevance on any card, feeding agent refinement.'},
+];
+
+/* ---------- render the Data check tab ---------- */
+const DC_LABEL={have:'HAVE',partial:'PARTIAL',missing:'MISSING'};
+function dcSources(srcs){
+  if(!srcs||!srcs.length) return `<div class="dc-nosrc">No Wyze AI One source available yet.</div>`;
+  return srcs.map(s=>`<div class="dc-src"><code class="dc-ep">${s.ep}</code>`
+    +((s.fields&&s.fields.length)?`<div class="dc-fields">${s.fields.map(f=>`<span class="dc-f">${f}</span>`).join('')}</div>`:'')
+    +`</div>`).join('');
+}
+function dcRow(id,fn){
+  const d=DATACHECK[id]||{status:'missing',contract:[],sources:[],note:'Not yet mapped.'};
+  return `<div class="dc-row">`
+    +`<div class="dc-left"><div class="modlive">${MODFULL[id]||MODPREV[id]||''}</div>`
+      +`<div class="dc-meta"><span class="dc-id">${id}</span><span class="dc-fn">${fn}</span></div></div>`
+    +`<div class="dc-card">`
+      +`<div class="dc-head"><b>Data check</b><span class="dc-badge dc-${d.status}">${DC_LABEL[d.status]}</span></div>`
+      +`<div class="dc-sec"><div class="dc-lab">Spec contract</div>`
+        +`<div class="dc-contract">${d.contract.map(c=>`<span class="dc-c">${c}</span>`).join('')}</div></div>`
+      +`<div class="dc-sec"><div class="dc-lab">Wyze AI One source</div>${dcSources(d.sources)}</div>`
+      +`<div class="dc-note">${d.note}</div>`
+    +`</div></div>`;
+}
+$('dcGrids').innerHTML=FAMILIES.map(([fam,mods])=>
+  `<div class="famblock dc-fam"><h3>${fam}</h3>`
+  +mods.map(([id,fn])=>dcRow(id,fn)).join('')+`</div>`).join('');
+const dcCnt={have:0,partial:0,missing:0};
+FAMILIES.forEach(([,mods])=>mods.forEach(([id])=>{dcCnt[(DATACHECK[id]||{}).status||'missing']++;}));
+$('dcSummary').innerHTML=
+  `<span class="dc-stat dc-have"><b>${dcCnt.have}</b> Have</span>`
+ +`<span class="dc-stat dc-partial"><b>${dcCnt.partial}</b> Partial</span>`
+ +`<span class="dc-stat dc-missing"><b>${dcCnt.missing}</b> Missing</span>`
+ +`<span class="dc-stat dc-total"><b>${dcCnt.have+dcCnt.partial+dcCnt.missing}</b> of 46 modules</span>`;
+$('dcOpps').innerHTML=`<div class="famblock dc-fam"><h3>Unused Wyze data &rarr; new component opportunities</h3>`
+ +DC_OPPS.map(o=>`<div class="dc-opp"><code class="dc-ep">${o.src}</code><span class="dc-oppidea">${o.idea}</span></div>`).join('')
+ +`</div>`;
 
 /* ---------- tab switching ---------- */
 document.querySelectorAll('.tab').forEach(tb=>tb.addEventListener('click',()=>{
