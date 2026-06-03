@@ -2067,6 +2067,10 @@ function ring(pct,color,inner){
 function slot(id,html){
   return `<div class="slot"><div class="slotlab">${id}</div>${html}</div>`;
 }
+/* v1.5 affordance helpers (hoisted; reused across the generated samples) */
+function vConf(v,txt){return `<div class="conf" style="margin-top:9px;padding:8px 11px"><div class="cd">${txt||'AI confidence · tap a detection to correct'}</div><div class="cv">${v}</div></div>`;}
+function vCorrect(label){return `<span class="fixchip">&#9998; ${label||'correct'}</span>`;}
+function vDelta(t,up){return `<span class="delta ${up?'up':'down'}">${up?'&#9650;':'&#9660;'} ${t}</span>`;}
 
 const SCREENS = {
  /* ---- GARAGE ---- */
@@ -2088,6 +2092,7 @@ const SCREENS = {
           <div><div class="fs" style="color:#7eecc4">Closed &middot; secure</div>
           <div class="fsub">Garage cam &middot; annotated snapshot &middot; changed 8:02 AM</div></div></div>
         </div></div>`)}
+   ${slot('Tier-2 binding',vConf('0.98','Open/closed via segmentation &middot; 12 confirmations')+`<div style="margin-top:7px">${vCorrect('correct last detection')}</div>`)}
    ${slot('M-ACT · Sa',`<div class="actions">
       <div class="act primary"><span class="ai">${aIcon('<path d="M12 19V5M5 12l7-7 7 7"/>')}</span>Open</div>
       <div class="act"><span class="ai">${aIcon('<path d="M12 5v14M5 12l7 7 7-7"/>')}</span>Close</div>
@@ -2118,7 +2123,7 @@ const SCREENS = {
       <span class="pulse" style="background:#4f8ff0"></span>Asleep · calm · 6h 12m</div>`)}
    ${slot('M-SCORE · S1',`<div class="hero"><div class="bigstate">
       ${ring(0.87,'#f472b6','87')}
-      <div class="lab" style="margin-top:8px">Last night&rsquo;s sleep</div>
+      <div class="lab" style="margin-top:8px">Last night&rsquo;s sleep ${vDelta('4 vs avg',true)}</div>
       <div class="val" style="font-size:18px;color:#f9a8d4">Restful night</div>
       <div class="meta">Above this baby&rsquo;s typical range (79&ndash;84)</div></div></div>`)}
    ${slot('M-LIVE · S1 · vision-as-reassurance',`<div class="hero">${vbox('Crib cam · overhead','02:14',
@@ -2170,8 +2175,8 @@ const SCREENS = {
    ${slot('M-PROMPT · S5',`<div class="promptbox"><div class="pl">Tier-3 detector · M-PROMPT</div>
       <div class="pt">&ldquo;Is a visible flame or glowing hot element present on the stovetop?&rdquo;</div></div>`)}
    ${slot('Tier-3 binding',`<div class="conf"><div class="cd">Vision-model confidence &mdash;
-      calibrated from 6 confirmations. Tap a detection to correct it.</div>
-      <div class="cv">0.94</div></div>`)}
+      calibrated from 6 confirmations.</div>
+      <div class="cv">0.94</div></div><div style="margin-top:7px">${vCorrect('correct last detection')}</div>`)}
    ${slot('M-RULES · S5',`<div class="actions">
       <div class="act danger"><span class="ai">${aIcon('<path d="M12 9v4M12 17h.01M10.3 3.9 2 18a2 2 0 0 0 1.7 3h16.6A2 2 0 0 0 22 18L13.7 3.9a2 2 0 0 0-3.4 0z"/>')}</span>Notify me</div>
       <div class="act"><span class="ai">${aIcon('<path d="M2 12h20"/><circle cx="12" cy="12" r="9"/>')}</span>Calibrate</div>
@@ -2200,8 +2205,8 @@ const SCREENS = {
       <span class="fc">Person</span><span class="fc">Vehicle</span><span class="fc">Familiar</span></div>`)}
    ${slot('M-FEED · S3',`<div class="panel"><div class="ph"><b>Events today</b>
       <span class="mi">M-FEED</span></div>
-      <div class="feedrow"><div class="thumb"></div><div><div class="ft">Package placed</div>
-        <div class="fm">1:46 PM · courier detected</div></div><span class="etag" style="background:#f6b73c22;color:#f3cd86">PACKAGE</span></div>
+      <div class="feedrow"><span style="width:6px;height:6px;border-radius:50%;background:#f25c5c;flex:none"></span><div class="thumb"></div><div><div class="ft">Package placed</div>
+        <div class="fm">1:46 PM · courier detected</div></div><span class="etag" style="background:#f6b73c22;color:#f3cd86">PACKAGE&middot;96</span></div>
       <div class="feedrow"><div class="thumb"></div><div><div class="ft">Familiar face &mdash; &ldquo;Mail carrier&rdquo;</div>
         <div class="fm">1:46 PM</div></div><span class="etag" style="background:#34d39922;color:#7eecc4">KNOWN</span></div>
       <div class="feedrow"><div class="thumb"></div><div><div class="ft">Person passed by</div>
@@ -2232,7 +2237,7 @@ const SCREENS = {
       <div class="idcard"><div class="pic"></div>
         <div><div class="nm">Northern Cardinal</div>
         <div class="sci">Cardinalis cardinalis</div>
-        <div class="meta">Visited 1:52 PM &middot; 41-second stay<br>Adult male &middot; 9th species this month</div></div></div></div>`)}
+        <div class="meta">Visited 1:52 PM &middot; 41-second stay<br>Adult male &middot; 9th species this month</div></div></div>${vConf('0.93','Species match · tap to relabel')}</div>`)}
    ${slot('M-FILTER · S3',`<div class="chips2">
       <span class="fc on">All species</span><span class="fc">New</span>
       <span class="fc">Songbirds</span><span class="fc">This week</span></div>`)}
@@ -2265,7 +2270,8 @@ const SCREENS = {
         <div class="fusedval"><div class="fv" style="color:#5fd0e0">04857.2</div>
           <div class="fl">m&sup3; &middot; gas meter cam &middot; read from cropped snapshot &middot; conf. 0.97</div></div>
         </div></div>`)}
-   ${slot('M-TREND · S2',`<div class="panel"><div class="ph"><b>Daily usage</b></div>
+   ${slot('Tier-3 binding',vConf('0.97','OCR reading &middot; calibrated &middot; tap to correct')+`<div style="margin-top:7px">${vCorrect('correct reading')}</div>`)}
+   ${slot('M-TREND · S2',`<div class="panel"><div class="ph"><b>Daily usage</b>${vDelta('8% vs last wk',false)}</div>
       <div class="trendbars">
         ${[52,61,48,70,44,38,66].map(h=>`<div class="tb" style="height:${h}%;background:linear-gradient(#38c6db,#1f7f8f)"></div>`).join('')}
       </div><div class="trendx">${['M','T','W','T','F','S','S'].map(d=>`<span>${d}</span>`).join('')}</div></div>`)}
@@ -2307,7 +2313,7 @@ const SCREENS = {
         <span class="ctg" style="background:#34d399;color:#04231a">ARRIVE</span></div>
         <div><div class="tn">Tue, May 6</div><div class="tm">9:20 AM &rarr; 10:18 AM</div></div>
         <div class="tsdur"><div class="dd" style="color:#7eecc4">58m</div>
-        <div class="ds" style="color:#7eecc4">VERIFIED</div></div></div></div></div>`)}
+        <div class="ds" style="color:#7eecc4">VERIFIED</div></div></div>${vConf('0.90','Crew identity match &middot; tap to correct')}</div></div>`)}
    ${slot('M-LIVE · S2 · vision-as-reassurance',`<div class="hero">${vbox('Front yard cam','10:41')}</div>`)}
    ${slot('M-CALENDAR · S3',`<div class="panel"><div class="ph"><b>Visit history</b></div>
       <div class="cal">${calCells(28,'#34d399',[3,10,17,24])}</div></div>`)}
@@ -2338,7 +2344,7 @@ const SCREENS = {
       <div class="lapsebar"><div class="lp">${aIcon('<path d="M6 4l14 8-14 8z"/>')}</div>
         <div class="lapsetrack"><i style="width:72%"></i><b style="left:72%"></b></div>
         <div class="ld2">d47 / 47</div></div></div>`)}
-   ${slot('M-COMPARE · S2',`<div class="panel"><div class="ph"><b>Growth &mdash; then &amp; now</b></div>
+   ${slot('M-COMPARE · S2',`<div class="panel"><div class="ph"><b>Growth &mdash; then &amp; now</b>${vDelta('17 cm',true)}</div>
       <div class="compare">
         <div class="cf"><div class="cimg" style="background:linear-gradient(160deg,#1f3a2c,#0f1d16)"></div>
           <div class="clab">Day 1 &middot; 41 cm</div></div>
@@ -2373,7 +2379,7 @@ const SCREENS = {
         <i style="background:linear-gradient(150deg,#2f4452,#141d24)"></i>
         <i style="background:linear-gradient(150deg,#473860,#1f1828)"></i>
         <div style="display:grid;place-items:center;font-size:10px;color:var(--dim);width:40px">+8</div></div></div></div>`)}
-   ${slot('M-INVENTORY · S2',`<div class="panel"><div class="ph"><b>Inventory</b></div>
+   ${slot('M-INVENTORY · S2',`<div class="panel"><div class="ph"><b>Inventory</b><span class="pvbadge" style="background:#f25c5c22;color:#ff9a9a;font-size:8px">2 LOW</span></div>
       <div class="invrow"><div class="invthumb" style="background:linear-gradient(150deg,#52402f,#241b13)"></div>
         <span class="in">Coffee beans</span>
         <div class="stockbar"><i style="width:14%;background:#f25c5c"></i></div>
@@ -2422,6 +2428,7 @@ const SCREENS = {
           <div><div class="fs" style="color:#f3b78a;font-size:15px">Onions translucent &mdash; add the garlic now</div>
           <div class="fsub">Cooktop cam &middot; annotated live &middot; next cue in ~40s</div></div></div>
       </div></div>`)}
+   ${slot('Tier-3 binding',vConf('0.92','Doneness read live &middot; tap to correct')+`<div style="margin-top:7px">${vCorrect('correct cue')}</div>`)}
    ${slot('M-ACT · Sa',`<div class="actions">
       <div class="act primary"><span class="ai">${aIcon('<path d="M9 6l10 6-10 6z"/>')}</span>Next step</div>
       <div class="act"><span class="ai">${aIcon('<circle cx="12" cy="13" r="8"/><path d="M12 13V9M9 2h6"/>')}</span>Timer</div>
@@ -2457,8 +2464,8 @@ const SCREENS = {
    ${slot('M-KPI · S2',`<div class="panel"><div class="ph"><b>Today across all sites</b></div>
       <div class="vitals">
         <div class="vit"><div class="vn">Occupied</div><div class="vv">3<small>/4</small></div></div>
-        <div class="vit"><div class="vn">Check-ins</div><div class="vv">2</div></div>
-        <div class="vit"><div class="vn">Alerts</div><div class="vv" style="color:#ff9a9a">1</div></div>
+        <div class="vit"><div class="vn">Check-ins</div><div class="vv">2<span class="delta up" style="font-size:8px">&#9650;1</span></div></div>
+        <div class="vit" style="border-color:#f25c5c55;background:#f25c5c10"><div class="vn" style="color:#ff9a9a">Alerts</div><div class="vv" style="color:#ff9a9a">1</div></div>
       </div></div>`)}
    ${slot('M-FEED · S3',`<div class="panel"><div class="ph"><b>Cross-site events</b></div>
       <div class="feedrow"><div class="thumb"></div><div><div class="ft">Downtown &mdash; noise after 11 PM</div>
@@ -2483,7 +2490,7 @@ const SCREENS = {
       <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#7eecc4" stroke-width="2">
         <circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>
       <div class="val" style="color:#7eecc4;font-size:21px">No falls &middot; moving normally</div>
-      <div class="meta">Up at 7:40 AM &middot; 3 active periods so far today</div></div></div>`)}
+      <div class="meta">Up at 7:40 AM &middot; 3 active periods so far today</div></div>${vConf('0.95','Fall detection &middot; privacy pose model &middot; tap to correct')}</div>`)}
    ${slot('M-LIVE · S1 · vision-as-reassurance',`<div class="hero">
       <div class="videobox" style="background:linear-gradient(165deg,#1c2436,#0c1320)">
         ${sigTag('live')}
@@ -2519,6 +2526,7 @@ const SCREENS = {
         <div class="annbox" style="left:13%;top:56%;width:74%;height:32%;border-color:#38c6db"></div>
         <div class="annbadge" style="left:13%;top:56%;background:#38c6db;color:#04222a">watch zone &middot; floor</div>
         <div class="vname">Under-sink cam</div><div class="vtime">14:09</div></div></div>`)}
+   ${slot('Tier-3 binding',vConf('0.97','Pooling/sheen prompt &middot; checked 30s ago')+`<div style="margin-top:7px">${vCorrect('correct')}</div>`)}
    ${slot('M-STATE · S2',`<div class="panel"><div class="ph"><b>Floor zone</b></div>
       <div class="duration"><div class="clock" style="color:#7eecc4;font-size:18px">No water</div>
       <div class="barwrap"><div class="dthresh" style="margin-top:0">Watched continuously &middot; instant alert on any pooling</div></div></div></div>`)}
@@ -2562,7 +2570,7 @@ const SCREENS = {
         <div class="gcell" style="background:linear-gradient(150deg,#3a67c4,#16304f)"><span>Tang active</span></div>
         <div class="gcell" style="background:linear-gradient(150deg,#2c5a3e,#13261a)"><span>Coral open</span></div>
       </div></div>`)}
-   ${slot('M-TREND · S4',`<div class="panel"><div class="ph"><b>Fish activity &middot; 7 days</b></div>
+   ${slot('M-TREND · S4',`<div class="panel"><div class="ph"><b>Fish activity &middot; 7 days</b>${vDelta('12%',true)}</div>
       <div class="trendbars">${[60,72,55,80,48,66,74].map(h=>`<div class="tb" style="height:${h}%"></div>`).join('')}</div>
       <div class="trendx">${['M','T','W','T','F','S','S'].map(d=>`<span>${d}</span>`).join('')}</div></div>`)}
   </div>`,
@@ -2583,7 +2591,8 @@ const SCREENS = {
         <div class="fusedval"><div class="fv" style="color:#5fd0e0">38&deg;F</div>
           <div class="fl">fridge thermometer &middot; safe band 34&ndash;40&deg;F &middot; conf. 0.96</div></div>
         </div></div>`)}
-   ${slot('M-TREND · S2',`<div class="panel"><div class="ph"><b>Temperature &middot; last 12 h</b></div>
+   ${slot('Tier-3 binding',vConf('0.96','Thermometer OCR &middot; in safe band &middot; tap to correct')+`<div style="margin-top:7px">${vCorrect('correct reading')}</div>`)}
+   ${slot('M-TREND · S2',`<div class="panel"><div class="ph"><b>Temperature &middot; last 12 h</b>${vDelta('stable',true)}</div>
       <div class="trendbars">${[44,46,45,47,44,43,45,46,44,45,46,44].map(h=>`<div class="tb" style="height:${h}%;background:linear-gradient(#38c6db,#1f7f8f)"></div>`).join('')}</div>
       <div style="font-size:9px;color:var(--dim);margin-top:5px">Every reading inside the 34&ndash;40&deg;F band</div></div>`)}
    ${slot('M-LOG · S3',`<div class="panel"><div class="ph"><b>Compliance log</b></div>
