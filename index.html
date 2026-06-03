@@ -503,6 +503,17 @@
   .modcard .mfn{font-size:10.5px;color:var(--mut);margin-top:3px;line-height:1.4}
   .modcard .mu{font-size:9px;color:var(--dim);margin-top:6px;font-family:var(--mono)}
   .modcard .mu b{color:#7eecc4;font-weight:700}
+  /* per-component "when to use" context (Library cards + Data check rows) */
+  .mctx{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+  .mctx-lab{display:block;font-size:8px;font-weight:700;letter-spacing:.7px;
+    text-transform:uppercase;color:var(--blue);margin-bottom:3px}
+  .mctx-use{font-size:10.5px;color:var(--mut);line-height:1.45}
+  .dc-use{font-size:11px;color:var(--mut);line-height:1.5;margin-bottom:6px}
+  .ctx-ex{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+  .ctx-eg{font-size:9.5px;color:#9cc3f5;background:#4f8ff014;border:1px solid #4f8ff033;
+    border-radius:6px;padding:2px 7px;line-height:1.5}
+  .ctx-eg::before{content:'“'}
+  .ctx-eg::after{content:'”'}
   .sigrow{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
   .sigchip{font-size:10px;padding:6px 10px;border-radius:8px;border:1px solid var(--line);
     background:var(--card);color:var(--mut)}
@@ -2827,14 +2838,69 @@ const MODFULL={
  'M-CALENDAR':`<div class="panel"><div class="ph"><b>Last 4 weeks</b></div><div class="cal">${calCells(28,'#38c6db')}</div></div>`,
 };
 
+/* ---------- per-component context: WHEN to use it + example monitoring goals ----------
+   Synthesized from the spec (§5 functions, §8 composition matrix, §14 routing). u=use-when, e=example goals. */
+const MODCTX={
+ 'M-LIVE':{u:'The user wants to watch the camera in real time — active watching or reassurance.',e:['Check in on the nursery live','Watch the front door right now']},
+ 'M-SNAP':{u:'A single current still answers the question. The workhorse of state, reader and logger goals.',e:['Did I leave the garage door open?','What does the meter read now?']},
+ 'M-CLIP':{u:'Each detected event should be reviewable as a short recorded clip.',e:['Show the clip when someone is at the door','Replay the package drop-off']},
+ 'M-FOOTAGE':{u:'The user needs to scrub the full continuous record, not just events.',e:['Let me scrub back through last night','Jump to 3am on the back camera']},
+ 'M-TIMELAPSE':{u:'Change is slow and worth compressing into an accelerated sequence.',e:['Watch my plant grow over weeks','Time-lapse the construction next door']},
+ 'M-REEL':{u:'The user wants an auto-compiled highlight montage of a period.',e:["Give me today's highlights","A reel of the dog's day"]},
+ 'M-GALLERY':{u:'Results are a browsable collection grouped by entity or species (discovery).',e:['Show which birds visited the feeder','Gallery of every visitor today']},
+ 'M-COMPARE':{u:'Two moments must be seen side by side.',e:['Compare the yard before and after the crew','Plant day 1 vs day 47']},
+ 'M-GRID':{u:'Several cameras must be watched at once (operations / multi-site).',e:['Show all my rental properties at once','Every camera on one screen']},
+ 'M-PTZ':{u:'The camera can move and the user needs to aim it.',e:['Pan around the backyard','Zoom into the driveway']},
+ 'M-STATE':{u:'The answer is a discrete state — open/closed, on/off, present/absent.',e:['Is the garage door open or closed?','Is the stove on?']},
+ 'M-DURATION':{u:'How long something has been in a state matters, and should alert past a threshold.',e:['Alert if the door is open over 10 min','How long has the stove been unattended?']},
+ 'M-VITALS':{u:'Live numeric metrics describe wellbeing or occupancy.',e:["Track the baby's breathing and room temp",'How many people are in the room?']},
+ 'M-SCORE':{u:'Many signals roll into one composite score read against a baseline.',e:["Score last night's sleep",'Overall calm score for the home']},
+ 'M-FEED':{u:'A reverse-chronological stream of AI-tagged events is the core view.',e:['Everything that happened at the front door','Feed of all motion events']},
+ 'M-FILTER':{u:'A feed or gallery needs narrowing by category.',e:['Only show people, not cars','Filter to package events']},
+ 'M-GROUPS':{u:'Clips should be bucketed by what triggered them.',e:['Group clips by trigger type','Bucket events: person / pet / vehicle']},
+ 'M-SCRUB':{u:'Activity density over a continuous time axis matters.',e:['Scrub the day and see when it was busy','Where was the activity overnight?']},
+ 'M-EVTLINE':{u:'Discrete events should sit as markers on a day axis.',e:["Mark each event on today's timeline",'Plot when motion happened']},
+ 'M-NIGHTGRAPH':{u:'A bounded session breaks into labeled segments.',e:["Chart the baby's night into asleep / awake",'Segment last night by activity']},
+ 'M-MAPLINE':{u:'Movement crosses multiple cameras and should fuse onto one timeline / map.',e:['Trace a person across all my cameras','Follow the car through the property']},
+ 'M-TREND':{u:'A metric over time, often compared to a baseline, is the insight.',e:['Trend feeder visits this week','Daily gas usage over the month']},
+ 'M-HEAT':{u:'Where activity concentrates in the frame is the question.',e:['Where does the dog spend most time?','Heat-map foot traffic at the door']},
+ 'M-RECAP':{u:'A plain-language summary of a period is what the user wants.',e:['Summarize what happened overnight','Morning recap of the nursery']},
+ 'M-KPI':{u:'Headline numbers across the system answer the question (dashboard).',e:['Events, cameras online, alerts today','Status tiles across all sites']},
+ 'M-TALK':{u:'The user needs to speak through the camera.',e:["Talk to whoever's at the door",'Tell the dog to get off the couch']},
+ 'M-DETER':{u:'An active deterrent (siren / lights) should be triggerable.',e:['Sound a siren if a stranger lingers','Flash the lights at night intruders']},
+ 'M-PLAY':{u:'The user interacts with a pet or subject (treat, laser, call).',e:['Toss the dog a treat','Play with the cat remotely']},
+ 'M-ACT':{u:'A quick action on the monitored thing is needed.',e:['Open or close the garage from the app','Mark this event handled']},
+ 'M-ZONE':{u:'Detection should be limited to a drawn region of the frame.',e:['Only watch the driveway, ignore the street','Draw a zone around the crib']},
+ 'M-PROMPT':{u:'No catalog detector exists — a natural-language VLM prompt defines the trigger (novel goals).',e:['Tell me if a raccoon shows up','Is there a visible flame on the stove?']},
+ 'M-IDCARD':{u:"A recognized subject's identity should be shown (face, plate, species).",e:['Who is this person at the door?','Identify the bird species']},
+ 'M-RULES':{u:'Thresholds, schedules, sensitivity or escalation targets must be configured.',e:['Set sensitivity and quiet hours','Escalate only after 6 minutes']},
+ 'M-DEVMAP':{u:'Cameras should be shown on a map / floorplan with status.',e:['Map all cameras with their status','Floorplan view of the house']},
+ 'M-HEALTH':{u:'Device health — battery, signal, storage, uptime — is the concern.',e:['Which cameras are low battery or offline?','Fleet health roll-up']},
+ 'M-SOS':{u:'Emergency escalation or a caregiver call tree is needed.',e:['Auto-call me and my sister if Mom falls','Escalate a cry to the whole family']},
+ 'M-TICKET':{u:'Events need an assign / investigate / resolve workflow.',e:['Open a ticket for the noise complaint','Assign this event to review']},
+ 'M-JOURNAL':{u:'Care or operational entries should be logged over time.',e:['Log each aide visit and what was done','Keep a maintenance journal']},
+ 'M-READOUT':{u:'A single numeric or text value (often OCR-read) is the answer.',e:['Read the gas meter','Show the fridge thermometer value']},
+ 'M-GAUGE':{u:'A value should be shown on a dial with a safe-range band.',e:['Show tank pressure on a gauge','Is the reading in the safe band?']},
+ 'M-LOG':{u:'A timestamped running log of readings or captures is needed.',e:['Log the meter every hour','Compliance log of fridge temps']},
+ 'M-INVENTORY':{u:'Items must be counted with stock status and restock flags.',e:["What's low in the pantry?",'Count stock on the shelf']},
+ 'M-CAPTURE':{u:'An on-demand scan / capture action drives the flow.',e:['Scan the shelf','Capture a snapshot on demand']},
+ 'M-TIMESHEET':{u:'Presence must be verified as arrival / departure / duration rows.',e:['Did the lawn crew show up for their window?','Log the aide visit times']},
+ 'M-REMINDER':{u:'A schedule- or elapsed-time reminder is the point.',e:['Remind me to water in 2 days','Nudge me if no reading in 24h']},
+ 'M-CALENDAR':{u:'Occurrence frequency per day should be shown as a heatmap.',e:['Calendar of how often the crew came','Daily occurrence heatmap']},
+};
+function ctxEx(ex){return (ex&&ex.length)?`<div class="ctx-ex">${ex.map(e=>`<span class="ctx-eg">${e}</span>`).join('')}</div>`:'';}
+
 $('famGrids').innerHTML=FAMILIES.map(([fam,mods])=>
   `<div class="famblock"><h3>${fam}</h3><div class="modgrid">`
   +mods.map(([id,fn])=>{
     const n=(modUsers[id]||[]).length;
+    const c=MODCTX[id]||{u:'',e:[]};
     return `<div class="modcard" data-mod="${id}">`
       +`<div class="modlive">${MODFULL[id]||MODPREV[id]||''}</div>`
       +`<div class="mid">${id}</div>`
-      +`<div class="mfn">${fn}</div><div class="mu">`
+      +`<div class="mfn">${fn}</div>`
+      +(c.u?`<div class="mctx"><span class="mctx-lab">When to use</span><span class="mctx-use">${c.u}</span>${ctxEx(c.e)}</div>`:'')
+      +`<div class="mu">`
       +(n?`used by <b>${n}</b> example${n>1?'s':''}`:'in the library · not in these examples')
       +`</div></div>`;
   }).join('')+`</div></div>`).join('');
@@ -3051,6 +3117,7 @@ function dcRow(id,fn){
       +`<div class="dc-meta"><span class="dc-id">${id}</span><span class="dc-fn">${fn}</span></div></div>`
     +`<div class="dc-card">`
       +`<div class="dc-head"><b>Data check</b><span class="dc-badge dc-${d.status}">${DC_LABEL[d.status]}</span></div>`
+      +((c=>c&&c.u?`<div class="dc-sec"><div class="dc-lab">When to use</div><div class="dc-use">${c.u}</div>${ctxEx(c.e)}</div>`:'')(MODCTX[id]))
       +`<div class="dc-sec"><div class="dc-lab">Spec contract</div>`
         +`<div class="dc-contract">${d.contract.map(c=>`<span class="dc-c">${c}</span>`).join('')}</div></div>`
       +`<div class="dc-sec"><div class="dc-lab">Wyze AI One source</div>${dcSources(d.sources)}</div>`

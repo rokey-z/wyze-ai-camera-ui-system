@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "python-http-server",
-      "runtimeExecutable": "/opt/homebrew/bin/python3",
-      "runtimeArgs": ["-m", "http.server", "8000", "-d", "/Users/weizhang/Library/Mobile Documents/com~apple~CloudDocs/@WYZE/Camera-research/Wyze-AI-camera-UI-system"],
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8000", "-d", "/Users/rokey.zhang/Desktop/wyze-ai/wyze-ai-camera-ui-system"],
       "port": 8000,
       "autoPort": false
     },
