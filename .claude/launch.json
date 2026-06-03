@@ -4,7 +4,7 @@
     {
       "name": "python-http-server",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8000", "-d", "/Users/rokey.zhang/Desktop/wyze-ai/wyze-ai-camera-ui-system"],
+      "runtimeArgs": ["-m", "http.server", "8000"],
       "port": 8000,
       "autoPort": false
     },
