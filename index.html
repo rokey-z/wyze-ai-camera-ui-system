@@ -54,7 +54,8 @@
   .tabs{display:flex;gap:2px;margin-top:24px;border-bottom:1px solid var(--line);
     position:sticky;top:0;z-index:40;background:#0e1726;padding-top:10px}
   .tab{padding:12px 22px;font-size:16px;font-weight:600;color:var(--mut);cursor:pointer;
-    border-bottom:2px solid transparent;margin-bottom:-1px;display:flex;align-items:baseline;gap:9px}
+    border-bottom:2px solid transparent;margin-bottom:-1px;display:flex;
+    flex-direction:column;align-items:flex-start;gap:2px;line-height:1.2}
   .tab:hover{color:var(--ink)}
   .tab.on{color:var(--ink);border-bottom-color:var(--blue)}
   .tab .tn{font-size:11.5px;color:var(--dim);font-weight:600}
@@ -629,6 +630,10 @@
      PLAYGROUND TAB
      ============================================================ */
   .playconsole{padding:18px 18px 18px;display:flex;flex-direction:column;gap:10px;overflow-y:auto}
+  /* playground input now lives at the top of the Generator console */
+  .playblock{display:flex;flex-direction:column;gap:10px;
+    padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid var(--line)}
+  .console h2.intenthead{margin-top:0}
   .playhead{display:flex;align-items:center;gap:10px;justify-content:space-between}
   .playhead h2{margin:0;flex:1;font-size:12px;letter-spacing:1.3px;
     text-transform:uppercase;color:var(--mut);font-weight:700}
@@ -689,7 +694,7 @@
   .playempty .pes{font-size:12px;line-height:1.55;color:var(--mut);max-width:240px}
 
   /* trace */
-  .playtrace .playtrace-empty{font-size:12px;color:var(--mut);line-height:1.55;
+  .playtrace-empty{font-size:12px;color:var(--mut);line-height:1.55;
     padding:10px 4px;font-style:italic}
 
   /* settings sheet */
@@ -902,14 +907,51 @@
     <div class="tab on" data-tab="gen">Generator<span class="tn">intent &rarr; UI</span></div>
     <div class="tab" data-tab="comp">Library &amp; spec<span class="tn">browse + read</span></div>
     <div class="tab" data-tab="builder">Builder reference<span class="tn">v3 · for the agent</span></div>
-    <div class="tab" data-tab="play">Playground<span class="tn">type or speak a goal</span></div>
     <div class="tab" data-tab="data">Data check<span class="tn">spec &rarr; Wyze AI One</span></div>
   </div>
 
   <div class="tabpane on" id="pane-gen">
     <div class="toprow">
       <div class="console">
-        <h2 id="intentTrigger"><span class="lbl">Monitoring intent</span><span class="cur" id="curIntent"></span></h2>
+        <!-- PLAYGROUND: type or speak a real goal → Claude generates a live mockup -->
+        <div class="playblock">
+          <div class="playhead">
+            <h2><span class="lbl">Describe a monitoring goal</span></h2>
+            <button class="playgear" id="playSettingsBtn" title="API key &amp; model">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </button>
+          </div>
+          <p class="playprompt">Type or speak a real monitoring intent. Claude decomposes it into the §1&ndash;§13 pipeline and the renderer composes a fresh prototype from the 46-module library &mdash; shown in the phone below.</p>
+          <div class="playinput-wrap">
+            <textarea id="playGoal" placeholder="e.g. Watch the chicken coop at night and alert me if a raccoon shows up." rows="3"></textarea>
+            <div class="playinput-bar">
+              <button class="playmic" id="playMic" title="Voice input" hidden>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3"/></svg>
+                <span class="mlbl">Voice</span>
+              </button>
+              <div class="playflex"></div>
+              <button class="playgen" id="playGenerate">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12l4 4L19 6"/></svg>
+                <span>Generate</span>
+              </button>
+            </div>
+          </div>
+          <div class="playexamples">
+            <div class="exhead">Try one of these</div>
+            <div class="exlist">
+              <button class="exchip" data-ex="Watch the chicken coop at night and alert me if a raccoon shows up.">Chicken coop &middot; raccoon alert</button>
+              <button class="exchip" data-ex="Did I leave the garage door open?">Garage door state</button>
+              <button class="exchip" data-ex="Is the dog OK and not anxious while I'm at work?">Dog wellbeing</button>
+              <button class="exchip" data-ex="Read the gas meter every hour and flag unusual jumps.">Gas meter reader</button>
+              <button class="exchip" data-ex="Show me which butterflies visit the flower bed each day.">Butterfly visitors</button>
+              <button class="exchip" data-ex="Did the lawn crew show up for their Tuesday window?">Lawn-crew attendance</button>
+            </div>
+          </div>
+          <div class="playstatus" id="playStatus" hidden></div>
+        </div>
+
+        <!-- MONITORING INTENT: pick a canned example -->
+        <h2 id="intentTrigger" class="intenthead"><span class="lbl">Or pick a sample intent</span><span class="cur" id="curIntent"></span></h2>
         <div class="promptline">&ldquo;I want a camera that&hellip;&rdquo; — pick a goal:</div>
         <div class="intents" id="intents"></div>
       </div>
@@ -1667,81 +1709,6 @@ EMIT  -&gt; see §13
 <span id="cb3-29"><a href="#cb3-29" aria-hidden="true"></a><span class="fu">}</span></span></code></pre></div><p>Rules for the emitted object: <code>layout</code> has ≤ 7 main-screen entries (§11.1); exactly one entry has <code>role</code> resolving to the hero slot S1; <code>visionSurface</code> is always present (§11.5); every required module appears in <code>bindings</code> or in <code>capabilityGaps</code> (§11.2).</p><hr /><h2 id="14-quick-routing-cheatsheet">14. Quick routing cheatsheet</h2><table><thead><tr class="header"><th>If the user says…</th><th>signalNature</th><th>archetype</th><th>cadence</th></tr></thead><tbody><tr class="odd"><td>"tell me if X is open/on/left out"</td><td>state</td><td>STATE_MONITOR</td><td>continuous</td></tr><tr class="even"><td>"alert me when X happens / someone does Y"</td><td>event</td><td>EVENT_WATCHER</td><td>continuous</td></tr><tr class="odd"><td>"is my baby/parent/pet OK / safe"</td><td>wellbeing</td><td>WELLBEING_MONITOR</td><td>continuous</td></tr><tr class="even"><td>"show me which birds/animals visit"</td><td>event (low urgency)</td><td>DISCOVERY</td><td>continuous</td></tr><tr class="odd"><td>"guide me / what do I do next"</td><td>—</td><td>LIVE_ASSISTANT</td><td>continuous</td></tr><tr class="even"><td>"across my properties / all my cameras"</td><td>— (multi-site)</td><td>OPERATIONS</td><td>continuous</td></tr><tr class="odd"><td>"read / track the meter / gauge / display"</td><td>value</td><td>INSTRUMENT_READER</td><td>periodic</td></tr><tr class="even"><td>"log / count / what do I have / restock"</td><td>item</td><td>CAPTURE_LOGGER</td><td>on-demand</td></tr><tr class="odd"><td>"did the crew / aide / kid show up / how long"</td><td>presence</td><td>ATTENDANCE_VERIFIER</td><td>window</td></tr><tr class="even"><td>"watch X grow / change over weeks"</td><td>state</td><td>(route by subject)</td><td>time-lapse</td></tr><tr class="odd"><td>anything that matches nothing above</td><td>—</td><td>custom composition §11.4</td><td>infer</td></tr></tbody></table><hr /><p><em>Reference v3 · May 2026 · consolidated from the three-part AI-Generated Camera UI specification. Module count: 46 across 9 families. Archetypes: 9. Cadences: 5.</em></p>
 </div></div>
 
-  <div class="tabpane" id="pane-play">
-    <div class="toprow play-row">
-      <!-- LEFT: input console -->
-      <div class="console playconsole">
-        <div class="playhead">
-          <h2><span class="lbl">Describe a monitoring goal</span></h2>
-          <button class="playgear" id="playSettingsBtn" title="API key &amp; model">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          </button>
-        </div>
-        <p class="playprompt">Type or speak a real monitoring intent. Claude decomposes it into the §1&ndash;§13 pipeline and the renderer composes a fresh prototype from the 46-module library.</p>
-
-        <div class="playinput-wrap">
-          <textarea id="playGoal" placeholder="e.g. Watch the chicken coop at night and alert me if a raccoon shows up." rows="3"></textarea>
-          <div class="playinput-bar">
-            <button class="playmic" id="playMic" title="Voice input" hidden>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3"/></svg>
-              <span class="mlbl">Voice</span>
-            </button>
-            <div class="playflex"></div>
-            <button class="playgen" id="playGenerate">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12l4 4L19 6"/></svg>
-              <span>Generate</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- examples (collapsible on mobile) -->
-        <div class="playexamples">
-          <div class="exhead">Try one of these</div>
-          <div class="exlist">
-            <button class="exchip" data-ex="Watch the chicken coop at night and alert me if a raccoon shows up.">Chicken coop &middot; raccoon alert</button>
-            <button class="exchip" data-ex="Did I leave the garage door open?">Garage door state</button>
-            <button class="exchip" data-ex="Is the dog OK and not anxious while I'm at work?">Dog wellbeing</button>
-            <button class="exchip" data-ex="Read the gas meter every hour and flag unusual jumps.">Gas meter reader</button>
-            <button class="exchip" data-ex="Show me which butterflies visit the flower bed each day.">Butterfly visitors</button>
-            <button class="exchip" data-ex="Did the lawn crew show up for their Tuesday window?">Lawn-crew attendance</button>
-          </div>
-        </div>
-
-        <!-- status / errors -->
-        <div class="playstatus" id="playStatus" hidden></div>
-      </div>
-
-      <!-- MIDDLE: phone preview -->
-      <div class="phonewrap playphonewrap">
-        <div class="phone">
-          <div class="notch"></div>
-          <div class="screen" id="playScreen">
-            <div class="statusbar"><span>9:41</span><span>Playground &middot; idle</span><span>5G &#9646;&#9646;&#9646;</span></div>
-            <div class="playempty">
-              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#4f8ff0" stroke-width="1.6" opacity=".75"><path d="M12 2l2.4 6.6L21 9l-5.2 4.2L17.4 21 12 17l-5.4 4 1.6-7.8L3 9l6.6-.4z"/></svg>
-              <div class="pet">Generated UI will appear here</div>
-              <div class="pes">Type a goal, press Generate. Claude decomposes the intent, picks an archetype, selects modules, and composes the layout.</div>
-            </div>
-          </div>
-        </div>
-        <div class="hint">
-          <span class="toggle" id="playTg"><span class="tg"></span></span>
-          Show module overlay
-        </div>
-      </div>
-
-      <!-- RIGHT: generation trace -->
-      <div class="trace playtrace">
-        <div class="htitle">Generation trace</div>
-        <div class="pipe" id="playPipe"></div>
-        <div id="playTraceBody">
-          <div class="playtrace-empty">
-            The intent frame, archetype, modules, and detector bindings will stream in here as Claude responds.
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- settings sheet -->
     <div class="playsheet" id="playSheet" hidden>
       <div class="playsheet-card">
@@ -1778,7 +1745,6 @@ EMIT  -&gt; see §13
         </div>
       </div>
     </div>
-  </div>
 
   <div class="tabpane" id="pane-data">
     <div class="dc-cap">How each of the 46 spec components maps to <b>real data in Wyze AI One</b>.
@@ -3461,8 +3427,9 @@ function xScrollDocForFilter(key,val){
 
   /* ---------- DOM refs ---------- */
   const $=id=>document.getElementById(id);
-  const sheet=$('playSheet'), screenEl=$('playScreen'), pipeEl=$('playPipe'),
-        traceBody=$('playTraceBody'), statusEl=$('playStatus'),
+  /* render into the Generator's shared phone + trace (playground merged into Generator) */
+  const sheet=$('playSheet'), screenEl=$('screen'), pipeEl=$('pipe'),
+        traceBody=$('traceBody'), statusEl=$('playStatus'),
         goalEl=$('playGoal'), genBtn=$('playGenerate'), micBtn=$('playMic');
 
   /* ---------- spec doc (system prompt) ---------- */
@@ -3742,7 +3709,7 @@ function xScrollDocForFilter(key,val){
       return;
     }
     inFlight=true; genBtn.disabled=true; genBtn.querySelector('span').textContent='Generating…';
-    resetPipe(); markStage(1);
+    renderPipe(); resetPipe(); markStage(1);
     renderTraceEmpty('Streaming from '+prov.label+' · '+model+'…');
     renderScreenLoading(prov.label,model);
     let raw='';
@@ -4192,7 +4159,8 @@ function xScrollDocForFilter(key,val){
 
   /* ---------- init ---------- */
   function init(){
-    renderPipe();
+    /* renderPipe() runs at generate() time, not on load, so the Generator's
+       default intent view owns the shared phone/trace until the user generates */
     $('playSettingsBtn').addEventListener('click',openSettings);
     $('playSheetClose').addEventListener('click',closeSettings);
     sheet.addEventListener('click',(e)=>{ if(e.target===sheet) closeSettings(); });
