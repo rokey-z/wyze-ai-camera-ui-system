@@ -940,13 +940,13 @@
   </header>
 
   <div class="tabs">
-    <div class="tab on" data-tab="gen">Generator<span class="tn">intent &rarr; UI</span></div>
+    <div class="tab on" data-tab="data">All components<span class="tn">v1 · v1.5 · data</span></div>
+    <div class="tab" data-tab="gen">Generator<span class="tn">intent &rarr; UI</span></div>
     <div class="tab" data-tab="comp">Library &amp; spec<span class="tn">browse + read</span></div>
     <div class="tab" data-tab="builder">Builder reference<span class="tn">v3 · for the agent</span></div>
-    <div class="tab" data-tab="data">Data check<span class="tn">spec &rarr; Wyze AI One</span></div>
   </div>
 
-  <div class="tabpane on" id="pane-gen">
+  <div class="tabpane" id="pane-gen">
     <div class="toprow">
       <div class="console">
         <!-- PLAYGROUND: type or speak a real goal → Claude generates a live mockup -->
@@ -1782,7 +1782,7 @@ EMIT  -&gt; see §13
       </div>
     </div>
 
-  <div class="tabpane" id="pane-data">
+  <div class="tabpane on" id="pane-data">
     <div class="dc-cap">How each of the 46 spec components maps to <b>real data in Wyze AI One</b>.
       Left: the live component. Right: its spec contract, the concrete API source
       (endpoint&nbsp;+&nbsp;fields), a feasibility badge, and an achievable path. Endpoints and field
