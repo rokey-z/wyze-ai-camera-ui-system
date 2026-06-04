@@ -35,6 +35,43 @@
   .promptline{color:var(--dim);font-size:13px;margin-bottom:14px}
   .intents{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start;
     flex:1;min-height:0;overflow-y:auto;padding-right:4px;margin-top:4px}
+  /* agent-template picker: grouped by category + framework samples */
+  #pane-gen .intents{display:block}
+  .tplgroup{margin-bottom:13px}
+  .tplgrouphd{font-size:9.5px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;
+    color:var(--blue);margin:0 0 7px;display:flex;gap:6px;align-items:center}
+  .tplgrouphd span{color:var(--dim);font-family:var(--mono);font-size:9px}
+  .tplgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .tplemoji{font-size:18px;line-height:1;flex:none;width:24px;text-align:center}
+  /* real Wyze agent-template card in the trace */
+  .tplcard{background:#0e1726;border:1px solid #2a3a55;border-radius:12px;padding:13px 14px;margin-top:6px}
+  .tplhead{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+  .tplhead .tplemoji{font-size:24px;width:auto}
+  .tplhead b{font-size:14px}
+  .tplcat{display:block;font-size:9px;font-weight:700;letter-spacing:.5px;
+    text-transform:uppercase;color:#9cc3f5;margin-top:2px}
+  .tplpurpose{font-size:11.5px;color:var(--ink);line-height:1.5}
+  .tplpers{font-size:10.5px;color:var(--mut);line-height:1.5;margin-top:5px;font-style:italic}
+  .tpllab{font-size:8.5px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;
+    color:var(--dim);margin:11px 0 6px}
+  .tpltrg{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-top:1px solid var(--line)}
+  .tpltrg:first-of-type{border-top:0;padding-top:0}
+  .tpltt{flex:none;font-size:7.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;
+    padding:2px 6px;border-radius:5px;margin-top:1px}
+  .tpltt.schedule{color:#9cc3f5;background:#4f8ff018;border:1px solid #4f8ff040}
+  .tpltt.event{color:#f3cd86;background:#f6b73c14;border:1px solid #f6b73c44}
+  .tpltrg b{font-size:11px;display:block}
+  .tpltrg span{font-size:10px;color:var(--mut);display:block;line-height:1.45;margin-top:1px}
+  .tplchips{display:flex;flex-wrap:wrap;gap:5px}
+  .tplchip{font-family:var(--mono);font-size:9px;color:#7eecc4;background:#34d3990d;
+    border:1px solid #34d39933;border-radius:5px;padding:2px 7px}
+  .tplchip.param{color:#c4b3f0;background:#a78bfa12;border-color:#a78bfa3a}
+  .tplfoot{font-size:9px;color:var(--dim);margin-top:11px;border-top:1px solid var(--line);padding-top:9px}
+  .tplfoot code{font-family:var(--mono);color:#9cc3f5}
+  /* playground full-width row beneath the preview */
+  .playrow{margin-top:18px;background:var(--panel);border:1px solid var(--line);
+    border-radius:14px;padding:16px 18px}
+  .playrow .playblock{border-bottom:0;padding-bottom:0;margin-bottom:0}
   .chip{cursor:pointer;border:1px solid var(--line);background:var(--card);
     color:var(--ink);padding:11px 11px 10px;border-radius:11px;font-size:12.5px;
     display:flex;flex-direction:column;align-items:flex-start;gap:7px;
@@ -941,57 +978,21 @@
 
   <div class="tabs">
     <div class="tab on" data-tab="data">All components<span class="tn">v1 · v1.5 · data</span></div>
-    <div class="tab" data-tab="gen">Generator<span class="tn">intent &rarr; UI</span></div>
+    <div class="tab" data-tab="gen">Agent Templates &amp; Playground<span class="tn">Wyze templates · playground</span></div>
     <div class="tab" data-tab="comp">Library &amp; spec<span class="tn">browse + read</span></div>
     <div class="tab" data-tab="builder">Builder reference<span class="tn">v3 · for the agent</span></div>
   </div>
 
   <div class="tabpane" id="pane-gen">
     <div class="toprow">
+      <!-- LEFT: agent-template + sample picker -->
       <div class="console">
-        <!-- PLAYGROUND: type or speak a real goal → Claude generates a live mockup -->
-        <div class="playblock">
-          <div class="playhead">
-            <h2><span class="lbl">Describe a monitoring goal</span></h2>
-            <button class="playgear" id="playSettingsBtn" title="API key &amp; model">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-            </button>
-          </div>
-          <p class="playprompt">Type or speak a real monitoring intent. Claude decomposes it into the §1&ndash;§13 pipeline and the renderer composes a fresh prototype from the 46-module library &mdash; shown in the phone below.</p>
-          <div class="playinput-wrap">
-            <textarea id="playGoal" placeholder="e.g. Watch the chicken coop at night and alert me if a raccoon shows up." rows="3"></textarea>
-            <div class="playinput-bar">
-              <button class="playmic" id="playMic" title="Voice input" hidden>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3"/></svg>
-                <span class="mlbl">Voice</span>
-              </button>
-              <div class="playflex"></div>
-              <button class="playgen" id="playGenerate">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12l4 4L19 6"/></svg>
-                <span>Generate</span>
-              </button>
-            </div>
-          </div>
-          <div class="playexamples">
-            <div class="exhead">Try one of these</div>
-            <div class="exlist">
-              <button class="exchip" data-ex="Watch the chicken coop at night and alert me if a raccoon shows up.">Chicken coop &middot; raccoon alert</button>
-              <button class="exchip" data-ex="Did I leave the garage door open?">Garage door state</button>
-              <button class="exchip" data-ex="Is the dog OK and not anxious while I'm at work?">Dog wellbeing</button>
-              <button class="exchip" data-ex="Read the gas meter every hour and flag unusual jumps.">Gas meter reader</button>
-              <button class="exchip" data-ex="Show me which butterflies visit the flower bed each day.">Butterfly visitors</button>
-              <button class="exchip" data-ex="Did the lawn crew show up for their Tuesday window?">Lawn-crew attendance</button>
-            </div>
-          </div>
-          <div class="playstatus" id="playStatus" hidden></div>
-        </div>
-
-        <!-- MONITORING INTENT: pick a canned example -->
-        <h2 id="intentTrigger" class="intenthead"><span class="lbl">Or pick a sample intent</span><span class="cur" id="curIntent"></span></h2>
-        <div class="promptline">&ldquo;I want a camera that&hellip;&rdquo; — pick a goal:</div>
+        <h2 id="intentTrigger" class="intenthead"><span class="lbl">Agent templates</span><span class="cur" id="curIntent"></span></h2>
+        <div class="promptline">21 Wyze AI One templates + framework samples — pick one to preview:</div>
         <div class="intents" id="intents"></div>
       </div>
 
+      <!-- CENTER: phone preview -->
       <div class="phonewrap">
         <div class="phone">
           <div class="notch"></div>
@@ -1003,10 +1004,51 @@
         </div>
       </div>
 
+      <!-- RIGHT: framework trace + real agent-template card -->
       <div class="trace">
         <div class="htitle">Generation trace</div>
         <div class="pipe" id="pipe"></div>
         <div id="traceBody"></div>
+        <div id="tplCard"></div>
+      </div>
+    </div>
+
+    <!-- PLAYGROUND: full-width row beneath the preview -->
+    <div class="playrow">
+      <div class="playblock">
+        <div class="playhead">
+          <h2><span class="lbl">Playground — describe your own goal</span></h2>
+          <button class="playgear" id="playSettingsBtn" title="API key &amp; model">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </button>
+        </div>
+        <p class="playprompt">Type or speak a real monitoring intent. Claude decomposes it into the §1&ndash;§13 pipeline and the renderer composes a fresh prototype from the 46-module library &mdash; shown in the preview above.</p>
+        <div class="playinput-wrap">
+          <textarea id="playGoal" placeholder="e.g. Watch the chicken coop at night and alert me if a raccoon shows up." rows="3"></textarea>
+          <div class="playinput-bar">
+            <button class="playmic" id="playMic" title="Voice input" hidden>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3"/></svg>
+              <span class="mlbl">Voice</span>
+            </button>
+            <div class="playflex"></div>
+            <button class="playgen" id="playGenerate">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12l4 4L19 6"/></svg>
+              <span>Generate</span>
+            </button>
+          </div>
+        </div>
+        <div class="playexamples">
+          <div class="exhead">Try one of these</div>
+          <div class="exlist">
+            <button class="exchip" data-ex="Watch the chicken coop at night and alert me if a raccoon shows up.">Chicken coop &middot; raccoon alert</button>
+            <button class="exchip" data-ex="Did I leave the garage door open?">Garage door state</button>
+            <button class="exchip" data-ex="Is the dog OK and not anxious while I'm at work?">Dog wellbeing</button>
+            <button class="exchip" data-ex="Read the gas meter every hour and flag unusual jumps.">Gas meter reader</button>
+            <button class="exchip" data-ex="Show me which butterflies visit the flower bed each day.">Butterfly visitors</button>
+            <button class="exchip" data-ex="Did the lawn crew show up for their Tuesday window?">Lawn-crew attendance</button>
+          </div>
+        </div>
+        <div class="playstatus" id="playStatus" hidden></div>
       </div>
     </div>
   </div>
@@ -2633,7 +2675,37 @@ function scrub(){
 }
 
 /* ---------- render trace + screen ---------- */
+/* ---------- Wyze AI One agent templates (real catalog from seed_templates.json) ----------
+   Each maps to a best-fit existing sample SCREEN for the phone preview; the real
+   soul/triggers/skills/params render in the trace card. */
+const TEMPLATES=[
+ {id:'night_watcher',name:'Night Watcher',icon:'🌙',cat:'security',screen:'pkg',desc:'Perimeter security for after-hours activity.',purpose:'Detect meaningful overnight activity and escalate only when it matters.',pers:'Calm, security-focused, and low-noise.',triggers:[{t:'schedule',name:'Routine perimeter check',goal:'Check all assigned cameras for after-hours activity. Report anything unusual.'},{t:'event',name:'Person or vehicle detected',goal:'A person or vehicle was just detected. Assess and alert if unusual for this time.'}],skills:['alerting','visual_analysis','memory_management'],params:[{id:'device_id',def:'camera'},{id:'start_time',def:'21:00'}]},
+ {id:'garage_door_watcher',name:'Garage Door Watcher',icon:'🚗',cat:'security',screen:'garage',desc:'Detects when the garage door is left open and alerts you.',purpose:'Detect open garage doors visually and alert before it becomes a security or weather risk.',pers:'Vigilant but not noisy — only alerts on confirmed open states, avoids shadow false-positives.',triggers:[{t:'schedule',name:'Periodic garage door check',goal:'Snapshot the garage camera and determine if the door is open. Alert if open past the threshold or after hours.'},{t:'event',name:'Motion near garage',goal:'Motion or a person was detected near the garage. Check if the door state changed.'}],skills:['alerting','visual_analysis','memory_management'],params:[{id:'device_id',def:'camera'},{id:'open_threshold_minutes',def:15},{id:'alert_after',def:'22:00'}]},
+ {id:'package_reminder',name:'Package Reminder',icon:'📦',cat:'delivery',screen:'pkg',desc:'Tracks package arrivals and reminds you if one sits outside.',purpose:'Make package arrivals easy to track without over-alerting.',pers:'Helpful, proactive, and practical.',triggers:[{t:'event',name:'Package delivery detected',goal:'A possible package delivery was detected. Confirm and track it.'},{t:'schedule',name:'Still-outside check',goal:'Check if any previously detected packages are still outside. Remind if so.'}],skills:['alerting','visual_analysis','memory_management'],params:[{id:'device_id',def:'camera'}]},
+ {id:'trash_bin_checker',name:'Trash Bin Checker',icon:'🗑️',cat:'utility',screen:'lawncrew',desc:'Checks whether the bins made it out and the truck arrived.',purpose:'Notice collection-day milestones without making the morning noisy.',pers:'Organized, observant, and low-key.',triggers:[{t:'schedule',name:'Collection day check',goal:'Check whether the bins are out and if the truck has arrived.'}],skills:['alerting','visual_analysis','memory_management'],params:[]},
+ {id:'camera_health_check',name:'Camera Health Check',icon:'📷',cat:'utility',screen:'rental',desc:'Daily image-quality check across your cameras.',purpose:'Catch camera issues early so you never miss an important moment.',pers:'Methodical and thorough — always a detailed per-camera breakdown, never a brief summary.',triggers:[{t:'schedule',name:'Daily camera health check',goal:'Check every camera\'s latest snapshot for image-quality issues, offline cameras, and stale event history.'}],skills:['alerting','visual_analysis'],params:[{id:'device_id',def:'all cameras'}]},
+ {id:'general_monitoring',name:'General Monitoring',icon:'📷',cat:'utility',screen:'pkg',desc:'General-purpose detection with a daily scheduled sweep.',purpose:'Detect notable activity on assigned cameras and provide a daily summary.',pers:'Observant, concise, and helpful.',triggers:[{t:'event',name:'Person or motion detected',goal:'A person or motion was detected. Assess and note anything unusual.'},{t:'schedule',name:'Daily sweep',goal:'Run a daily review of camera activity. Summarize notable events from the past 24 hours.'}],skills:['alerting','visual_analysis','memory_management'],params:[{id:'device_id',def:'camera'}]},
+ {id:'baby_monitor',name:'Baby Monitor',icon:'🍼',cat:'family',screen:'baby',desc:'Overnight nursery monitor for safety checks and summaries.',purpose:'Keep a careful eye on the nursery while minimizing false alarms.',pers:'Attentive, gentle, and safety-first.',triggers:[{t:'schedule',name:'Routine nursery check',goal:'Check the nursery for unusual activity. Escalate urgent safety conditions immediately.'},{t:'event',name:'Sound or motion in nursery',goal:'Sound or motion was detected. Check if the baby needs attention.'}],skills:['alerting','visual_analysis','memory_management'],params:[{id:'device_id',def:'camera'},{id:'overnight_start',def:'21:00'},{id:'overnight_end',def:'07:00'}]},
+ {id:'pet_monitoring',name:'Pet Monitoring',icon:'🐾',cat:'family',screen:'eldercare',desc:"Tracks your pet's activity and well-being; alerts on escapes.",purpose:'Keep track of a pet\'s activity and well-being, and alert if they may have escaped or are in distress.',pers:'Caring, observant, and reassuring without overwhelming the owner.',triggers:[{t:'schedule',name:'Routine pet check',goal:'Note the pet\'s location, activity level, and any signs of distress.'},{t:'event',name:'Motion detected',goal:'Check if the pet is active, near exit points, or anything unusual is happening.'}],skills:['alerting','visual_analysis','memory_management'],params:[{id:'device_id',def:'camera'},{id:'pet_name',def:'Pet'},{id:'pet_type',def:'dog'}]},
+ {id:'school_bus_watch',name:'School Bus Watch',icon:'🚌',cat:'family',screen:'pkg',desc:"Detects your child's bus and alerts if it's late.",purpose:'Detect school-bus arrivals so no one misses pickup or dropoff, and flag when the bus is late.',pers:'Punctual, reliable, and family-focused.',triggers:[{t:'schedule',name:'Morning bus watch',goal:'Watch for the bus during the morning pickup window. Alert when it arrives or if it\'s late.'},{t:'event',name:'Vehicle detected',goal:'A vehicle was detected on the street. Check if it\'s the school bus and alert if so.'}],skills:['alerting','visual_analysis','memory_management'],params:[{id:'device_id',def:'camera'},{id:'morning_pickup',def:'07:30'},{id:'afternoon_dropoff',def:'15:00'}]},
+ {id:'kids_watch',name:'Kids Watch',icon:'👧',cat:'family',screen:'eldercare',desc:'Monitors a play area: zone departure & stranger detection.',purpose:'Keep children safe — alert on zone departure, unknown adults, and unsupervised pool approach.',pers:'Protective and safety-first; minimizes false alarms from normal play.',triggers:[{t:'schedule',name:'Routine zone check',goal:'Check the watch zone for children\'s presence and safety.'},{t:'event',name:'Motion or person detected',goal:'Verify children\'s safety and check for any alert conditions.'}],skills:['alerting','visual_analysis','memory_management'],params:[{id:'device_id',def:'camera'},{id:'watch_zone',def:'backyard'},{id:'alert_on',def:'leaving_zone, pool_approach, stranger'}]},
+ {id:'cat_monitoring',name:'Cat Monitoring',icon:'🐱',cat:'family',screen:'bird',desc:"Tracks your cat's location and enforces indoor-only rules.",purpose:'Monitor a cat\'s whereabouts and activity, enforcing indoor-only rules when configured.',pers:'Attentive and cat-savvy — reports with context, not unnecessary alarms.',triggers:[{t:'schedule',name:'Routine cat check',goal:'Note location and activity. If indoor-only is set, alert on outdoor sightings.'},{t:'event',name:'Motion detected',goal:'Check if the cat is involved and log their activity.'}],skills:['alerting','visual_analysis','memory_management'],params:[{id:'device_id',def:'camera'},{id:'cat_name',def:'Cat'},{id:'indoor_only',def:'false'}]},
+ {id:'bird_monitoring',name:'Bird Monitoring',icon:'🐦',cat:'nature',screen:'bird',desc:'Watches your feeder for visiting species and feeder status.',purpose:'Track bird species visiting the feeder, monitor feeder status, and build a running species log.',pers:'Patient, observant, and nature-curious. Logs diligently without over-alerting.',triggers:[{t:'schedule',name:'Routine feeder check',goal:'Check the feeder for bird activity. Log species observed and the feeder fill level.'},{t:'event',name:'Bird or motion at feeder',goal:'Identify any birds present and log the visit.'}],skills:['alerting','visual_analysis','memory_management'],params:[{id:'device_id',def:'camera'},{id:'log_frequency',def:'hourly'}]},
+ {id:'hummingbird_watch',name:'Hummingbird Watch',icon:'🌺',cat:'nature',screen:'bird',desc:'Tracks feeder visits and reminds you to change nectar.',purpose:'Track hummingbird visits, keep nectar fresh, and help maintain a healthy feeder.',pers:'Gentle and detail-oriented; cares about bird welfare.',triggers:[{t:'schedule',name:'Hummingbird feeder check',goal:'Check for visits and nectar level. Log activity and remind if nectar needs changing.'},{t:'event',name:'Motion at feeder',goal:'Check for a hummingbird visit and log details.'}],skills:['alerting','visual_analysis','memory_management'],params:[{id:'device_id',def:'camera'},{id:'nectar_change_days',def:5}]},
+ {id:'garden_watch',name:'Garden Watch',icon:'🌱',cat:'nature',screen:'plant',desc:'Monitors plant health, animal intrusions, and watering.',purpose:'Watch the garden, detect changes over time, and alert on animal intrusions or declining plant health.',pers:'Attentive and growth-minded — tracks changes patiently over days and weeks.',triggers:[{t:'schedule',name:'Daily garden check',goal:'Compare plant health to baseline; note intrusions, damage, and watering conditions.'},{t:'event',name:'Motion in garden',goal:'Check for animal intruders (deer, rabbits) and alert if in garden beds.'}],skills:['alerting','visual_analysis','memory_management'],params:[{id:'device_id',def:'camera'},{id:'check_time',def:'08:00'}]},
+ {id:'chicken_monitoring',name:'Chicken Monitoring',icon:'🐔',cat:'nature',screen:'bird',desc:'Monitors the coop for headcount, predators, and door status.',purpose:'Keep the flock safe — monitor headcount, detect predators quickly, and ensure the coop is secured at night.',pers:'Watchful and protective. Treats predator detection as urgent.',triggers:[{t:'schedule',name:'Routine coop check',goal:'Check headcount, coop door state, and any signs of predators or distress.'},{t:'event',name:'Motion near coop',goal:'Immediately check for predators. If identified, alert URGENTLY.'}],skills:['alerting','visual_analysis','memory_management'],params:[{id:'device_id',def:'camera'},{id:'flock_size',def:6},{id:'coop_close_time',def:'20:00'}]},
+ {id:'fall_detection',name:'Fall Detection',icon:'🚨',cat:'safety',screen:'eldercare',desc:'Watches for sudden human falls and alerts immediately.',purpose:'Detect falls in real time and alert immediately when a person goes from upright to the floor and does not recover.',pers:'Vigilant and disciplined about false positives — ignores bending, sitting, pets; only true sudden descents.',triggers:[{t:'event',name:'Motion or person detected',goal:'Immediately classify for a possible fall and alert if confirmed.'},{t:'schedule',name:'Periodic floor-check heartbeat',goal:'Snapshot and check if anyone is motionless on the floor — catches falls during pipeline gaps.'}],skills:['alerting','visual_analysis','memory_management'],params:[{id:'device_id',def:'camera'},{id:'sensitivity',def:'standard'},{id:'cooldown_minutes',def:10},{id:'emergency_contact',def:'—'}]},
+ {id:'senior_care',name:'Senior Care',icon:'👴',cat:'safety',screen:'eldercare',desc:'Monitors daily routines; alerts on prolonged inactivity.',purpose:'Track daily activity patterns of elderly residents and alert caregivers when routines are disrupted or inactivity exceeds safe thresholds.',pers:'Compassionate and reliable. Respects dignity while prioritizing safety.',triggers:[{t:'schedule',name:'Morning routine check',goal:'Check if the person is up and active. If no activity by the check time, escalate.'},{t:'schedule',name:'Inactivity heartbeat',goal:'Confirm recent activity. If no person detected within the threshold, alert.'}],skills:['alerting','visual_analysis','memory_management'],params:[{id:'device_id',def:'camera'},{id:'morning_check',def:'08:00'},{id:'inactivity_threshold_minutes',def:120}]},
+ {id:'stove_watch',name:'Stove Watch',icon:'🔥',cat:'safety',screen:'stove',desc:'Monitors the stove for unattended cooking and fire hazards.',purpose:'Detect unattended stove use and smoke hazards, alerting before a dangerous situation escalates.',pers:'Alert and precise. Distinguishes real hazards from normal cooking without over-alerting.',triggers:[{t:'schedule',name:'Stove safety check',goal:'Check for active stove use and whether someone is present. Alert if active but unattended.'},{t:'event',name:'Motion in kitchen',goal:'Update person-presence tracking for stove safety monitoring.'}],skills:['alerting','visual_analysis','memory_management'],params:[{id:'device_id',def:'camera'},{id:'unattended_threshold_minutes',def:15}]},
+ {id:'pool_watch',name:'Pool Watch',icon:'🏊',cat:'safety',screen:'leak',desc:'Monitors the pool for unauthorized access and child safety.',purpose:'Prevent pool accidents by enforcing pool hours, detecting unsupervised children, and alerting on pet access.',pers:'Vigilant and decisive — pool safety is life-safety, errs on the side of alerting.',triggers:[{t:'schedule',name:'Pool area safety check',goal:'Check for people, children, or pets. Enforce pool hours and safety rules.'},{t:'event',name:'Motion near pool',goal:'Check who is present and whether safety conditions are met.'}],skills:['alerting','visual_analysis','memory_management'],params:[{id:'device_id',def:'camera'},{id:'pool_hours',def:'08:00–20:00'},{id:'alert_on_child',def:'true'}]},
+ {id:'gym_monitoring',name:'Gym Monitoring',icon:'💪',cat:'wellness',screen:'cooking',desc:'Tracks home-gym sessions and equipment left out.',purpose:'Help users track home-workout habits by logging gym sessions and giving daily summaries.',pers:'Encouraging and organized. Celebrates consistency; focuses on facts, not judgment.',triggers:[{t:'event',name:'Motion in gym area',goal:'Check if a workout session is starting or in progress. Log activity.'},{t:'schedule',name:'Daily gym summary',goal:'Summarize gym usage — sessions, duration, and whether equipment was left out.'}],skills:['alerting','visual_analysis','memory_management'],params:[{id:'device_id',def:'camera'}]},
+ {id:'medicine_reminder',name:'Medicine Reminder',icon:'💊',cat:'wellness',screen:'pantry',desc:'Reminds you if a scheduled dose may have been missed.',purpose:'Improve medication compliance by detecting visits to the medicine area at scheduled times and reminding when a dose may be missed.',pers:'Caring and gentle, persistent without nagging. Respects the user\'s autonomy.',triggers:[{t:'schedule',name:'Medicine time check',goal:'Check if someone visited the medicine area recently. If yes, record as taken; if not, send a reminder.'},{t:'schedule',name:'Compliance follow-up',goal:'If the dose was not recorded as taken, send an urgent reminder.'}],skills:['alerting','visual_analysis','memory_management'],params:[{id:'device_id',def:'camera'},{id:'schedule_times',def:'08:00, 20:00'},{id:'medicine_name',def:'medicine'}]},
+];
+const CATS=['security','delivery','utility','family','nature','safety','wellness'];
+const CATLAB={security:'Security',delivery:'Delivery',utility:'Utility',family:'Family',nature:'Nature',safety:'Safety',wellness:'Wellness'};
+
 let current='garage';
+let currentTpl=null;
 function build(){
   const c=CASES[current];
   // pipeline
@@ -2673,35 +2745,77 @@ function build(){
   document.getElementById('screen').innerHTML=
     `<div class="statusbar"><span>9:41</span><span>Generated UI ▾</span><span>5G ▮▮▮</span></div>`
     +SCREENS[current]();
-  // chips
-  document.querySelectorAll('.chip').forEach(ch=>
-    ch.classList.toggle('on',ch.dataset.k===current));
+  // real Wyze agent-template card (only when a template is selected)
+  renderTplCard(currentTpl);
+  // active chip
+  document.querySelectorAll('#intents .chip').forEach(ch=>
+    ch.classList.toggle('on', currentTpl ? ch.dataset.tpl===currentTpl.id : (!ch.dataset.tpl && ch.dataset.k===current)));
 }
 
-/* intent chips */
-document.getElementById('intents').innerHTML=Object.entries(CASES).map(([k,c])=>
-  `<div class="chip" data-k="${k}">${c.icon}`
-  +`<div class="txt">${c.label}<small>${c.sub}</small></div>`
-  +`<span class="chiparch">${c.arche.name}</span>`
-  +`${c.v2?'<span class="v2b">v2</span>':''}</div>`).join('');
+/* real Wyze agent-template card in the trace */
+function renderTplCard(t){
+  const el=document.getElementById('tplCard'); if(!el) return;
+  if(!t){ el.innerHTML=''; return; }
+  const trg=t.triggers.map(tr=>
+    `<div class="tpltrg"><span class="tpltt ${tr.t}">${tr.t}</span>`
+    +`<div><b>${tr.name}</b><span>${tr.goal}</span></div></div>`).join('');
+  const skills=t.skills.map(s=>`<span class="tplchip">${s}</span>`).join('');
+  const params=(t.params&&t.params.length)
+    ? t.params.map(p=>`<span class="tplchip param">${p.id}${p.def!=null?' = '+p.def:''}</span>`).join('')
+    : `<span class="tplchip param" style="opacity:.6">none</span>`;
+  el.innerHTML=`<div class="sectlab" style="margin-top:14px">Wyze AI One — agent template</div>
+   <div class="tplcard">
+    <div class="tplhead"><span class="tplemoji">${t.icon}</span>
+      <div><b>${t.name}</b><span class="tplcat">${CATLAB[t.cat]||t.cat}</span></div></div>
+    <div class="tplpurpose">${t.purpose}</div>
+    <div class="tplpers">${t.pers}</div>
+    <div class="tpllab">Triggers</div>${trg}
+    <div class="tpllab">Skills</div><div class="tplchips">${skills}</div>
+    <div class="tpllab">Parameters</div><div class="tplchips">${params}</div>
+    <div class="tplfoot">Real Wyze AI One template · <code>GET /api/templates/${t.id}</code></div>
+   </div>`;
+}
 
-/* mobile collapsible menu: tap the trigger to open/close the chip grid.
-   No effect on desktop — the CSS keeps the grid visible regardless of .open. */
-const consoleEl=document.querySelector('.console');
+/* picker: 21 agent templates grouped by category + the framework samples */
+function tplChip(t){
+  return `<div class="chip" data-tpl="${t.id}"><span class="tplemoji">${t.icon}</span>`
+    +`<div class="txt">${t.name}<small>${t.desc}</small></div>`
+    +`<span class="chiparch">${t.cat}</span></div>`;
+}
+(function(){
+  let html=CATS.map(cat=>{
+    const items=TEMPLATES.filter(t=>t.cat===cat);
+    if(!items.length) return '';
+    return `<div class="tplgroup"><div class="tplgrouphd">${CATLAB[cat]} <span>${items.length}</span></div>`
+      +`<div class="tplgrid">`+items.map(tplChip).join('')+`</div></div>`;
+  }).join('');
+  html+=`<div class="tplgroup"><div class="tplgrouphd">Framework samples <span>${Object.keys(CASES).length}</span></div><div class="tplgrid">`
+    +Object.entries(CASES).map(([k,c])=>
+      `<div class="chip" data-k="${k}">${c.icon}`
+      +`<div class="txt">${c.label}<small>${c.sub}</small></div>`
+      +`<span class="chiparch">${c.arche.name}</span>`
+      +`${c.v2?'<span class="v2b">v2</span>':''}</div>`).join('')
+    +`</div></div>`;
+  document.getElementById('intents').innerHTML=html;
+})();
+
+const consoleEl=document.querySelector('#pane-gen .console');
 const curEl=document.getElementById('curIntent');
-function updateCurLabel(){curEl.textContent=CASES[current]?.label||'';}
+function updateCurLabel(){curEl.textContent=(currentTpl?currentTpl.name:CASES[current]?.label)||'';}
 document.getElementById('intentTrigger').addEventListener('click',()=>{
   consoleEl.classList.toggle('open');});
 
-document.querySelectorAll('.chip').forEach(ch=>
-  ch.addEventListener('click',()=>{
-    current=ch.dataset.k;build();updateCurLabel();
-    consoleEl.classList.remove('open');
-    /* on mobile, jump to the preview so the user sees the result */
-    if(window.matchMedia('(max-width:640px)').matches){
-      document.querySelector('.phonewrap')?.scrollIntoView({behavior:'smooth',block:'start'});
-    }
-  }));
+/* event delegation — handles both template (data-tpl) and sample (data-k) chips */
+document.getElementById('intents').addEventListener('click',e=>{
+  const ch=e.target.closest('.chip'); if(!ch) return;
+  if(ch.dataset.tpl){ currentTpl=TEMPLATES.find(t=>t.id===ch.dataset.tpl)||null; if(currentTpl) current=currentTpl.screen; }
+  else if(ch.dataset.k){ currentTpl=null; current=ch.dataset.k; }
+  build(); updateCurLabel();
+  consoleEl.classList.remove('open');
+  if(window.matchMedia('(max-width:640px)').matches){
+    document.querySelector('.phonewrap')?.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+});
 updateCurLabel();
 
 /* overlay toggle */
@@ -3923,6 +4037,7 @@ function xScrollDocForFilter(key,val){
       return;
     }
     inFlight=true; genBtn.disabled=true; genBtn.querySelector('span').textContent='Generating…';
+    currentTpl=null; var _tc=document.getElementById('tplCard'); if(_tc) _tc.innerHTML='';  /* free-form goal: not a template */
     renderPipe(); resetPipe(); markStage(1);
     renderTraceEmpty('Streaming from '+prov.label+' · '+model+'…');
     renderScreenLoading(prov.label,model);
