@@ -230,6 +230,11 @@ to the data as evidence — one unit) · `reassurance` (co-hero beside a non-ima
 For `value` and `state` goals use `fused-overlay` + `proof` — the number/state word is
 drawn on its source frame, not placed beside an icon.
 
+**RULE — actions sit below the camera.** The action dock (Family F — `M-ACT`, `M-TALK`,
+`M-DETER`) is always placed **beneath the camera surface / Vision Surface (hero)**, never
+above it. Controls act on what the user just saw, so the camera image always comes first
+and the action row follows directly under it.
+
 **Playback mode** is set with the signal: `live` auto-plays; `highlight-reel` and
 `timelapse` loop; `event-clip` is tap-to-play; `continuous-footage` is scrub; `snapshot`
 is static.
