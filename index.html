@@ -930,6 +930,7 @@
   .exchip:hover{color:var(--ink);border-color:var(--blue)}
   .playstatus{font-size:12px;line-height:1.5;padding:10px 12px;border-radius:9px;
     border:1px solid;display:flex;gap:8px;align-items:flex-start}
+  .playstatus[hidden]{display:none}
   .playstatus.err{border-color:#f25c5c66;background:#f25c5c14;color:#ffb0b0}
   .playstatus.warn{border-color:#f6b73c55;background:#f6b73c12;color:#f3cd86}
   .playstatus.info{border-color:#4f8ff066;background:#4f8ff012;color:#9cc3f5}
@@ -1167,6 +1168,40 @@
     <div class="toprow">
       <!-- LEFT: agent-template + sample picker -->
       <div class="console">
+        <div class="playblock playside">
+        <div class="playhead">
+          <h2><span class="lbl">Describe your own goal</span></h2>
+          <button class="playgear" id="playSettingsBtn" title="API key &amp; model">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </button>
+        </div>
+        <div class="playinput-wrap">
+          <textarea id="playGoal" placeholder="e.g. Watch the chicken coop at night and alert me if a raccoon shows up." rows="3"></textarea>
+          <div class="playinput-bar">
+            <button class="playmic" id="playMic" title="Voice input" hidden>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3"/></svg>
+              <span class="mlbl">Voice</span>
+            </button>
+            <div class="playflex"></div>
+            <button class="playgen" id="playGenerate">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12l4 4L19 6"/></svg>
+              <span>Generate</span>
+            </button>
+          </div>
+        </div>
+        <div class="playexamples">
+          <div class="exhead">Try one of these</div>
+          <div class="exlist">
+            <button class="exchip" data-ex="Watch the chicken coop at night and alert me if a raccoon shows up.">Chicken coop &middot; raccoon alert</button>
+            <button class="exchip" data-ex="Did I leave the garage door open?">Garage door state</button>
+            <button class="exchip" data-ex="Is the dog OK and not anxious while I'm at work?">Dog wellbeing</button>
+            <button class="exchip" data-ex="Read the gas meter every hour and flag unusual jumps.">Gas meter reader</button>
+            <button class="exchip" data-ex="Show me which butterflies visit the flower bed each day.">Butterfly visitors</button>
+            <button class="exchip" data-ex="Did the lawn crew show up for their Tuesday window?">Lawn-crew attendance</button>
+          </div>
+        </div>
+        <div class="playstatus" id="playStatus" hidden></div>
+      </div>
         <h2 id="intentTrigger" class="intenthead"><span class="lbl">Agent templates</span><span class="cur" id="curIntent"></span></h2>
         <div class="promptline">21 Wyze AI One templates + framework samples — pick one to preview:</div>
         <div class="intents" id="intents"></div>
@@ -1199,44 +1234,6 @@
       <div id="tplCard"></div>
     </div>
 
-    <!-- PLAYGROUND: full-width row beneath the preview -->
-    <div class="playrow">
-      <div class="playblock">
-        <div class="playhead">
-          <h2><span class="lbl">Playground — describe your own goal</span></h2>
-          <button class="playgear" id="playSettingsBtn" title="API key &amp; model">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          </button>
-        </div>
-        <p class="playprompt">Type or speak a real monitoring intent. Claude decomposes it into the §1&ndash;§13 pipeline and the renderer composes a fresh prototype from the 46-module library &mdash; shown in the preview above.</p>
-        <div class="playinput-wrap">
-          <textarea id="playGoal" placeholder="e.g. Watch the chicken coop at night and alert me if a raccoon shows up." rows="3"></textarea>
-          <div class="playinput-bar">
-            <button class="playmic" id="playMic" title="Voice input" hidden>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3"/></svg>
-              <span class="mlbl">Voice</span>
-            </button>
-            <div class="playflex"></div>
-            <button class="playgen" id="playGenerate">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12l4 4L19 6"/></svg>
-              <span>Generate</span>
-            </button>
-          </div>
-        </div>
-        <div class="playexamples">
-          <div class="exhead">Try one of these</div>
-          <div class="exlist">
-            <button class="exchip" data-ex="Watch the chicken coop at night and alert me if a raccoon shows up.">Chicken coop &middot; raccoon alert</button>
-            <button class="exchip" data-ex="Did I leave the garage door open?">Garage door state</button>
-            <button class="exchip" data-ex="Is the dog OK and not anxious while I'm at work?">Dog wellbeing</button>
-            <button class="exchip" data-ex="Read the gas meter every hour and flag unusual jumps.">Gas meter reader</button>
-            <button class="exchip" data-ex="Show me which butterflies visit the flower bed each day.">Butterfly visitors</button>
-            <button class="exchip" data-ex="Did the lawn crew show up for their Tuesday window?">Lawn-crew attendance</button>
-          </div>
-        </div>
-        <div class="playstatus" id="playStatus" hidden></div>
-      </div>
-    </div>
   </div>
 
     <div class="tabpane" id="pane-comp">
@@ -1346,7 +1343,6 @@
 <h3 id="fam-I">Family I — Readings &amp; Records</h3>
 <table><tr><th>Module</th><th>Function</th></tr><tr><td><a class="modref" data-mod="M-READOUT">M-READOUT</a></td><td>Large numeric or text value display; supports a read-aloud variant</td></tr><tr><td><a class="modref" data-mod="M-GAUGE">M-GAUGE</a></td><td>Analog gauge or dial with current value and a safe-range band</td></tr><tr><td><a class="modref" data-mod="M-LOG">M-LOG</a></td><td>Timestamped running log of readings or captures</td></tr><tr><td><a class="modref" data-mod="M-INVENTORY">M-INVENTORY</a></td><td>Item list with counts, stock status, and restock flags</td></tr><tr><td><a class="modref" data-mod="M-CAPTURE">M-CAPTURE</a></td><td>Scan / capture action plus a strip of recent captures</td></tr><tr><td><a class="modref" data-mod="M-TIMESHEET">M-TIMESHEET</a></td><td>Visit log — arrival, departure, duration, status — each row a clip</td></tr><tr><td><a class="modref" data-mod="M-REMINDER">M-REMINDER</a></td><td>Schedule- or elapsed-time reminder card</td></tr><tr><td><a class="modref" data-mod="M-CALENDAR">M-CALENDAR</a></td><td>Heatmap calendar of occurrences</td></tr></table>
 
-
 <h1 id="fam-A">10.  Camera vision signals, layout and priority</h1>
 <p>The agent is a camera agent. Whatever the goal, the user expects to see real imagery from their own camera. The camera visual is not one widget among many; it is the thing the product is made of. Family A is treated separately here because it is the family that determines whether a generated UI feels like a camera product at all.</p>
 <h2>10.1  The nine visual signals</h2>
@@ -1401,7 +1397,6 @@
 
 <h2>15.5  “Watch for rats in the backyard” (a long-tail goal)</h2>
 <table><tr><th>Stage</th><th>Result</th></tr><tr><td>Archetype / cadence</td><td>Event Watcher · Window (night) — moderate confidence</td></tr><tr><td>Modules</td><td><a class="modref" data-mod="M-LIVE">M-LIVE</a> (hero) · <a class="modref" data-mod="M-FEED">M-FEED</a> · <a class="modref" data-mod="M-FILTER">M-FILTER</a> · <a class="modref" data-mod="M-HEAT">M-HEAT</a> · <a class="modref" data-mod="M-PROMPT">M-PROMPT</a> · <a class="modref" data-mod="M-RULES">M-RULES</a></td></tr><tr><td>Vision</td><td>Live + clip · cropped · full-bleed hero · Hero</td></tr><tr><td>Binding</td><td>Tier 3 — a generated VLM prompt (catalog animal detectors do not isolate rodents); conservative threshold, user calibration</td></tr></table>
-
 
 <h1>16.  Open problems and build roadmap</h1>
 <h2>16.1  Open problems</h2>
