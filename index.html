@@ -3112,19 +3112,13 @@ function tplChip(t){
     +`<div class="txt">${t.name}</div></div>`;
 }
 (function(){
-  let html=CATS.map(cat=>{
-    const items=TEMPLATES.filter(t=>t.cat===cat);
-    if(!items.length) return '';
-    return `<div class="tplgroup"><div class="tplgrouphd">${CATLAB[cat]} <span>${items.length}</span></div>`
-      +`<div class="tplgrid">`+items.map(tplChip).join('')+`</div></div>`;
-  }).join('');
-  html+=`<div class="tplgroup"><div class="tplgrouphd">Framework samples <span>${Object.keys(CASES).length}</span></div><div class="tplgrid">`
-    +Object.entries(CASES).map(([k,c])=>
-      `<div class="chip" data-k="${k}">${c.icon}`
-      +`<div class="txt">${c.label}</div>`
-      +`${c.v2?'<span class="v2b">v2</span>':''}</div>`).join('')
-    +`</div></div>`;
-  document.getElementById('intents').innerHTML=html;
+  /* one flat grid — all templates + framework samples, no category groups */
+  const tpls=TEMPLATES.map(tplChip).join('');
+  const samples=Object.entries(CASES).map(([k,c])=>
+    `<div class="chip" data-k="${k}">${c.icon}`
+    +`<div class="txt">${c.label}</div>`
+    +`${c.v2?'<span class="v2b">v2</span>':''}</div>`).join('');
+  document.getElementById('intents').innerHTML=`<div class="tplgrid">${tpls}${samples}</div>`;
 })();
 
 const consoleEl=document.querySelector('#pane-gen .console');
