@@ -269,6 +269,11 @@
   .dc-badge.dc-v2{color:#c4b3f0;border-color:#a78bfa66;background:#a78bfa14}
   .dc-modepill{color:#c4b3f0 !important;border-color:#a78bfa3a !important;background:#a78bfa12 !important}
   .dc-v2chip{border-color:#a78bfa55 !important}
+  .dc-cov{display:flex;gap:5px;margin-top:9px;flex-wrap:wrap}
+  .dc-cv{font-size:8.5px;font-weight:700;padding:2px 7px;border-radius:6px;border:1px solid}
+  .dc-cv.dc-have{color:#7eecc4;border-color:#34d39955;background:#34d39912}
+  .dc-cv.dc-partial{color:#f3cd86;border-color:#f6b73c55;background:#f6b73c12}
+  .dc-cv.dc-missing{color:#ff9a9a;border-color:#f25c5c55;background:#f25c5c12}
 
   .dc-opp{display:flex;align-items:flex-start;gap:13px;padding:11px 0;border-top:1px solid var(--line)}
   .dc-opp:first-of-type{border-top:0}
@@ -3586,30 +3591,72 @@ function dcSources(srcs){
     +`</div>`).join('');
 }
 /* ---------- v2 — consolidated set (42 components → 11 adjustable ones) ---------- */
+/* v2 — rethought from the v1.5 42: keep 18 distinct (variety), merge 12 that are
+   one format + a small adjust → 30 components. folds[] lists the v1.5 ids each absorbs;
+   sources are derived from those folds' real Wyze mappings (curated src[] only where
+   the folds have no DATACHECK entry yet). */
 const V2=[
- {id:'C-CAMERA',name:'Camera surface',primary:'M-LIVE',modes:['live','snapshot','clip','24/7','time-lapse','PTZ'],folds:['M-LIVE','M-SNAP','M-CLIP','M-FOOTAGE','M-TIMELAPSE','M-PTZ','M-CAPTURE'],src:[{ep:'POST /api/devices/{mac}/stream_params'},{ep:'POST /api/devices/{mac}/capture_snapshot'},{ep:'POST /api/events/video_url'},{ep:'POST /api/devices/thumbnails'}],use:'One camera surface for every visual need — pick the mode (live, still, clip, 24/7, time-lapse) and overlay annotations.'},
- {id:'C-COLLECTION',name:'Visual collection',primary:'M-GALLERY',modes:['gallery','compare','grid','reel'],folds:['M-GALLERY','M-COMPARE','M-GRID','M-REEL'],src:[{ep:'GET /api/eventgroups (+ /{id}/artifact gif)'},{ep:'GET /api/reid/identities'}],use:'Multi-image layouts — a browsable collection, a before/after pair, a synced multi-cam grid, or an auto-compiled reel.'},
- {id:'C-STATUS',name:'Status readout',primary:'M-STATE',modes:['state + duration','number','gauge','score ring','tiles'],folds:['M-STATE','M-SCORE','M-VITALS','M-READOUT','M-GAUGE','M-KPI'],src:[{ep:'GET /api/household/visual-memories',fields:['status_line']},{ep:'GET /api/devices/{mac}/power_status'},{ep:'GET /api/eventgroups',fields:['score']},{ep:'capture + tools/vlm.py (OCR)'}],use:'Any current-state readout — a state badge with how-long, a big number, a gauge, a score ring, or metric tiles.'},
- {id:'C-FEED',name:'Record feed',primary:'M-FEED',modes:['event cards','grouped','log','journal','visit sheet','identity','filter'],folds:['M-FEED','M-GROUPS','M-LOG','M-JOURNAL','M-TIMESHEET','M-IDCARD'],src:[{ep:'POST /api/events/filter'},{ep:'GET /api/eventgroups'},{ep:'GET /api/reid/identities/{id}/appearances'},{ep:'GET /api/household/visual-memories'}],use:'Any list of records — tagged event cards, grouped clips, a reading log, a care journal, visit rows, or an identity detail; filter chips built in.'},
- {id:'C-TIMELINE',name:'Activity timeline',primary:'M-SCRUB',modes:['scrubber + markers','sessions','cross-camera'],folds:['M-SCRUB','M-NIGHTGRAPH','M-MAPLINE'],src:[{ep:'POST /api/events/filter',fields:['event_ts']},{ep:'GET /api/reid/identities/{id}/appearances'}],use:'Activity over a time axis — a scrubber with event markers, labeled session segments, or a cross-camera path.'},
- {id:'C-CHART',name:'Analytics chart',primary:'M-TREND',modes:['trend','heat-map','calendar'],folds:['M-TREND','M-HEAT','M-CALENDAR'],src:[{ep:'POST /api/events/filter (counts)'},{ep:'GET /api/eventgroups/{id}/artifact',fields:['bbox_xywh']},{ep:'POST /api/eventgroups/digest'}],use:'Analytics — a metric trend, a spatial heat-map, or an occurrence calendar.'},
- {id:'C-RECAP',name:'AI recap',primary:'M-RECAP',modes:['narrative','tone band'],folds:['M-RECAP'],src:[{ep:'GET /api/stories',fields:['narrative','tone','why_it_matters']}],use:'An AI plain-language summary / story of a period, with an all-clear → alert tone band.'},
- {id:'C-ACTIONS',name:'Action bar',primary:'M-ACT',modes:['power','talk','siren / lights','treat','custom'],folds:['M-ACT','M-TALK','M-DETER','M-PLAY'],src:[{ep:'POST /api/devices/{mac}/power_on · power_off'}],use:'A quick-action bar bound to the device — power works today; talk, siren/lights and treat need hardware-control APIs.'},
- {id:'C-CONFIG',name:'Detection & config',primary:'M-RULES',modes:['rules / threshold / schedule','zone editor','VLM prompt','reminder'],folds:['M-RULES','M-ZONE','M-PROMPT','M-REMINDER'],src:[{ep:'GET/PUT /api/devices/{mac}/profile',fields:['user_prompt','threshold_level']},{ep:'GET /api/agents (triggers)'}],use:'Detection & config — sensitivity / schedule / escalation, a drawn zone, the open-vocab VLM prompt, and reminders.'},
- {id:'C-FLEET',name:'Fleet roll-up',primary:'M-HEALTH',modes:['device map','health roll-up'],folds:['M-DEVMAP','M-HEALTH'],src:[{ep:'GET /api/devices',fields:['firmware_ver']},{ep:'GET /api/devices/{mac}/power_status',fields:['is_on']}],use:'Fleet view — devices on a map / floorplan plus a health roll-up (online + firmware; battery/signal need extra telemetry).'},
- {id:'C-ESCALATE',name:'Escalation & workflow',primary:'M-SOS',modes:['escalation tree','incident ticket'],folds:['M-SOS','M-TICKET'],src:[{ep:'GET /api/household (members)'},{ep:'push subscriptions'},{ep:'GET /api/eventgroups (status)'}],use:'Escalation & workflow — a caregiver call tree and an assign / investigate / resolve ticket on an event.'},
+ // ——— Visual surfaces ———
+ {id:'C-LIVE',grp:'Visual surface',name:'Live view',primary:'M-LIVE',folds:['M-LIVE','M-PTZ'],modes:['live','pan / tilt / zoom'],use:'Real-time stream; reveal pan-tilt-zoom controls when the camera supports it.'},
+ {id:'C-RECVIDEO',grp:'Visual surface',name:'Recorded video',primary:'M-CLIP',folds:['M-CLIP','M-FOOTAGE'],modes:['event clip','24/7 scrub'],use:'A scrubbable player — an event clip, or the full continuous record.'},
+ {id:'C-SNAP',grp:'Visual surface',name:'Snapshot / scan',primary:'M-SNAP',folds:['M-SNAP','M-CAPTURE'],modes:['snapshot','scan / OCR capture'],src:[{ep:'POST /api/devices/{mac}/capture_snapshot'},{ep:'capture + tools/vlm.py (OCR)'}],use:'A single still — a passive snapshot, or an on-demand scan/capture read with OCR.'},
+ {id:'C-TIMELAPSE',grp:'Visual surface',name:'Time-lapse',primary:'M-TIMELAPSE',folds:['M-TIMELAPSE'],modes:['accelerated sequence'],use:'A long span compressed into an accelerated sequence (growth, projects, sky).'},
+ {id:'C-REEL',grp:'Visual surface',name:'Highlight reel',primary:'M-REEL',folds:['M-REEL'],modes:['auto-compiled digest'],use:'An auto-compiled montage of the notable moments across a period.'},
+ {id:'C-GALLERY',grp:'Visual surface',name:'Gallery',primary:'M-GALLERY',folds:['M-GALLERY'],modes:['browsable collection'],use:'A browsable image collection grouped by entity (species, faces, packages).'},
+ {id:'C-MULTIVIEW',grp:'Visual surface',name:'Multi-view',primary:'M-GRID',folds:['M-COMPARE','M-GRID'],modes:['compare pair','synced grid'],use:'Tiled views — a time-aligned before/after pair, or a synchronized multi-camera grid.'},
+ // ——— Status & readouts ———
+ {id:'C-STATE',grp:'Status & readout',name:'State badge',primary:'M-STATE',folds:['M-STATE'],modes:['state + time-in-state'],use:'A current-state badge with how long it has held (Door closed · 3h).'},
+ {id:'C-GAUGE',grp:'Status & readout',name:'Gauge / score ring',primary:'M-SCORE',folds:['M-SCORE','M-GAUGE'],modes:['score ring','analog dial'],use:'A radial indicator — a composite score ring, or an analog gauge / dial.'},
+ {id:'C-TILES',grp:'Status & readout',name:'Metric tiles',primary:'M-VITALS',folds:['M-VITALS','M-KPI'],modes:['live vitals','headline KPIs'],use:'A row of number tiles — live vital metrics, or headline KPI figures.'},
+ {id:'C-READOUT',grp:'Status & readout',name:'Big readout',primary:'M-READOUT',folds:['M-READOUT'],modes:['large value / OCR'],use:'One large numeric or text value read from the scene (meter, count, label).'},
+ // ——— Events & records ———
+ {id:'C-FEED',grp:'Events & records',name:'Event feed',primary:'M-FEED',folds:['M-FEED','M-GROUPS'],modes:['tagged cards','grouped by trigger','filter chips'],use:'AI-tagged event cards with filter chips — flat, or bucketed by trigger type.'},
+ {id:'C-LOG',grp:'Events & records',name:'Log / journal',primary:'M-LOG',folds:['M-LOG','M-JOURNAL'],modes:['running log','narrative journal'],src:[{ep:'GET /api/household/visual-memories'},{ep:'GET /api/stories'}],use:'A timestamped record — a terse running log, or a narrative care / activity journal.'},
+ {id:'C-VISIT',grp:'Events & records',name:'Visit sheet',primary:'M-TIMESHEET',folds:['M-TIMESHEET'],modes:['arrival / departure rows'],src:[{ep:'POST /api/events/filter',fields:['event_ts','tags']},{ep:'GET /api/reid/identities/{id}/appearances'}],use:'Attendance / visit verification — arrival, departure and dwell per subject, each linking its clip.'},
+ {id:'C-IDCARD',grp:'Events & records',name:'Identity card',primary:'M-IDCARD',folds:['M-IDCARD'],modes:['recognized subject'],use:'A recognized-subject detail card (face / plate, last seen, appearance count).'},
+ // ——— Timeline ———
+ {id:'C-TIMELINE',grp:'Timeline',name:'Activity timeline',primary:'M-SCRUB',folds:['M-SCRUB','M-NIGHTGRAPH'],modes:['scrubber + markers','session graph'],use:'Activity on a time axis — a scrubber with event markers, or color-coded session segments.'},
+ {id:'C-PATH',grp:'Timeline',name:'Cross-camera path',primary:'M-MAPLINE',folds:['M-MAPLINE'],modes:['map timeline'],use:'A subject’s path across cameras on a map / floorplan over time.'},
+ // ——— Analytics ———
+ {id:'C-TREND',grp:'Analytics',name:'Trend chart',primary:'M-TREND',folds:['M-TREND'],modes:['metric over time'],use:'One metric plotted over time (counts, duration, frequency).'},
+ {id:'C-HEAT',grp:'Analytics',name:'Heat-map',primary:'M-HEAT',folds:['M-HEAT'],modes:['spatial density'],use:'A spatial activity heat-map over the camera frame.'},
+ {id:'C-CALENDAR',grp:'Analytics',name:'Calendar',primary:'M-CALENDAR',folds:['M-CALENDAR'],modes:['occurrence grid'],src:[{ep:'POST /api/eventgroups/digest'},{ep:'POST /api/events/filter (daily counts)'}],use:'An occurrence calendar — which days / times a thing happened.'},
+ {id:'C-RECAP',grp:'Analytics',name:'AI recap',primary:'M-RECAP',folds:['M-RECAP'],modes:['narrative + tone'],use:'An AI plain-language summary of a period with an all-clear → alert tone.'},
+ // ——— Actions ———
+ {id:'C-ACT',grp:'Actions',name:'Quick actions',primary:'M-ACT',folds:['M-ACT','M-TALK'],modes:['power / quick','two-way talk'],use:'A device action bar — power and quick actions, plus two-way talk.'},
+ {id:'C-DETER',grp:'Actions',name:'Deter / dispense',primary:'M-DETER',folds:['M-DETER','M-PLAY'],modes:['siren / lights','treat / play'],use:'Active outputs — a siren / lights deterrent, or a treat / play interaction.'},
+ // ——— Detection & config ———
+ {id:'C-RULES',grp:'Detection & config',name:'Rules & schedule',primary:'M-RULES',folds:['M-RULES','M-REMINDER'],modes:['thresholds / escalation','schedule / reminder'],use:'Detection rules and escalation, plus schedules and elapsed-time reminders.'},
+ {id:'C-ZONE',grp:'Detection & config',name:'Zone editor',primary:'M-ZONE',folds:['M-ZONE'],modes:['region of interest'],use:'Draw the region-of-interest the agent watches.'},
+ {id:'C-PROMPT',grp:'Detection & config',name:'VLM prompt',primary:'M-PROMPT',folds:['M-PROMPT'],modes:['natural-language detector'],use:'The open-vocabulary natural-language prompt that defines a novel detector.'},
+ // ——— Fleet ———
+ {id:'C-DEVMAP',grp:'Fleet',name:'Device map',primary:'M-DEVMAP',folds:['M-DEVMAP'],modes:['map / floorplan'],use:'Devices placed on a map or floorplan.'},
+ {id:'C-HEALTH',grp:'Fleet',name:'Health roll-up',primary:'M-HEALTH',folds:['M-HEALTH'],modes:['online / firmware'],use:'A fleet health roll-up — online state and firmware across devices.'},
+ // ——— Escalation ———
+ {id:'C-SOS',grp:'Escalation',name:'Escalation',primary:'M-SOS',folds:['M-SOS'],modes:['caregiver call tree'],use:'An emergency escalation / caregiver call tree.'},
+ {id:'C-TICKET',grp:'Escalation',name:'Incident ticket',primary:'M-TICKET',folds:['M-TICKET'],modes:['assign / investigate / resolve'],use:'An incident workflow on an event — assign, investigate, resolve.'},
 ];
 function v2Card(v){
   const comp=MODFULL15[v.primary]||MODFULL[v.primary]||'';
+  let srcs=v.src;
+  if(!srcs){ const seen={}; srcs=[]; v.folds.forEach(f=>((DATACHECK[f]||{}).sources||[]).forEach(s=>{ if(!seen[s.ep]){seen[s.ep]=1;srcs.push(s);} })); }
+  const cov={have:0,partial:0,missing:0};
+  v.folds.forEach(f=>{cov[(DATACHECK[f]||{}).status||'missing']++;});
+  const cv=[];
+  if(cov.have)cv.push(`<span class="dc-cv dc-have">${cov.have} have</span>`);
+  if(cov.partial)cv.push(`<span class="dc-cv dc-partial">${cov.partial} partial</span>`);
+  if(cov.missing)cv.push(`<span class="dc-cv dc-missing">${cov.missing} missing</span>`);
+  const merged=v.folds.length>1;
   return `<div class="dc-row dc-solo">`
-    +`<div class="dc-left"><span class="dc-vlab v2">v2 · consolidated</span><div class="modlive">${comp}</div>`
+    +`<div class="dc-left"><span class="dc-vlab v2">v2 · ${merged?'merged':'kept'}</span><div class="modlive">${comp}</div>`
       +`<div class="dc-modes">${v.modes.map(m=>`<span class="dc-mode">${m}</span>`).join('')}</div>`
       +`<div class="dc-meta"><span class="dc-id">${v.id}</span><span class="dc-fn">${v.name}</span></div></div>`
     +`<div class="dc-card">`
-      +`<div class="dc-head"><b>${v.name}</b><span class="dc-badge dc-v2">consolidates ${v.folds.length}</span></div>`
-      +`<div class="dc-sec"><div class="dc-lab">Consolidates</div><div class="dc-contract">${v.folds.map(f=>`<span class="dc-c">${f}</span>`).join('')}</div></div>`
+      +`<div class="dc-head"><b>${v.name}</b><span class="dc-badge dc-v2">${merged?'merges '+v.folds.length:'kept as-is'}</span></div>`
+      +`<div class="dc-sec"><div class="dc-lab">${merged?'Consolidates':'From v1.5'}</div><div class="dc-contract">${v.folds.map(f=>`<span class="dc-c">${f}</span>`).join('')}</div></div>`
       +`<div class="dc-sec"><div class="dc-lab">Adjustable modes</div><div class="dc-contract">${v.modes.map(m=>`<span class="dc-c dc-modepill">${m}</span>`).join('')}</div></div>`
-      +`<div class="dc-sec"><div class="dc-lab">Wyze AI One source</div>${dcSources(v.src)}</div>`
+      +`<div class="dc-sec"><div class="dc-lab">Wyze AI One source</div>${dcSources(srcs)}</div>`
+      +(cv.length?`<div class="dc-cov">${cv.join('')}</div>`:'')
       +`<div class="dc-note">${v.use}</div>`
     +`</div></div>`;
 }
@@ -3645,9 +3692,12 @@ function renderDcVer(ver){
   document.querySelectorAll('#dcVerTabs .dc-vertab').forEach(b=>b.classList.toggle('on',b.dataset.ver===ver));
   $('dcOpps').style.display='';
   if(ver==='v2'){
-    $('dcGrids').innerHTML=`<div class="famblock dc-fam"><h3>v2 &middot; consolidated &mdash; ${V2.length} components</h3>`+V2.map(v2Card).join('')+`</div>`;
-    $('dcSummary').innerHTML=`<span class="dc-stat dc-v2chip"><b>42</b> &rarr; <b style="color:#c4b3f0">${V2.length}</b> consolidated</span>`
-      +`<span class="dc-stat">each component flexes across modes</span>`;
+    const groups=[]; V2.forEach(v=>{let g=groups.find(x=>x.name===v.grp); if(!g){g={name:v.grp,items:[]};groups.push(g);} g.items.push(v);});
+    $('dcGrids').innerHTML=groups.map(g=>`<div class="famblock dc-fam"><h3>${g.name} <span style="color:var(--dim);font-weight:600">${g.items.length}</span></h3>`+g.items.map(v2Card).join('')+`</div>`).join('');
+    const merged=V2.filter(v=>v.folds.length>1).length;
+    $('dcSummary').innerHTML=`<span class="dc-stat dc-v2chip"><b>42</b> &rarr; <b style="color:#c4b3f0">${V2.length}</b> components</span>`
+      +`<span class="dc-stat"><b>${V2.length-merged}</b> kept for variety</span>`
+      +`<span class="dc-stat"><b>${merged}</b> merged (one format, adjustable)</span>`;
     return;
   }
   $('dcGrids').innerHTML=FAMILIES.map(([fam,mods])=>`<div class="famblock dc-fam"><h3>${fam}</h3>`+mods.map(([id,fn])=>dcRowSolo(id,fn,ver)).join('')+`</div>`).join('');
