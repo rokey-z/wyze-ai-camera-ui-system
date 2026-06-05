@@ -95,6 +95,14 @@
     font-weight:600;color:var(--ink);margin-top:7px}
   .agdot{width:7px;height:7px;border-radius:50%;flex:none}
   .agemoji{font-size:13px}
+  .agt-media{position:relative}
+  .agalert{position:absolute;top:3px;right:3px;width:14px;height:14px;border-radius:50%;border:2.5px solid var(--card)}
+  .agtitle .agpill{margin:0 auto}
+  .agpill{display:inline-block;font-size:12.5px;font-weight:800;letter-spacing:.2px;line-height:1.1;padding:5px 12px;border-radius:999px;border:1px solid;white-space:nowrap}
+  .agpill-sm{font-size:9px;font-weight:800;padding:3px 8px}
+  .agsub{font-size:9.5px;color:var(--dim);text-align:center;line-height:1.35;margin-top:1px;max-width:118px}
+  .agsub-t{font-family:var(--mono);color:var(--mut)}
+  .agname .ic,.agsub .ic{width:14px;height:14px;flex:none;vertical-align:-2px}
   /* states showcase */
   .agstates{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-top:6px;justify-items:center}
   /* card states are the same vertical-pill shape/ratio as the hero card, just smaller */
@@ -139,9 +147,10 @@
     letter-spacing:.5px;color:#c4b3f0;border:1px solid #a78bfa55;
     background:#a78bfa1e;padding:2px 5px;border-radius:5px}
   /* template picker: each selection is a full-width block row (emoji left, text, category right) */
-  .tplgrid .chip{flex-direction:row;align-items:center;gap:12px;padding:10px 12px}
-  .tplgrid .chip .tplemoji{font-size:20px;width:26px}
-  .tplgrid .chip .txt{flex:1;min-width:0}
+  .tplgrid .chip{flex-direction:row;align-items:center;gap:12px;padding:9px 12px;height:58px}
+  .tplgrid .chip .tplemoji{font-size:20px;width:26px;flex:none}
+  .tplgrid .chip .ic{width:22px;height:22px;flex:none}
+  .tplgrid .chip .txt{flex:1;min-width:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.24}
   .tplgrid .chip .chiparch{margin-top:0;margin-left:auto;flex:none;text-align:right}
 
   /* tabs */
@@ -2997,44 +3006,58 @@ const TPLVIEW={
    title = present-tense status_line, colored by relevance priority; thumb adapts to the goal. */
 const PRI={P0:{c:'#ff9a9a',dot:'#f25c5c',lab:'Action required'},P1:{c:'#f3cd86',dot:'#f6b73c',lab:'Needs attention'},P2:{c:'#9cc3f5',dot:'#4f8ff0',lab:'Notable'},P3:{c:'#7eecc4',dot:'',lab:'All clear'},P4:{c:'#93a3bd',dot:'',lab:'Low'}};
 const AGCARD={
- 'night_watcher':{th:{t:'snap',grad:'linear-gradient(150deg,#10182b,#070b14)',tag:'PERSON',tc:'#f25c5c'},title:'Person at side gate · 2m',pri:'P1',time:'2m ago',fresh:true},
- 'garage_door_watcher':{th:{t:'status',word:'OPEN',c:'#f6b73c'},title:'Door open · 12 min',pri:'P1',time:'12m ago',fresh:true},
- 'package_reminder':{th:{t:'snap',grad:'linear-gradient(150deg,#243a5e,#0f1a2c)',tag:'PACKAGE',tc:'#f6b73c'},title:'Package outside · 2h',pri:'P2',time:'2h ago',fresh:false},
- 'trash_bin_checker':{th:{t:'status',word:'BINS OUT',c:'#34d399'},title:'Bins out · truck pending',pri:'P3',time:'1h ago',fresh:false},
- 'camera_health_check':{th:{t:'number',val:'3/4',unit:'online',c:'#f6b73c'},title:'Side-yard cam offline',pri:'P1',time:'20m ago',fresh:true},
- 'general_monitoring':{th:{t:'snap',grad:'linear-gradient(150deg,#1d2d49,#0f1828)',tag:'',tc:''},title:'All quiet · 6 events',pri:'P3',time:'30m ago',fresh:true},
- 'baby_monitor':{th:{t:'live',grad:'linear-gradient(150deg,#10182b,#070b14)'},title:'Asleep · calm · 6h',pri:'P3',time:'4m ago',fresh:true},
- 'pet_monitoring':{th:{t:'live',grad:'linear-gradient(150deg,#243018,#0e1208)'},title:'Cooper resting · 1h',pri:'P3',time:'12m ago',fresh:true},
- 'school_bus_watch':{th:{t:'snap',grad:'linear-gradient(150deg,#2a2f3a,#10131a)',tag:'BUS',tc:'#f6b73c'},title:'Bus on time · 7:32a',pri:'P3',time:'3h ago',fresh:false},
- 'kids_watch':{th:{t:'live',grad:'linear-gradient(150deg,#22303f,#0c1119)'},title:'2 kids · safe',pri:'P3',time:'5m ago',fresh:true},
- 'cat_monitoring':{th:{t:'snap',grad:'linear-gradient(150deg,#241a30,#0e0a16)',tag:'INDOOR',tc:'#a78bfa'},title:'Mochi indoors · 2h',pri:'P3',time:'40m ago',fresh:false},
- 'bird_monitoring':{th:{t:'snap',grad:'linear-gradient(150deg,#b1402f,#5a1c14)',tag:'CARDINAL',tc:'#34d399'},title:'6 species today',pri:'P2',time:'15m ago',fresh:true},
- 'hummingbird_watch':{th:{t:'number',val:'9',unit:'visits',c:'#f472b6'},title:'9 visits · nectar day 3',pri:'P3',time:'1h ago',fresh:false},
- 'garden_watch':{th:{t:'lapse',grad:'linear-gradient(150deg,#1f3a2c,#0e1a14)',day:'day 12'},title:'Healthy · deer 5:40a',pri:'P2',time:'6h ago',fresh:false},
- 'chicken_monitoring':{th:{t:'number',val:'6/6',unit:'hens',c:'#34d399'},title:'All hens · door OPEN',pri:'P1',time:'20m ago',fresh:true},
- 'fall_detection':{th:{t:'live',grad:'linear-gradient(150deg,#1c2436,#0c1320)',pose:true},title:'No falls · upright',pri:'P3',time:'8m ago',fresh:true},
- 'senior_care':{th:{t:'status',word:'ACTIVE',c:'#34d399'},title:'Active · last 9:12a',pri:'P3',time:'1h ago',fresh:false},
- 'stove_watch':{th:{t:'status',word:'OFF',c:'#34d399'},title:'Stove off · clear',pri:'P3',time:'5m ago',fresh:true},
- 'pool_watch':{th:{t:'status',word:'CLEAR',c:'#38c6db'},title:'Pool clear · gate shut',pri:'P3',time:'2h ago',fresh:false},
- 'gym_monitoring':{th:{t:'number',val:'24',unit:'min',c:'#e9844a'},title:'Session in progress',pri:'P3',time:'now',fresh:true},
- 'medicine_reminder':{th:{t:'status',word:'TAKEN',c:'#34d399',check:true},title:'Morning dose · 8:05a',pri:'P3',time:'3h ago',fresh:false},
+ 'night_watcher':{th:{grad:'linear-gradient(150deg,#10182b,#070b14)',tag:'PERSON',tc:'#f25c5c'},state:{w:'PERSON · 2m',c:'#f25c5c'},title:'Unfamiliar at side gate',pri:'P1',time:'2m ago',fresh:true},
+ 'garage_door_watcher':{th:{grad:'linear-gradient(150deg,#1c2230,#0b0f17)',tag:'DOOR',tc:'#f6b73c'},state:{w:'OPEN · 12m',c:'#f6b73c'},title:'Garage door left open',pri:'P1',time:'12m ago',fresh:true},
+ 'package_reminder':{th:{grad:'linear-gradient(150deg,#243a5e,#0f1a2c)',tag:'PACKAGE',tc:'#f6b73c'},state:{w:'PACKAGE · 2h',c:'#f6b73c'},title:'Still on the porch',pri:'P2',time:'2h ago',fresh:false},
+ 'trash_bin_checker':{th:{grad:'linear-gradient(150deg,#1f2a24,#0e1410)',tag:'CURB',tc:'#34d399'},state:{w:'BINS OUT',c:'#34d399'},title:'At curb · truck pending',pri:'P3',time:'1h ago',fresh:false},
+ 'camera_health_check':{th:{grad:'linear-gradient(150deg,#1d2d49,#0f1828)',tag:'4 CAMS',tc:'#f6b73c'},state:{w:'3/4 ONLINE',c:'#f6b73c'},title:'Side-yard cam offline',pri:'P1',time:'20m ago',fresh:true},
+ 'general_monitoring':{th:{grad:'linear-gradient(150deg,#1d2d49,#0f1828)'},state:{w:'ALL QUIET',c:'#34d399'},title:'6 events today',pri:'P3',time:'30m ago',fresh:true},
+ 'baby_monitor':{th:{grad:'linear-gradient(150deg,#10182b,#070b14)',live:true},state:{w:'ASLEEP · 6h',c:'#34d399'},title:'Calm · breathing steady',pri:'P3',time:'4m ago',fresh:true},
+ 'pet_monitoring':{th:{grad:'linear-gradient(150deg,#243018,#0e1208)',live:true},state:{w:'RESTING',c:'#34d399'},title:'Cooper on the couch',pri:'P3',time:'12m ago',fresh:true},
+ 'school_bus_watch':{th:{grad:'linear-gradient(150deg,#2a2f3a,#10131a)',tag:'BUS',tc:'#f6b73c'},state:{w:'ON TIME',c:'#34d399'},title:'Pickup at 7:32a',pri:'P3',time:'3h ago',fresh:false},
+ 'kids_watch':{th:{grad:'linear-gradient(150deg,#22303f,#0c1119)',live:true},state:{w:'2 KIDS · SAFE',c:'#34d399'},title:'In the yard zone',pri:'P3',time:'5m ago',fresh:true},
+ 'cat_monitoring':{th:{grad:'linear-gradient(150deg,#241a30,#0e0a16)',tag:'INDOOR',tc:'#a78bfa'},state:{w:'INDOORS',c:'#a78bfa'},title:'Mochi by the window',pri:'P3',time:'40m ago',fresh:false},
+ 'bird_monitoring':{th:{grad:'linear-gradient(150deg,#b1402f,#5a1c14)',tag:'CARDINAL',tc:'#34d399'},state:{w:'6 SPECIES',c:'#34d399'},title:'Cardinal · 15m ago',pri:'P2',time:'15m ago',fresh:true},
+ 'hummingbird_watch':{th:{grad:'linear-gradient(150deg,#3a1f33,#160a14)',tag:'VISIT',tc:'#f472b6'},state:{w:'9 VISITS',c:'#f472b6'},title:'Nectar day 3 of 5',pri:'P3',time:'1h ago',fresh:false},
+ 'garden_watch':{th:{grad:'linear-gradient(150deg,#1f3a2c,#0e1a14)',lapse:true,day:'day 12'},state:{w:'HEALTHY',c:'#34d399'},title:'Deer 5:40a · growing',pri:'P2',time:'6h ago',fresh:false},
+ 'chicken_monitoring':{th:{grad:'linear-gradient(150deg,#2a2418,#14110a)',tag:'COOP',tc:'#f6b73c'},state:{w:'DOOR OPEN',c:'#f6b73c'},title:'6/6 hens · close coop',pri:'P1',time:'20m ago',fresh:true},
+ 'fall_detection':{th:{grad:'linear-gradient(150deg,#1c2436,#0c1320)',live:true,pose:true},state:{w:'UPRIGHT',c:'#34d399'},title:'No falls · mobile',pri:'P3',time:'8m ago',fresh:true},
+ 'senior_care':{th:{grad:'linear-gradient(150deg,#22303f,#0c1119)',live:true},state:{w:'ACTIVE',c:'#34d399'},title:'Up & about · 9:12a',pri:'P3',time:'1h ago',fresh:false},
+ 'stove_watch':{th:{grad:'linear-gradient(150deg,#2a211a,#140f0a)',tag:'COOKTOP',tc:'#34d399'},state:{w:'OFF · CLEAR',c:'#34d399'},title:'All burners off',pri:'P3',time:'5m ago',fresh:true},
+ 'pool_watch':{th:{grad:'linear-gradient(150deg,#10384a,#06141d)',live:true},state:{w:'CLEAR',c:'#38c6db'},title:'Gate shut · empty',pri:'P3',time:'2h ago',fresh:false},
+ 'gym_monitoring':{th:{grad:'linear-gradient(150deg,#2a2230,#120e16)',live:true},state:{w:'24 MIN',c:'#e9844a'},title:'Session in progress',pri:'P3',time:'now',fresh:true},
+ 'medicine_reminder':{th:{grad:'linear-gradient(150deg,#1f2a24,#0e1410)',tag:'PILL',tc:'#34d399'},state:{w:'TAKEN &check;',c:'#34d399'},title:'Morning dose 8:05a',pri:'P3',time:'3h ago',fresh:false},
+ 'meter':{th:{grad:'linear-gradient(150deg,#2a2535,#12101a)',tag:'OCR',tc:'#c4b3f0'},state:{w:'04857 ft³',c:'#9cc3f5'},title:'+12 since 6:00a',pri:'P3',time:'2h ago',fresh:false},
+ 'lawncrew':{th:{grad:'linear-gradient(150deg,#1f3a2c,#0e1a14)',tag:'CREW',tc:'#34d399'},state:{w:'DONE · 34m',c:'#34d399'},title:'9:02 → 9:36 · all zones',pri:'P3',time:'Tue',fresh:false},
+ 'plant':{th:{grad:'linear-gradient(150deg,#1f3a2c,#0e1a14)',lapse:true,day:'day 12'},state:{w:'+2.4 cm',c:'#34d399'},title:'Healthy · watered 2d ago',pri:'P3',time:'6h ago',fresh:false},
+ 'pantry':{th:{grad:'linear-gradient(150deg,#2a2418,#14110a)',tag:'SHELF',tc:'#f6b73c'},state:{w:'3 LOW',c:'#f6b73c'},title:'Milk, eggs, coffee',pri:'P2',time:'1d ago',fresh:false},
+ 'cooking':{th:{grad:'linear-gradient(150deg,#3a2218,#160d08)',live:true},state:{w:'STEP 3 / 6',c:'#e9844a'},title:'Simmer 8 min · timer set',pri:'P3',time:'now',fresh:true},
+ 'rental':{th:{grad:'linear-gradient(150deg,#1d2d49,#0f1828)',tag:'4 SITES',tc:'#4f8ff0'},state:{w:'ALL CLEAR',c:'#34d399'},title:'4 properties · 0 alerts',pri:'P3',time:'15m ago',fresh:true},
+ 'eldercare':{th:{grad:'linear-gradient(150deg,#22303f,#0c1119)',live:true},state:{w:'ACTIVE',c:'#34d399'},title:'Up & about · 9:12a',pri:'P3',time:'1h ago',fresh:false},
+ 'leak':{th:{grad:'linear-gradient(150deg,#16242e,#0a1118)',tag:'FLOOR',tc:'#38c6db'},state:{w:'DRY',c:'#38c6db'},title:'No water · sensor OK',pri:'P3',time:'30m ago',fresh:true},
+ 'aquarium':{th:{grad:'linear-gradient(150deg,#10384a,#06141d)',live:true},state:{w:'78°F · CLEAR',c:'#38c6db'},title:'Fish active · pump on',pri:'P3',time:'10m ago',fresh:true},
+ 'fridgetemp':{th:{grad:'linear-gradient(150deg,#16242e,#0a1118)',tag:'38°F',tc:'#38c6db'},state:{w:'IN RANGE',c:'#34d399'},title:'38°F · logged 5m ago',pri:'P3',time:'5m ago',fresh:true},
 };
+const CASE2AG={garage:'garage_door_watcher',baby:'baby_monitor',stove:'stove_watch',pkg:'package_reminder',bird:'bird_monitoring'};
 function agThumb(th){
   if(!th) return '';
-  if(th.t==='status') return `<div class="agthumb agt-status" style="color:${th.c};border-color:${th.c}66;background:${th.c}14"><span class="agt-word">${th.word}${th.check?' &check;':''}</span></div>`;
-  if(th.t==='number') return `<div class="agthumb agt-number"><span class="agt-num" style="color:${th.c}">${th.val}</span>${th.unit?`<span class="agt-unit">${th.unit}</span>`:''}</div>`;
-  if(th.t==='live') return `<div class="agthumb agt-media" style="background:${th.grad}"><span class="agt-live">&#9679; LIVE</span>${th.pose?`<svg width="24" height="32" viewBox="0 0 24 30" fill="none" stroke="#4f8ff0" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="4" r="3"/><path d="M12 7v9M12 10l-5 3M12 10l5 3M12 16l-4 8M12 16l4 8"/></svg>`:''}</div>`;
-  if(th.t==='snap') return `<div class="agthumb agt-media" style="background:${th.grad}">${th.tag?`<span class="agt-tag" style="background:${th.tc}">${th.tag}</span>`:''}</div>`;
-  if(th.t==='lapse') return `<div class="agthumb agt-media" style="background:${th.grad}"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="1.6"><path d="M12 21v-9M12 12c0-5 4-8 9-8 0 5-4 8-9 8zM12 14c0-4-4-7-9-7 0 5 4 7 9 7z"/></svg><span class="agt-day">${th.day}</span></div>`;
-  return '';
+  const ov=[];
+  if(th.live) ov.push('<span class="agt-live">&#9679; LIVE</span>');
+  if(th.pose) ov.push('<svg class="agt-pose" width="22" height="30" viewBox="0 0 24 30" fill="none" stroke="#4f8ff0" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="4" r="3"/><path d="M12 7v9M12 10l-5 3M12 10l5 3M12 16l-4 8M12 16l4 8"/></svg>');
+  if(th.lapse) ov.push('<svg class="agt-lapseic" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="1.6"><path d="M12 21v-9M12 12c0-5 4-8 9-8 0 5-4 8-9 8zM12 14c0-4-4-7-9-7 0 5 4 7 9 7z"/></svg>');
+  if(th.day) ov.push(`<span class="agt-day">${th.day}</span>`);
+  if(th.tag) ov.push(`<span class="agt-tag" style="background:${th.tc||'#9cc3f5'}">${th.tag}</span>`);
+  return `<div class="agthumb agt-media" style="background:${th.grad}">${ov.join('')}</div>`;
 }
+function agPill(w,c,sm){return `<span class="agpill${sm?' agpill-sm':''}" style="color:${c};border-color:${c}66;background:${c}1a">${w}</span>`;}
 function agCardHTML(t,tpl){
   const p=PRI[t.pri]||PRI.P3;
-  const tstyle=(t.fresh&&p.dot)?` style="color:${p.c};background:${p.dot}24"`:'';
-  return `<div class="agcard${t.off?' agoff':''}"><div class="agthumb-wrap">${agThumb(t.th)}</div>`
-    +`<div class="agtime ${t.fresh?'fresh':'stale'}"${tstyle}>${t.time}</div>`
-    +`<div class="agtitle" style="color:${p.c}">${t.title}</div>`
-    +`<div class="agname"><span class="agemoji">${tpl.icon}</span>${tpl.name}</div></div>`;
+  const st=t.state||{w:t.title,c:p.c};
+  const dot=(t.fresh&&p.dot)?`<span class="agalert" style="background:${p.dot}"></span>`:'';
+  return `<div class="agcard${t.off?' agoff':''}"><div class="agthumb-wrap">${agThumb(t.th)}${dot}</div>`
+    +`<div class="agtitle">${agPill(st.w,st.c)}</div>`
+    +`<div class="agname"><span class="agemoji">${tpl.icon}</span>${tpl.name}</div>`
+    +`<div class="agsub">${t.title} &middot; <span class="agsub-t">${t.time}</span></div></div>`;
 }
 function agStates(t,tpl){
   const S=[{lab:'Action required',pri:'P0',time:'now',fresh:true},{lab:'Needs attention',pri:'P1',time:'3m ago',fresh:true},
@@ -3046,18 +3069,20 @@ function agStates(t,tpl){
     let thumb = s.run?`<div class="agthumb agt-run"><span class="agspin"></span></div>`
       : s.none?`<div class="agthumb agt-none"><span class="agemoji-lg">${tpl.icon}</span></div>`
       : agThumb(t.th);
-    const title = s.none?'No runs yet':s.run?'Working…':s.lab==='Quiet'?'Quiet · nothing new':t.title;
-    const tc = (s.none||s.run||s.lab==='Quiet')?'#93a3bd':p.c;
-    const tnew = s.fresh && p.dot && !s.none && !s.run;
-    return `<div class="agms${s.paused?' agoff':''}"><div class="agthumb-wrap">${thumb}</div>`
-      +`<div class="agms-time ${s.fresh?'fresh':'stale'}"${tnew?` style="color:${p.c};background:${p.dot}24"`:''}>${s.time}</div>`
-      +`<div class="agms-title" style="color:${tc}">${title}</div>`
-      +`<div class="agms-lab">${s.lab}</div></div>`;
+    const pc=(s.none||s.run)?'#93a3bd':p.c;
+    const pill=s.none?agPill('No runs','#93a3bd',true):s.run?agPill('Working…','#9cc3f5',true):agPill(s.lab,pc,true);
+    const tnew=s.fresh && p.dot && !s.none && !s.run;
+    const dot=tnew?`<span class="agalert" style="background:${p.dot}"></span>`:'';
+    return `<div class="agms${s.paused?' agoff':''}"><div class="agthumb-wrap">${thumb}${dot}</div>`
+      +`<div class="agms-title">${pill}</div>`
+      +`<div class="agms-lab">${s.time}</div></div>`;
   }).join('');
 }
 function renderAgHome(tplId){
   const el=document.getElementById('tplHomeCard'); if(!el) return;
-  const t=AGCARD[tplId]; const tpl=TEMPLATES.find(x=>x.id===tplId);
+  let t=AGCARD[tplId], tpl=TEMPLATES.find(x=>x.id===tplId);
+  if(!t && CASE2AG[tplId]) t=AGCARD[CASE2AG[tplId]];
+  if(!tpl && CASES[tplId]) tpl={icon:CASES[tplId].icon,name:CASES[tplId].label};
   if(!t||!tpl){ el.innerHTML=''; return; }
   el.innerHTML=`<div class="sectlab" style="margin-top:14px">Agent Widget</div>`
     +`<div class="aghint">Tap the widget &rarr; opens the agent panel (center)</div>`
@@ -3109,7 +3134,7 @@ function build(){
     +((currentTpl&&TPLVIEW[currentTpl.id])?TPLVIEW[currentTpl.id].screen():SCREENS[current]());
   // real Wyze agent-template card (only when a template is selected)
   renderTplCard(currentTpl);
-  renderAgHome(currentTpl?currentTpl.id:null);
+  renderAgHome(currentTpl?currentTpl.id:current);
   // active chip
   document.querySelectorAll('#intents .chip').forEach(ch=>
     ch.classList.toggle('on', currentTpl ? ch.dataset.tpl===currentTpl.id : (!ch.dataset.tpl && ch.dataset.k===current)));
