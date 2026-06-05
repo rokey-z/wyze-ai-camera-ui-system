@@ -241,6 +241,28 @@
   .dc-needs{display:flex;gap:7px;align-items:flex-start;margin-top:7px;font-size:10.5px;
     color:#f3cd86;line-height:1.45}
   .dc-needs::before{content:'⚠';flex:none}
+  /* version sub-tabs + v2 consolidated layout */
+  .dc-stickyhdr{position:sticky;top:62px;z-index:31;background:var(--bg);
+    padding-top:6px;border-bottom:1px solid var(--line)}
+  .dc-stickyhdr .dc-summary{position:static;top:auto;border-bottom:0;padding:7px 0 8px}
+  .dc-vertabs{display:flex;gap:6px;padding:2px 0 2px}
+  .dc-vertab{font-size:12px;font-weight:700;color:var(--mut);background:var(--card);
+    border:1px solid var(--line);border-radius:999px;padding:6px 16px;cursor:pointer;
+    font-family:inherit;transition:.12s}
+  .dc-vertab:hover{color:var(--ink);border-color:var(--blue)}
+  .dc-vertab[data-ver="v1"].on,.dc-vertab[data-ver="v15"].on{color:#9cc3f5;background:#4f8ff01e;
+    border-color:#4f8ff066;box-shadow:0 0 0 1px #4f8ff044 inset}
+  .dc-vertab[data-ver="v2"].on{color:#c4b3f0;background:#a78bfa1e;border-color:#a78bfa66;
+    box-shadow:0 0 0 1px #a78bfa55 inset}
+  .dc-solo{grid-template-columns:minmax(0,1fr) minmax(0,1.5fr)}
+  .dc-solo .dc-left{max-width:340px}
+  .dc-vlab.v2{color:#c4b3f0;background:#a78bfa18;border:1px solid #a78bfa44}
+  .dc-modes{display:flex;flex-wrap:wrap;gap:4px;margin-top:9px}
+  .dc-mode{font-size:8.5px;color:#c4b3f0;background:#a78bfa12;border:1px solid #a78bfa33;
+    border-radius:5px;padding:2px 6px}
+  .dc-badge.dc-v2{color:#c4b3f0;border-color:#a78bfa66;background:#a78bfa14}
+  .dc-modepill{color:#c4b3f0 !important;border-color:#a78bfa3a !important;background:#a78bfa12 !important}
+  .dc-v2chip{border-color:#a78bfa55 !important}
 
   .dc-opp{display:flex;align-items:flex-start;gap:13px;padding:11px 0;border-top:1px solid var(--line)}
   .dc-opp:first-of-type{border-top:0}
@@ -1877,11 +1899,17 @@ EMIT  -&gt; see §13
     </div>
 
   <div class="tabpane on" id="pane-data">
-    <div class="dc-cap">How each of the 46 spec components maps to <b>real data in Wyze AI One</b>.
-      Left: the live component. Right: its spec contract, the concrete API source
-      (endpoint&nbsp;+&nbsp;fields), a feasibility badge, and an achievable path. Endpoints and field
-      names are taken from the Wyze&nbsp;AI&nbsp;One codebase.</div>
-    <div class="dc-summary" id="dcSummary"></div>
+    <div class="dc-cap">Each component mapped to <b>real data in Wyze AI One</b> — one component on the
+      left, its data card on the right. Switch versions below: <b>v1</b> and <b>v1.5</b> are the
+      full component set; <b>v2</b> consolidates them into fewer adjustable components.</div>
+    <div class="dc-stickyhdr">
+      <div class="dc-vertabs" id="dcVerTabs">
+        <button class="dc-vertab" data-ver="v1">v1</button>
+        <button class="dc-vertab" data-ver="v15">v1.5</button>
+        <button class="dc-vertab on" data-ver="v2">v2 · latest</button>
+      </div>
+      <div class="dc-summary" id="dcSummary"></div>
+    </div>
     <div id="dcGrids"></div>
     <div id="dcOpps"></div>
   </div>
@@ -3542,58 +3570,82 @@ function dcSources(srcs){
     +((s.fields&&s.fields.length)?`<div class="dc-fields">${s.fields.map(f=>`<span class="dc-f">${f}</span>`).join('')}</div>`:'')
     +`</div>`).join('');
 }
-function dcRow(id,fn){
+/* ---------- v2 — consolidated set (42 components → 11 adjustable ones) ---------- */
+const V2=[
+ {id:'C-CAMERA',name:'Camera surface',primary:'M-LIVE',modes:['live','snapshot','clip','24/7','time-lapse','PTZ'],folds:['M-LIVE','M-SNAP','M-CLIP','M-FOOTAGE','M-TIMELAPSE','M-PTZ','M-CAPTURE'],src:[{ep:'POST /api/devices/{mac}/stream_params'},{ep:'POST /api/devices/{mac}/capture_snapshot'},{ep:'POST /api/events/video_url'},{ep:'POST /api/devices/thumbnails'}],use:'One camera surface for every visual need — pick the mode (live, still, clip, 24/7, time-lapse) and overlay annotations.'},
+ {id:'C-COLLECTION',name:'Visual collection',primary:'M-GALLERY',modes:['gallery','compare','grid','reel'],folds:['M-GALLERY','M-COMPARE','M-GRID','M-REEL'],src:[{ep:'GET /api/eventgroups (+ /{id}/artifact gif)'},{ep:'GET /api/reid/identities'}],use:'Multi-image layouts — a browsable collection, a before/after pair, a synced multi-cam grid, or an auto-compiled reel.'},
+ {id:'C-STATUS',name:'Status readout',primary:'M-STATE',modes:['state + duration','number','gauge','score ring','tiles'],folds:['M-STATE','M-SCORE','M-VITALS','M-READOUT','M-GAUGE','M-KPI'],src:[{ep:'GET /api/household/visual-memories',fields:['status_line']},{ep:'GET /api/devices/{mac}/power_status'},{ep:'GET /api/eventgroups',fields:['score']},{ep:'capture + tools/vlm.py (OCR)'}],use:'Any current-state readout — a state badge with how-long, a big number, a gauge, a score ring, or metric tiles.'},
+ {id:'C-FEED',name:'Record feed',primary:'M-FEED',modes:['event cards','grouped','log','journal','visit sheet','identity','filter'],folds:['M-FEED','M-GROUPS','M-LOG','M-JOURNAL','M-TIMESHEET','M-IDCARD'],src:[{ep:'POST /api/events/filter'},{ep:'GET /api/eventgroups'},{ep:'GET /api/reid/identities/{id}/appearances'},{ep:'GET /api/household/visual-memories'}],use:'Any list of records — tagged event cards, grouped clips, a reading log, a care journal, visit rows, or an identity detail; filter chips built in.'},
+ {id:'C-TIMELINE',name:'Activity timeline',primary:'M-SCRUB',modes:['scrubber + markers','sessions','cross-camera'],folds:['M-SCRUB','M-NIGHTGRAPH','M-MAPLINE'],src:[{ep:'POST /api/events/filter',fields:['event_ts']},{ep:'GET /api/reid/identities/{id}/appearances'}],use:'Activity over a time axis — a scrubber with event markers, labeled session segments, or a cross-camera path.'},
+ {id:'C-CHART',name:'Analytics chart',primary:'M-TREND',modes:['trend','heat-map','calendar'],folds:['M-TREND','M-HEAT','M-CALENDAR'],src:[{ep:'POST /api/events/filter (counts)'},{ep:'GET /api/eventgroups/{id}/artifact',fields:['bbox_xywh']},{ep:'POST /api/eventgroups/digest'}],use:'Analytics — a metric trend, a spatial heat-map, or an occurrence calendar.'},
+ {id:'C-RECAP',name:'AI recap',primary:'M-RECAP',modes:['narrative','tone band'],folds:['M-RECAP'],src:[{ep:'GET /api/stories',fields:['narrative','tone','why_it_matters']}],use:'An AI plain-language summary / story of a period, with an all-clear → alert tone band.'},
+ {id:'C-ACTIONS',name:'Action bar',primary:'M-ACT',modes:['power','talk','siren / lights','treat','custom'],folds:['M-ACT','M-TALK','M-DETER','M-PLAY'],src:[{ep:'POST /api/devices/{mac}/power_on · power_off'}],use:'A quick-action bar bound to the device — power works today; talk, siren/lights and treat need hardware-control APIs.'},
+ {id:'C-CONFIG',name:'Detection & config',primary:'M-RULES',modes:['rules / threshold / schedule','zone editor','VLM prompt','reminder'],folds:['M-RULES','M-ZONE','M-PROMPT','M-REMINDER'],src:[{ep:'GET/PUT /api/devices/{mac}/profile',fields:['user_prompt','threshold_level']},{ep:'GET /api/agents (triggers)'}],use:'Detection & config — sensitivity / schedule / escalation, a drawn zone, the open-vocab VLM prompt, and reminders.'},
+ {id:'C-FLEET',name:'Fleet roll-up',primary:'M-HEALTH',modes:['device map','health roll-up'],folds:['M-DEVMAP','M-HEALTH'],src:[{ep:'GET /api/devices',fields:['firmware_ver']},{ep:'GET /api/devices/{mac}/power_status',fields:['is_on']}],use:'Fleet view — devices on a map / floorplan plus a health roll-up (online + firmware; battery/signal need extra telemetry).'},
+ {id:'C-ESCALATE',name:'Escalation & workflow',primary:'M-SOS',modes:['escalation tree','incident ticket'],folds:['M-SOS','M-TICKET'],src:[{ep:'GET /api/household (members)'},{ep:'push subscriptions'},{ep:'GET /api/eventgroups (status)'}],use:'Escalation & workflow — a caregiver call tree and an assign / investigate / resolve ticket on an event.'},
+];
+function v2Card(v){
+  const comp=MODFULL15[v.primary]||MODFULL[v.primary]||'';
+  return `<div class="dc-row dc-solo">`
+    +`<div class="dc-left"><span class="dc-vlab v2">v2 · consolidated</span><div class="modlive">${comp}</div>`
+      +`<div class="dc-modes">${v.modes.map(m=>`<span class="dc-mode">${m}</span>`).join('')}</div>`
+      +`<div class="dc-meta"><span class="dc-id">${v.id}</span><span class="dc-fn">${v.name}</span></div></div>`
+    +`<div class="dc-card">`
+      +`<div class="dc-head"><b>${v.name}</b><span class="dc-badge dc-v2">consolidates ${v.folds.length}</span></div>`
+      +`<div class="dc-sec"><div class="dc-lab">Consolidates</div><div class="dc-contract">${v.folds.map(f=>`<span class="dc-c">${f}</span>`).join('')}</div></div>`
+      +`<div class="dc-sec"><div class="dc-lab">Adjustable modes</div><div class="dc-contract">${v.modes.map(m=>`<span class="dc-c dc-modepill">${m}</span>`).join('')}</div></div>`
+      +`<div class="dc-sec"><div class="dc-lab">Wyze AI One source</div>${dcSources(v.src)}</div>`
+      +`<div class="dc-note">${v.use}</div>`
+    +`</div></div>`;
+}
+function dcRowSolo(id,fn,ver){
   const d=DATACHECK[id]||{status:'missing',contract:[],sources:[],note:'Not yet mapped.'};
-  const v1=MODFULL[id]||MODPREV[id]||'';
-  const v15=MODFULL15[id]||v1;
+  const comp=(ver==='v15'?MODFULL15[id]:MODFULL[id])||MODPREV[id]||'';
   const m=MOD15[id]||{a:''};
-  return `<div class="dc-row" data-status="${d.status}">`
-    +`<div class="dc-left"><div class="dc-pair">`
-      +`<div class="dc-ver"><span class="dc-vlab v1">v1 · current</span><div class="modlive">${v1}</div></div>`
-      +`<div class="dc-ver"><span class="dc-vlab v15">v1.5 · proposed</span><div class="modlive">${v15}</div></div>`
-    +`</div>`
+  return `<div class="dc-row dc-solo" data-status="${d.status}">`
+    +`<div class="dc-left"><span class="dc-vlab ${ver==='v15'?'v15':'v1'}">${ver==='v15'?'v1.5':'v1'}</span><div class="modlive">${comp}</div>`
       +`<div class="dc-meta"><span class="dc-id">${id}</span><span class="dc-fn">${fn}</span></div></div>`
     +`<div class="dc-card">`
       +`<div class="dc-head"><b>Data check</b><span class="dc-badge dc-${d.status}">${DC_LABEL[d.status]}</span></div>`
       +((c=>c&&c.u?`<div class="dc-sec"><div class="dc-lab">When to use</div><div class="dc-use">${c.u}</div>${ctxEx(c.e)}</div>`:'')(MODCTX[id]))
-      +`<div class="dc-sec"><div class="dc-lab">Spec contract</div>`
-        +`<div class="dc-contract">${d.contract.map(c=>`<span class="dc-c">${c}</span>`).join('')}</div></div>`
+      +`<div class="dc-sec"><div class="dc-lab">Spec contract</div><div class="dc-contract">${d.contract.map(c=>`<span class="dc-c">${c}</span>`).join('')}</div></div>`
       +`<div class="dc-sec"><div class="dc-lab">Wyze AI One source</div>${dcSources(d.sources)}</div>`
       +`<div class="dc-note">${d.note}</div>`
-      +(m.a?`<div class="dc-v15"><div class="dc-lab">v1.5 — what's improved</div><div class="dc-adds">${m.a}</div>`
-        +(m.n?`<div class="dc-needs">Needs data we don't have yet: ${m.n}</div>`:'')+`</div>`:'')
+      +((ver==='v15'&&m.a)?`<div class="dc-v15"><div class="dc-lab">v1.5 — what's improved</div><div class="dc-adds">${m.a}</div>`+(m.n?`<div class="dc-needs">Needs data we don't have yet: ${m.n}</div>`:'')+`</div>`:'')
     +`</div></div>`;
 }
-$('dcGrids').innerHTML=FAMILIES.map(([fam,mods])=>
-  `<div class="famblock dc-fam"><h3>${fam}</h3>`
-  +mods.map(([id,fn])=>dcRow(id,fn)).join('')+`</div>`).join('');
-const dcCnt={have:0,partial:0,missing:0};
-FAMILIES.forEach(([,mods])=>mods.forEach(([id])=>{dcCnt[(DATACHECK[id]||{}).status||'missing']++;}));
-$('dcSummary').innerHTML=
-  `<span class="dc-stat dc-have" data-f="have"><b>${dcCnt.have}</b> Have</span>`
- +`<span class="dc-stat dc-partial" data-f="partial"><b>${dcCnt.partial}</b> Partial</span>`
- +`<span class="dc-stat dc-missing" data-f="missing"><b>${dcCnt.missing}</b> Missing</span>`
- +`<span class="dc-stat dc-total dc-on" data-f=""><b>${dcCnt.have+dcCnt.partial+dcCnt.missing}</b> modules</span>`;
 $('dcOpps').innerHTML=`<div class="famblock dc-fam"><h3>Unused Wyze data &rarr; new component opportunities</h3>`
- +DC_OPPS.map(o=>`<div class="dc-opp"><code class="dc-ep">${o.src}</code><span class="dc-oppidea">${o.idea}</span></div>`).join('')
- +`</div>`;
+ +DC_OPPS.map(o=>`<div class="dc-opp"><code class="dc-ep">${o.src}</code><span class="dc-oppidea">${o.idea}</span></div>`).join('')+`</div>`;
 
-/* click a summary stat to filter rows by status; click it again (or "of 46 modules") to clear */
-let dcCur='';
+let dcVer='v2', dcCur='';
 function dcFilter(f){
-  if(f && f===dcCur) f='';            /* toggle the active status off */
-  dcCur=f;
-  document.querySelectorAll('#dcSummary .dc-stat').forEach(s=>
-    s.classList.toggle('dc-on', f ? (s.dataset.f===f) : (s.dataset.f==='')));
-  document.querySelectorAll('#dcGrids .dc-row').forEach(r=>{
-    r.style.display=(!f||r.dataset.status===f)?'':'none';});
-  document.querySelectorAll('#dcGrids .dc-fam').forEach(fam=>{
-    const any=[...fam.querySelectorAll('.dc-row')].some(r=>r.style.display!=='none');
-    fam.style.display=any?'':'none';});
-  $('dcOpps').style.display=f?'none':'';   /* opportunities aren't a per-status result */
+  if(f && f===dcCur) f=''; dcCur=f;
+  document.querySelectorAll('#dcSummary .dc-stat[data-f]').forEach(s=>s.classList.toggle('dc-on', f?(s.dataset.f===f):(s.dataset.f==='')));
+  document.querySelectorAll('#dcGrids .dc-row').forEach(r=>{r.style.display=(!f||r.dataset.status===f)?'':'none';});
+  document.querySelectorAll('#dcGrids .dc-fam').forEach(fam=>{const any=[...fam.querySelectorAll('.dc-row')].some(r=>r.style.display!=='none');fam.style.display=any?'':'none';});
+  $('dcOpps').style.display=f?'none':'';
 }
-document.querySelectorAll('#dcSummary .dc-stat').forEach(s=>
-  s.addEventListener('click',()=>dcFilter(s.dataset.f||'')));
+function renderDcVer(ver){
+  dcVer=ver; dcCur='';
+  document.querySelectorAll('#dcVerTabs .dc-vertab').forEach(b=>b.classList.toggle('on',b.dataset.ver===ver));
+  $('dcOpps').style.display='';
+  if(ver==='v2'){
+    $('dcGrids').innerHTML=`<div class="famblock dc-fam"><h3>v2 &middot; consolidated &mdash; ${V2.length} components</h3>`+V2.map(v2Card).join('')+`</div>`;
+    $('dcSummary').innerHTML=`<span class="dc-stat dc-v2chip"><b>42</b> &rarr; <b style="color:#c4b3f0">${V2.length}</b> consolidated</span>`
+      +`<span class="dc-stat">each component flexes across modes</span>`;
+    return;
+  }
+  $('dcGrids').innerHTML=FAMILIES.map(([fam,mods])=>`<div class="famblock dc-fam"><h3>${fam}</h3>`+mods.map(([id,fn])=>dcRowSolo(id,fn,ver)).join('')+`</div>`).join('');
+  const cnt={have:0,partial:0,missing:0};
+  FAMILIES.forEach(([,mods])=>mods.forEach(([id])=>{cnt[(DATACHECK[id]||{}).status||'missing']++;}));
+  $('dcSummary').innerHTML=`<span class="dc-stat dc-have" data-f="have"><b>${cnt.have}</b> Have</span>`
+    +`<span class="dc-stat dc-partial" data-f="partial"><b>${cnt.partial}</b> Partial</span>`
+    +`<span class="dc-stat dc-missing" data-f="missing"><b>${cnt.missing}</b> Missing</span>`
+    +`<span class="dc-stat dc-total dc-on" data-f=""><b>${cnt.have+cnt.partial+cnt.missing}</b> components</span>`;
+  document.querySelectorAll('#dcSummary .dc-stat[data-f]').forEach(s=>s.addEventListener('click',()=>dcFilter(s.dataset.f||'')));
+}
+document.querySelectorAll('#dcVerTabs .dc-vertab').forEach(b=>b.addEventListener('click',()=>renderDcVer(b.dataset.ver)));
+renderDcVer('v2');
 
 /* ---------- tab switching ---------- */
 document.querySelectorAll('.tab').forEach(tb=>tb.addEventListener('click',()=>{
