@@ -888,6 +888,13 @@
     padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid var(--line)}
   .console h2.intenthead{margin-top:0}
   .playhead{display:flex;align-items:center;gap:10px;justify-content:space-between}
+  /* foldable playground */
+  #playFoldHead{cursor:pointer;user-select:none}
+  .playcaret{flex:none;color:var(--mut);font-size:11px;transition:transform .15s;margin-right:-4px}
+  .playblock.folded .playcaret{transform:rotate(-90deg)}
+  .playblock.folded > :not(.playhead){display:none}
+  .playblock.folded{padding-bottom:15px;margin-bottom:15px}
+  .playblock.folded .playstatus{display:none}
   .playhead h2{margin:0;flex:1;font-size:12px;letter-spacing:1.3px;
     text-transform:uppercase;color:var(--mut);font-weight:700}
   .playgear{flex:none;width:30px;height:30px;border-radius:9px;background:var(--card);
@@ -1168,8 +1175,9 @@
     <div class="toprow">
       <!-- LEFT: agent-template + sample picker -->
       <div class="console">
-        <div class="playblock playside">
-        <div class="playhead">
+        <div class="playblock playside folded" id="playBlock">
+        <div class="playhead" id="playFoldHead">
+          <span class="playcaret" aria-hidden="true">&#9662;</span>
           <h2><span class="lbl">Describe your own goal</span></h2>
           <button class="playgear" id="playSettingsBtn" title="API key &amp; model">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -4961,6 +4969,8 @@ function xScrollDocForFilter(key,val){
     /* renderPipe() runs at generate() time, not on load, so the Generator's
        default intent view owns the shared phone/trace until the user generates */
     $('playSettingsBtn').addEventListener('click',openSettings);
+    /* fold/unfold the playground (default folded); ignore clicks on the gear */
+    $('playFoldHead').addEventListener('click',(e)=>{ if(e.target.closest('#playSettingsBtn')) return; $('playBlock').classList.toggle('folded'); });
     $('playSheetClose').addEventListener('click',closeSettings);
     sheet.addEventListener('click',(e)=>{ if(e.target===sheet) closeSettings(); });
     $('playKeySave').addEventListener('click',saveKey);
