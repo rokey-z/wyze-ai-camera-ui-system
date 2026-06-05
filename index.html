@@ -26,7 +26,7 @@
   header p{color:var(--mut);font-size:14px;margin-top:8px;max-width:760px;line-height:1.6}
 
   .console{background:var(--panel);border:1px solid var(--line);
-    border-radius:var(--radius);padding:20px 20px 22px;position:sticky;top:62px;
+    border-radius:var(--radius);padding:20px 20px 22px;position:sticky;top:60px;
     display:flex;flex-direction:column;height:calc(100vh - 86px);overflow:hidden}
   .console h2{font-size:12px;letter-spacing:1.3px;text-transform:uppercase;color:var(--mut);
     font-weight:700;margin-bottom:6px}
@@ -147,7 +147,7 @@
   /* tabs */
   .tabs{display:flex;gap:2px;margin-top:24px;border-bottom:1px solid var(--line);
     position:sticky;top:0;z-index:40;background:#0e1726;padding-top:10px}
-  .tab{padding:12px 22px;font-size:16px;font-weight:600;color:var(--mut);cursor:pointer;
+  .tab{padding:12px 22px;font-size:20px;font-weight:600;color:var(--mut);cursor:pointer;
     border-bottom:2px solid transparent;margin-bottom:-1px;display:flex;
     flex-direction:column;align-items:flex-start;gap:2px;line-height:1.2}
   .tab:hover{color:var(--ink)}
@@ -169,7 +169,7 @@
   /* ===== Data check tab ===== */
   .dc-cap{font-size:12.5px;color:var(--mut);line-height:1.55;margin:4px 0 14px;max-width:880px}
   .dc-summary{display:flex;flex-wrap:wrap;gap:9px;
-    position:sticky;top:62px;z-index:30;background:var(--bg);
+    position:sticky;top:60px;z-index:30;background:var(--bg);
     padding:11px 0;margin-bottom:4px;border-bottom:1px solid var(--line)}
   .dc-stat{font-size:12px;color:var(--mut);background:var(--card);
     border:1px solid var(--line);border-radius:999px;padding:6px 13px;
@@ -248,9 +248,10 @@
     color:#f3cd86;line-height:1.45}
   .dc-needs::before{content:'⚠';flex:none}
   /* version sub-tabs + v2 consolidated layout */
-  .dc-stickyhdr{position:sticky;top:62px;z-index:31;background:var(--bg);
-    padding-top:6px;border-bottom:1px solid var(--line)}
+  .dc-stickyhdr{position:sticky;top:60px;z-index:31;background:var(--bg);
+    padding-top:0;border-bottom:1px solid var(--line)}
   .dc-stickyhdr .dc-summary{position:static;top:auto;border-bottom:0;padding:7px 0 8px}
+  .dc-stickyhdr .dc-summary:empty{padding:0}
   .dc-vertabs{display:flex;gap:6px;padding:2px 0 2px}
   .dc-vertab{font-size:12px;font-weight:700;color:var(--mut);background:var(--card);
     border:1px solid var(--line);border-radius:999px;padding:6px 16px;cursor:pointer;
@@ -403,7 +404,7 @@
 
   /* generation trace — right of the preview, vertical single-column layout */
   .trace{background:var(--panel);border:1px solid var(--line);
-    border-radius:var(--radius);padding:15px 17px;position:sticky;top:62px;
+    border-radius:var(--radius);padding:15px 17px;position:sticky;top:60px;
     height:calc(100vh - 86px);overflow-y:auto}
   .tracegrid{display:grid;grid-template-columns:1fr;gap:0}
   .tracecol{min-width:0}
@@ -448,7 +449,7 @@
   .tier b{color:var(--ink)}
 
   /* phone */
-  .phonewrap{display:flex;flex-direction:column;align-items:center;position:sticky;top:62px;
+  .phonewrap{display:flex;flex-direction:column;align-items:center;position:sticky;top:60px;
     height:calc(100vh - 86px);overflow-y:auto}
   .phone{width:344px;background:#070b13;border:9px solid #05080f;border-radius:42px;
     box-shadow:0 26px 60px -22px #000,0 0 0 1px #1c283e;overflow:hidden;position:relative}
@@ -3835,18 +3836,7 @@ function renderDcVer(ver){
     const SET=ver==='v25'?V25:V2, opt=ver==='v25'?{rmap:MOD25,vlab:'v2.5',vcls:'v25'}:undefined;
     const groups=[]; SET.forEach(v=>{let g=groups.find(x=>x.name===v.grp); if(!g){g={name:v.grp,items:[]};groups.push(g);} g.items.push(v);});
     $('dcGrids').innerHTML=groups.map(g=>`<div class="famblock dc-fam"><h3>${g.name} <span style="color:var(--dim);font-weight:600">${g.items.length}</span></h3>`+g.items.map(v=>v2Card(v,opt)).join('')+`</div>`).join('');
-    if(ver==='v25'){
-      const mg=V25.filter(v=>v.folds.length>1).length, nw=V25.filter(v=>v.tag==='new').length;
-      $('dcSummary').innerHTML=`<span class="dc-stat dc-v25chip"><b>42</b> &rarr; <b style="color:#7eecc4">${V25.length}</b> components</span>`
-        +`<span class="dc-stat"><b>${mg}</b> merged</span>`
-        +`<span class="dc-stat"><b>11</b> retired</span>`
-        +`<span class="dc-stat"><b>${nw}</b> new &middot; Insight, Assistant, Learnings</span>`;
-    } else {
-      const merged=V2.filter(v=>v.folds.length>1).length;
-      $('dcSummary').innerHTML=`<span class="dc-stat dc-v2chip"><b>42</b> &rarr; <b style="color:#c4b3f0">${V2.length}</b> components</span>`
-        +`<span class="dc-stat"><b>${V2.length-merged}</b> kept for variety</span>`
-        +`<span class="dc-stat"><b>${merged}</b> merged (one format, adjustable)</span>`;
-    }
+    $('dcSummary').innerHTML='';   /* v2 / v2.5 stats were non-interactive — removed */
     return;
   }
   $('dcGrids').innerHTML=FAMILIES.map(([fam,mods])=>`<div class="famblock dc-fam"><h3>${fam}</h3>`+mods.map(([id,fn])=>dcRowSolo(id,fn,ver)).join('')+`</div>`).join('');
