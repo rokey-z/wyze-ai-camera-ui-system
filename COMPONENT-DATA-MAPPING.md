@@ -82,7 +82,7 @@ Wyze AI One has rich data that no current spec module consumes:
 | M-REEL | Have | `GET /api/eventgroups/{id}/artifact` → gif_url · `POST /api/eventgroups/digest` → highlights | Montage = event-group GIF; digest = highlights. |
 | M-GALLERY | Have | `GET /api/eventgroups` → ai_tags, thumbnail_url · `GET /api/reid/identities` → entity_type, image_url | Group by tag or identity. |
 | M-COMPARE | Partial | `capture_snapshot` → url · `thumbnails` → captured_at | No stored pairs; pick two captures at two times. Growth comparison needs the time-lapse store. |
-| M-GRID | Have | `GET /api/devices` → device_mac, device_name · `…/stream_params` | Multi-cam tiles, one stream per tile. |
+| M-GRID | Have | `GET /api/devices/home` → device_mac, device_name · `…/stream_params` | Multi-cam tiles, one stream per tile. |
 | M-PTZ | Missing | — | No PTZ control endpoint (only power on/off). |
 
 ### B · State & Status
@@ -96,7 +96,7 @@ Wyze AI One has rich data that no current spec module consumes:
 ### C · Events
 | Module | Status | Source | Note |
 |---|---|---|---|
-| M-FEED | Have | `POST /api/events/filter` → event_ts, tag_list, event_resources, video_description · `…/insights` → description_title, score | Core fit. |
+| M-FEED | Have | `POST /api/events/filter` → event_ts, tag_list, event_resources, video_description · `…/insights` → vlm_insight | Core fit. |
 | M-FILTER | Have | `GET /api/events/tags` (50+) · `…/filter` → tag_list, device_mac | Direct. |
 | M-GROUPS | Have | `GET /api/eventgroups` → ai_tags, event_count, cameras | Bucket by ai_tags. |
 
@@ -135,9 +135,9 @@ Wyze AI One has rich data that no current spec module consumes:
 ### H · Fleet & Escalation
 | Module | Status | Source | Note |
 |---|---|---|---|
-| M-DEVMAP | Partial | `GET /api/devices` · `…/power_status` → is_on | Status roll-up yes; positional map needs coordinates (missing). |
-| M-HEALTH | Partial | `GET /api/devices` → firmware_ver · `…/power_status` → is_on | Online+firmware yes; battery/signal/storage/uptime not in model. |
-| M-SOS | Partial | `GET /api/household` → members · push subscriptions | Escalation tree on members+push; call/SMS needs comms integration. |
+| M-DEVMAP | Partial | `GET /api/devices/home` · `…/power_status` → is_on | Status roll-up yes; positional map needs coordinates (missing). |
+| M-HEALTH | Partial | `GET /api/devices/home` → firmware_ver · `…/power_status` → is_on | Online+firmware yes; battery/signal/storage/uptime not in model. |
+| M-SOS | Partial | `GET /api/household/profile` → members · `POST /api/notifications/push-subscription` | Escalation tree on members+push; call/SMS needs comms integration. |
 | M-TICKET | Partial | `GET /api/eventgroups` → status · `/api/signals` | Closest primitives; full assignable workflow needs extension. |
 | M-JOURNAL | Partial | `GET /api/household/visual-memories` → runs[].summary, created_at | Chronological log exists; user-written journal needs an entry store. |
 

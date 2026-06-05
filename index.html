@@ -3514,7 +3514,7 @@ const DATACHECK={
      {ep:'POST /api/devices/thumbnails',fields:['captured_at']}],
    note:'No stored aligned pairs. Achievable: pick two captures of one device at two times. Growth-over-time comparison depends on the M-TIMELAPSE store.'},
  'M-GRID':{status:'have',contract:['multiple synced feeds','layout','focus index'],
-   sources:[{ep:'GET /api/devices',fields:['device_mac','device_name','product_model']},
+   sources:[{ep:'GET /api/devices/home',fields:['device_mac','device_name','product_model']},
      {ep:'POST /api/devices/{mac}/stream_params',fields:['signaling_url']}],
    note:'Multi-camera tiles from the device list, one live stream per tile.'},
  'M-PTZ':{status:'missing',contract:['live stream','pan / tilt / zoom','presets'],
@@ -3539,7 +3539,7 @@ const DATACHECK={
  /* C · Events */
  'M-FEED':{status:'have',contract:['reverse-chron cards','trigger','thumbnail','entity'],
    sources:[{ep:'POST /api/events/filter',fields:['event_ts','tag_list','event_resources','video_description']},
-     {ep:'POST /api/events/insights',fields:['description_title','score']}],
+     {ep:'POST /api/events/insights',fields:['vlm_insight']}],
    note:'Core fit — the AI-tagged event feed is exactly this app’s primary data.'},
  'M-FILTER':{status:'have',contract:['category chips','active set','count per category'],
    sources:[{ep:'GET /api/events/tags',fields:['tag definitions (50+)']},
@@ -3609,16 +3609,16 @@ const DATACHECK={
    note:'No user-drawn zone storage in this app’s API (the profile holds a prompt + threshold, not polygons). Achievable: add zone polygons to the device profile and render them over the current frame.'},
  /* H · Fleet & Escalation */
  'M-DEVMAP':{status:'partial',contract:['devices on map/floorplan','status badges'],
-   sources:[{ep:'GET /api/devices',fields:['device_mac','device_name']},
+   sources:[{ep:'GET /api/devices/home',fields:['device_mac','device_name']},
      {ep:'GET /api/devices/{mac}/power_status',fields:['is_on']}],
    note:'Status roll-up is available; the positional map is missing — no device location coordinates are stored.'},
  'M-HEALTH':{status:'partial',contract:['battery','signal','storage','uptime'],
-   sources:[{ep:'GET /api/devices',fields:['firmware_ver']},
+   sources:[{ep:'GET /api/devices/home',fields:['firmware_ver']},
      {ep:'GET /api/devices/{mac}/power_status',fields:['is_on (online)']}],
    note:'Online state + firmware are available now. Battery / signal / storage / uptime are not in the device model and would need extra Wyze telemetry fields.'},
  'M-SOS':{status:'partial',contract:['escalation tree','contact methods','active alert'],
-   sources:[{ep:'GET /api/household',fields:['members[]']},
-     {ep:'push subscriptions',fields:['device-bound push tokens']}],
+   sources:[{ep:'GET /api/household/profile',fields:['members[]']},
+     {ep:'POST /api/notifications/push-subscription',fields:['push tokens']}],
    note:'An escalation tree over household members + push is achievable. Call/SMS escalation needs a comms integration.'},
  'M-TICKET':{status:'partial',contract:['assign / investigate / resolve workflow'],
    sources:[{ep:'GET /api/eventgroups',fields:['status (pending/confirmed)']},
@@ -3703,7 +3703,7 @@ const V2=[
  // ——— Events & records ———
  {id:'C-FEED',grp:'Events & records',name:'Event feed',primary:'M-FEED',folds:['M-FEED','M-GROUPS'],modes:['tagged cards','grouped by trigger','filter chips'],use:'AI-tagged event cards with filter chips — flat, or bucketed by trigger type.'},
  {id:'C-LOG',grp:'Events & records',name:'Log / journal',primary:'M-LOG',folds:['M-LOG','M-JOURNAL'],modes:['running log','narrative journal'],src:[{ep:'GET /api/household/visual-memories'},{ep:'GET /api/stories'}],use:'A timestamped record — a terse running log, or a narrative care / activity journal.'},
- {id:'C-VISIT',grp:'Events & records',name:'Visit sheet',primary:'M-TIMESHEET',folds:['M-TIMESHEET'],modes:['arrival / departure rows'],src:[{ep:'POST /api/events/filter',fields:['event_ts','tags']},{ep:'GET /api/reid/identities/{id}/appearances'}],use:'Attendance / visit verification — arrival, departure and dwell per subject, each linking its clip.'},
+ {id:'C-VISIT',grp:'Events & records',name:'Visit sheet',primary:'M-TIMESHEET',folds:['M-TIMESHEET'],modes:['arrival / departure rows'],src:[{ep:'POST /api/events/filter',fields:['event_ts','tag_list']},{ep:'GET /api/reid/identities/{id}/appearances'}],use:'Attendance / visit verification — arrival, departure and dwell per subject, each linking its clip.'},
  {id:'C-IDCARD',grp:'Events & records',name:'Identity card',primary:'M-IDCARD',folds:['M-IDCARD'],modes:['recognized subject'],use:'A recognized-subject detail card (face / plate, last seen, appearance count).'},
  // ——— Timeline ———
  {id:'C-TIMELINE',grp:'Timeline',name:'Activity timeline',primary:'M-SCRUB',folds:['M-SCRUB','M-NIGHTGRAPH'],modes:['scrubber + markers','session graph'],use:'Activity on a time axis — a scrubber with event markers, or color-coded session segments.'},
@@ -3768,7 +3768,7 @@ const V25=[
  // ——— Records & lists (4) ———
  {id:'C-FEED',grp:'Records & lists',name:'Event feed',primary:'M-FEED',folds:['M-FEED'],modes:['tagged cards','filter chips','load more'],use:'AI-tagged event cards with filter chips — shows several rows with a More button to page further back.'},
  {id:'C-LOG',grp:'Records & lists',name:'Log / journal',primary:'M-LOG',folds:['M-LOG','M-JOURNAL'],modes:['running log','narrative journal'],src:[{ep:'GET /api/household/visual-memories',fields:['status_line','summary']},{ep:'GET /api/stories'}],use:'A timestamped record — a terse running log, or a narrative journal.'},
- {id:'C-VISIT',grp:'Records & lists',name:'Visit sheet',primary:'M-TIMESHEET',folds:['M-TIMESHEET'],modes:['arrival / departure rows'],src:[{ep:'POST /api/events/filter',fields:['event_ts','tags']},{ep:'GET /api/reid/identities/{id}/appearances'}],use:'Attendance / visit verification — arrival, departure and dwell per subject.'},
+ {id:'C-VISIT',grp:'Records & lists',name:'Visit sheet',primary:'M-TIMESHEET',folds:['M-TIMESHEET'],modes:['arrival / departure rows'],src:[{ep:'POST /api/events/filter',fields:['event_ts','tag_list']},{ep:'GET /api/reid/identities/{id}/appearances'}],use:'Attendance / visit verification — arrival, departure and dwell per subject.'},
  {id:'C-IDCARD',grp:'Records & lists',name:'Identity card',primary:'M-IDCARD',folds:['M-IDCARD'],modes:['recognized subject'],use:'A recognized-subject detail card (face / plate, last seen, appearances).'},
  // ——— Status & readouts (3) ———
  {id:'C-STATE',grp:'Status & readouts',name:'State (large)',primary:'M-STATE',folds:['M-STATE'],modes:['big state word + duration'],use:'The current state shown as a large word with how long it has held.'},
@@ -3780,13 +3780,13 @@ const V25=[
  {id:'C-MONTHTREND',grp:'Charts & trends',name:'Month trend',primary:'M-CALENDAR',folds:['M-CALENDAR'],modes:['calendar w/ counts'],src:[{ep:'POST /api/eventgroups/digest'},{ep:'POST /api/events/filter (daily counts)'}],use:'A month calendar with the event count printed in each day cell.'},
  // ——— AI (4) ———
  {id:'C-RECAP',grp:'AI',name:'AI recap (large)',primary:'M-RECAP',folds:['M-RECAP'],modes:['large narrative + tone'],use:'An AI plain-language summary of a period, shown as a large readable block.'},
- {id:'C-INSIGHT',grp:'AI',name:'Insight',primary:'',folds:[],tag:'new',modes:['adjustable period (daily / weekly / monthly)','output: plain text + simple chart','grounded in goal + context + memory'],src:[{ep:'POST /api/insights',fields:['finding','period','series']},{ep:'GET /api/stories',fields:['narrative','why_it_matters','tone']},{ep:'GET /api/agents',fields:['schedule']}],use:'The agent’s periodic finding — a plain-text takeaway plus a simple data chart, synthesized from its goal, context and memory. Delivery cadence (daily / weekly / monthly) is set per agent and adjustable.'},
+ {id:'C-INSIGHT',grp:'AI',name:'Insight',primary:'',folds:[],tag:'new',modes:['adjustable period (daily / weekly / monthly)','output: plain text + simple chart','grounded in goal + context + memory'],src:[{ep:'GET /api/household/visual/digests/latest'},{ep:'POST /api/events/insights',fields:['vlm_insight']},{ep:'GET /api/stories',fields:['narrative','why_it_matters','tone']},{ep:'POST /api/events/filter',fields:['event_ts (chart series)']}],use:'The agent’s periodic finding — a plain-text takeaway plus a simple data chart, synthesized from its goal, context and memory. (No single insights endpoint yet — composed from the visual digest, per-event VLM insights, stories, and event counts.) Delivery cadence (daily / weekly / monthly) is set per agent.'},
  {id:'C-ASSIST',grp:'AI',name:'Assistant + suggestions',primary:'',folds:[],tag:'new',modes:['ask · answer','suggestion chips','create-agent'],src:[{ep:'POST /api/chat',fields:['answer','event_cards','media']},{ep:'GET /api/chat/history'},{ep:'POST /api/skills/suggest',fields:['name','instructions','rationale']}],use:'Ask-Home assistant — ask in plain language and get an answer with event / clip cards; offers categorized suggestion chips (insight / memory / config) and can propose a new agent to create.'},
- {id:'C-LEARN',grp:'AI',name:'Learnings card',primary:'',folds:[],tag:'new',modes:['2–3 recent learnings','confidence'],src:[{ep:'GET /api/household/learnings',fields:['fact','category','confidence']},{ep:'GET /api/household/visual/entities/{id}',fields:['routines','summary_recent']}],use:'Surfaces 2–3 things the agent has recently learned or remembered (routines, baselines, recognized identities).'},
+ {id:'C-LEARN',grp:'AI',name:'Learnings card',primary:'',folds:[],tag:'new',modes:['2–3 recent learnings','confidence'],src:[{ep:'GET /api/household/learnings',fields:['fact','category','confidence']},{ep:'GET /api/household/visual/entities/{id}',fields:['page','recent_observations']}],use:'Surfaces 2–3 things the agent has recently learned or remembered (from the compiled household learnings + per-entity knowledge pages).'},
  // ——— Actions & alerts (3) ———
  {id:'C-ACT',grp:'Actions & alerts',name:'Quick actions',primary:'M-ACT',folds:['M-ACT','M-TALK'],modes:['power on / off','two-way talk'],use:'A device action bar — power (on/off toggle icons) and two-way talk. In a generated UI this sits directly under the live view.'},
  {id:'C-DETER',grp:'Actions & alerts',name:'Deterrent',primary:'M-DETER',folds:['M-DETER'],modes:['siren / lights'],use:'A siren / lights deterrent action.'},
- {id:'C-REMINDER',grp:'Actions & alerts',name:'Reminder & schedule',primary:'M-REMINDER',folds:['M-REMINDER'],modes:['schedule','elapsed reminder'],src:[{ep:'GET /api/agents',fields:['schedule','triggers']},{ep:'GET /api/household/visual-memories',fields:['status_line']}],use:'A schedule or elapsed-time reminder (e.g. “trash day in 2h”, “not seen since 9am”).'},
+ {id:'C-REMINDER',grp:'Actions & alerts',name:'Reminder & schedule',primary:'M-REMINDER',folds:['M-REMINDER'],modes:['schedule','elapsed reminder'],src:[{ep:'GET /api/agents',fields:['triggers (schedule config)']},{ep:'GET /api/household/visual-memories',fields:['status_line']}],use:'A schedule or elapsed-time reminder (e.g. “trash day in 2h”, “not seen since 9am”).'},
  // ——— Escalation (grouped under Actions & alerts) ———
  {id:'C-SOS',grp:'Actions & alerts',name:'Escalation',primary:'M-SOS',folds:['M-SOS'],modes:['caregiver call tree'],use:'An emergency escalation / caregiver call tree.'},
 ];
@@ -3804,7 +3804,7 @@ const MOD25={
  'C-TILES':`<div class="panel"><div class="ph"><b>Tiles &mdash; metrics + fleet</b><span style="font-size:9px;color:#7eecc4">3 / 4 online</span></div><div class="tilegrid">${[['Garage cam','online &middot; fw 4.36','#34d399'],['Front cam','online &middot; fw 4.36','#34d399'],['Yard cam','online &middot; fw 4.31','#34d399'],['Porch cam','offline &middot; 2h','#f25c5c']].map(([n,s,c])=>`<div class="gtile"><div class="gt-top"><span class="gt-dot" style="background:${c}"></span>${n}</div><div class="gt-sub">${s}</div></div>`).join('')}</div><div class="tilegrid" style="margin-top:7px">${[['38','events today'],['2','need attention'],['97%','uptime 7d']].map(([v,l])=>`<div class="gtile num"><b>${v}</b><span>${l}</span></div>`).join('')}</div></div>`,
  'C-SOS':`<div class="panel"><div class="ph"><b>Escalation contacts</b><span style="font-size:9px;color:var(--dim)">call order</span></div><div class="sosbook">${[['Y','You','Push &middot; this phone','#4f8ff0','push'],['S','Sarah &middot; sister','Call &middot; (415) 555-0142','#f6b73c','call'],['M','Mike &middot; neighbor','Text &middot; (415) 555-0177','#34d399','text'],['D','Dr. Lee','Call &middot; clinic line','#a78bfa','call']].map(([ini,name,method,c,kind],i)=>`<div class="sosc"><span class="sosc-av" style="background:${c}22;color:${c}">${ini}</span><div class="sosc-main"><div class="sosc-name">${name}</div><div class="sosc-method"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco[kind]}</svg>${method}</div></div><span class="sosc-ord">${i+1}</span></div>`).join('')}</div></div>`,
  'C-ASSIST':`<div class="panel"><div class="ph"><b>Ask Home</b><span class="recap"><span class="ai">AI</span></span></div><div class="dc-lab" style="margin:0 0 8px">Suggested questions</div><div class="suglist">${[['#9cc3f5','What did I miss today?'],['#c4b3f0','When does the mail usually come?'],['#7eecc4','Is the garage closed right now?'],['#9cc3f5','Did anyone come to the door?'],['#c4b3f0','Who was the person at 2 PM?']].map(([c,q])=>`<div class="sugq"><i class="sugdot" style="background:${c}"></i><span class="sugq-t">${q}</span><span class="sugq-go">&rarr;</span></div>`).join('')}</div></div>`,
- 'C-LEARN':`<div class="panel"><div class="ph"><b>What this agent learned</b><span class="recap"><span class="ai">AI</span></span></div>`+[['Mail usually arrives 1&ndash;3pm','routine','0.86'],['The garage is normally closed overnight','baseline','0.93'],['Recognizes the silver SUV as &ldquo;family car&rdquo;','identity','0.78']].map(([f,cat,c])=>`<div class="learnrow"><span class="lbulb"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f6b73c" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12c.5.5 1 1.2 1 2h6c0-.8.5-1.5 1-2a7 7 0 0 0-4-12z"/></svg></span><div style="flex:1;min-width:0"><div class="ft">${f}</div><div class="fm">${cat} &middot; remembered</div></div><span class="lconf">${c}</span></div>`).join('')+`<div class="ghost" style="display:block;margin-top:7px;padding:5px 9px"><span style="font-size:9px;color:var(--dim)">From household learnings + entity routines</span><span class="nodata">COMPILED</span></div></div>`,
+ 'C-LEARN':`<div class="panel"><div class="ph"><b>What this agent learned</b><span class="recap"><span class="ai">AI</span></span></div>`+[['Mail usually arrives 1&ndash;3pm','routine','0.86'],['The garage is normally closed overnight','baseline','0.93'],['Recognizes the silver SUV as &ldquo;family car&rdquo;','identity','0.78']].map(([f,cat,c])=>`<div class="learnrow"><span class="lbulb"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f6b73c" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12c.5.5 1 1.2 1 2h6c0-.8.5-1.5 1-2a7 7 0 0 0-4-12z"/></svg></span><div style="flex:1;min-width:0"><div class="ft">${f}</div><div class="fm">${cat} &middot; remembered</div></div><span class="lconf">${c}</span></div>`).join('')+`<div class="ghost" style="display:block;margin-top:7px;padding:5px 9px"><span style="font-size:9px;color:var(--dim)">From household learnings + entity pages</span><span class="nodata">COMPILED</span></div></div>`,
 };
 function dcRowSolo(id,fn,ver){
   const d=DATACHECK[id]||{status:'missing',contract:[],sources:[],note:'Not yet mapped.'};
