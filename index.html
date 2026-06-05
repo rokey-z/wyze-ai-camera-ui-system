@@ -270,8 +270,9 @@
   .dc-lay:hover{color:var(--ink)}
   .dc-lay.on{color:var(--ink);background:var(--panel);box-shadow:0 0 0 1px var(--line) inset}
   /* GRID view: show only the components; data card floats in on hover */
-  #dcGrids.dc-gridmode .dc-fam{display:grid;grid-template-columns:repeat(auto-fill,minmax(198px,1fr));
-    gap:12px;align-items:start}
+  /* fixed-width tiles so components keep their original size (no stretch/shrink) */
+  #dcGrids.dc-gridmode .dc-fam{display:grid;grid-template-columns:repeat(auto-fill,320px);
+    gap:12px;align-items:start;justify-content:start}
   #dcGrids.dc-gridmode .dc-fam h3{grid-column:1/-1;margin-bottom:0}
   #dcGrids.dc-gridmode .dc-row{display:block;position:relative;border:1px solid var(--line);
     border-radius:12px;padding:11px 11px 12px;background:var(--panel);cursor:pointer;
@@ -1143,10 +1144,10 @@
   </header>
 
   <div class="tabs">
-    <div class="tab on" data-tab="data">All components<span class="tn">v1 · v1.5 · data</span></div>
-    <div class="tab" data-tab="gen">Agent Templates &amp; Playground<span class="tn">Wyze templates · playground</span></div>
-    <div class="tab" data-tab="comp">Library &amp; spec<span class="tn">browse + read</span></div>
-    <div class="tab" data-tab="builder">Builder reference<span class="tn">v3 · for the agent</span></div>
+    <div class="tab on" data-tab="data">All components</div>
+    <div class="tab" data-tab="gen">Agent Templates &amp; Playground</div>
+    <div class="tab" data-tab="comp">Library &amp; spec</div>
+    <div class="tab" data-tab="builder">Builder reference</div>
   </div>
 
   <div class="tabpane" id="pane-gen">
