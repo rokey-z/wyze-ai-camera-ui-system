@@ -41,7 +41,7 @@
   .tplgrouphd{font-size:9.5px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;
     color:var(--blue);margin:0 0 7px;display:flex;gap:6px;align-items:center}
   .tplgrouphd span{color:var(--dim);font-family:var(--mono);font-size:9px}
-  .tplgrid{display:grid;grid-template-columns:1fr;gap:8px}
+  .tplgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .tplemoji{font-size:18px;line-height:1;flex:none;width:24px;text-align:center}
   /* real Wyze agent-template card in the trace */
   .tplcard{background:#0e1726;border:1px solid #2a3a55;border-radius:12px;padding:13px 14px;margin-top:6px}
@@ -409,7 +409,8 @@
   /* home-wall entry card sits to the LEFT of the phone preview */
   .previewrow{display:flex;align-items:flex-start;gap:18px;justify-content:center}
   .phonecol{display:flex;flex-direction:column;align-items:center;gap:14px}
-  .previewrow #tplHomeCard{width:330px;flex:none}
+  .previewrow #tplHomeCard{width:330px;flex:none;order:2}   /* Agent Widget on the right */
+  .previewrow .phonecol{order:1}                            /* phone preview on the left */
   @media(max-width:1080px){.toprow{grid-template-columns:1fr;justify-content:stretch}
     .console,.phonewrap,.trace{position:static;height:auto;overflow:visible}
     .previewrow{flex-wrap:wrap}
