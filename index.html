@@ -73,8 +73,6 @@
   .aghome{display:flex;justify-content:center}
   .agcard{width:130px;display:flex;flex-direction:column;align-items:center;gap:7px;position:relative;
     background:var(--card);border:1px solid var(--line);border-radius:50px;padding:28px 13px 26px}
-  .agemoji-tl{position:absolute;top:15px;left:17px;font-size:14px;line-height:1;z-index:3}
-  .agemoji-tl .ic{width:15px;height:15px}
   .agthumb-wrap{position:relative;width:96px;height:96px}
   .agthumb{width:96px;height:96px;border-radius:50%;overflow:hidden;display:flex;
     align-items:center;justify-content:center;position:relative;background:#0e1726}
@@ -93,14 +91,14 @@
   .agtime.fresh{color:#7eecc4;background:#34d39915}
   .agtime.stale{color:var(--dim);background:var(--bg)}
   .agtitle{font-size:12px;font-weight:700;text-align:center;line-height:1.32}
-  .agname{display:flex;align-items:center;justify-content:center;gap:5px;font-size:10.5px;
+  .agname{display:flex;align-items:center;justify-content:center;gap:4px;font-size:9.5px;
     font-weight:600;color:var(--mut);margin-top:6px}
   .agdot{width:7px;height:7px;border-radius:50%;flex:none}
-  .agemoji{font-size:13px}
+  .agemoji{font-size:11px}
   .agt-media{position:relative}
   .agalert{position:absolute;top:3px;right:3px;width:14px;height:14px;border-radius:50%;border:2.5px solid var(--card)}
   .agtitle .agpill{margin:0 auto}
-  .agpill{display:inline-block;font-size:12.5px;font-weight:800;letter-spacing:.2px;line-height:1.1;padding:5px 12px;border-radius:999px;border:1px solid;white-space:nowrap}
+  .agpill{display:inline-block;font-size:12.5px;font-weight:800;letter-spacing:.2px;line-height:1.1;padding:5px 12px;border-radius:999px;white-space:nowrap}
   .agpill-sm{font-size:9px;font-weight:800;padding:3px 8px}
   .agsub{font-size:9.5px;color:var(--dim);text-align:center;line-height:1.35;margin-top:1px;max-width:118px}
   .agsub-t{font-family:var(--mono);color:var(--mut)}
@@ -3046,14 +3044,14 @@ function agThumb(th){
   if(th.tag) ov.push(`<span class="agt-tag" style="background:${th.tc||'#9cc3f5'}">${th.tag}</span>`);
   return `<div class="agthumb agt-media" style="background:${th.grad}">${ov.join('')}</div>`;
 }
-function agPill(w,c,sm){return `<span class="agpill${sm?' agpill-sm':''}" style="color:${c};border-color:${c}66;background:${c}1a">${w}</span>`;}
+function agPill(w,c,sm){return `<span class="agpill${sm?' agpill-sm':''}" style="color:${c};background:${c}24">${w}</span>`;}
 function agCardHTML(t,tpl){
   const p=PRI[t.pri]||PRI.P3;
   const st=t.state||{w:t.title,c:p.c};
   const dot=(t.fresh&&p.dot)?`<span class="agalert" style="background:${p.dot}"></span>`:'';
-  return `<div class="agcard${t.off?' agoff':''}"><span class="agemoji-tl">${tpl.icon}</span><div class="agthumb-wrap">${agThumb(t.th)}${dot}</div>`
+  return `<div class="agcard${t.off?' agoff':''}"><div class="agthumb-wrap">${agThumb(t.th)}${dot}</div>`
     +`<div class="agtitle">${agPill(st.w,st.c)}</div>`
-    +`<div class="agname">${tpl.name}</div>`
+    +`<div class="agname"><span class="agemoji">${tpl.icon}</span>${tpl.name}</div>`
     +`<div class="agsub">${t.title} &middot; <span class="agsub-t">${t.time}</span></div></div>`;
 }
 function agStates(t,tpl){
