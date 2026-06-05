@@ -312,22 +312,14 @@
   .gcard-info{position:absolute;left:11px;right:11px;bottom:9px}
   .gcard-title{font-size:15px;font-weight:800;color:#fff;line-height:1.15}
   .gcard-meta{font-size:10px;color:#d6def0;margin-top:3px}
-  /* assistant + suggestions */
-  .askq{font-size:11px;color:var(--mut);margin-bottom:8px}
-  .aska{display:flex;gap:8px;font-size:11px;line-height:1.45;color:#c7d2e4;margin-bottom:10px}
-  .askai{flex:none;width:20px;height:20px;border-radius:6px;display:grid;place-items:center;
-    font-size:8px;font-weight:800;color:#c4b3f0;background:#a78bfa1c;border:1px solid #a78bfa44}
-  .askclip{font-size:8.5px;font-weight:700;color:#9cc3f5;background:#4f8ff018;border:1px solid #4f8ff03a;
-    border-radius:5px;padding:1px 6px;white-space:nowrap}
-  .askbar{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--dim);
-    background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:8px 10px}
-  .askbar span:first-child{flex:1}
-  .asksend{flex:none;width:22px;height:22px;border-radius:6px;display:grid;place-items:center;
-    color:#fff;background:#4f8ff0;font-weight:800}
-  .askskill{display:flex;align-items:center;gap:7px;margin-top:9px;font-size:9.5px;color:#7eecc4;
-    background:#34d3990d;border:1px dashed #34d39944;border-radius:8px;padding:7px 9px}
-  .askplus{flex:none;width:15px;height:15px;border-radius:5px;display:grid;place-items:center;
-    background:#34d39922;font-weight:800}
+  /* assistant — suggested questions list */
+  .suglist{display:flex;flex-direction:column;gap:6px}
+  .sugq{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:9px;
+    background:var(--bg);border:1px solid var(--line);cursor:pointer;transition:border-color .12s}
+  .sugq:hover{border-color:var(--blue)}
+  .sugdot{flex:none;width:7px;height:7px;border-radius:50%}
+  .sugq-t{flex:1;font-size:11.5px;color:var(--ink);font-weight:600}
+  .sugq-go{flex:none;color:var(--dim);font-size:13px}
   /* escalation — contact-book list */
   .sosbook{display:flex;flex-direction:column}
   .sosc{display:flex;align-items:center;gap:11px;padding:9px 2px;border-top:1px solid var(--line)}
@@ -3791,7 +3783,7 @@ const MOD25={
  'C-ACT':`<div class="actions" style="margin-bottom:8px"><div class="act primary"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>Power on</div><div class="act"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="8" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>Power off</div></div><div class="actions" style="margin-bottom:8px"><div class="act"><span class="ai">${aIcon('<path d="M3 11l16-5v12L3 13z"/><path d="M9 19a2.5 2.5 0 0 0 4 0"/>')}</span>Two-way talk</div></div><div style="font-size:9px;color:#7eecc4">&#9679; Plug is ON &middot; confirmed 1s ago &middot; <span style="color:var(--dim)">sits under the live view</span></div>`,
  'C-FLEET':`<div class="panel"><div class="ph"><b>Fleet</b><span style="font-size:9px;color:#7eecc4">2 / 3 online</span></div><div class="invrow"><span style="width:6px;height:6px;border-radius:50%;background:#34d399;flex:none"></span><span class="in">Garage cam</span><span class="roletag" style="color:#7eecc4;border-color:#34d39940;background:#34d39912">online &middot; fw 4.36</span></div><div class="invrow"><span style="width:6px;height:6px;border-radius:50%;background:#34d399;flex:none"></span><span class="in">Front door cam</span><span class="roletag" style="color:#7eecc4;border-color:#34d39940;background:#34d39912">online &middot; fw 4.36</span></div><div class="invrow"><span style="width:6px;height:6px;border-radius:50%;background:#f25c5c;flex:none"></span><span class="in">Porch cam</span><span class="roletag" style="color:#ff9a9a;border-color:#f25c5c40">offline</span></div><div class="ghost" style="display:block;margin-top:7px;height:48px;background:#0e1a2c;border-radius:6px;position:relative"><span style="position:absolute;left:18%;top:42%;width:7px;height:7px;border-radius:50%;background:#34d399"></span><span style="position:absolute;left:60%;top:28%;width:7px;height:7px;border-radius:50%;background:#34d399"></span><span style="position:absolute;left:80%;top:66%;width:7px;height:7px;border-radius:50%;background:#f25c5c"></span><span class="nodata">FLOORPLAN STUB</span></div></div>`,
  'C-SOS':`<div class="panel"><div class="ph"><b>Escalation contacts</b><span style="font-size:9px;color:var(--dim)">call order</span></div><div class="sosbook">${[['Y','You','Push &middot; this phone','#4f8ff0','push'],['S','Sarah &middot; sister','Call &middot; (415) 555-0142','#f6b73c','call'],['M','Mike &middot; neighbor','Text &middot; (415) 555-0177','#34d399','text'],['D','Dr. Lee','Call &middot; clinic line','#a78bfa','call']].map(([ini,name,method,c,kind],i)=>`<div class="sosc"><span class="sosc-av" style="background:${c}22;color:${c}">${ini}</span><div class="sosc-main"><div class="sosc-name">${name}</div><div class="sosc-method"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco[kind]}</svg>${method}</div></div><span class="sosc-ord">${i+1}</span></div>`).join('')}</div></div>`,
- 'C-ASSIST':`<div class="panel"><div class="ph"><b>Ask Home</b><span class="recap"><span class="ai">AI</span></span></div><div class="askq">&ldquo;Did the mail come yet?&rdquo;</div><div class="aska"><span class="askai">AI</span><div>Yes &mdash; the carrier came at <b style="color:#e9eef6">1:42 PM</b> and left a package by the front door. <span class="askclip">&#9654; clip</span></div></div><div class="askbar"><span>Ask about your cameras&hellip;</span><span class="asksend">&rarr;</span></div><div class="dc-lab" style="margin:10px 0 5px">Suggestions</div><div class="chips2">${[['#9cc3f5','What did I miss today?'],['#c4b3f0','When does mail usually come?'],['#7eecc4','Is the garage closed?']].map(([c,q])=>`<span class="fc"><i style="display:inline-block;width:6px;height:6px;border-radius:50%;background:${c};margin-right:5px"></i>${q}</span>`).join('')}</div><div class="askskill"><span class="askplus">&#43;</span>Create an agent: &ldquo;tell me when the mail arrives&rdquo;</div></div>`,
+ 'C-ASSIST':`<div class="panel"><div class="ph"><b>Ask Home</b><span class="recap"><span class="ai">AI</span></span></div><div class="dc-lab" style="margin:0 0 8px">Suggested questions</div><div class="suglist">${[['#9cc3f5','What did I miss today?'],['#c4b3f0','When does the mail usually come?'],['#7eecc4','Is the garage closed right now?'],['#9cc3f5','Did anyone come to the door?'],['#c4b3f0','Who was the person at 2 PM?']].map(([c,q])=>`<div class="sugq"><i class="sugdot" style="background:${c}"></i><span class="sugq-t">${q}</span><span class="sugq-go">&rarr;</span></div>`).join('')}</div></div>`,
  'C-LEARN':`<div class="panel"><div class="ph"><b>What this agent learned</b><span class="recap"><span class="ai">AI</span></span></div>`+[['Mail usually arrives 1&ndash;3pm','routine','0.86'],['The garage is normally closed overnight','baseline','0.93'],['Recognizes the silver SUV as &ldquo;family car&rdquo;','identity','0.78']].map(([f,cat,c])=>`<div class="learnrow"><span class="lbulb"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f6b73c" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12c.5.5 1 1.2 1 2h6c0-.8.5-1.5 1-2a7 7 0 0 0-4-12z"/></svg></span><div style="flex:1;min-width:0"><div class="ft">${f}</div><div class="fm">${cat} &middot; remembered</div></div><span class="lconf">${c}</span></div>`).join('')+`<div class="ghost" style="display:block;margin-top:7px;padding:5px 9px"><span style="font-size:9px;color:var(--dim)">From household learnings + entity routines</span><span class="nodata">COMPILED</span></div></div>`,
 };
 function dcRowSolo(id,fn,ver){
