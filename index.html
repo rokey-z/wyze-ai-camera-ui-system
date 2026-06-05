@@ -3735,6 +3735,8 @@ function applyCompFilter(){
 renderFilters();
 applyCompFilter();
 
+/* land on the first Wyze AI One template so the home-wall entry card + states show by default */
+if(TEMPLATES&&TEMPLATES.length){ currentTpl=TEMPLATES[0]; current=currentTpl.screen; updateCurLabel(); }
 build();
 applyOverlay();
 
