@@ -97,23 +97,24 @@
   .agemoji{font-size:13px}
   /* states showcase */
   .agstates{display:grid;grid-template-columns:1fr;gap:8px;margin-top:6px}
-  .agms{display:flex;flex-direction:column;align-items:center;gap:3px;background:var(--bg);
-    border:1px solid var(--line);border-radius:12px;padding:8px 4px}
+  /* card states use the same vertical pill shape as the hero agent card */
+  .agms{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--card);
+    border:1px solid var(--line);border-radius:20px;padding:12px 10px 11px}
   .agms-paused{opacity:.5}
-  .agms .agthumb-wrap,.agms .agthumb{width:46px;height:46px}
-  .agms .agt-word{font-size:8.5px;padding:0 2px}
-  .agms .agt-num{font-size:15px}
-  .agms .agt-unit{font-size:5.5px;margin-top:1px}
-  .agms .agt-status{border-width:1.5px}
-  .agms .agt-live{font-size:5px;padding:1px 3px;top:3px;left:3px}
-  .agms .agt-tag{font-size:5px;bottom:3px;padding:1px 3px}
-  .agms .agpri{width:11px;height:11px;border-width:2px}
-  .agms-time{font-size:7.5px;font-family:var(--mono)}
-  .agms-time.fresh{color:#7eecc4}
-  .agms-time.stale{color:var(--dim)}
-  .agms-title{font-size:8px;text-align:center;line-height:1.25;font-weight:600}
-  .agms-lab{font-size:7px;color:var(--dim);display:flex;align-items:center;gap:3px}
-  .agms-lab .agdot{width:5px;height:5px}
+  .agms .agthumb-wrap,.agms .agthumb{width:72px;height:72px}
+  .agms .agt-word{font-size:13px;padding:0 4px}
+  .agms .agt-num{font-size:22px}
+  .agms .agt-unit{font-size:6.5px;margin-top:2px}
+  .agms .agt-status{border-width:2px}
+  .agms .agt-live{font-size:6px;padding:1px 4px;top:5px;left:5px}
+  .agms .agt-tag{font-size:6px;bottom:5px;padding:1px 5px}
+  .agms .agpri{width:13px;height:13px;border-width:2.5px}
+  .agms-time{font-size:9px;font-weight:700;padding:2px 8px;border-radius:999px;font-family:var(--mono)}
+  .agms-time.fresh{color:#7eecc4;background:#34d39915}
+  .agms-time.stale{color:var(--dim);background:var(--bg)}
+  .agms-title{font-size:10px;text-align:center;line-height:1.3;font-weight:700}
+  .agms-lab{font-size:8.5px;color:var(--dim);display:flex;align-items:center;gap:4px;margin-top:1px}
+  .agms-lab .agdot{width:6px;height:6px}
   .agt-run{background:#0e1726}
   .agspin{width:22px;height:22px;border-radius:50%;border:2.5px solid #26344f;border-top-color:#4f8ff0;animation:agspin .9s linear infinite}
   @keyframes agspin{to{transform:rotate(360deg)}}
