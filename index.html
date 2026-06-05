@@ -400,7 +400,7 @@
   .pvthumb{width:26px;height:18px;border-radius:3px;flex:none;
     background:linear-gradient(150deg,#2a3f63,#0f1a2c)}
 
-  .toprow{margin-top:18px;display:grid;grid-template-columns:.67fr 1.7fr .78fr;
+  .toprow{margin-top:18px;display:grid;grid-template-columns:.67fr 1.7fr;
     gap:22px;align-items:start;min-height:calc(100vh + 60px)}
   /* playground sits on top of the agent-templates row */
   #pane-gen.on{display:flex;flex-direction:column}
@@ -415,11 +415,10 @@
     .previewrow{flex-wrap:wrap}
     .intents{flex:none;max-height:none}}
 
-  /* generation trace — right of the preview, vertical single-column layout */
+  /* generation trace — full-width section at the bottom of the Templates tab */
   .trace{background:var(--panel);border:1px solid var(--line);
-    border-radius:var(--radius);padding:15px 17px;position:sticky;top:60px;
-    height:calc(100vh - 86px);overflow-y:auto}
-  .tracegrid{display:grid;grid-template-columns:1fr;gap:0}
+    border-radius:var(--radius);padding:16px 18px 18px;margin-top:22px}
+  .tracegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:6px 26px}
   .tracecol{min-width:0}
   .tracecol .sectlab:first-child{margin-top:0}
   .trace .htitle{font-size:12px;letter-spacing:1.3px;text-transform:uppercase;
@@ -1190,13 +1189,14 @@
         </div>
       </div>
 
-      <!-- RIGHT: framework trace + real agent-template card -->
-      <div class="trace">
-        <div class="htitle">Generation trace</div>
-        <div class="pipe" id="pipe"></div>
-        <div id="traceBody"></div>
-        <div id="tplCard"></div>
-      </div>
+    </div>
+
+    <!-- GENERATION TRACE: full-width section, moved to the bottom -->
+    <div class="trace">
+      <div class="htitle">Generation trace</div>
+      <div class="pipe" id="pipe"></div>
+      <div id="traceBody"></div>
+      <div id="tplCard"></div>
     </div>
 
     <!-- PLAYGROUND: full-width row beneath the preview -->
