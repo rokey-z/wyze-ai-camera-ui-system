@@ -496,6 +496,16 @@
   .statebig{text-align:center;border-radius:14px;padding:17px 14px 14px}
   .statebig .sbw{font-size:27px;font-weight:800;letter-spacing:-1px;line-height:1.05}
   .statebig .sbs{font-size:11px;color:var(--mut);margin-top:7px}
+  /* hover-a-component -> latest (v2.5) component card popover */
+  .comppop{position:fixed;z-index:90;width:302px;max-height:84vh;overflow:auto;pointer-events:none;
+    background:var(--card);border:1px solid #34d39966;border-radius:13px;padding:13px 14px;
+    box-shadow:0 16px 50px #000c}
+  .comppop-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px}
+  .comppop-h b{font-size:13px;color:var(--ink)}
+  .comppop-id{flex:none;font-family:var(--mono);font-size:8.5px;font-weight:800;letter-spacing:.3px;
+    color:#7eecc4;background:#34d39914;border:1px solid #34d39944;border-radius:6px;padding:2px 7px}
+  .comppop-live{border:1px solid var(--line);border-radius:9px;padding:8px;background:#070b13;overflow:hidden}
+  .comppop-use{font-size:10.5px;color:var(--mut);line-height:1.5;margin-top:9px}
   .pulse{width:9px;height:9px;border-radius:50%;animation:pulse 1.8s infinite}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
 
@@ -2929,7 +2939,7 @@ const TPLVIEW={
    screen:()=>tbar('Package Reminder','Event Watcher')+`<div class="ui">`+slot('C-STATE · S0',stState('1 package','on the porch &middot; 2h 14m','#f6b73c'))+slot('C-LIVE · S1',vb('linear-gradient(165deg,#243a5e,#0f1a2c)',`<div style="position:absolute;left:50%;top:54%;transform:translate(-50%,-50%);width:52px;height:38px;border:2px solid #f6b73c;border-radius:4px"></div><div style="position:absolute;left:50%;top:80%;transform:translateX(-50%);font-size:8px;font-weight:700;background:#f6b73cdd;color:#3a2a05;padding:2px 6px;border-radius:4px">PACKAGE</div><div class="vname">Doorbell cam</div>`))+slot('C-REMINDER · S2',`<div class="reminder" style="background:#f6b73c12;border-color:#f6b73c40"><div class="rc" style="background:#f6b73c">${aIcon('<path d="M12 2s6 7 6 11a6 6 0 0 1-12 0z"/>')}</div><div style="flex:1"><b>Still outside &middot; 2h</b><span>Delivered 1:46 PM &middot; bring it in</span></div></div>`)+slot('C-FEED · S3',fdp('Today',[['Package placed','1:46 PM &middot; courier','PACKAGE','#f3cd86'],['Familiar face &mdash; mail carrier','1:46 PM','KNOWN','#7eecc4']]))+`</div>`},
  'trash_bin_checker':{arche:{key:'verifier',name:'Attendance Verifier',color:'#34d399',q:'Bins out — did the truck come?'},frame:{Subject:'Curb / trash bins',Condition:'Bins out + truck arrival',Question:'Did the bins make it out and the truck arrive?',Urgency:'Low',Cadence:'Collection-day window',Output:'Milestone log'},mods:[['C-SNAP','req','hero'],['C-STATE','req',''],['C-FEED','req',''],['C-MONTHTREND','cond','']],tiers:[['#34d399','Tier 1','vehicle (truck) detection'],['#a78bfa','Tier 3','VLM confirms bins are at the curb']],policy:'One quiet milestone note — bins out, then truck arrived. No steady-state pings.',
    screen:()=>tbar('Trash Bin Checker','Attendance Verifier')+`<div class="ui">`+slot('C-STATE · S0',stState('Bins out &check;','truck not arrived yet','#f6b73c'))+slot('C-SNAP · S1',`<div class="hero"><div class="videobox" style="background:linear-gradient(165deg,#2a3340,#10141b)">${sigTag('snap')}<div class="annbox" style="left:22%;top:46%;width:54%;height:34%;border-color:#34d399"></div><div class="annbadge" style="left:22%;top:46%;background:#34d399;color:#04231a">2 bins at curb</div><div class="vname">Driveway cam &middot; 7:04 AM</div></div></div>`)+slot('C-FEED · S3',fdp('Collection day',[['Bins placed at curb','7:02 AM','BINS','#7eecc4'],['Truck expected','~9:00 AM &middot; last week 9:08','ETA','#9cc3f5']]))+slot('C-MONTHTREND · S4',`<div class="panel"><div class="ph"><b>Pickups</b><span style="font-size:9px;color:var(--dim)">Tue</span></div><div class="cal">${calCells(28,'#34d399',[1,8,15,22])}</div></div>`)+`</div>`},
- 'camera_health_check':{arche:{key:'ops',name:'Operations Console',color:'#7aa3c8',q:'Are all cameras healthy?'},frame:{Subject:'Camera fleet',Condition:'Image quality / online / stale',Question:'Is every camera healthy and current?',Urgency:'Low',Cadence:'Daily sweep',Output:'Per-camera health report'},mods:[['C-TILES','req','hero'],['C-TILES','req',''],['C-TILES','cond','']],tiers:[['#a78bfa','Tier 3','VLM rates each snapshot for blur / dark / obstruction']],policy:'Daily report; alert immediately on offline or a sudden quality drop.',
+ 'camera_health_check':{arche:{key:'ops',name:'Operations Console',color:'#7aa3c8',q:'Are all cameras healthy?'},frame:{Subject:'Camera fleet',Condition:'Image quality / online / stale',Question:'Is every camera healthy and current?',Urgency:'Low',Cadence:'Daily sweep',Output:'Per-camera health report'},mods:[['C-STATE','req','hero'],['C-TILES','req','']],tiers:[['#a78bfa','Tier 3','VLM rates each snapshot for blur / dark / obstruction']],policy:'Daily report; alert immediately on offline or a sudden quality drop.',
    screen:()=>tbar('Camera Health Check','Operations Console')+`<div class="ui">`+slot('C-STATE · S0',stState('3 / 4 OK','1 camera needs attention','#7aa3c8'))+slot('C-TILES · S2',`<div class="panel"><div class="ph"><b>Fleet today</b></div><div class="vitals"><div class="vit"><div class="vn">Online</div><div class="vv">3<small>/4</small></div></div><div class="vit"><div class="vn">Quality OK</div><div class="vv">3</div></div><div class="vit" style="border-color:#f25c5c55;background:#f25c5c10"><div class="vn" style="color:#ff9a9a">Issues</div><div class="vv" style="color:#ff9a9a">1</div></div></div></div>`)+slot('C-TILES · S1',`<div class="panel"><div class="ph"><b>Per-camera health</b></div><div class="invrow"><span style="width:6px;height:6px;border-radius:50%;background:#34d399;flex:none"></span><span class="in">Front door</span><span class="roletag" style="color:#7eecc4;border-color:#34d39940">clear &middot; fw 4.36</span></div><div class="invrow"><span style="width:6px;height:6px;border-radius:50%;background:#34d399;flex:none"></span><span class="in">Backyard</span><span class="roletag" style="color:#7eecc4;border-color:#34d39940">clear</span></div><div class="invrow"><span style="width:6px;height:6px;border-radius:50%;background:#f6b73c;flex:none"></span><span class="in">Garage</span><span class="roletag" style="color:#f3cd86;border-color:#f6b73c40">spider web &middot; blurry</span></div><div class="invrow"><span style="width:6px;height:6px;border-radius:50%;background:#f25c5c;flex:none"></span><span class="in">Side yard</span><span class="roletag" style="color:#ff9a9a;border-color:#f25c5c40">offline 2h</span></div></div>`)+slot('Tier-3 binding',vConf('0.95','Per-snapshot quality score &middot; VLM'))+`</div>`},
  'general_monitoring':{arche:{key:'event',name:'Event Watcher',color:'#4f8ff0',q:'What notable activity happened?'},frame:{Subject:'Assigned cameras',Condition:'Notable person / motion',Question:'What notable activity happened?',Urgency:'Medium',Cadence:'Event + daily sweep',Output:'Feed + daily summary'},mods:[['C-LIVE','req','hero'],['C-FEED','req',''],['C-RECAP','req','']],tiers:[['#34d399','Tier 1','person / vehicle / animal classifiers']],policy:'Surface notable events; compile a once-daily summary.',
    screen:()=>tbar('General Monitoring','Event Watcher')+`<div class="ui">`+slot('C-STATE · S0',stState('All quiet','6 events today','#4f8ff0'))+slot('C-LIVE · S1',vb('linear-gradient(165deg,#1d2d49,#0f1828)',`<div class="vname">Backyard cam</div><div class="vtime">14:09</div>`))+slot('C-FEED · S3',`<div class="chips2"><span class="fc on">All &middot; 6</span><span class="fc">Person &middot; 3</span><span class="fc">Vehicle &middot; 1</span><span class="fc">Animal &middot; 2</span></div>`)+slot('C-RECAP · S4',`<div class="panel"><div class="ph"><b>Daily summary</b><span class="recap"><span class="ai">AI</span></span></div><div class="recap">Quiet day. 3 family arrivals, a delivery at 1 PM, and two cats in the yard. Nothing unusual.</div></div>`)+`</div>`},
@@ -3864,6 +3874,34 @@ function renderDcVer(ver){
 }
 document.querySelectorAll('#dcVerTabs .dc-vertab').forEach(b=>b.addEventListener('click',()=>renderDcVer(b.dataset.ver)));
 renderDcVer('v25');
+
+/* hover a component in a template preview -> show its latest (v2.5) component card */
+(function(){
+  const screen=document.getElementById('screen'); if(!screen) return;
+  const pop=document.createElement('div'); pop.className='comppop'; pop.style.display='none';
+  document.body.appendChild(pop);
+  function cardFor(id){
+    const v=V25.find(x=>x.id===id); if(!v) return '';
+    const comp=(MOD25&&MOD25[id])||MODFULL15[v.primary]||MODFULL[v.primary]||'';
+    return `<div class="comppop-h"><b>${v.name}</b><span class="comppop-id">${v.id} &middot; v2.5</span></div>`
+      +`<div class="comppop-live">${comp}</div>`
+      +`<div class="dc-modes" style="margin-top:9px">${v.modes.map(m=>`<span class="dc-mode">${m}</span>`).join('')}</div>`
+      +`<div class="comppop-use">${v.use}</div>`;
+  }
+  screen.addEventListener('mouseover',e=>{
+    const slot=e.target.closest('.slot'); if(!slot){pop.style.display='none';return;}
+    const lab=slot.querySelector('.slotlab');
+    const id=lab?(lab.textContent.split(' ')[0]||'').trim():'';
+    const html=/^C-/.test(id)?cardFor(id):'';
+    if(!html){pop.style.display='none';return;}
+    pop.innerHTML=html; pop.style.display='block';
+    const r=slot.getBoundingClientRect(), W=302, gap=12, h=pop.offsetHeight;
+    let left=r.right+gap; if(left+W>window.innerWidth-8) left=r.left-W-gap; if(left<8) left=8;
+    let top=r.top; if(top+h>window.innerHeight-8) top=Math.max(8,window.innerHeight-8-h);
+    pop.style.left=left+'px'; pop.style.top=top+'px';
+  });
+  screen.addEventListener('mouseleave',()=>{pop.style.display='none';});
+})();
 
 /* list / grid view toggle — grid shows components only, hovering a cell floats in its data card */
 let dcLayout='grid';
