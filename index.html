@@ -274,6 +274,25 @@
   .dc-cv.dc-have{color:#7eecc4;border-color:#34d39955;background:#34d39912}
   .dc-cv.dc-partial{color:#f3cd86;border-color:#f6b73c55;background:#f6b73c12}
   .dc-cv.dc-missing{color:#ff9a9a;border-color:#f25c5c55;background:#f25c5c12}
+  /* v2.5 accent (teal) + its custom-render classes */
+  .dc-vertab[data-ver="v25"].on{color:#7eecc4;background:#34d3991e;border-color:#34d39966;box-shadow:0 0 0 1px #34d39955 inset}
+  .dc-vlab.v25{color:#7eecc4;background:#34d39918;border:1px solid #34d39944}
+  .dc-badge.dc-v25{color:#7eecc4;border-color:#34d39966;background:#34d39914}
+  .dc-v25chip{border-color:#34d39955 !important}
+  .dc-more{display:block;width:100%;margin-top:8px;padding:7px;border-radius:8px;cursor:pointer;
+    font-family:inherit;font-size:10px;font-weight:700;color:#9cc3f5;background:#4f8ff012;
+    border:1px solid #4f8ff033;transition:.12s}
+  .dc-more:hover{background:#4f8ff022;border-color:#4f8ff066}
+  .grouprow{display:flex;align-items:center;gap:9px;padding:7px 2px;border-top:1px solid var(--line)}
+  .grouprow:first-of-type{border-top:0}
+  .gthumbs{display:flex;gap:3px;align-items:center;flex:none}
+  .gthumbs>div{width:22px;height:22px;border-radius:4px}
+  .gmore{font-size:8.5px;font-weight:700;color:var(--dim);font-family:var(--mono)}
+  .learnrow{display:flex;align-items:center;gap:9px;padding:8px 2px;border-top:1px solid var(--line)}
+  .learnrow:first-of-type{border-top:0}
+  .lbulb{flex:none;width:24px;height:24px;border-radius:7px;display:grid;place-items:center;
+    background:#f6b73c14;border:1px solid #f6b73c33}
+  .lconf{flex:none;font-family:var(--mono);font-size:10px;font-weight:700;color:#7eecc4}
 
   .dc-opp{display:flex;align-items:flex-start;gap:13px;padding:11px 0;border-top:1px solid var(--line)}
   .dc-opp:first-of-type{border-top:0}
@@ -1921,12 +1940,13 @@ EMIT  -&gt; see §13
   <div class="tabpane on" id="pane-data">
     <div class="dc-cap">Each component mapped to <b>real data in Wyze AI One</b> — one component on the
       left, its data card on the right. Switch versions below: <b>v1</b> and <b>v1.5</b> are the
-      full component set; <b>v2</b> consolidates them into fewer adjustable components.</div>
+      full component set; <b>v2</b> consolidates them, and <b>v2.5</b> trims to the realistic set.</div>
     <div class="dc-stickyhdr">
       <div class="dc-vertabs" id="dcVerTabs">
         <button class="dc-vertab" data-ver="v1">v1</button>
         <button class="dc-vertab" data-ver="v15">v1.5</button>
-        <button class="dc-vertab on" data-ver="v2">v2 · latest</button>
+        <button class="dc-vertab" data-ver="v2">v2</button>
+        <button class="dc-vertab on" data-ver="v25">v2.5 · latest</button>
       </div>
       <div class="dc-summary" id="dcSummary"></div>
     </div>
@@ -3636,8 +3656,10 @@ const V2=[
  {id:'C-SOS',grp:'Escalation',name:'Escalation',primary:'M-SOS',folds:['M-SOS'],modes:['caregiver call tree'],use:'An emergency escalation / caregiver call tree.'},
  {id:'C-TICKET',grp:'Escalation',name:'Incident ticket',primary:'M-TICKET',folds:['M-TICKET'],modes:['assign / investigate / resolve'],use:'An incident workflow on an event — assign, investigate, resolve.'},
 ];
-function v2Card(v){
-  const comp=MODFULL15[v.primary]||MODFULL[v.primary]||'';
+function v2Card(v,opt){
+  opt=opt||{};
+  const comp=(opt.rmap&&opt.rmap[v.id])||MODFULL15[v.primary]||MODFULL[v.primary]||'';
+  const vlab=opt.vlab||'v2', vcls=opt.vcls||'v2';
   let srcs=v.src;
   if(!srcs){ const seen={}; srcs=[]; v.folds.forEach(f=>((DATACHECK[f]||{}).sources||[]).forEach(s=>{ if(!seen[s.ep]){seen[s.ep]=1;srcs.push(s);} })); }
   const cov={have:0,partial:0,missing:0};
@@ -3646,20 +3668,70 @@ function v2Card(v){
   if(cov.have)cv.push(`<span class="dc-cv dc-have">${cov.have} have</span>`);
   if(cov.partial)cv.push(`<span class="dc-cv dc-partial">${cov.partial} partial</span>`);
   if(cov.missing)cv.push(`<span class="dc-cv dc-missing">${cov.missing} missing</span>`);
-  const merged=v.folds.length>1;
+  const isnew=v.tag==='new', merged=v.folds.length>1;
+  const tagtxt=isnew?'new':(merged?'merged':'kept'), badge=isnew?'new in v2.5':(merged?'merges '+v.folds.length:'kept as-is');
   return `<div class="dc-row dc-solo">`
-    +`<div class="dc-left"><span class="dc-vlab v2">v2 · ${merged?'merged':'kept'}</span><div class="modlive">${comp}</div>`
+    +`<div class="dc-left"><span class="dc-vlab ${vcls}">${vlab} · ${tagtxt}</span><div class="modlive">${comp}</div>`
       +`<div class="dc-modes">${v.modes.map(m=>`<span class="dc-mode">${m}</span>`).join('')}</div>`
       +`<div class="dc-meta"><span class="dc-id">${v.id}</span><span class="dc-fn">${v.name}</span></div></div>`
     +`<div class="dc-card">`
-      +`<div class="dc-head"><b>${v.name}</b><span class="dc-badge dc-v2">${merged?'merges '+v.folds.length:'kept as-is'}</span></div>`
-      +`<div class="dc-sec"><div class="dc-lab">${merged?'Consolidates':'From v1.5'}</div><div class="dc-contract">${v.folds.map(f=>`<span class="dc-c">${f}</span>`).join('')}</div></div>`
+      +`<div class="dc-head"><b>${v.name}</b><span class="dc-badge dc-${vcls}">${badge}</span></div>`
+      +(v.folds.length?`<div class="dc-sec"><div class="dc-lab">${merged?'Consolidates':'From v1.5'}</div><div class="dc-contract">${v.folds.map(f=>`<span class="dc-c">${f}</span>`).join('')}</div></div>`:'')
       +`<div class="dc-sec"><div class="dc-lab">Adjustable modes</div><div class="dc-contract">${v.modes.map(m=>`<span class="dc-c dc-modepill">${m}</span>`).join('')}</div></div>`
       +`<div class="dc-sec"><div class="dc-lab">Wyze AI One source</div>${dcSources(srcs)}</div>`
       +(cv.length?`<div class="dc-cov">${cv.join('')}</div>`:'')
       +`<div class="dc-note">${v.use}</div>`
     +`</div></div>`;
 }
+/* ---------- v2.5 — trimmed realistic set (24): retire library-ish, repurpose a few, + Learnings ---------- */
+const V25=[
+ // ——— Visual surface (6) ———
+ {id:'C-LIVE',grp:'Visual surface',name:'Live view',primary:'M-LIVE',folds:['M-LIVE','M-PTZ'],modes:['live','pan / tilt / zoom'],use:'Real-time stream; PTZ controls when supported. Action controls render directly under this in a generated UI.'},
+ {id:'C-RECVIDEO',grp:'Visual surface',name:'Continuous record',primary:'M-FOOTAGE',folds:['M-FOOTAGE'],modes:['24/7 scrub'],use:'The full continuous 24/7 record, scrubbable. (Standalone event-clip module dropped — clips live in Grouped clips.)'},
+ {id:'C-SNAP',grp:'Visual surface',name:'Snapshot',primary:'M-SNAP',folds:['M-SNAP'],modes:['single still'],use:'A single still frame on demand or on event.'},
+ {id:'C-TIMELAPSE',grp:'Visual surface',name:'Time-lapse',primary:'M-TIMELAPSE',folds:['M-TIMELAPSE'],modes:['accelerated sequence'],use:'A long span compressed into an accelerated sequence.'},
+ {id:'C-GALLERY',grp:'Visual surface',name:'Gallery',primary:'M-GALLERY',folds:['M-GALLERY'],modes:['browsable collection'],use:'A browsable image collection grouped by entity.'},
+ {id:'C-MULTIVIEW',grp:'Visual surface',name:'Multi-view',primary:'M-GRID',folds:['M-COMPARE','M-GRID'],modes:['compare pair','synced grid'],use:'A before/after pair, or a synchronized multi-camera grid.'},
+ // ——— Events & records (5) ———
+ {id:'C-GROUPED',grp:'Events & records',name:'Grouped clips',primary:'M-REEL',folds:['M-REEL','M-GROUPS'],modes:['groups by event','score-ranked','clip thumbs'],src:[{ep:'GET /api/eventgroups',fields:['group_id','title','score','event_count','clip_urls']},{ep:'GET /api/eventgroups/{id}/artifact',fields:['gif_url','chips']}],use:'Clips bucketed into event groups like the home wall — title, clip count, score-ranked, with thumbnails. Replaces the highlight reel and clips-by-trigger.'},
+ {id:'C-FEED',grp:'Events & records',name:'Event feed',primary:'M-FEED',folds:['M-FEED'],modes:['tagged cards','filter chips','load more'],use:'AI-tagged event cards with filter chips — shows several rows with a More button to page further back.'},
+ {id:'C-LOG',grp:'Events & records',name:'Log / journal',primary:'M-LOG',folds:['M-LOG','M-JOURNAL'],modes:['running log','narrative journal'],src:[{ep:'GET /api/household/visual-memories',fields:['status_line','summary']},{ep:'GET /api/stories'}],use:'A timestamped record — a terse running log, or a narrative journal.'},
+ {id:'C-VISIT',grp:'Events & records',name:'Visit sheet',primary:'M-TIMESHEET',folds:['M-TIMESHEET'],modes:['arrival / departure rows'],src:[{ep:'POST /api/events/filter',fields:['event_ts','tags']},{ep:'GET /api/reid/identities/{id}/appearances'}],use:'Attendance / visit verification — arrival, departure and dwell per subject.'},
+ {id:'C-IDCARD',grp:'Events & records',name:'Identity card',primary:'M-IDCARD',folds:['M-IDCARD'],modes:['recognized subject'],use:'A recognized-subject detail card (face / plate, last seen, appearances).'},
+ // ——— Status & readout (3) ———
+ {id:'C-STATE',grp:'Status & readout',name:'State (large)',primary:'M-STATE',folds:['M-STATE'],modes:['big state word + duration'],use:'The current state shown as a large word with how long it has held.'},
+ {id:'C-TILES',grp:'Status & readout',name:'Metric tiles',primary:'M-VITALS',folds:['M-VITALS','M-KPI'],modes:['live vitals','headline KPIs'],use:'A row of number tiles — live vitals, or headline KPI figures.'},
+ {id:'C-READOUT',grp:'Status & readout',name:'Number readout',primary:'M-READOUT',folds:['M-READOUT','M-GAUGE'],modes:['large number / OCR'],use:'One large number read from the scene — meter, count, or a gauge value as a number. (Score ring dropped.)'},
+ // ——— Trends (4) ———
+ {id:'C-DAYTREND',grp:'Trends',name:'Day trend',primary:'M-SCRUB',folds:['M-SCRUB','M-NIGHTGRAPH'],modes:['today by hour'],use:'Activity across today by hour — combines the scrubber and night-graph into one day view.'},
+ {id:'C-TREND',grp:'Trends',name:'Week trend',primary:'M-TREND',folds:['M-TREND'],modes:['this week by day'],use:'A metric across the last 7 days.'},
+ {id:'C-MONTHTREND',grp:'Trends',name:'Month trend',primary:'M-CALENDAR',folds:['M-CALENDAR'],modes:['calendar w/ counts'],src:[{ep:'POST /api/eventgroups/digest'},{ep:'POST /api/events/filter (daily counts)'}],use:'A month calendar with the event count printed in each day cell.'},
+ {id:'C-RECAP',grp:'Trends',name:'AI recap (large)',primary:'M-RECAP',folds:['M-RECAP'],modes:['large narrative + tone'],use:'An AI plain-language summary of a period, shown as a large readable block.'},
+ // ——— Actions (2) ———
+ {id:'C-ACT',grp:'Actions',name:'Quick actions',primary:'M-ACT',folds:['M-ACT','M-TALK'],modes:['power on / off','two-way talk'],use:'A device action bar — power (on/off toggle icons) and two-way talk. In a generated UI this sits directly under the live view.'},
+ {id:'C-DETER',grp:'Actions',name:'Deterrent',primary:'M-DETER',folds:['M-DETER'],modes:['siren / lights'],use:'A siren / lights deterrent action.'},
+ // ——— Reminder (1) ———
+ {id:'C-REMINDER',grp:'Reminder',name:'Reminder & schedule',primary:'M-REMINDER',folds:['M-REMINDER'],modes:['schedule','elapsed reminder'],src:[{ep:'GET /api/agents',fields:['schedule','triggers']},{ep:'GET /api/household/visual-memories',fields:['status_line']}],use:'A schedule or elapsed-time reminder (e.g. “trash day in 2h”, “not seen since 9am”).'},
+ // ——— Fleet (1) ———
+ {id:'C-FLEET',grp:'Fleet',name:'Fleet: map + health',primary:'M-DEVMAP',folds:['M-DEVMAP','M-HEALTH'],modes:['device map','health roll-up'],use:'One panel: devices with online state + firmware, plus a map / floorplan placement.'},
+ // ——— Escalation (1) ———
+ {id:'C-SOS',grp:'Escalation',name:'Escalation',primary:'M-SOS',folds:['M-SOS'],modes:['caregiver call tree'],use:'An emergency escalation / caregiver call tree.'},
+ // ——— Agent memory (1, NEW) ———
+ {id:'C-LEARN',grp:'Agent memory',name:'Learnings card',primary:'',folds:[],tag:'new',modes:['2–3 recent learnings','confidence'],src:[{ep:'GET /api/household/learnings',fields:['fact','category','confidence']},{ep:'GET /api/household/visual/entities/{id}',fields:['routines','summary_recent']}],use:'Surfaces 2–3 things the agent has recently learned or remembered (routines, baselines, recognized identities).'},
+];
+/* v2.5-only custom renders (keyed by component id). Reuse the same component CSS classes. */
+const grpThumb=g=>`<div style="background:linear-gradient(150deg,${g})"></div>`;
+const MOD25={
+ 'C-STATE':`<div class="panel" style="text-align:center;padding:20px 12px 16px"><div style="font-size:9px;letter-spacing:1px;color:var(--dim);text-transform:uppercase;margin-bottom:7px">Garage door</div><div style="font-size:36px;font-weight:800;letter-spacing:-1.5px;color:#7eecc4;line-height:1">CLOSED</div><div style="font-size:11px;color:var(--mut);margin-top:8px">secure &middot; <span style="font-family:var(--mono);color:#7eecc4;font-weight:700">3h 42m</span></div></div>`+cf15('0.96','State + time-in-state from VLM &middot; tap to correct'),
+ 'C-FEED':`<div class="panel"><div class="ph"><b>Entry history</b></div><div class="chips2" style="margin-bottom:8px"><span class="fc on">All &middot; 24</span><span class="fc">Person &middot; 11</span><span class="fc">Vehicle &middot; 6</span><span class="fc">Pet &middot; 7</span></div>`+[['#f25c5c','Vehicle departed','8:02 AM &middot; &ldquo;a car backs out&rdquo;','VEHICLE&middot;92','#4f8ff022','#9cc3f5'],['#34d399','Person entered','7:55 AM &middot; &ldquo;someone walks up&rdquo;','PERSON&middot;88','#34d39922','#7eecc4'],['#f6b73c','Pet in the yard','7:31 AM &middot; &ldquo;a dog crosses&rdquo;','PET&middot;81','#f6b73c22','#f3cd86'],['#9cc3f5','Package dropped','7:12 AM &middot; &ldquo;a box by the door&rdquo;','PKG&middot;76','#a78bfa22','#c4b3f0']].map(([d,t,m,tag,bg,c])=>`<div class="feedrow"><span style="width:6px;height:6px;border-radius:50%;background:${d};flex:none"></span><div class="thumb"></div><div style="flex:1"><div class="ft">${t}</div><div class="fm">${m}</div></div><span class="etag" style="background:${bg};color:${c}">${tag}</span></div>`).join('')+`<button class="dc-more">More &middot; 20 earlier &rsaquo;</button></div>`,
+ 'C-GROUPED':`<div class="panel"><div class="ph"><b>Grouped clips</b><span style="font-size:9px;color:var(--dim)">today &middot; 4 groups</span></div>`+[['Package delivery',3,4,'#f25c5c',['#b1402f,#5a1c14','#3a67c4,#16304f','#caa23f,#5c4715']],['Person at side gate',1,4,'#f6b73c',['#243a5e,#0f1a2c']],['Door opened &amp; closed',5,2,'#4f8ff0',['#1f3a2c,#0e1a14','#22345a,#0e1828','#2c6b47,#16331f']],['Garage closed',2,1,'#5a6b82',['#1c2740,#0c1119','#2f4452,#16242f']]].map(([t,n,sc,c,th])=>`<div class="grouprow"><span style="width:7px;height:7px;border-radius:50%;background:${c};flex:none"></span><div style="flex:1;min-width:0"><div class="ft">${t}</div><div class="fm">${n} clip${n>1?'s':''} &middot; score ${sc}/5</div></div><div class="gthumbs">${th.slice(0,3).map(grpThumb).join('')}${n>th.length?`<span class="gmore">+${n-th.length}</span>`:''}</div></div>`).join('')+`</div>`,
+ 'C-DAYTREND':`<div class="panel"><div class="ph"><b>Today by hour</b><span class="delta up">&#9650; busier PM</span></div><div class="scrub" style="height:48px">${Array.from({length:24},(_,i)=>{const a=i>=16&&i<=18;const h=a?60+((i*17)%38):8+((i*13)%22);return `<div class="seg" style="height:${h}%;background:${a?'#f6b73c':'#3a5fa0'}"></div>`;}).join('')}<div class="pin" style="left:75%"></div><div class="axis"><span>12a</span><span>6a</span><span>12p</span><span>6p</span><span>now</span></div></div><div class="ngkey" style="margin-top:7px"><span><i style="background:#3a5fa0"></i>events / hr</span><span><i style="background:#f6b73c"></i>peak</span></div></div>`,
+ 'C-MONTHTREND':`<div class="panel"><div class="ph"><b>June</b><span style="font-size:9px;color:var(--dim);font-family:var(--mono)">142 events &middot; busiest Tue</span></div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;font-size:7px;color:var(--dim);text-align:center;margin-bottom:3px">${['S','M','T','W','T','F','S'].map(d=>`<span>${d}</span>`).join('')}</div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px">${Array.from({length:35},(_,i)=>{const day=i-1;const has=day>=1&&day<=30;const cnt=has?((i*7+3)%9):0;const op=has?Math.min(0.16+cnt/10,1).toFixed(2):0;return `<div style="aspect-ratio:1;border-radius:3px;display:grid;place-items:center;font-size:8px;font-weight:700;color:${cnt>5?'#04231a':'#cfe3ff'};background:${has?`rgba(56,198,219,${op})`:'transparent'}${day===18?';box-shadow:0 0 0 1.5px #fff inset':''}">${has?cnt:''}</div>`;}).join('')}</div><div style="display:flex;justify-content:flex-end;align-items:center;gap:4px;font-size:7.5px;color:var(--dim);margin-top:6px">less<i style="width:9px;height:9px;border-radius:2px;background:rgba(56,198,219,.3)"></i><i style="width:9px;height:9px;border-radius:2px;background:rgba(56,198,219,.6)"></i><i style="width:9px;height:9px;border-radius:2px;background:#38c6db"></i>more</div></div>`,
+ 'C-RECAP':`<div class="panel"><div class="ph"><b>Morning recap</b><span class="recap"><span class="ai">AI</span></span></div><span class="pvbadge" style="background:#34d39922;color:#7eecc4;font-size:8px;display:inline-block;margin-bottom:10px">ALL CLEAR</span><div style="font-size:16px;line-height:1.5;font-weight:600;color:#e9eef6">Slept <b style="color:#9cc3f5">10h 4m</b> with 2 brief wakings. One true-cry at <b style="color:#f3cd86">2:14</b>, self-settled in 3 min.</div><div style="display:flex;gap:5px;margin-top:11px"><span class="fc" style="font-size:8px">2:14 cry &middot; clip</span><span class="fc" style="font-size:8px">night graph</span></div></div>`,
+ 'C-ACT':`<div class="actions" style="margin-bottom:8px"><div class="act primary"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>Power on</div><div class="act"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="8" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>Power off</div></div><div class="actions" style="margin-bottom:8px"><div class="act"><span class="ai">${aIcon('<path d="M3 11l16-5v12L3 13z"/><path d="M9 19a2.5 2.5 0 0 0 4 0"/>')}</span>Two-way talk</div></div><div style="font-size:9px;color:#7eecc4">&#9679; Plug is ON &middot; confirmed 1s ago &middot; <span style="color:var(--dim)">sits under the live view</span></div>`,
+ 'C-FLEET':`<div class="panel"><div class="ph"><b>Fleet</b><span style="font-size:9px;color:#7eecc4">2 / 3 online</span></div><div class="invrow"><span style="width:6px;height:6px;border-radius:50%;background:#34d399;flex:none"></span><span class="in">Garage cam</span><span class="roletag" style="color:#7eecc4;border-color:#34d39940;background:#34d39912">online &middot; fw 4.36</span></div><div class="invrow"><span style="width:6px;height:6px;border-radius:50%;background:#34d399;flex:none"></span><span class="in">Front door cam</span><span class="roletag" style="color:#7eecc4;border-color:#34d39940;background:#34d39912">online &middot; fw 4.36</span></div><div class="invrow"><span style="width:6px;height:6px;border-radius:50%;background:#f25c5c;flex:none"></span><span class="in">Porch cam</span><span class="roletag" style="color:#ff9a9a;border-color:#f25c5c40">offline</span></div><div class="ghost" style="display:block;margin-top:7px;height:48px;background:#0e1a2c;border-radius:6px;position:relative"><span style="position:absolute;left:18%;top:42%;width:7px;height:7px;border-radius:50%;background:#34d399"></span><span style="position:absolute;left:60%;top:28%;width:7px;height:7px;border-radius:50%;background:#34d399"></span><span style="position:absolute;left:80%;top:66%;width:7px;height:7px;border-radius:50%;background:#f25c5c"></span><span class="nodata">FLOORPLAN STUB</span></div></div>`,
+ 'C-LEARN':`<div class="panel"><div class="ph"><b>What this agent learned</b><span class="recap"><span class="ai">AI</span></span></div>`+[['Mail usually arrives 1&ndash;3pm','routine','0.86'],['The garage is normally closed overnight','baseline','0.93'],['Recognizes the silver SUV as &ldquo;family car&rdquo;','identity','0.78']].map(([f,cat,c])=>`<div class="learnrow"><span class="lbulb"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f6b73c" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12c.5.5 1 1.2 1 2h6c0-.8.5-1.5 1-2a7 7 0 0 0-4-12z"/></svg></span><div style="flex:1;min-width:0"><div class="ft">${f}</div><div class="fm">${cat} &middot; remembered</div></div><span class="lconf">${c}</span></div>`).join('')+`<div class="ghost" style="display:block;margin-top:7px;padding:5px 9px"><span style="font-size:9px;color:var(--dim)">From household learnings + entity routines</span><span class="nodata">COMPILED</span></div></div>`,
+};
 function dcRowSolo(id,fn,ver){
   const d=DATACHECK[id]||{status:'missing',contract:[],sources:[],note:'Not yet mapped.'};
   const comp=(ver==='v15'?MODFULL15[id]:MODFULL[id])||MODPREV[id]||'';
@@ -3679,7 +3751,7 @@ function dcRowSolo(id,fn,ver){
 $('dcOpps').innerHTML=`<div class="famblock dc-fam"><h3>Unused Wyze data &rarr; new component opportunities</h3>`
  +DC_OPPS.map(o=>`<div class="dc-opp"><code class="dc-ep">${o.src}</code><span class="dc-oppidea">${o.idea}</span></div>`).join('')+`</div>`;
 
-let dcVer='v2', dcCur='';
+let dcVer='v25', dcCur='';
 function dcFilter(f){
   if(f && f===dcCur) f=''; dcCur=f;
   document.querySelectorAll('#dcSummary .dc-stat[data-f]').forEach(s=>s.classList.toggle('dc-on', f?(s.dataset.f===f):(s.dataset.f==='')));
@@ -3691,13 +3763,22 @@ function renderDcVer(ver){
   dcVer=ver; dcCur='';
   document.querySelectorAll('#dcVerTabs .dc-vertab').forEach(b=>b.classList.toggle('on',b.dataset.ver===ver));
   $('dcOpps').style.display='';
-  if(ver==='v2'){
-    const groups=[]; V2.forEach(v=>{let g=groups.find(x=>x.name===v.grp); if(!g){g={name:v.grp,items:[]};groups.push(g);} g.items.push(v);});
-    $('dcGrids').innerHTML=groups.map(g=>`<div class="famblock dc-fam"><h3>${g.name} <span style="color:var(--dim);font-weight:600">${g.items.length}</span></h3>`+g.items.map(v2Card).join('')+`</div>`).join('');
-    const merged=V2.filter(v=>v.folds.length>1).length;
-    $('dcSummary').innerHTML=`<span class="dc-stat dc-v2chip"><b>42</b> &rarr; <b style="color:#c4b3f0">${V2.length}</b> components</span>`
-      +`<span class="dc-stat"><b>${V2.length-merged}</b> kept for variety</span>`
-      +`<span class="dc-stat"><b>${merged}</b> merged (one format, adjustable)</span>`;
+  if(ver==='v2'||ver==='v25'){
+    const SET=ver==='v25'?V25:V2, opt=ver==='v25'?{rmap:MOD25,vlab:'v2.5',vcls:'v25'}:undefined;
+    const groups=[]; SET.forEach(v=>{let g=groups.find(x=>x.name===v.grp); if(!g){g={name:v.grp,items:[]};groups.push(g);} g.items.push(v);});
+    $('dcGrids').innerHTML=groups.map(g=>`<div class="famblock dc-fam"><h3>${g.name} <span style="color:var(--dim);font-weight:600">${g.items.length}</span></h3>`+g.items.map(v=>v2Card(v,opt)).join('')+`</div>`).join('');
+    if(ver==='v25'){
+      const mg=V25.filter(v=>v.folds.length>1).length, nw=V25.filter(v=>v.tag==='new').length;
+      $('dcSummary').innerHTML=`<span class="dc-stat dc-v25chip"><b>42</b> &rarr; <b style="color:#7eecc4">${V25.length}</b> components</span>`
+        +`<span class="dc-stat"><b>${mg}</b> merged</span>`
+        +`<span class="dc-stat"><b>11</b> retired</span>`
+        +`<span class="dc-stat"><b>${nw}</b> new &middot; Learnings</span>`;
+    } else {
+      const merged=V2.filter(v=>v.folds.length>1).length;
+      $('dcSummary').innerHTML=`<span class="dc-stat dc-v2chip"><b>42</b> &rarr; <b style="color:#c4b3f0">${V2.length}</b> components</span>`
+        +`<span class="dc-stat"><b>${V2.length-merged}</b> kept for variety</span>`
+        +`<span class="dc-stat"><b>${merged}</b> merged (one format, adjustable)</span>`;
+    }
     return;
   }
   $('dcGrids').innerHTML=FAMILIES.map(([fam,mods])=>`<div class="famblock dc-fam"><h3>${fam}</h3>`+mods.map(([id,fn])=>dcRowSolo(id,fn,ver)).join('')+`</div>`).join('');
@@ -3710,7 +3791,7 @@ function renderDcVer(ver){
   document.querySelectorAll('#dcSummary .dc-stat[data-f]').forEach(s=>s.addEventListener('click',()=>dcFilter(s.dataset.f||'')));
 }
 document.querySelectorAll('#dcVerTabs .dc-vertab').forEach(b=>b.addEventListener('click',()=>renderDcVer(b.dataset.ver)));
-renderDcVer('v2');
+renderDcVer('v25');
 
 /* ---------- tab switching ---------- */
 document.querySelectorAll('.tab').forEach(tb=>tb.addEventListener('click',()=>{
