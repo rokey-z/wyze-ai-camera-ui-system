@@ -100,7 +100,7 @@
   /* card states use the same vertical pill shape as the hero agent card */
   .agms{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--card);
     border:1px solid var(--line);border-radius:20px;padding:12px 10px 11px}
-  .agms-paused{opacity:.5}
+  .agcard.agoff,.agms.agoff{opacity:.5;filter:grayscale(.65)}
   .agms .agthumb-wrap,.agms .agthumb{width:72px;height:72px}
   .agms .agt-word{font-size:13px;padding:0 4px}
   .agms .agt-num{font-size:22px}
@@ -2919,10 +2919,11 @@ function agThumb(th){
 }
 function agCardHTML(t,tpl){
   const p=PRI[t.pri]||PRI.P3;
-  return `<div class="agcard"><div class="agthumb-wrap">${agThumb(t.th)}${p.dot?`<span class="agpri" style="background:${p.dot}"></span>`:''}</div>`
-    +`<div class="agtime ${t.fresh?'fresh':'stale'}">${t.time}</div>`
+  const tstyle=(t.fresh&&p.dot)?` style="color:${p.c};background:${p.dot}24"`:'';
+  return `<div class="agcard${t.off?' agoff':''}"><div class="agthumb-wrap">${agThumb(t.th)}</div>`
+    +`<div class="agtime ${t.fresh?'fresh':'stale'}"${tstyle}>${t.time}</div>`
     +`<div class="agtitle" style="color:${p.c}">${t.title}</div>`
-    +`<div class="agname"><span class="agdot" style="background:#34d399"></span><span class="agemoji">${tpl.icon}</span>${tpl.name}</div></div>`;
+    +`<div class="agname"><span class="agemoji">${tpl.icon}</span>${tpl.name}</div></div>`;
 }
 function agStates(t,tpl){
   const S=[{lab:'Action required',pri:'P0',time:'now',fresh:true},{lab:'Needs attention',pri:'P1',time:'3m ago',fresh:true},
@@ -2936,11 +2937,11 @@ function agStates(t,tpl){
       : agThumb(t.th);
     const title = s.none?'No runs yet':s.run?'Working…':s.lab==='Quiet'?'Quiet · nothing new':t.title;
     const tc = (s.none||s.run||s.lab==='Quiet')?'#93a3bd':p.c;
-    const showPri = p.dot && !s.none && !s.run;
-    return `<div class="agms${s.paused?' agms-paused':''}"><div class="agthumb-wrap">${thumb}${showPri?`<span class="agpri" style="background:${p.dot}"></span>`:''}</div>`
-      +`<div class="agms-time ${s.fresh?'fresh':'stale'}">${s.time}</div>`
+    const tnew = s.fresh && p.dot && !s.none && !s.run;
+    return `<div class="agms${s.paused?' agoff':''}"><div class="agthumb-wrap">${thumb}</div>`
+      +`<div class="agms-time ${s.fresh?'fresh':'stale'}"${tnew?` style="color:${p.c};background:${p.dot}24"`:''}>${s.time}</div>`
       +`<div class="agms-title" style="color:${tc}">${title}</div>`
-      +`<div class="agms-lab"><span class="agdot" style="background:${s.paused?'#f6b73c':'#34d399'}"></span>${s.lab}</div></div>`;
+      +`<div class="agms-lab">${s.lab}</div></div>`;
   }).join('');
 }
 function renderAgHome(tplId){
