@@ -137,6 +137,11 @@
   .v2b{position:absolute;top:8px;right:8px;font-size:7.5px;font-weight:800;
     letter-spacing:.5px;color:#c4b3f0;border:1px solid #a78bfa55;
     background:#a78bfa1e;padding:2px 5px;border-radius:5px}
+  /* template picker: each selection is a full-width block row (emoji left, text, category right) */
+  .tplgrid .chip{flex-direction:row;align-items:center;gap:12px;padding:10px 12px}
+  .tplgrid .chip .tplemoji{font-size:20px;width:26px}
+  .tplgrid .chip .txt{flex:1;min-width:0}
+  .tplgrid .chip .chiparch{margin-top:0;margin-left:auto;flex:none;text-align:right}
 
   /* tabs */
   .tabs{display:flex;gap:2px;margin-top:24px;border-bottom:1px solid var(--line);
