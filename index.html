@@ -262,6 +262,25 @@
     box-shadow:0 0 0 1px #a78bfa55 inset}
   .dc-solo{grid-template-columns:minmax(0,1fr) minmax(0,1.5fr)}
   .dc-solo .dc-left{max-width:340px}
+  /* list / grid view toggle */
+  .dc-laytoggle{margin-left:auto;display:flex;gap:3px;background:var(--card);
+    border:1px solid var(--line);border-radius:999px;padding:2px}
+  .dc-lay{font-size:11px;font-weight:700;color:var(--mut);background:transparent;border:0;
+    border-radius:999px;padding:5px 12px;cursor:pointer;font-family:inherit;transition:.12s}
+  .dc-lay:hover{color:var(--ink)}
+  .dc-lay.on{color:var(--ink);background:var(--panel);box-shadow:0 0 0 1px var(--line) inset}
+  /* GRID view: show only the components; data card floats in on hover */
+  #dcGrids.dc-gridmode .dc-fam{display:grid;grid-template-columns:repeat(auto-fill,minmax(198px,1fr));
+    gap:12px;align-items:start}
+  #dcGrids.dc-gridmode .dc-fam h3{grid-column:1/-1;margin-bottom:0}
+  #dcGrids.dc-gridmode .dc-row{display:block;position:relative;border:1px solid var(--line);
+    border-radius:12px;padding:11px 11px 12px;background:var(--panel);cursor:pointer;
+    transition:border-color .12s,box-shadow .12s}
+  #dcGrids.dc-gridmode .dc-row:hover{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue) inset}
+  #dcGrids.dc-gridmode .dc-left,#dcGrids.dc-gridmode .dc-solo .dc-left{max-width:none}
+  #dcGrids.dc-gridmode .dc-meta{margin-top:8px}
+  #dcGrids.dc-gridmode .dc-card{position:fixed;display:none;width:330px;max-height:82vh;
+    overflow:auto;z-index:80;pointer-events:none;box-shadow:0 14px 44px #000c}
   .dc-vlab.v2{color:#c4b3f0;background:#a78bfa18;border:1px solid #a78bfa44}
   .dc-modes{display:flex;flex-wrap:wrap;gap:4px;margin-top:9px}
   .dc-mode{font-size:8.5px;color:#c4b3f0;background:#a78bfa12;border:1px solid #a78bfa33;
@@ -1951,6 +1970,10 @@ EMIT  -&gt; see §13
         <button class="dc-vertab" data-ver="v15">v1.5</button>
         <button class="dc-vertab" data-ver="v2">v2</button>
         <button class="dc-vertab on" data-ver="v25">v2.5 · latest</button>
+        <span class="dc-laytoggle" id="dcLayToggle">
+          <button class="dc-lay on" data-lay="list" title="List — component + data card">&#9776; List</button>
+          <button class="dc-lay" data-lay="grid" title="Grid — components only, hover for data">&#9638; Grid</button>
+        </span>
       </div>
       <div class="dc-summary" id="dcSummary"></div>
     </div>
@@ -3797,6 +3820,33 @@ function renderDcVer(ver){
 }
 document.querySelectorAll('#dcVerTabs .dc-vertab').forEach(b=>b.addEventListener('click',()=>renderDcVer(b.dataset.ver)));
 renderDcVer('v25');
+
+/* list / grid view toggle — grid shows components only, hovering a cell floats in its data card */
+let dcLayout='list';
+function dcHidePops(){document.querySelectorAll('#dcGrids .dc-card').forEach(c=>{c.style.display='';c.style.left='';c.style.top='';});}
+function setDcLayout(lay){
+  dcLayout=lay;
+  $('dcGrids').classList.toggle('dc-gridmode',lay==='grid');
+  document.querySelectorAll('#dcLayToggle .dc-lay').forEach(b=>b.classList.toggle('on',b.dataset.lay===lay));
+  dcHidePops();
+}
+document.querySelectorAll('#dcLayToggle .dc-lay').forEach(b=>b.addEventListener('click',()=>setDcLayout(b.dataset.lay)));
+$('dcGrids').addEventListener('mouseover',e=>{
+  if(dcLayout!=='grid')return;
+  const row=e.target.closest('.dc-row'); if(!row||!$('dcGrids').contains(row))return;
+  const card=row.querySelector('.dc-card'); if(!card)return;
+  card.style.display='block';
+  const r=row.getBoundingClientRect(), W=330, gap=10, h=card.offsetHeight;
+  let left=r.right+gap; if(left+W>window.innerWidth-8) left=r.left-W-gap; if(left<8) left=8;
+  let top=r.top; if(top+h>window.innerHeight-8) top=Math.max(8,window.innerHeight-8-h);
+  card.style.left=left+'px'; card.style.top=top+'px';
+});
+$('dcGrids').addEventListener('mouseout',e=>{
+  if(dcLayout!=='grid')return;
+  const row=e.target.closest('.dc-row'); if(!row)return;
+  if(row.contains(e.relatedTarget))return;
+  const card=row.querySelector('.dc-card'); if(card){card.style.display='';card.style.left='';card.style.top='';}
+});
 
 /* ---------- tab switching ---------- */
 document.querySelectorAll('.tab').forEach(tb=>tb.addEventListener('click',()=>{
