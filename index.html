@@ -81,7 +81,7 @@
   .agt-number{flex-direction:column;background:#0e1726}
   .agt-num{font-family:var(--mono);font-size:30px;font-weight:800;letter-spacing:-1px;line-height:1}
   .agt-unit{font-size:8.5px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px;margin-top:3px}
-  .agt-live{position:absolute;top:8px;left:8px;font-size:7px;font-weight:800;color:#fff;
+  .agt-live{position:absolute;top:9px;left:50%;transform:translateX(-50%);font-size:7px;font-weight:800;color:#fff;
     background:#f25c5cdd;padding:2px 6px;border-radius:5px}
   .agt-tag{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);font-size:7.5px;
     font-weight:800;color:#0a0f18;padding:2px 7px;border-radius:5px;white-space:nowrap}
@@ -114,7 +114,7 @@
   .agms .agt-num{font-size:22px}
   .agms .agt-unit{font-size:6.5px;margin-top:2px}
   .agms .agt-status{border-width:2px}
-  .agms .agt-live{font-size:6px;padding:1px 4px;top:5px;left:5px}
+  .agms .agt-live{font-size:6px;padding:1px 4px;top:5px;left:50%;transform:translateX(-50%)}
   .agms .agt-tag{font-size:6px;bottom:5px;padding:1px 5px}
   .agms .agpri{width:13px;height:13px;border-width:2.5px}
   .agms-time{font-size:9px;font-weight:700;padding:2px 8px;border-radius:999px;font-family:var(--mono)}
@@ -262,6 +262,13 @@
   .dc-stickyhdr .dc-summary{position:static;top:auto;border-bottom:0;padding:7px 0 8px}
   .dc-stickyhdr .dc-summary:empty{padding:0}
   .dc-vertabs{display:flex;gap:6px;padding:2px 0 2px}
+  .dc-vn{font-size:10.5px;font-weight:600;opacity:.62;font-family:var(--mono)}
+  .dc-vertab.on .dc-vn{opacity:.85}
+  .dc-anchors{display:flex;flex-wrap:wrap;gap:6px;padding:8px 0 4px}
+  .dc-anchor{font-size:11px;font-weight:600;color:var(--mut);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 11px;cursor:pointer;transition:.13s;white-space:nowrap}
+  .dc-anchor:hover{color:var(--ink);border-color:var(--blue);background:#4f8ff012}
+  .dc-anchor span{color:var(--dim);font-weight:700;margin-left:4px;font-family:var(--mono)}
+  .dc-fam{scroll-margin-top:140px}
   .dc-vertab{font-size:12px;font-weight:700;color:var(--mut);background:var(--card);
     border:1px solid var(--line);border-radius:999px;padding:6px 16px;cursor:pointer;
     font-family:inherit;transition:.12s}
@@ -920,8 +927,9 @@
   #pane-gen .intenthead{display:none}   /* "Agent templates" group title removed */
   .playhead{display:flex;align-items:center;gap:10px;justify-content:space-between}
   /* foldable playground */
-  #playFoldHead{cursor:pointer;user-select:none}
-  .playcaret{flex:none;color:var(--mut);font-size:11px;transition:transform .15s;margin-right:-4px}
+  #playFoldHead{cursor:pointer;user-select:none;border:1px solid var(--line);border-radius:10px;padding:9px 13px;transition:border-color .13s,background .13s}
+  #playFoldHead:hover{border-color:var(--blue);background:#4f8ff012}
+  .playcaret{flex:none;color:var(--blue);font-size:16px;font-weight:800;line-height:1;transition:transform .15s;margin-right:0}
   .playblock.folded .playcaret{transform:rotate(-90deg)}
   .playblock.folded > :not(.playhead){display:none}
   .playblock.folded{padding-bottom:15px;margin-bottom:15px}
@@ -1191,8 +1199,8 @@
        the v2 archetypes — <b>Instrument Reader</b>, <b>Capture Logger</b>, <b>Attendance
        Verifier</b>. Per v3, every screen leads with a real camera visual, tagged by signal
        type (<b>live</b>, <b>snapshot</b>, <b>clip</b>, <b>time-lapse</b>, <b>collection</b>)
-       and given a role — hero, proof, or reassurance. Toggle <b>module overlay</b> to see
-       which library module renders each region.</p>
+       and given a role — hero, proof, or reassurance. Hover any component in a preview to
+       see its latest v2.5 component card.</p>
   </header>
 
   <div class="tabs">
@@ -1254,10 +1262,6 @@
             <div class="phone">
               <div class="notch"></div>
               <div class="screen" id="screen"></div>
-            </div>
-            <div class="hint" id="overlayToggle">
-              <span class="toggle on" id="tg"><span class="tg"></span></span>
-              Show module overlay
             </div>
           </div>
         </div>
@@ -2049,15 +2053,16 @@ EMIT  -&gt; see §13
       full component set; <b>v2</b> consolidates them, and <b>v2.5</b> trims to the realistic set.</div>
     <div class="dc-stickyhdr">
       <div class="dc-vertabs" id="dcVerTabs">
-        <button class="dc-vertab" data-ver="v1">v1</button>
-        <button class="dc-vertab" data-ver="v15">v1.5</button>
-        <button class="dc-vertab" data-ver="v2">v2</button>
-        <button class="dc-vertab on" data-ver="v25">v2.5 · latest</button>
+        <button class="dc-vertab" data-ver="v1">v1 <span class="dc-vn">42</span></button>
+        <button class="dc-vertab" data-ver="v15">v1.5 <span class="dc-vn">42</span></button>
+        <button class="dc-vertab" data-ver="v2">v2 <span class="dc-vn">30</span></button>
+        <button class="dc-vertab on" data-ver="v25">v2.5 <span class="dc-vn">25</span> · latest</button>
         <span class="dc-laytoggle" id="dcLayToggle">
           <button class="dc-lay" data-lay="list" title="List — component + data card">&#9776; List</button>
           <button class="dc-lay on" data-lay="grid" title="Grid — components only, hover for data">&#9638; Grid</button>
         </span>
       </div>
+      <div class="dc-anchors" id="dcAnchors"></div>
       <div class="dc-summary" id="dcSummary"></div>
     </div>
     <div id="dcGrids"></div>
@@ -3198,13 +3203,7 @@ document.getElementById('intents').addEventListener('click',e=>{
 });
 updateCurLabel();
 
-/* overlay toggle */
-let overlay=false;
 const scr=document.getElementById('screen');
-function applyOverlay(){scr.classList.toggle('showmods',overlay);
-  document.getElementById('tg').classList.toggle('on',overlay);}
-document.getElementById('overlayToggle').addEventListener('click',()=>{
-  overlay=!overlay;applyOverlay();});
 
 /* ---------- cadence map ---------- */
 const CAD={garage:'Continuous',baby:'Continuous',stove:'Continuous',pkg:'Continuous',
@@ -3903,11 +3902,13 @@ function renderDcVer(ver){
   if(ver==='v2'||ver==='v25'){
     const SET=ver==='v25'?V25:V2, opt=ver==='v25'?{rmap:MOD25,vlab:'v2.5',vcls:'v25'}:undefined;
     const groups=[]; SET.forEach(v=>{let g=groups.find(x=>x.name===v.grp); if(!g){g={name:v.grp,items:[]};groups.push(g);} g.items.push(v);});
-    $('dcGrids').innerHTML=groups.map(g=>`<div class="famblock dc-fam"><h3>${g.name} <span style="color:var(--dim);font-weight:600">${g.items.length}</span></h3>`+g.items.map(v=>v2Card(v,opt)).join('')+`</div>`).join('');
+    $('dcGrids').innerHTML=groups.map((g,gi)=>`<div class="famblock dc-fam" data-grp="g${gi}"><h3>${g.name} <span style="color:var(--dim);font-weight:600">${g.items.length}</span></h3>`+g.items.map(v=>v2Card(v,opt)).join('')+`</div>`).join('');
+    $('dcAnchors').innerHTML=groups.map((g,gi)=>`<button class="dc-anchor" data-grp="g${gi}">${g.name} <span>${g.items.length}</span></button>`).join('');
     $('dcSummary').innerHTML='';   /* v2 / v2.5 stats were non-interactive — removed */
     return;
   }
-  $('dcGrids').innerHTML=FAMILIES.map(([fam,mods])=>`<div class="famblock dc-fam"><h3>${fam}</h3>`+mods.map(([id,fn])=>dcRowSolo(id,fn,ver)).join('')+`</div>`).join('');
+  $('dcGrids').innerHTML=FAMILIES.map(([fam,mods],gi)=>`<div class="famblock dc-fam" data-grp="g${gi}"><h3>${fam}</h3>`+mods.map(([id,fn])=>dcRowSolo(id,fn,ver)).join('')+`</div>`).join('');
+  $('dcAnchors').innerHTML=FAMILIES.map(([fam,mods],gi)=>`<button class="dc-anchor" data-grp="g${gi}">${fam} <span>${mods.length}</span></button>`).join('');
   const cnt={have:0,partial:0,missing:0};
   FAMILIES.forEach(([,mods])=>mods.forEach(([id])=>{cnt[(DATACHECK[id]||{}).status||'missing']++;}));
   $('dcSummary').innerHTML=`<span class="dc-stat dc-have" data-f="have"><b>${cnt.have}</b> Have</span>`
@@ -3917,6 +3918,7 @@ function renderDcVer(ver){
   document.querySelectorAll('#dcSummary .dc-stat[data-f]').forEach(s=>s.addEventListener('click',()=>dcFilter(s.dataset.f||'')));
 }
 document.querySelectorAll('#dcVerTabs .dc-vertab').forEach(b=>b.addEventListener('click',()=>renderDcVer(b.dataset.ver)));
+document.getElementById('dcAnchors').addEventListener('click',e=>{const a=e.target.closest('.dc-anchor'); if(!a) return; const fam=document.querySelector('.dc-fam[data-grp="'+a.dataset.grp+'"]'); if(fam) fam.scrollIntoView({behavior:'smooth',block:'start'});});
 renderDcVer('v25');
 
 /* hover a component in a template preview -> show its latest (v2.5) component card */
@@ -4057,7 +4059,6 @@ applyCompFilter();
 /* land on the first Wyze AI One template so the home-wall entry card + states show by default */
 if(TEMPLATES&&TEMPLATES.length){ currentTpl=TEMPLATES[0]; current=currentTpl.screen; updateCurLabel(); }
 build();
-applyOverlay();
 
 /* ---------- builder reference: copy / download ---------- */
 (function(){
