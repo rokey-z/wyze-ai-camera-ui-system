@@ -26,8 +26,8 @@
   header p{color:var(--mut);font-size:14px;margin-top:8px;max-width:760px;line-height:1.6}
 
   .console{background:var(--panel);border:1px solid var(--line);
-    border-radius:var(--radius);padding:20px 20px 22px;position:sticky;top:60px;
-    display:flex;flex-direction:column;height:calc(100vh - 86px);overflow:hidden}
+    border-radius:var(--radius);padding:20px 20px 22px;
+    display:flex;flex-direction:column}
   .console h2{font-size:12px;letter-spacing:1.3px;text-transform:uppercase;color:var(--mut);
     font-weight:700;margin-bottom:6px}
   /* selected-intent label inside h2 — hidden on desktop, shown on mobile trigger */
@@ -96,7 +96,7 @@
   .agdot{width:7px;height:7px;border-radius:50%;flex:none}
   .agemoji{font-size:13px}
   /* states showcase */
-  .agstates{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:6px;justify-items:center}
+  .agstates{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-top:6px;justify-items:center}
   /* card states are the same vertical-pill shape/ratio as the hero card, just smaller */
   .agms{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--card);
     border:1px solid var(--line);border-radius:22px;padding:12px 9px 12px;width:100px}
@@ -401,7 +401,7 @@
     background:linear-gradient(150deg,#2a3f63,#0f1a2c)}
 
   .toprow{margin-top:18px;display:grid;grid-template-columns:.67fr 1.7fr;
-    gap:22px;align-items:start;min-height:calc(100vh + 60px)}
+    gap:22px;align-items:start}
   /* playground sits on top of the agent-templates row */
   #pane-gen.on{display:flex;flex-direction:column}
   #pane-gen .playrow{order:-1}
@@ -409,7 +409,7 @@
   /* home-wall entry card sits to the LEFT of the phone preview */
   .previewrow{display:flex;align-items:flex-start;gap:18px;justify-content:center}
   .phonecol{display:flex;flex-direction:column;align-items:center;gap:14px}
-  .previewrow #tplHomeCard{width:218px;flex:none}
+  .previewrow #tplHomeCard{width:330px;flex:none}
   @media(max-width:1080px){.toprow{grid-template-columns:1fr;justify-content:stretch}
     .console,.phonewrap,.trace{position:static;height:auto;overflow:visible}
     .previewrow{flex-wrap:wrap}
@@ -461,13 +461,12 @@
   .tier b{color:var(--ink)}
 
   /* phone */
-  .phonewrap{display:flex;flex-direction:column;align-items:center;position:sticky;top:60px;
-    height:calc(100vh - 86px);overflow-y:auto}
+  .phonewrap{display:flex;flex-direction:column;align-items:center}
   .phone{width:344px;background:#070b13;border:9px solid #05080f;border-radius:42px;
     box-shadow:0 26px 60px -22px #000,0 0 0 1px #1c283e;overflow:hidden;position:relative}
   .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:23px;
     background:#05080f;border-radius:0 0 16px 16px;z-index:30}
-  .screen{height:678px;overflow-y:auto;background:#0c1422}
+  .screen{min-height:678px;background:#0c1422}
   .screen::-webkit-scrollbar{width:0}
   .statusbar{height:30px;display:flex;align-items:flex-end;justify-content:space-between;
     padding:0 22px 4px;font-size:11px;color:#cdd7e6;font-weight:600}
