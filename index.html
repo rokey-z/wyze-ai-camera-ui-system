@@ -96,7 +96,7 @@
   .agdot{width:7px;height:7px;border-radius:50%;flex:none}
   .agemoji{font-size:13px}
   /* states showcase */
-  .agstates{display:grid;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:8px;margin-top:6px}
+  .agstates{display:grid;grid-template-columns:1fr;gap:8px;margin-top:6px}
   .agms{display:flex;flex-direction:column;align-items:center;gap:3px;background:var(--bg);
     border:1px solid var(--line);border-radius:12px;padding:8px 4px}
   .agms-paused{opacity:.5}
@@ -301,10 +301,15 @@
   .pvthumb{width:26px;height:18px;border-radius:3px;flex:none;
     background:linear-gradient(150deg,#2a3f63,#0f1a2c)}
 
-  .toprow{margin-top:18px;display:grid;grid-template-columns:1fr 1.18fr 1fr;
+  .toprow{margin-top:18px;display:grid;grid-template-columns:.92fr 1.6fr 1fr;
     gap:22px;align-items:start;min-height:calc(100vh + 60px)}
+  /* home-wall entry card sits to the LEFT of the phone preview */
+  .previewrow{display:flex;align-items:flex-start;gap:18px;justify-content:center}
+  .phonecol{display:flex;flex-direction:column;align-items:center;gap:14px}
+  .previewrow #tplHomeCard{width:152px;flex:none}
   @media(max-width:1080px){.toprow{grid-template-columns:1fr;justify-content:stretch}
     .console,.phonewrap,.trace{position:static;height:auto;overflow:visible}
+    .previewrow{flex-wrap:wrap}
     .intents{flex:none;max-height:none}}
 
   /* generation trace — right of the preview, vertical single-column layout */
@@ -1065,15 +1070,20 @@
         <div class="intents" id="intents"></div>
       </div>
 
-      <!-- CENTER: phone preview -->
+      <!-- CENTER: home-wall entry card (left) + phone preview -->
       <div class="phonewrap">
-        <div class="phone">
-          <div class="notch"></div>
-          <div class="screen" id="screen"></div>
-        </div>
-        <div class="hint" id="overlayToggle">
-          <span class="toggle on" id="tg"><span class="tg"></span></span>
-          Show module overlay
+        <div class="previewrow">
+          <div id="tplHomeCard"></div>
+          <div class="phonecol">
+            <div class="phone">
+              <div class="notch"></div>
+              <div class="screen" id="screen"></div>
+            </div>
+            <div class="hint" id="overlayToggle">
+              <span class="toggle on" id="tg"><span class="tg"></span></span>
+              Show module overlay
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1082,7 +1092,6 @@
         <div class="htitle">Generation trace</div>
         <div class="pipe" id="pipe"></div>
         <div id="traceBody"></div>
-        <div id="tplHomeCard"></div>
         <div id="tplCard"></div>
       </div>
     </div>
