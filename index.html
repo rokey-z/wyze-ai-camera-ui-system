@@ -123,6 +123,11 @@
   .agms-title{font-size:10px;text-align:center;line-height:1.3;font-weight:700}
   .agms-lab{font-size:8.5px;color:var(--dim);display:flex;align-items:center;gap:4px;margin-top:1px}
   .agms-lab .agdot{width:6px;height:6px}
+  .agms-name{display:flex;align-items:center;justify-content:center;gap:3px;font-size:8px;font-weight:600;color:var(--mut);text-align:center;line-height:1.2;margin-top:3px}
+  .agms-name .agemoji{font-size:9px}
+  .agms-name .ic{width:10px;height:10px;flex:none}
+  .agms-sub{font-size:7px;color:var(--dim);text-align:center;line-height:1.3;margin-top:1px;max-width:92px}
+  .agms-sub .agsub-t{font-family:var(--mono)}
   .agt-run{background:#0e1726}
   .agspin{width:22px;height:22px;border-radius:50%;border:2.5px solid #26344f;border-top-color:#4f8ff0;animation:agspin .9s linear infinite}
   @keyframes agspin{to{transform:rotate(360deg)}}
@@ -3068,9 +3073,11 @@ function agStates(t,tpl){
     const pill=s.none?agPill('No runs','#93a3bd',true):s.run?agPill('Working…','#9cc3f5',true):agPill(s.lab,pc,true);
     const tnew=s.fresh && p.dot && !s.none && !s.run;
     const dot=tnew?`<span class="agalert" style="background:${p.dot}"></span>`:'';
+    const detail=s.none?'not run yet':s.run?'analyzing now':t.title;
     return `<div class="agms${s.paused?' agoff':''}"><div class="agthumb-wrap">${thumb}${dot}</div>`
       +`<div class="agms-title">${pill}</div>`
-      +`<div class="agms-lab">${s.time}</div></div>`;
+      +`<div class="agms-name"><span class="agemoji">${tpl.icon}</span>${tpl.name}</div>`
+      +`<div class="agms-sub">${detail} &middot; <span class="agsub-t">${s.time}</span></div></div>`;
   }).join('');
 }
 function renderAgHome(tplId){
