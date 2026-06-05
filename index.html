@@ -415,9 +415,11 @@
     .previewrow{flex-wrap:wrap}
     .intents{flex:none;max-height:none}}
 
-  /* generation trace — full-width section at the bottom of the Templates tab */
+  /* generation trace — sits at the bottom of the preview section, left-aligned */
   .trace{background:var(--panel);border:1px solid var(--line);
     border-radius:var(--radius);padding:16px 18px 18px;margin-top:22px}
+  .phonewrap .previewrow{align-self:stretch;justify-content:flex-start}
+  .phonewrap .trace{align-self:stretch}
   .tracegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:6px 26px}
   .tracecol{min-width:0}
   .tracecol .sectlab:first-child{margin-top:0}
@@ -461,7 +463,7 @@
   .tier b{color:var(--ink)}
 
   /* phone */
-  .phonewrap{display:flex;flex-direction:column;align-items:center}
+  .phonewrap{display:flex;flex-direction:column;align-items:flex-start}
   .phone{width:344px;background:#070b13;border:9px solid #05080f;border-radius:42px;
     box-shadow:0 26px 60px -22px #000,0 0 0 1px #1c283e;overflow:hidden;position:relative}
   .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:23px;
@@ -1229,16 +1231,15 @@
             </div>
           </div>
         </div>
+        <!-- GENERATION TRACE: at the bottom of the preview section, left-aligned -->
+        <div class="trace">
+          <div class="htitle">Generation trace</div>
+          <div class="pipe" id="pipe"></div>
+          <div id="traceBody"></div>
+          <div id="tplCard"></div>
+        </div>
       </div>
 
-    </div>
-
-    <!-- GENERATION TRACE: full-width section, moved to the bottom -->
-    <div class="trace">
-      <div class="htitle">Generation trace</div>
-      <div class="pipe" id="pipe"></div>
-      <div id="traceBody"></div>
-      <div id="tplCard"></div>
     </div>
 
   </div>
