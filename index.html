@@ -391,8 +391,12 @@
   .pvthumb{width:26px;height:18px;border-radius:3px;flex:none;
     background:linear-gradient(150deg,#2a3f63,#0f1a2c)}
 
-  .toprow{margin-top:18px;display:grid;grid-template-columns:1fr 1.7fr .78fr;
+  .toprow{margin-top:18px;display:grid;grid-template-columns:.67fr 1.7fr .78fr;
     gap:22px;align-items:start;min-height:calc(100vh + 60px)}
+  /* playground sits on top of the agent-templates row */
+  #pane-gen.on{display:flex;flex-direction:column}
+  #pane-gen .playrow{order:-1}
+  #pane-gen .toprow{order:0}
   /* home-wall entry card sits to the LEFT of the phone preview */
   .previewrow{display:flex;align-items:flex-start;gap:18px;justify-content:center}
   .phonecol{display:flex;flex-direction:column;align-items:center;gap:14px}
@@ -3008,8 +3012,8 @@ function renderAgHome(tplId){
   const el=document.getElementById('tplHomeCard'); if(!el) return;
   const t=AGCARD[tplId]; const tpl=TEMPLATES.find(x=>x.id===tplId);
   if(!t||!tpl){ el.innerHTML=''; return; }
-  el.innerHTML=`<div class="sectlab" style="margin-top:14px">Home wall &mdash; entry card</div>`
-    +`<div class="aghint">Tap on the home wall &rarr; opens the panel (center)</div>`
+  el.innerHTML=`<div class="sectlab" style="margin-top:14px">Agent Widget</div>`
+    +`<div class="aghint">Tap the widget &rarr; opens the agent panel (center)</div>`
     +`<div class="aghome">${agCardHTML(t,tpl)}</div>`
     +`<div class="sectlab" style="margin-top:13px">Card states</div>`
     +`<div class="agstates">${agStates(t,tpl)}</div>`;
@@ -3091,8 +3095,7 @@ function renderTplCard(t){
 /* picker: 21 agent templates grouped by category + the framework samples */
 function tplChip(t){
   return `<div class="chip" data-tpl="${t.id}"><span class="tplemoji">${t.icon}</span>`
-    +`<div class="txt">${t.name}<small>${t.desc}</small></div>`
-    +`<span class="chiparch">${t.cat}</span></div>`;
+    +`<div class="txt">${t.name}</div></div>`;
 }
 (function(){
   let html=CATS.map(cat=>{
@@ -3104,8 +3107,7 @@ function tplChip(t){
   html+=`<div class="tplgroup"><div class="tplgrouphd">Framework samples <span>${Object.keys(CASES).length}</span></div><div class="tplgrid">`
     +Object.entries(CASES).map(([k,c])=>
       `<div class="chip" data-k="${k}">${c.icon}`
-      +`<div class="txt">${c.label}<small>${c.sub}</small></div>`
-      +`<span class="chiparch">${c.arche.name}</span>`
+      +`<div class="txt">${c.label}</div>`
       +`${c.v2?'<span class="v2b">v2</span>':''}</div>`).join('')
     +`</div></div>`;
   document.getElementById('intents').innerHTML=html;
