@@ -2007,8 +2007,8 @@ EMIT  -&gt; see §13
         <button class="dc-vertab" data-ver="v2">v2</button>
         <button class="dc-vertab on" data-ver="v25">v2.5 · latest</button>
         <span class="dc-laytoggle" id="dcLayToggle">
-          <button class="dc-lay on" data-lay="list" title="List — component + data card">&#9776; List</button>
-          <button class="dc-lay" data-lay="grid" title="Grid — components only, hover for data">&#9638; Grid</button>
+          <button class="dc-lay" data-lay="list" title="List — component + data card">&#9776; List</button>
+          <button class="dc-lay on" data-lay="grid" title="Grid — components only, hover for data">&#9638; Grid</button>
         </span>
       </div>
       <div class="dc-summary" id="dcSummary"></div>
@@ -3749,41 +3749,40 @@ function v2Card(v,opt){
 }
 /* ---------- v2.5 — trimmed realistic set (24): retire library-ish, repurpose a few, + Learnings ---------- */
 const V25=[
- // ——— Visual surface (6) ———
- {id:'C-LIVE',grp:'Visual surface',name:'Live view',primary:'M-LIVE',folds:['M-LIVE','M-PTZ'],modes:['live','pan / tilt / zoom'],use:'Real-time stream; PTZ controls when supported. Action controls render directly under this in a generated UI.'},
- {id:'C-RECVIDEO',grp:'Visual surface',name:'Continuous record',primary:'M-FOOTAGE',folds:['M-FOOTAGE'],modes:['24/7 scrub'],use:'The full continuous 24/7 record, scrubbable. (Standalone event-clip module dropped — clips live in Grouped clips.)'},
- {id:'C-SNAP',grp:'Visual surface',name:'Snapshot',primary:'M-SNAP',folds:['M-SNAP'],modes:['single still'],use:'A single still frame on demand or on event.'},
- {id:'C-TIMELAPSE',grp:'Visual surface',name:'Time-lapse',primary:'M-TIMELAPSE',folds:['M-TIMELAPSE'],modes:['accelerated sequence'],use:'A long span compressed into an accelerated sequence.'},
- {id:'C-GALLERY',grp:'Visual surface',name:'Gallery',primary:'M-GALLERY',folds:['M-GALLERY'],modes:['browsable collection'],use:'A browsable image collection grouped by entity.'},
- {id:'C-MULTIVIEW',grp:'Visual surface',name:'Multi-view',primary:'M-GRID',folds:['M-COMPARE','M-GRID'],modes:['compare pair','synced grid'],use:'A before/after pair, or a synchronized multi-camera grid.'},
- // ——— Events & records (5) ———
- {id:'C-GROUPED',grp:'Events & records',name:'Grouped clips',primary:'M-REEL',folds:['M-REEL','M-GROUPS'],modes:['groups by event','score-ranked','clip thumbs'],src:[{ep:'GET /api/eventgroups',fields:['group_id','title','score','event_count','clip_urls']},{ep:'GET /api/eventgroups/{id}/artifact',fields:['gif_url','chips']}],use:'Clips bucketed into event groups like the home wall — title, clip count, score-ranked, with thumbnails. Replaces the highlight reel and clips-by-trigger.'},
- {id:'C-FEED',grp:'Events & records',name:'Event feed',primary:'M-FEED',folds:['M-FEED'],modes:['tagged cards','filter chips','load more'],use:'AI-tagged event cards with filter chips — shows several rows with a More button to page further back.'},
- {id:'C-LOG',grp:'Events & records',name:'Log / journal',primary:'M-LOG',folds:['M-LOG','M-JOURNAL'],modes:['running log','narrative journal'],src:[{ep:'GET /api/household/visual-memories',fields:['status_line','summary']},{ep:'GET /api/stories'}],use:'A timestamped record — a terse running log, or a narrative journal.'},
- {id:'C-VISIT',grp:'Events & records',name:'Visit sheet',primary:'M-TIMESHEET',folds:['M-TIMESHEET'],modes:['arrival / departure rows'],src:[{ep:'POST /api/events/filter',fields:['event_ts','tags']},{ep:'GET /api/reid/identities/{id}/appearances'}],use:'Attendance / visit verification — arrival, departure and dwell per subject.'},
- {id:'C-IDCARD',grp:'Events & records',name:'Identity card',primary:'M-IDCARD',folds:['M-IDCARD'],modes:['recognized subject'],use:'A recognized-subject detail card (face / plate, last seen, appearances).'},
- // ——— Status & readout (3) ———
- {id:'C-STATE',grp:'Status & readout',name:'State (large)',primary:'M-STATE',folds:['M-STATE'],modes:['big state word + duration'],use:'The current state shown as a large word with how long it has held.'},
- {id:'C-TILES',grp:'Status & readout',name:'Metric tiles',primary:'M-VITALS',folds:['M-VITALS','M-KPI'],modes:['live vitals','headline KPIs'],use:'A row of number tiles — live vitals, or headline KPI figures.'},
- {id:'C-READOUT',grp:'Status & readout',name:'Number readout',primary:'M-READOUT',folds:['M-READOUT','M-GAUGE'],modes:['large number / OCR'],use:'One large number read from the scene — meter, count, or a gauge value as a number. (Score ring dropped.)'},
- // ——— Trends (4) ———
- {id:'C-DAYTREND',grp:'Trends',name:'Day trend',primary:'M-SCRUB',folds:['M-SCRUB','M-NIGHTGRAPH'],modes:['today by hour'],use:'Activity across today by hour — combines the scrubber and night-graph into one day view.'},
- {id:'C-TREND',grp:'Trends',name:'Week trend',primary:'M-TREND',folds:['M-TREND'],modes:['this week by day'],use:'A metric across the last 7 days.'},
- {id:'C-MONTHTREND',grp:'Trends',name:'Month trend',primary:'M-CALENDAR',folds:['M-CALENDAR'],modes:['calendar w/ counts'],src:[{ep:'POST /api/eventgroups/digest'},{ep:'POST /api/events/filter (daily counts)'}],use:'A month calendar with the event count printed in each day cell.'},
- {id:'C-RECAP',grp:'Trends',name:'AI recap (large)',primary:'M-RECAP',folds:['M-RECAP'],modes:['large narrative + tone'],use:'An AI plain-language summary of a period, shown as a large readable block.'},
- {id:'C-INSIGHT',grp:'Trends',name:'Insight',primary:'',folds:[],tag:'new',modes:['adjustable period (daily / weekly / monthly)','output: plain text + simple chart','grounded in goal + context + memory'],src:[{ep:'POST /api/insights',fields:['finding','period','series']},{ep:'GET /api/stories',fields:['narrative','why_it_matters','tone']},{ep:'GET /api/agents',fields:['schedule']}],use:'The agent’s periodic finding — a plain-text takeaway plus a simple data chart, synthesized from its goal, context and memory. Delivery cadence (daily / weekly / monthly) is set per agent and adjustable.'},
- // ——— Actions (2) ———
- {id:'C-ACT',grp:'Actions',name:'Quick actions',primary:'M-ACT',folds:['M-ACT','M-TALK'],modes:['power on / off','two-way talk'],use:'A device action bar — power (on/off toggle icons) and two-way talk. In a generated UI this sits directly under the live view.'},
- {id:'C-DETER',grp:'Actions',name:'Deterrent',primary:'M-DETER',folds:['M-DETER'],modes:['siren / lights'],use:'A siren / lights deterrent action.'},
- // ——— Reminder (1) ———
- {id:'C-REMINDER',grp:'Reminder',name:'Reminder & schedule',primary:'M-REMINDER',folds:['M-REMINDER'],modes:['schedule','elapsed reminder'],src:[{ep:'GET /api/agents',fields:['schedule','triggers']},{ep:'GET /api/household/visual-memories',fields:['status_line']}],use:'A schedule or elapsed-time reminder (e.g. “trash day in 2h”, “not seen since 9am”).'},
- // ——— Fleet (1) ———
- {id:'C-FLEET',grp:'Fleet',name:'Fleet: map + health',primary:'M-DEVMAP',folds:['M-DEVMAP','M-HEALTH'],modes:['device map','health roll-up'],use:'One panel: devices with online state + firmware, plus a map / floorplan placement.'},
- // ——— Escalation (1) ———
- {id:'C-SOS',grp:'Escalation',name:'Escalation',primary:'M-SOS',folds:['M-SOS'],modes:['caregiver call tree'],use:'An emergency escalation / caregiver call tree.'},
- // ——— Assistant & memory (2, NEW) ———
- {id:'C-ASSIST',grp:'Assistant & memory',name:'Assistant + suggestions',primary:'',folds:[],tag:'new',modes:['ask · answer','suggestion chips','create-agent'],src:[{ep:'POST /api/chat',fields:['answer','event_cards','media']},{ep:'GET /api/chat/history'},{ep:'POST /api/skills/suggest',fields:['name','instructions','rationale']}],use:'Ask-Home assistant — ask in plain language and get an answer with event / clip cards; offers categorized suggestion chips (insight / memory / config) and can propose a new agent to create.'},
- {id:'C-LEARN',grp:'Assistant & memory',name:'Learnings card',primary:'',folds:[],tag:'new',modes:['2–3 recent learnings','confidence'],src:[{ep:'GET /api/household/learnings',fields:['fact','category','confidence']},{ep:'GET /api/household/visual/entities/{id}',fields:['routines','summary_recent']}],use:'Surfaces 2–3 things the agent has recently learned or remembered (routines, baselines, recognized identities).'},
+ // ——— Camera surfaces (4) ———
+ {id:'C-LIVE',grp:'Camera surfaces',name:'Live view',primary:'M-LIVE',folds:['M-LIVE','M-PTZ'],modes:['live','pan / tilt / zoom'],use:'Real-time stream; PTZ controls when supported. Action controls render directly under this in a generated UI.'},
+ {id:'C-RECVIDEO',grp:'Camera surfaces',name:'Continuous record',primary:'M-FOOTAGE',folds:['M-FOOTAGE'],modes:['24/7 scrub'],use:'The full continuous 24/7 record, scrubbable. (Standalone event-clip module dropped — clips live in Grouped clips.)'},
+ {id:'C-SNAP',grp:'Camera surfaces',name:'Snapshot',primary:'M-SNAP',folds:['M-SNAP'],modes:['single still'],use:'A single still frame on demand or on event.'},
+ {id:'C-TIMELAPSE',grp:'Camera surfaces',name:'Time-lapse',primary:'M-TIMELAPSE',folds:['M-TIMELAPSE'],modes:['accelerated sequence'],use:'A long span compressed into an accelerated sequence.'},
+ // ——— Collections (3) ———
+ {id:'C-GALLERY',grp:'Collections',name:'Gallery',primary:'M-GALLERY',folds:['M-GALLERY'],modes:['browsable collection'],use:'A browsable image collection grouped by entity.'},
+ {id:'C-MULTIVIEW',grp:'Collections',name:'Multi-view',primary:'M-GRID',folds:['M-COMPARE','M-GRID'],modes:['compare pair','synced grid'],use:'A before/after pair, or a synchronized multi-camera grid.'},
+ {id:'C-GROUPED',grp:'Collections',name:'Grouped clips',primary:'M-REEL',folds:['M-REEL','M-GROUPS'],modes:['groups by event','score-ranked','clip thumbs'],src:[{ep:'GET /api/eventgroups',fields:['group_id','title','score','event_count','clip_urls']},{ep:'GET /api/eventgroups/{id}/artifact',fields:['gif_url','chips']}],use:'Clips bucketed into event groups like the home wall — title, clip count, score-ranked, with thumbnails. Replaces the highlight reel and clips-by-trigger.'},
+ // ——— Records & lists (4) ———
+ {id:'C-FEED',grp:'Records & lists',name:'Event feed',primary:'M-FEED',folds:['M-FEED'],modes:['tagged cards','filter chips','load more'],use:'AI-tagged event cards with filter chips — shows several rows with a More button to page further back.'},
+ {id:'C-LOG',grp:'Records & lists',name:'Log / journal',primary:'M-LOG',folds:['M-LOG','M-JOURNAL'],modes:['running log','narrative journal'],src:[{ep:'GET /api/household/visual-memories',fields:['status_line','summary']},{ep:'GET /api/stories'}],use:'A timestamped record — a terse running log, or a narrative journal.'},
+ {id:'C-VISIT',grp:'Records & lists',name:'Visit sheet',primary:'M-TIMESHEET',folds:['M-TIMESHEET'],modes:['arrival / departure rows'],src:[{ep:'POST /api/events/filter',fields:['event_ts','tags']},{ep:'GET /api/reid/identities/{id}/appearances'}],use:'Attendance / visit verification — arrival, departure and dwell per subject.'},
+ {id:'C-IDCARD',grp:'Records & lists',name:'Identity card',primary:'M-IDCARD',folds:['M-IDCARD'],modes:['recognized subject'],use:'A recognized-subject detail card (face / plate, last seen, appearances).'},
+ // ——— Status & readouts (3) ———
+ {id:'C-STATE',grp:'Status & readouts',name:'State (large)',primary:'M-STATE',folds:['M-STATE'],modes:['big state word + duration'],use:'The current state shown as a large word with how long it has held.'},
+ {id:'C-TILES',grp:'Status & readouts',name:'Metric tiles',primary:'M-VITALS',folds:['M-VITALS','M-KPI'],modes:['live vitals','headline KPIs'],use:'A row of number tiles — live vitals, or headline KPI figures.'},
+ {id:'C-READOUT',grp:'Status & readouts',name:'Number readout',primary:'M-READOUT',folds:['M-READOUT','M-GAUGE'],modes:['large number / OCR'],use:'One large number read from the scene — meter, count, or a gauge value as a number. (Score ring dropped.)'},
+ // ——— Charts & trends (3) ———
+ {id:'C-DAYTREND',grp:'Charts & trends',name:'Day trend',primary:'M-SCRUB',folds:['M-SCRUB','M-NIGHTGRAPH'],modes:['today by hour'],use:'Activity across today by hour — combines the scrubber and night-graph into one day view.'},
+ {id:'C-TREND',grp:'Charts & trends',name:'Week trend',primary:'M-TREND',folds:['M-TREND'],modes:['this week by day'],use:'A metric across the last 7 days.'},
+ {id:'C-MONTHTREND',grp:'Charts & trends',name:'Month trend',primary:'M-CALENDAR',folds:['M-CALENDAR'],modes:['calendar w/ counts'],src:[{ep:'POST /api/eventgroups/digest'},{ep:'POST /api/events/filter (daily counts)'}],use:'A month calendar with the event count printed in each day cell.'},
+ // ——— AI (4) ———
+ {id:'C-RECAP',grp:'AI',name:'AI recap (large)',primary:'M-RECAP',folds:['M-RECAP'],modes:['large narrative + tone'],use:'An AI plain-language summary of a period, shown as a large readable block.'},
+ {id:'C-INSIGHT',grp:'AI',name:'Insight',primary:'',folds:[],tag:'new',modes:['adjustable period (daily / weekly / monthly)','output: plain text + simple chart','grounded in goal + context + memory'],src:[{ep:'POST /api/insights',fields:['finding','period','series']},{ep:'GET /api/stories',fields:['narrative','why_it_matters','tone']},{ep:'GET /api/agents',fields:['schedule']}],use:'The agent’s periodic finding — a plain-text takeaway plus a simple data chart, synthesized from its goal, context and memory. Delivery cadence (daily / weekly / monthly) is set per agent and adjustable.'},
+ {id:'C-ASSIST',grp:'AI',name:'Assistant + suggestions',primary:'',folds:[],tag:'new',modes:['ask · answer','suggestion chips','create-agent'],src:[{ep:'POST /api/chat',fields:['answer','event_cards','media']},{ep:'GET /api/chat/history'},{ep:'POST /api/skills/suggest',fields:['name','instructions','rationale']}],use:'Ask-Home assistant — ask in plain language and get an answer with event / clip cards; offers categorized suggestion chips (insight / memory / config) and can propose a new agent to create.'},
+ {id:'C-LEARN',grp:'AI',name:'Learnings card',primary:'',folds:[],tag:'new',modes:['2–3 recent learnings','confidence'],src:[{ep:'GET /api/household/learnings',fields:['fact','category','confidence']},{ep:'GET /api/household/visual/entities/{id}',fields:['routines','summary_recent']}],use:'Surfaces 2–3 things the agent has recently learned or remembered (routines, baselines, recognized identities).'},
+ // ——— Actions & alerts (3) ———
+ {id:'C-ACT',grp:'Actions & alerts',name:'Quick actions',primary:'M-ACT',folds:['M-ACT','M-TALK'],modes:['power on / off','two-way talk'],use:'A device action bar — power (on/off toggle icons) and two-way talk. In a generated UI this sits directly under the live view.'},
+ {id:'C-DETER',grp:'Actions & alerts',name:'Deterrent',primary:'M-DETER',folds:['M-DETER'],modes:['siren / lights'],use:'A siren / lights deterrent action.'},
+ {id:'C-REMINDER',grp:'Actions & alerts',name:'Reminder & schedule',primary:'M-REMINDER',folds:['M-REMINDER'],modes:['schedule','elapsed reminder'],src:[{ep:'GET /api/agents',fields:['schedule','triggers']},{ep:'GET /api/household/visual-memories',fields:['status_line']}],use:'A schedule or elapsed-time reminder (e.g. “trash day in 2h”, “not seen since 9am”).'},
+ // ——— Fleet & escalation (2) ———
+ {id:'C-FLEET',grp:'Fleet & escalation',name:'Fleet: map + health',primary:'M-DEVMAP',folds:['M-DEVMAP','M-HEALTH'],modes:['device map','health roll-up'],use:'One panel: devices with online state + firmware, plus a map / floorplan placement.'},
+ {id:'C-SOS',grp:'Fleet & escalation',name:'Escalation',primary:'M-SOS',folds:['M-SOS'],modes:['caregiver call tree'],use:'An emergency escalation / caregiver call tree.'},
 ];
 /* v2.5-only custom renders (keyed by component id). Reuse the same component CSS classes. */
 const sosIco={call:'<path d="M5 4h4l2 5-3 2a11 11 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>',text:'<path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"/>',push:'<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/>'};
@@ -3863,7 +3862,7 @@ document.querySelectorAll('#dcVerTabs .dc-vertab').forEach(b=>b.addEventListener
 renderDcVer('v25');
 
 /* list / grid view toggle — grid shows components only, hovering a cell floats in its data card */
-let dcLayout='list';
+let dcLayout='grid';
 function dcHidePops(){document.querySelectorAll('#dcGrids .dc-card').forEach(c=>{c.style.display='';c.style.left='';c.style.top='';});}
 function setDcLayout(lay){
   dcLayout=lay;
@@ -3872,6 +3871,7 @@ function setDcLayout(lay){
   dcHidePops();
 }
 document.querySelectorAll('#dcLayToggle .dc-lay').forEach(b=>b.addEventListener('click',()=>setDcLayout(b.dataset.lay)));
+setDcLayout('grid');
 $('dcGrids').addEventListener('mouseover',e=>{
   if(dcLayout!=='grid')return;
   const row=e.target.closest('.dc-row'); if(!row||!$('dcGrids').contains(row))return;
