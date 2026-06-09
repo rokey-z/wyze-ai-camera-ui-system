@@ -3826,6 +3826,15 @@ function v2Card(v,opt){
 }
 /* ---------- v2.5 — trimmed realistic set (24): retire library-ish, repurpose a few, + Learnings ---------- */
 const V25=[
+ // ——— Agent surfaces (1) ———
+ {id:'C-AGENT',grp:'Agent surfaces',name:'Agent widget',primary:'',folds:[],tag:'new',
+  modes:['signal thumb','priority dot','state pill','timestamp','template name','7 card states'],
+  src:[
+    {ep:'GET /api/agents',fields:['id','name','icon','template_id','priority']},
+    {ep:'GET /api/agents/{id}/state',fields:['state.w (state word)','state.c (state color)','last_run_ts','fresh']},
+    {ep:'GET /api/agents/{id}/thumb',fields:['thumb_grad','thumb_tag','signal_type (live/snap/score…)']}
+  ],
+  use:'The agent\'s home-wall entry. A tappable widget showing the latest signal (rounded thumb), the current state (color pill), how recent it is, and the template name. Tap to open the agent panel. Renders identically in 7 card states: action required / needs attention / all clear / quiet / running / no runs / paused.'},
  // ——— Camera surfaces (4) ———
  {id:'C-LIVE',grp:'Camera surfaces',name:'Live view',primary:'M-LIVE',folds:['M-LIVE','M-PTZ'],modes:['live','pan / tilt / zoom'],use:'Real-time stream; PTZ controls when supported. Action controls render directly under this in a generated UI.'},
  {id:'C-RECVIDEO',grp:'Camera surfaces',name:'Continuous record',primary:'M-FOOTAGE',folds:['M-FOOTAGE'],modes:['24/7 scrub'],use:'The full continuous 24/7 record, scrubbable. (Standalone event-clip module dropped — clips live in Grouped clips.)'},
@@ -3863,6 +3872,7 @@ const V25=[
 /* v2.5-only custom renders (keyed by component id). Reuse the same component CSS classes. */
 const sosIco={call:'<path d="M5 4h4l2 5-3 2a11 11 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>',text:'<path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"/>',push:'<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/>'};
 const MOD25={
+ 'C-AGENT':`<div class="aghome" style="padding:6px 0 4px">`+agCardHTML(AGCARD.night_watcher||{th:{grad:'linear-gradient(150deg,#10182b,#070b14)',tag:'PERSON',tc:'#f25c5c'},state:{w:'PERSON · 2m',c:'#f25c5c'},title:'Unfamiliar at side gate',pri:'P1',time:'2m ago',fresh:true},{name:'Night Watcher'})+`</div>`,
  'C-STATE':`<div class="panel" style="text-align:center;padding:20px 12px 16px"><div style="font-size:9px;letter-spacing:1px;color:var(--dim);text-transform:uppercase;margin-bottom:7px">Garage door</div><div style="font-size:36px;font-weight:800;letter-spacing:-1.5px;color:#7eecc4;line-height:1">CLOSED</div><div style="font-size:11px;color:var(--mut);margin-top:8px">secure &middot; <span style="font-family:var(--mono);color:#7eecc4;font-weight:700">3h 42m</span></div></div>`+cf15('0.96','State + time-in-state from VLM &middot; tap to correct'),
  'C-FEED':`<div class="panel"><div class="ph"><b>Entry history</b></div><div class="chips2" style="margin-bottom:8px"><span class="fc on">All &middot; 24</span><span class="fc">Person &middot; 11</span><span class="fc">Vehicle &middot; 6</span><span class="fc">Pet &middot; 7</span></div>`+[['#f25c5c','Vehicle departed','8:02 AM &middot; &ldquo;a car backs out&rdquo;','VEHICLE&middot;92','#4f8ff022','#9cc3f5'],['#34d399','Person entered','7:55 AM &middot; &ldquo;someone walks up&rdquo;','PERSON&middot;88','#34d39922','#7eecc4'],['#f6b73c','Pet in the yard','7:31 AM &middot; &ldquo;a dog crosses&rdquo;','PET&middot;81','#f6b73c22','#f3cd86'],['#9cc3f5','Package dropped','7:12 AM &middot; &ldquo;a box by the door&rdquo;','PKG&middot;76','#a78bfa22','#c4b3f0']].map(([d,t,m,tag,bg,c])=>`<div class="feedrow"><span style="width:6px;height:6px;border-radius:50%;background:${d};flex:none"></span><div class="thumb"></div><div style="flex:1"><div class="ft">${t}</div><div class="fm">${m}</div></div><span class="etag" style="background:${bg};color:${c}">${tag}</span></div>`).join('')+`<button class="dc-more">More &middot; 20 earlier &rsaquo;</button></div>`,
  'C-GROUPED':`<div class="gcard"><div class="gcard-thumb" style="background:linear-gradient(150deg,#b1402f,#5a1c14)"><span class="gcard-gif">&#9654; GIF &middot; 0:06</span><span class="gcard-score" style="background:#f25c5c">score 4/5</span><div class="gcard-grad"></div><div class="gcard-info"><div class="gcard-title">Package delivery</div><div class="gcard-meta">3 clips &middot; Front door &middot; 2:14&ndash;2:17 PM</div></div></div></div>`,
