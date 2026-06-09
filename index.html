@@ -517,12 +517,18 @@
   #tplHomeCard{text-align:center}
   #tplHomeCard .aghome{justify-content:center}
   #tplHomeCard .agstates{justify-items:center}
-  /* Keep .toprow left/right layout at every width; only relax internal
-     sticky/height constraints below the desktop comfort zone. */
+  /* Left console = a self-contained, sticky, vertically scrollable panel
+     whenever it sits beside the phone (>=641px). The playground stays pinned
+     at the top; the long template list scrolls within (the .intents flex child
+     owns the scroll). Below 641px the console becomes a collapsible menu. */
+  @media(min-width:641px){
+    .toprow>.console{position:sticky;top:70px;max-height:calc(100vh - 88px)}
+  }
+  /* Keep .toprow left/right layout at every width; just tighten the gap below
+     the desktop comfort zone. (The console stays scrollable down to 641px;
+     phonewrap/trace are static by default and need no relaxing here.) */
   @media(max-width:1080px){
     .toprow{gap:14px}
-    .console,.phonewrap,.trace{position:static;height:auto;overflow:visible}
-    .intents{flex:none;max-height:none}
   }
 
   /* generation trace — sits at the bottom of the preview section, left-aligned */
@@ -1209,7 +1215,8 @@
     .console .intents{display:none;padding:8px 14px 16px;
       grid-template-columns:1fr 1fr;gap:7px}
     .console.open .promptline{display:block}
-    .console.open .intents{display:grid}
+    .console.open .intents{display:grid;max-height:62vh;overflow-y:auto;
+      -webkit-overflow-scrolling:touch}
     .chip{padding:9px 10px 9px;font-size:12px;gap:5px}
     .chip .ic{width:20px;height:20px}
     .chip small{font-size:10px}
@@ -1347,7 +1354,7 @@
         <div class="playstatus" id="playStatus" hidden></div>
       </div>
         <h2 id="intentTrigger" class="intenthead"><span class="lbl">Agent templates</span><span class="cur" id="curIntent"></span></h2>
-        <div class="promptline">21 Wyze AI One templates + framework samples — pick one to preview:</div>
+        <div class="promptline">36 Wyze AI One templates — ordered most common to most personalized; pick one to preview:</div>
         <div class="intents" id="intents"></div>
       </div>
 
@@ -2816,19 +2823,37 @@ function renderTplCard(t){
    </div>`;
 }
 
-/* picker: 21 agent templates grouped by category + the framework samples */
+/* picker: all 36 Wyze AI One templates (21 named templates + the 15 former
+   framework samples, now unified as templates) in one flat list. */
 function tplChip(t){
   return `<div class="chip" data-tpl="${t.id}"><span class="tplemoji">${t.icon}</span>`
     +`<div class="txt">${t.name}</div></div>`;
 }
+/* Priority order — most common / universal monitoring jobs (broad security,
+   delivery, access, family safety) → most personalized / niche (hobby
+   collections, single-instrument readers, multi-site ops consoles).
+   {t} = named-template id; {k} = framework-sample key. */
+const PICKER_ORDER=[
+  /* universal security · delivery · access */
+  {t:'general_monitoring'},{t:'night_watcher'},{t:'package_reminder'},{k:'pkg'},
+  {t:'garage_door_watcher'},{k:'garage'},{t:'camera_health_check'},
+  /* family & people */
+  {t:'baby_monitor'},{k:'baby'},{t:'kids_watch'},{t:'pet_monitoring'},{t:'cat_monitoring'},{t:'school_bus_watch'},
+  /* safety & home hazards */
+  {t:'fall_detection'},{t:'senior_care'},{k:'eldercare'},{t:'stove_watch'},{k:'stove'},{t:'pool_watch'},{k:'leak'},
+  /* personal routines */
+  {t:'medicine_reminder'},{t:'gym_monitoring'},{t:'trash_bin_checker'},{k:'pantry'},{k:'cooking'},
+  /* nature & outdoor hobbies */
+  {t:'garden_watch'},{k:'plant'},{t:'chicken_monitoring'},{t:'bird_monitoring'},{k:'bird'},{t:'hummingbird_watch'},{k:'aquarium'},
+  /* specialized instruments & operations (most personalized) */
+  {k:'meter'},{k:'fridgetemp'},{k:'lawncrew'},{k:'rental'},
+];
 (function(){
-  /* one flat grid — all templates + framework samples, no category groups */
-  const tpls=TEMPLATES.map(tplChip).join('');
-  const samples=Object.entries(CASES).map(([k,c])=>
-    `<div class="chip" data-k="${k}">${c.icon}`
-    +`<div class="txt">${c.label}</div>`
-    +`${c.v2?'<span class="v2b">v2</span>':''}</div>`).join('');
-  document.getElementById('intents').innerHTML=`<div class="tplgrid">${tpls}${samples}</div>`;
+  const html=PICKER_ORDER.map(o=>{
+    if(o.t){ const t=TEMPLATES.find(x=>x.id===o.t); return t?tplChip(t):''; }
+    const c=CASES[o.k]; return c?`<div class="chip" data-k="${o.k}">${c.icon}<div class="txt">${c.label}</div></div>`:'';
+  }).join('');
+  document.getElementById('intents').innerHTML=`<div class="tplgrid">${html}</div>`;
 })();
 
 const consoleEl=document.querySelector('#pane-gen .console');
