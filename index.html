@@ -3940,6 +3940,41 @@ const MAPLINES={
     {sel:'.aghome .agcard .agpill',  fld:'state.w',    color:'#7eecc4'},
     {sel:'.aghome .agcard .agsub',   fld:'last_run_ts',color:'#c4b3f0'},
     {sel:'.aghome .agcard .agname',  fld:'name',       color:'#cdd9ea'}
+  ],
+  'C-STATE':[
+    {sel:'.ml-subj',  fld:'subject',         color:'#9cc3f5'},
+    {sel:'.ml-state', fld:'state.w',         color:'#7eecc4'},
+    {sel:'.ml-label', fld:'state.label',     color:'#c4b3f0'},
+    {sel:'.ml-dur',   fld:'state.since_ts',  color:'#f3cd86'}
+  ],
+  'C-FEED':[
+    {sel:'.chips2 .fc.on',   fld:'event_count', color:'#9cc3f5'},
+    {sel:'.feedrow .ft',     fld:'event_ts',    color:'#7eecc4'},
+    {sel:'.feedrow .fm',     fld:'vlm_caption', color:'#c4b3f0'},
+    {sel:'.feedrow .etag',   fld:'tag_conf',    color:'#f3cd86'}
+  ],
+  'C-RECAP':[
+    {sel:'.ml-title',     fld:'title',       color:'#9cc3f5'},
+    {sel:'.ml-tone',      fld:'tone',        color:'#f3cd86'},
+    {sel:'.ml-narrative', fld:'narrative',   color:'#7eecc4'},
+    {sel:'.ml-hi .fc',    fld:'highlights[]',color:'#c4b3f0'}
+  ],
+  'C-ACT':[
+    {sel:'.ml-pon',      fld:'power_on',       color:'#7eecc4'},
+    {sel:'.ml-poff',     fld:'power_off',      color:'#9cc3f5'},
+    {sel:'.ml-talk',     fld:'talk_session_id',color:'#c4b3f0'},
+    {sel:'.ml-devstate', fld:'power_state',    color:'#f3cd86'}
+  ],
+  'C-READOUT':[
+    {sel:'.ml-value', fld:'value',      color:'#7eecc4'},
+    {sel:'.ml-unit',  fld:'unit',       color:'#9cc3f5'},
+    {sel:'.ml-meter', fld:'meter_label',color:'#c4b3f0'},
+    {sel:'.ml-conf',  fld:'confidence', color:'#f3cd86'}
+  ],
+  'C-SOS':[
+    {sel:'.sosc .sosc-name',   fld:'name',     color:'#9cc3f5'},
+    {sel:'.sosc .sosc-method', fld:'method',   color:'#7eecc4'},
+    {sel:'.sosc .sosc-ord',    fld:'priority', color:'#f3cd86'}
   ]
 };
 /* Per-component field availability in the Wyze codebase today.
@@ -3949,6 +3984,28 @@ const FIELD_STATUS={
   'C-AGENT':{
     have:    ['id','name','icon','template_id','last_run_ts','fresh','signal_type'],
     missing: ['priority','state.w','state.c','thumb_grad','thumb_tag']
+  },
+  'C-STATE':{
+    have:    ['subject','state.since_ts'],
+    missing: ['state.w','state.label']
+  },
+  'C-FEED':{
+    have:    ['event_ts','tag_list','tag_conf','event_count','categories[]'],
+    missing: ['vlm_caption']
+  },
+  'C-RECAP':{
+    have:    ['title','narrative','highlights[]'],
+    missing: ['tone']
+  },
+  'C-ACT':{
+    have:    ['power_on','power_off','power_state','last_change_ts','talk_session_id']
+  },
+  'C-READOUT':{
+    have:    ['value','unit','meter_label'],
+    missing: ['confidence']
+  },
+  'C-SOS':{
+    have:    ['name','method','priority','phone']
   }
 };
 function fieldStatus(compId,fld){
@@ -3983,43 +4040,43 @@ const V25=[
  {id:'C-MULTIVIEW',grp:'Collections',name:'Multi-view',primary:'M-GRID',folds:['M-COMPARE','M-GRID'],modes:['compare pair','synced grid'],use:'A before/after pair, or a synchronized multi-camera grid.'},
  {id:'C-GROUPED',grp:'Collections',name:'Grouped clips',primary:'M-REEL',folds:['M-REEL','M-GROUPS'],modes:['groups by event','score-ranked','clip thumbs'],src:[{ep:'GET /api/eventgroups',fields:['group_id','title','score','event_count','clip_urls']},{ep:'GET /api/eventgroups/{id}/artifact',fields:['gif_url','chips']}],use:'Clips bucketed into event groups like the home wall — title, clip count, score-ranked, with thumbnails. Replaces the highlight reel and clips-by-trigger.'},
  // ——— Records & lists (4) ———
- {id:'C-FEED',grp:'Records & lists',name:'Event feed',primary:'M-FEED',folds:['M-FEED'],modes:['tagged cards','filter chips','load more'],use:'AI-tagged event cards with filter chips — shows several rows with a More button to page further back.'},
+ {id:'C-FEED',grp:'Records & lists',name:'Event feed',primary:'M-FEED',folds:['M-FEED'],modes:['tagged cards','filter chips','load more'],src:[{ep:'POST /api/events/filter',fields:['event_ts','tag_list','tag_conf','event_count']},{ep:'POST /api/events/insights',fields:['vlm_caption']},{ep:'GET /api/events/filter-categories',fields:['categories[]']}],use:'AI-tagged event cards with filter chips — shows several rows with a More button to page further back.'},
  {id:'C-LOG',grp:'Records & lists',name:'Log / journal',primary:'M-LOG',folds:['M-LOG','M-JOURNAL'],modes:['running log','narrative journal'],src:[{ep:'GET /api/household/visual-memories',fields:['status_line','summary']},{ep:'GET /api/stories'}],use:'A timestamped record — a terse running log, or a narrative journal.'},
  {id:'C-VISIT',grp:'Records & lists',name:'Visit sheet',primary:'M-TIMESHEET',folds:['M-TIMESHEET'],modes:['arrival / departure rows'],src:[{ep:'POST /api/events/filter',fields:['event_ts','tag_list']},{ep:'GET /api/reid/identities/{id}/appearances'}],use:'Attendance / visit verification — arrival, departure and dwell per subject.'},
  {id:'C-IDCARD',grp:'Records & lists',name:'Identity card',primary:'M-IDCARD',folds:['M-IDCARD'],modes:['recognized subject'],use:'A recognized-subject detail card (face / plate, last seen, appearances).'},
  // ——— Status & readouts (3) ———
- {id:'C-STATE',grp:'Status & readouts',name:'State (large)',primary:'M-STATE',folds:['M-STATE'],modes:['big state word + duration'],use:'The current state shown as a large word with how long it has held.'},
+ {id:'C-STATE',grp:'Status & readouts',name:'State (large)',primary:'M-STATE',folds:['M-STATE'],modes:['big state word + duration'],src:[{ep:'GET /api/agents/{id}',fields:['subject']},{ep:'GET /api/agents/{id}/state',fields:['state.w (state word)','state.label','state.since_ts']}],use:'The current state shown as a large word with how long it has held.'},
  {id:'C-TILES',grp:'Status & readouts',name:'Tiles (metrics + fleet)',primary:'M-VITALS',folds:['M-VITALS','M-KPI','M-DEVMAP','M-HEALTH'],modes:['metric tiles','device / fleet health'],use:'A grid of tiles — live vitals or headline KPIs, plus per-device fleet health (online + firmware). Combines the metric tiles and the fleet roll-up into one grid.'},
- {id:'C-READOUT',grp:'Status & readouts',name:'Number readout',primary:'M-READOUT',folds:['M-READOUT','M-GAUGE'],modes:['large number / OCR'],use:'One large number read from the scene — meter, count, or a gauge value as a number. (Score ring dropped.)'},
+ {id:'C-READOUT',grp:'Status & readouts',name:'Number readout',primary:'M-READOUT',folds:['M-READOUT','M-GAUGE'],modes:['large number / OCR'],src:[{ep:'POST /api/ocr/read',fields:['value','unit','confidence']},{ep:'GET /api/agents/{id}',fields:['meter_label']}],use:'One large number read from the scene — meter, count, or a gauge value as a number. (Score ring dropped.)'},
  // ——— Charts & trends (3) ———
  {id:'C-DAYTREND',grp:'Charts & trends',name:'Day trend',primary:'M-SCRUB',folds:['M-SCRUB','M-NIGHTGRAPH'],modes:['today by hour'],use:'Activity across today by hour — combines the scrubber and night-graph into one day view.'},
  {id:'C-TREND',grp:'Charts & trends',name:'Week trend',primary:'M-TREND',folds:['M-TREND'],modes:['this week by day'],use:'A metric across the last 7 days.'},
  {id:'C-MONTHTREND',grp:'Charts & trends',name:'Month trend',primary:'M-CALENDAR',folds:['M-CALENDAR'],modes:['calendar w/ counts'],src:[{ep:'POST /api/eventgroups/digest'},{ep:'POST /api/events/filter (daily counts)'}],use:'A month calendar with the event count printed in each day cell.'},
  // ——— AI (4) ———
- {id:'C-RECAP',grp:'AI',name:'AI recap (large)',primary:'M-RECAP',folds:['M-RECAP'],modes:['large narrative + tone'],use:'An AI plain-language summary of a period, shown as a large readable block.'},
+ {id:'C-RECAP',grp:'AI',name:'AI recap (large)',primary:'M-RECAP',folds:['M-RECAP'],modes:['large narrative + tone'],src:[{ep:'GET /api/stories',fields:['title','narrative','tone','highlights[]']}],use:'An AI plain-language summary of a period, shown as a large readable block.'},
  {id:'C-INSIGHT',grp:'AI',name:'Insight',primary:'',folds:[],tag:'new',modes:['text only (large)','text + chart','text + stats / list','adjustable period'],src:[{ep:'GET /api/household/visual/digests/latest'},{ep:'POST /api/events/insights',fields:['vlm_insight']},{ep:'GET /api/stories',fields:['narrative','why_it_matters','tone']},{ep:'POST /api/events/filter',fields:['event_ts (chart series)']}],use:'The agent’s periodic finding — a large plain-text takeaway on its own, or text plus whatever fits — a chart, stat tiles, or a short list — synthesized from its goal, context and memory. (No single insights endpoint yet — composed from the visual digest, per-event VLM insights, stories, and event counts.) Delivery cadence (daily / weekly / monthly) is set per agent.'},
  {id:'C-ASSIST',grp:'AI',name:'Assistant + suggestions',primary:'',folds:[],tag:'new',modes:['ask · answer','suggestion chips','create-agent'],src:[{ep:'POST /api/chat',fields:['answer','event_cards','media']},{ep:'GET /api/chat/history'},{ep:'POST /api/skills/suggest',fields:['name','instructions','rationale']}],use:'Ask-Home assistant — ask in plain language and get an answer with event / clip cards; offers categorized suggestion chips (insight / memory / config) and can propose a new agent to create.'},
  {id:'C-LEARN',grp:'AI',name:'Learnings card',primary:'',folds:[],tag:'new',modes:['2–3 recent learnings','confidence'],src:[{ep:'GET /api/household/learnings',fields:['fact','category','confidence']},{ep:'GET /api/household/visual/entities/{id}',fields:['page','recent_observations']}],use:'Surfaces 2–3 things the agent has recently learned or remembered (from the compiled household learnings + per-entity knowledge pages).'},
  // ——— Actions & alerts (3) ———
- {id:'C-ACT',grp:'Actions & alerts',name:'Quick actions',primary:'M-ACT',folds:['M-ACT','M-TALK'],modes:['power on / off','two-way talk'],use:'A device action bar — power (on/off toggle icons) and two-way talk. In a generated UI this sits directly under the live view.'},
+ {id:'C-ACT',grp:'Actions & alerts',name:'Quick actions',primary:'M-ACT',folds:['M-ACT','M-TALK'],modes:['power on / off','two-way talk'],src:[{ep:'POST /api/devices/{id}/command',fields:['power_on','power_off']},{ep:'POST /api/devices/{id}/talk',fields:['talk_session_id']},{ep:'GET /api/devices/{id}/state',fields:['power_state','last_change_ts']}],use:'A device action bar — power (on/off toggle icons) and two-way talk. In a generated UI this sits directly under the live view.'},
  {id:'C-DETER',grp:'Actions & alerts',name:'Deterrent',primary:'M-DETER',folds:['M-DETER'],modes:['siren / lights'],use:'A siren / lights deterrent action.'},
  {id:'C-REMINDER',grp:'Actions & alerts',name:'Reminder & schedule',primary:'M-REMINDER',folds:['M-REMINDER'],modes:['schedule','elapsed reminder'],src:[{ep:'GET /api/agents',fields:['triggers (schedule config)']},{ep:'GET /api/household/visual-memories',fields:['status_line']}],use:'A schedule or elapsed-time reminder (e.g. “trash day in 2h”, “not seen since 9am”).'},
  // ——— Escalation (grouped under Actions & alerts) ———
- {id:'C-SOS',grp:'Actions & alerts',name:'Escalation',primary:'M-SOS',folds:['M-SOS'],modes:['caregiver call tree'],use:'An emergency escalation / caregiver call tree.'},
+ {id:'C-SOS',grp:'Actions & alerts',name:'Escalation',primary:'M-SOS',folds:['M-SOS'],modes:['caregiver call tree'],src:[{ep:'GET /api/escalation/contacts',fields:['name','method','priority','phone']}],use:'An emergency escalation / caregiver call tree.'},
 ];
 /* v2.5-only custom renders (keyed by component id). Reuse the same component CSS classes. */
 const sosIco={call:'<path d="M5 4h4l2 5-3 2a11 11 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>',text:'<path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"/>',push:'<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/>'};
 const MOD25={
  'C-AGENT':`<div class="aghome" style="padding:6px 0 4px">`+agCardHTML(AGCARD.night_watcher||{th:{grad:'linear-gradient(150deg,#10182b,#070b14)',tag:'PERSON',tc:'#f25c5c'},state:{w:'PERSON · 2m',c:'#f25c5c'},title:'Unfamiliar at side gate',pri:'P1',time:'2m ago',fresh:true},{name:'Night Watcher'})+`</div>`,
- 'C-STATE':`<div class="panel" style="text-align:center;padding:20px 12px 16px"><div style="font-size:9px;letter-spacing:1px;color:var(--dim);text-transform:uppercase;margin-bottom:7px">Garage door</div><div style="font-size:36px;font-weight:800;letter-spacing:-1.5px;color:#7eecc4;line-height:1">CLOSED</div><div style="font-size:11px;color:var(--mut);margin-top:8px">secure &middot; <span style="font-family:var(--mono);color:#7eecc4;font-weight:700">3h 42m</span></div></div>`+cf15('0.96','State + time-in-state from VLM &middot; tap to correct'),
+ 'C-STATE':`<div class="panel" style="text-align:center;padding:20px 12px 16px"><div class="ml-subj" style="font-size:9px;letter-spacing:1px;color:var(--dim);text-transform:uppercase;margin-bottom:7px">Garage door</div><div class="ml-state" style="font-size:36px;font-weight:800;letter-spacing:-1.5px;color:#7eecc4;line-height:1">CLOSED</div><div style="font-size:11px;color:var(--mut);margin-top:8px"><span class="ml-label">secure</span> &middot; <span class="ml-dur" style="font-family:var(--mono);color:#7eecc4;font-weight:700">3h 42m</span></div></div>`+cf15('0.96','State + time-in-state from VLM &middot; tap to correct'),
  'C-FEED':`<div class="panel"><div class="ph"><b>Entry history</b></div><div class="chips2" style="margin-bottom:8px"><span class="fc on">All &middot; 24</span><span class="fc">Person &middot; 11</span><span class="fc">Vehicle &middot; 6</span><span class="fc">Pet &middot; 7</span></div>`+[['#f25c5c','Vehicle departed','8:02 AM &middot; &ldquo;a car backs out&rdquo;','VEHICLE&middot;92','#4f8ff022','#9cc3f5'],['#34d399','Person entered','7:55 AM &middot; &ldquo;someone walks up&rdquo;','PERSON&middot;88','#34d39922','#7eecc4'],['#f6b73c','Pet in the yard','7:31 AM &middot; &ldquo;a dog crosses&rdquo;','PET&middot;81','#f6b73c22','#f3cd86'],['#9cc3f5','Package dropped','7:12 AM &middot; &ldquo;a box by the door&rdquo;','PKG&middot;76','#a78bfa22','#c4b3f0']].map(([d,t,m,tag,bg,c])=>`<div class="feedrow"><span style="width:6px;height:6px;border-radius:50%;background:${d};flex:none"></span><div class="thumb"></div><div style="flex:1"><div class="ft">${t}</div><div class="fm">${m}</div></div><span class="etag" style="background:${bg};color:${c}">${tag}</span></div>`).join('')+`<button class="dc-more">More &middot; 20 earlier &rsaquo;</button></div>`,
  'C-GROUPED':`<div class="gcard"><div class="gcard-thumb" style="background:linear-gradient(150deg,#b1402f,#5a1c14)"><span class="gcard-gif">&#9654; GIF &middot; 0:06</span><span class="gcard-score" style="background:#f25c5c">score 4/5</span><div class="gcard-grad"></div><div class="gcard-info"><div class="gcard-title">Package delivery</div><div class="gcard-meta">3 clips &middot; Front door &middot; 2:14&ndash;2:17 PM</div></div></div></div>`,
  'C-DAYTREND':`<div class="panel"><div class="ph"><b>Today by hour</b><span class="delta up">&#9650; busier PM</span></div><div class="scrub" style="height:48px">${Array.from({length:24},(_,i)=>{const a=i>=16&&i<=18;const h=a?60+((i*17)%38):8+((i*13)%22);return `<div class="seg" style="height:${h}%;background:${a?'#f6b73c':'#3a5fa0'}"></div>`;}).join('')}<div class="pin" style="left:75%"></div><div class="axis"><span>12a</span><span>6a</span><span>12p</span><span>6p</span><span>now</span></div></div><div class="ngkey" style="margin-top:7px"><span><i style="background:#3a5fa0"></i>events / hr</span><span><i style="background:#f6b73c"></i>peak</span></div></div>`,
  'C-MONTHTREND':`<div class="panel"><div class="ph"><b>June</b><span style="font-size:9px;color:var(--dim);font-family:var(--mono)">142 events &middot; busiest Tue</span></div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;font-size:7px;color:var(--dim);text-align:center;margin-bottom:3px">${['S','M','T','W','T','F','S'].map(d=>`<span>${d}</span>`).join('')}</div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px">${Array.from({length:35},(_,i)=>{const day=i-1;const has=day>=1&&day<=30;const cnt=has?((i*7+3)%9):0;const op=has?Math.min(0.16+cnt/10,1).toFixed(2):0;return `<div style="aspect-ratio:1;border-radius:3px;display:grid;place-items:center;font-size:13px;font-weight:800;color:${cnt>5?'#04231a':'#cfe3ff'};background:${has?`rgba(56,198,219,${op})`:'transparent'}${day===18?';box-shadow:0 0 0 1.5px #fff inset':''}">${has?cnt:''}</div>`;}).join('')}</div><div style="display:flex;justify-content:flex-end;align-items:center;gap:4px;font-size:7.5px;color:var(--dim);margin-top:6px">less<i style="width:9px;height:9px;border-radius:2px;background:rgba(56,198,219,.3)"></i><i style="width:9px;height:9px;border-radius:2px;background:rgba(56,198,219,.6)"></i><i style="width:9px;height:9px;border-radius:2px;background:#38c6db"></i>more</div></div>`,
  'C-INSIGHT':`<div class="panel"><div class="ph"><b>Weekly insight</b><span class="recap"><span class="ai">AI</span></span></div><div class="insbar">${['Daily','Weekly','Monthly'].map(p=>`<span class="insper${p==='Weekly'?' on':''}">${p}</span>`).join('')}<span class="insnext">next Mon 8 AM</span></div><div class="insfind big">Front-door traffic is up <b style="color:#7eecc4">22%</b> this week — visits cluster <b style="color:#e9eef6">1&ndash;3 PM</b>, with Saturday the busiest day.</div><div class="trendbars" style="margin:11px 0 3px">${[40,62,55,78,48,90,70].map((h,i)=>`<div class="tb" style="height:${h}%;${i===5?'background:linear-gradient(#34d399,#1f7a5a)':''}"></div>`).join('')}</div><div class="trendx">${['M','T','W','T','F','S','S'].map(d=>`<span>${d}</span>`).join('')}</div></div>`,
- 'C-RECAP':`<div class="panel"><div class="ph"><b>Morning recap</b><span class="recap"><span class="ai">AI</span></span></div><span class="pvbadge" style="background:#34d39922;color:#7eecc4;font-size:8px;display:inline-block;margin-bottom:10px">ALL CLEAR</span><div style="font-size:16px;line-height:1.5;font-weight:600;color:#e9eef6">Slept <b style="color:#9cc3f5">10h 4m</b> with 2 brief wakings. One true-cry at <b style="color:#f3cd86">2:14</b>, self-settled in 3 min.</div><div style="display:flex;gap:5px;margin-top:11px"><span class="fc" style="font-size:8px">2:14 cry &middot; clip</span><span class="fc" style="font-size:8px">night graph</span></div></div>`,
- 'C-ACT':`<div class="actions" style="margin-bottom:8px"><div class="act primary"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>Power on</div><div class="act"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="8" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>Power off</div></div><div class="actions" style="margin-bottom:8px"><div class="act"><span class="ai">${aIcon('<path d="M3 11l16-5v12L3 13z"/><path d="M9 19a2.5 2.5 0 0 0 4 0"/>')}</span>Two-way talk</div></div><div style="font-size:9px;color:#7eecc4">&#9679; Plug is ON &middot; confirmed 1s ago &middot; <span style="color:var(--dim)">sits under the live view</span></div>`,
- 'C-READOUT':`<div class="panel"><div class="ph"><b>Number readout</b><span style="font-size:9px;color:var(--dim)">OCR &middot; live</span></div><div class="readout"><div class="rn">04857<span style="font-size:18px;color:var(--mut)"> kWh</span></div><div class="ru">utility meter</div><div class="rl">one large value read from the scene</div></div></div>`,
+ 'C-RECAP':`<div class="panel"><div class="ph"><b class="ml-title">Morning recap</b><span class="recap"><span class="ai">AI</span></span></div><span class="pvbadge ml-tone" style="background:#34d39922;color:#7eecc4;font-size:8px;display:inline-block;margin-bottom:10px">ALL CLEAR</span><div class="ml-narrative" style="font-size:16px;line-height:1.5;font-weight:600;color:#e9eef6">Slept <b style="color:#9cc3f5">10h 4m</b> with 2 brief wakings. One true-cry at <b style="color:#f3cd86">2:14</b>, self-settled in 3 min.</div><div class="ml-hi" style="display:flex;gap:5px;margin-top:11px"><span class="fc" style="font-size:8px">2:14 cry &middot; clip</span><span class="fc" style="font-size:8px">night graph</span></div></div>`,
+ 'C-ACT':`<div class="actions" style="margin-bottom:8px"><div class="act primary ml-pon"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>Power on</div><div class="act ml-poff"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="8" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>Power off</div></div><div class="actions" style="margin-bottom:8px"><div class="act ml-talk"><span class="ai">${aIcon('<path d="M3 11l16-5v12L3 13z"/><path d="M9 19a2.5 2.5 0 0 0 4 0"/>')}</span>Two-way talk</div></div><div class="ml-devstate" style="font-size:9px;color:#7eecc4">&#9679; Plug is ON &middot; confirmed 1s ago &middot; <span style="color:var(--dim)">sits under the live view</span></div>`,
+ 'C-READOUT':`<div class="panel"><div class="ph"><b>Number readout</b><span class="ml-conf" style="font-size:9px;color:var(--dim)">OCR &middot; live</span></div><div class="readout"><div class="rn"><span class="ml-value">04857</span><span class="ml-unit" style="font-size:18px;color:var(--mut)"> kWh</span></div><div class="ru ml-meter">utility meter</div><div class="rl">one large value read from the scene</div></div></div>`,
  'C-TILES':`<div class="panel"><div class="ph"><b>Tiles &mdash; metrics + fleet</b><span style="font-size:9px;color:#7eecc4">3 / 4 online</span></div><div class="tilegrid">${[['Garage cam','online &middot; fw 4.36','#34d399'],['Front cam','online &middot; fw 4.36','#34d399'],['Yard cam','online &middot; fw 4.31','#34d399'],['Porch cam','offline &middot; 2h','#f25c5c']].map(([n,s,c])=>`<div class="gtile"><div class="gt-top"><span class="gt-dot" style="background:${c}"></span>${n}</div><div class="gt-sub">${s}</div></div>`).join('')}</div><div class="tilegrid" style="margin-top:7px">${[['38','events today'],['2','need attention'],['97%','uptime 7d']].map(([v,l])=>`<div class="gtile num"><b>${v}</b><span>${l}</span></div>`).join('')}</div></div>`,
  'C-SOS':`<div class="panel"><div class="ph"><b>Escalation contacts</b><span style="font-size:9px;color:var(--dim)">call order</span></div><div class="sosbook">${[['Y','You','Push &middot; this phone','#4f8ff0','push'],['S','Sarah &middot; sister','Call &middot; (415) 555-0142','#f6b73c','call'],['M','Mike &middot; neighbor','Text &middot; (415) 555-0177','#34d399','text'],['D','Dr. Lee','Call &middot; clinic line','#a78bfa','call']].map(([ini,name,method,c,kind],i)=>`<div class="sosc"><span class="sosc-av" style="background:${c}22;color:${c}">${ini}</span><div class="sosc-main"><div class="sosc-name">${name}</div><div class="sosc-method"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco[kind]}</svg>${method}</div></div><span class="sosc-ord">${i+1}</span></div>`).join('')}</div></div>`,
  'C-ASSIST':`<div class="panel"><div class="ph"><b>Ask Home</b><span class="recap"><span class="ai">AI</span></span></div><div class="dc-lab" style="margin:0 0 8px">Suggested questions</div><div class="suglist">${[['#9cc3f5','What did I miss today?'],['#c4b3f0','When does the mail usually come?'],['#7eecc4','Is the garage closed right now?'],['#9cc3f5','Did anyone come to the door?'],['#c4b3f0','Who was the person at 2 PM?']].map(([c,q])=>`<div class="sugq"><i class="sugdot" style="background:${c}"></i><span class="sugq-t">${q}</span><span class="sugq-go">&rarr;</span></div>`).join('')}</div></div>`,
