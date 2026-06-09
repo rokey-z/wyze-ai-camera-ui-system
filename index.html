@@ -97,6 +97,9 @@
   .agemoji{font-size:11px}
   .agt-media{position:relative}
   .agalert{position:absolute;top:3px;right:3px;width:14px;height:14px;border-radius:50%;border:2.5px solid var(--card)}
+  /* when the priority dot sits inline in the timestamp line, render it as a small inline bullet */
+  .agsub .agalert{position:static;display:inline-block;width:8px;height:8px;border:none;margin:0 5px 1px 0;vertical-align:middle}
+  .agms .agsub .agalert{width:6px;height:6px;margin-right:4px}
   .agtitle .agpill{margin:0 auto}
   .agpill{display:inline-block;font-size:12.5px;font-weight:800;letter-spacing:.2px;line-height:1.1;padding:5px 12px;border-radius:999px;white-space:nowrap}
   .agpill-sm{font-size:9px;font-weight:800;padding:3px 8px}
@@ -2118,7 +2121,7 @@ EMIT  -&gt; see §13
         <button class="dc-vertab" data-ver="v1">v1 <span class="dc-vn">42</span></button>
         <button class="dc-vertab" data-ver="v15">v1.5 <span class="dc-vn">42</span></button>
         <button class="dc-vertab" data-ver="v2">v2 <span class="dc-vn">30</span></button>
-        <button class="dc-vertab on" data-ver="v25">v2.5 <span class="dc-vn">25</span> · latest</button>
+        <button class="dc-vertab on" data-ver="v25">v2.5 <span class="dc-vn">26</span> · latest</button>
         <span class="dc-laytoggle" id="dcLayToggle">
           <button class="dc-lay on" data-lay="list" title="List — component + data card + connecting lines">&#9776; List</button>
           <button class="dc-lay" data-lay="grid" title="Grid — components only, hover for data">&#9638; Grid</button>
@@ -3114,7 +3117,6 @@ function agThumb(th){
   if(th.pose) ov.push('<svg class="agt-pose" width="22" height="30" viewBox="0 0 24 30" fill="none" stroke="#4f8ff0" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="4" r="3"/><path d="M12 7v9M12 10l-5 3M12 10l5 3M12 16l-4 8M12 16l4 8"/></svg>');
   if(th.lapse) ov.push('<svg class="agt-lapseic" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="1.6"><path d="M12 21v-9M12 12c0-5 4-8 9-8 0 5-4 8-9 8zM12 14c0-4-4-7-9-7 0 5 4 7 9 7z"/></svg>');
   if(th.day) ov.push(`<span class="agt-day">${th.day}</span>`);
-  if(th.tag) ov.push(`<span class="agt-tag" style="background:${th.tc||'#9cc3f5'}">${th.tag}</span>`);
   return `<div class="agthumb agt-media" style="background:${th.grad}">${ov.join('')}</div>`;
 }
 /* strip trailing duration like " · 2m" / " · 12h" so the state pill shows
@@ -3125,9 +3127,9 @@ function agCardHTML(t,tpl){
   const p=PRI[t.pri]||PRI.P3;
   const st=t.state||{w:t.title,c:p.c};
   const dot=(t.fresh&&p.dot)?`<span class="agalert" style="background:${p.dot}"></span>`:'';
-  return `<div class="agcard${t.off?' agoff':''}"><div class="agthumb-wrap">${agThumb(t.th)}${dot}</div>`
+  return `<div class="agcard${t.off?' agoff':''}"><div class="agthumb-wrap">${agThumb(t.th)}</div>`
     +`<div class="agtitle">${agPill(st.w,st.c)}</div>`
-    +`<div class="agsub">${t.time}</div>`
+    +`<div class="agsub">${dot}${t.time}</div>`
     +`<div class="agname">${tpl.name}</div></div>`;
 }
 function agStates(t,tpl){
@@ -3146,9 +3148,9 @@ function agStates(t,tpl){
     const pill=s.none?agPill('No runs','#93a3bd'):s.run?agPill('Working…','#9cc3f5'):agPill(s.lab,pc);
     const tnew=s.fresh && p.dot && !s.none && !s.run;
     const dot=tnew?`<span class="agalert" style="background:${p.dot}"></span>`:'';
-    return `<div class="agms${s.paused?' agoff':''}"><div class="agthumb-wrap">${thumb}${dot}</div>`
+    return `<div class="agms${s.paused?' agoff':''}"><div class="agthumb-wrap">${thumb}</div>`
       +`<div class="agtitle">${pill}</div>`
-      +`<div class="agsub">${s.time}</div>`
+      +`<div class="agsub">${dot}${s.time}</div>`
       +`<div class="agname">${tpl.name}</div></div>`;
   }).join('');
 }
@@ -3510,10 +3512,10 @@ $('sigRow').innerHTML=SIGNALS.map(([n,d])=>`<span class="sigchip"><b>${n}</b> &m
    the Data check tab only; the Library tab keeps v1. */
 const cf15=(v,t)=>`<div class="conf" style="margin-top:7px;padding:7px 9px"><div class="cd">${t||'VLM confidence · tap a detection to correct'}</div><div class="cv">${v}</div></div>`;
 const MODFULL15={
- 'M-LIVE':`<div class="hero"><div class="videobox" style="background:linear-gradient(165deg,#1d2d49,#0f1828)">${sigTag('live')}<span style="position:absolute;right:7px;top:7px;font-size:7px;font-weight:800;background:#0009;color:#cfe3ff;padding:2px 6px;border-radius:5px">1080p · &#9679; REC</span><div class="vname">Front cam &middot; online</div><div class="vtime">14:09</div></div></div>`,
+ 'M-LIVE':`<div class="hero"><div class="videobox" style="background:linear-gradient(165deg,#1d2d49,#0f1828)">${sigTag('live')}<span class="ml-res" style="position:absolute;right:7px;top:7px;font-size:7px;font-weight:800;background:#0009;color:#cfe3ff;padding:2px 6px;border-radius:5px">1080p · &#9679; REC</span><div class="vname">Front cam &middot; online</div><div class="vtime">14:09</div></div></div>`,
  'M-SNAP':MODFULL['M-SNAP']+cf15('0.94','AI verdict: Closed &middot; 0.94 &middot; tap to correct'),
  'M-CLIP':MODFULL['M-CLIP']+`<div class="scrub" style="height:18px;margin-top:7px"><div style="position:absolute;left:0;top:0;bottom:0;width:38%;background:#4f8ff033"></div><div class="pin" style="left:38%"></div></div>`+cf15('0.91','Trigger: person &middot; 0.91'),
- 'M-FOOTAGE':`<div class="hero" style="margin-bottom:8px"><div class="videobox" style="background:linear-gradient(165deg,#1c2740,#0c1119)"><div class="sigtag" style="background:#5a6b82dd;color:#fff">EVENTS</div><div class="vname">Activity scrubber</div><div class="vtime">last 24h</div></div></div>`+scrub()+`<div class="ghost" style="display:block;margin-top:8px;padding:8px"><div style="font-size:9px;color:var(--dim);text-align:center">24/7 continuous record</div><span class="nodata">NO DATA</span></div>`,
+ 'M-FOOTAGE':`<div class="hero" style="margin-bottom:8px"><div class="videobox" style="background:linear-gradient(165deg,#1c2740,#0c1119)"><div class="sigtag" style="background:#5a6b82dd;color:#fff">EVENTS</div><div class="vname">Activity scrubber</div><div class="vtime">last 24h</div></div></div>`+scrub()+`<div class="ghost" style="display:block;margin-top:8px;padding:8px"><div class="ml-cont" style="font-size:9px;color:var(--dim);text-align:center">24/7 continuous record</div><span class="nodata">NO DATA</span></div>`,
  'M-TIMELAPSE':MODFULL['M-TIMELAPSE']+`<div class="ghost" style="display:block;margin-top:8px;padding:7px 9px"><div style="font-size:9px;color:var(--dim)">Periodic frame store &middot; 1/day</div><span class="nodata">NEEDS STORE</span></div>`,
  'M-REEL':MODFULL['M-REEL']+`<div style="display:flex;gap:3px;margin-top:7px">${[0,1,2,3,4,5,6,7].map(i=>`<div style="flex:1;height:4px;border-radius:2px;background:${i<3?'#a78bfa':'#26344f'}"></div>`).join('')}</div><div style="font-size:9px;color:var(--dim);margin-top:5px">8 clips &middot; auto-compiled</div>`,
  'M-GALLERY':`<div class="panel"><div class="ph"><b>Today&rsquo;s visitors</b><span class="sigtag sig-coll" style="position:static">6</span></div><div class="chips2" style="margin-bottom:8px"><span class="fc on">All 6</span><span class="fc">New 2</span><span class="fc">Songbirds 4</span></div><div class="gallery"><div class="gcell new" style="background:linear-gradient(150deg,#b1402f,#5a1c14)"><span>Cardinal</span></div><div class="gcell" style="background:linear-gradient(150deg,#3a67c4,#16304f)"><span>Blue Jay</span></div><div class="gcell new" style="background:linear-gradient(150deg,#caa23f,#5c4715)"><span>Robin</span></div></div></div>`,
@@ -3908,10 +3910,7 @@ function v2Card(v,opt){
      stays focused on data. */
   const noteHtml=`<div class="dc-note">${v.use}</div>`;
   const rightHtml=
-     (v.folds.length?`<div class="dc-sec"><div class="dc-lab">${merged?'Consolidates':'From v1.5'}</div><div class="dc-contract">${v.folds.map(f=>`<span class="dc-c">${f}</span>`).join('')}</div></div>`:'')
-    +`<div class="dc-sec"><div class="dc-lab">Adjustable modes</div><div class="dc-contract">${v.modes.map(m=>`<span class="dc-c dc-modepill">${m}</span>`).join('')}</div></div>`
-    +`<div class="dc-sec"><div class="dc-lab">Wyze AI One source</div>${dcSources(srcs,v.id)}</div>`
-    +(cv.length?`<div class="dc-cov">${cv.join('')}</div>`:'');
+     `<div class="dc-sec"><div class="dc-lab">Wyze AI One source</div>${dcSources(srcs,v.id)}</div>`;
   return `<div class="dc-row dc-solo"${hasMap?' data-maplines="'+v.id+'"':''}>`
     +(hasMap?'<svg class="dc-maplines" aria-hidden="true"></svg>':'')
     +`<div class="dc-left"><div class="modlive">${comp}</div>`
@@ -3920,7 +3919,7 @@ function v2Card(v,opt){
       +noteHtml
     +`</div>`
     +`<div class="dc-card${hasMap?' dc-card-split':''}">`
-      +`<div class="dc-head"><b>${v.name}</b><span class="dc-badge dc-${vcls}">${badge}</span></div>`
+      +`<div class="dc-head"><b>${v.name}</b></div>`
       +(hasMap
          ?`<div class="dc-card-body"><div class="dc-card-bound">${boundHtml}</div><div class="dc-card-rest">${rightHtml}</div></div>`
          :rightHtml)
@@ -3935,7 +3934,6 @@ function v2Card(v,opt){
 const MAPLINES={
   'C-AGENT':[
     {sel:'.aghome .agcard .agthumb', fld:'thumb_grad', color:'#9cc3f5'},
-    {sel:'.aghome .agcard .agt-tag', fld:'thumb_tag',  color:'#f3cd86'},
     {sel:'.aghome .agcard .agalert', fld:'priority',   color:'#ff9a9a'},
     {sel:'.aghome .agcard .agpill',  fld:'state.w',    color:'#7eecc4'},
     {sel:'.aghome .agcard .agsub',   fld:'last_run_ts',color:'#c4b3f0'},
@@ -3945,13 +3943,15 @@ const MAPLINES={
     {sel:'.ml-subj',  fld:'subject',         color:'#9cc3f5'},
     {sel:'.ml-state', fld:'state.w',         color:'#7eecc4'},
     {sel:'.ml-label', fld:'state.label',     color:'#c4b3f0'},
-    {sel:'.ml-dur',   fld:'state.since_ts',  color:'#f3cd86'}
+    {sel:'.ml-dur',   fld:'state.since_ts',  color:'#f3cd86'},
+    {sel:'.cv',       fld:'confidence',      color:'#93a3bd'}
   ],
   'C-FEED':[
-    {sel:'.chips2 .fc.on',   fld:'event_count', color:'#9cc3f5'},
-    {sel:'.feedrow .ft',     fld:'event_ts',    color:'#7eecc4'},
-    {sel:'.feedrow .fm',     fld:'vlm_caption', color:'#c4b3f0'},
-    {sel:'.feedrow .etag',   fld:'tag_conf',    color:'#f3cd86'}
+    {sel:'.chips2 .fc.on',      fld:'event_count', color:'#9cc3f5'},
+    {sel:'.chips2 .fc:not(.on)',fld:'categories[]',color:'#93a3bd'},
+    {sel:'.feedrow .ft',        fld:'event_ts',    color:'#7eecc4'},
+    {sel:'.feedrow .fm',        fld:'vlm_insight', color:'#c4b3f0'},
+    {sel:'.feedrow .etag',      fld:'tag_conf',    color:'#f3cd86'}
   ],
   'C-RECAP':[
     {sel:'.ml-title',     fld:'title',       color:'#9cc3f5'},
@@ -3975,6 +3975,111 @@ const MAPLINES={
     {sel:'.sosc .sosc-name',   fld:'name',     color:'#9cc3f5'},
     {sel:'.sosc .sosc-method', fld:'method',   color:'#7eecc4'},
     {sel:'.sosc .sosc-ord',    fld:'priority', color:'#f3cd86'}
+  ],
+  'C-GROUPED':[
+    {sel:'.gcard-title', fld:'title',       color:'#9cc3f5'},
+    {sel:'.gcard-gif',   fld:'gif_url',     color:'#c4b3f0'},
+    {sel:'.gcard-score', fld:'score',       color:'#f3cd86'},
+    {sel:'.gcard-meta',  fld:'event_count', color:'#7eecc4'}
+  ],
+  'C-DAYTREND':[
+    {sel:'.scrub .seg', fld:'event_ts', color:'#9cc3f5'},
+    {sel:'.delta',      fld:'peak',     color:'#f3cd86'}
+  ],
+  'C-MONTHTREND':[
+    {sel:'.ml-month',   fld:'date',         color:'#9cc3f5'},
+    {sel:'.ml-mtotal',  fld:'total_events', color:'#7eecc4'},
+    {sel:'.ml-daycell', fld:'daily_count',  color:'#f3cd86'}
+  ],
+  'C-INSIGHT':[
+    {sel:'.insfind',       fld:'narrative', color:'#7eecc4'},
+    {sel:'.insper.on',     fld:'cadence',   color:'#c4b3f0'},
+    {sel:'.insnext',       fld:'next_run',  color:'#f3cd86'},
+    {sel:'.trendbars .tb', fld:'event_ts',  color:'#9cc3f5'}
+  ],
+  'C-TILES':[
+    {sel:'.ml-fleet',         fld:'online_count', color:'#34d399'},
+    {sel:'.tilegrid .gt-top', fld:'device_name',  color:'#9cc3f5'},
+    {sel:'.tilegrid .gt-sub', fld:'firmware_ver', color:'#7eecc4'},
+    {sel:'.kpi0 b',           fld:'event_count',  color:'#f3cd86'},
+    {sel:'.kpi1 b',           fld:'alerts_count', color:'#ff9a9a'},
+    {sel:'.kpi2 b',           fld:'uptime',       color:'#93a3bd'}
+  ],
+  'C-ASSIST':[
+    {sel:'.sugq-t', fld:'suggestion', color:'#c4b3f0'}
+  ],
+  'C-LEARN':[
+    {sel:'.learnrow .ft',    fld:'fact',       color:'#7eecc4'},
+    {sel:'.learnrow .fm',    fld:'category',   color:'#9cc3f5'},
+    {sel:'.learnrow .lconf', fld:'confidence', color:'#f3cd86'}
+  ],
+  'C-LIVE':[
+    {sel:'.videobox', fld:'signaling_url',  color:'#9cc3f5'},
+    {sel:'.vname',    fld:'is_on',          color:'#7eecc4'},
+    {sel:'.ml-res',   fld:'resolution',     color:'#f3cd86'},
+    {sel:'.vtime',    fld:'recording_time', color:'#93a3bd'}
+  ],
+  'C-RECVIDEO':[
+    {sel:'.scrub .seg', fld:'event_ts',          color:'#9cc3f5'},
+    {sel:'.ml-cont',    fld:'continuous_record', color:'#ff9a9a'}
+  ],
+  'C-SNAP':[
+    {sel:'.videobox', fld:'url',               color:'#9cc3f5'},
+    {sel:'.annbadge', fld:'bbox_xywh',         color:'#f3cd86'},
+    {sel:'.fsub',     fld:'captured_at',       color:'#7eecc4'},
+    {sel:'.fs',       fld:'video_description', color:'#c4b3f0'},
+    {sel:'.cv',       fld:'confidence',        color:'#93a3bd'}
+  ],
+  'C-TIMELAPSE':[
+    {sel:'.lapsetrack', fld:'frame_sequence', color:'#9cc3f5'},
+    {sel:'.vname',      fld:'device_name',    color:'#7eecc4'},
+    {sel:'.vtime',      fld:'frame_day',      color:'#f3cd86'},
+    {sel:'.ld2',        fld:'frame_count',    color:'#93a3bd'}
+  ],
+  'C-GALLERY':[
+    {sel:'.gallery .gcell',      fld:'thumbnail_url', color:'#9cc3f5'},
+    {sel:'.gallery .gcell span', fld:'identity_name', color:'#c4b3f0'},
+    {sel:'.sig-coll',            fld:'count',         color:'#f3cd86'},
+    {sel:'.chips2 .fc.on',       fld:'ai_tags',       color:'#7eecc4'},
+    {sel:'.chips2 .fc:not(.on)', fld:'entity_type',   color:'#93a3bd'}
+  ],
+  'C-MULTIVIEW':[
+    {sel:'.gallery .gcell', fld:'device_name',   color:'#9cc3f5'},
+    {sel:'.sig-multi',      fld:'signaling_url', color:'#7eecc4'}
+  ],
+  'C-LOG':[
+    {sel:'.logrow .lt', fld:'created_at',  color:'#9cc3f5'},
+    {sel:'.logrow .lv', fld:'status_line', color:'#7eecc4'},
+    {sel:'.logrow .ld', fld:'delta',       color:'#f3cd86'}
+  ],
+  'C-VISIT':[
+    {sel:'.tsrow .tm',      fld:'timestamp_ms',     color:'#9cc3f5'},
+    {sel:'.tsrow .cliptip', fld:'thumbnail_url',    color:'#c4b3f0'},
+    {sel:'.tsrow .ctg',     fld:'clip_url',         color:'#7eecc4'},
+    {sel:'.tsrow .dd',      fld:'event_ts',         color:'#f3cd86'},
+    {sel:'.tsrow .ds',      fld:'verify_status',    color:'#ff9a9a'},
+    {sel:'.cv',             fld:'match_confidence', color:'#93a3bd'}
+  ],
+  'C-IDCARD':[
+    {sel:'.idcard .nm',   fld:'identity_name',      color:'#9cc3f5'},
+    {sel:'.idcard .sci',  fld:'attributes',         color:'#c4b3f0'},
+    {sel:'.idcard .pic',  fld:'image_url',          color:'#7eecc4'},
+    {sel:'.idcard .meta', fld:'last_recognized_ts', color:'#f3cd86'},
+    {sel:'.pvbadge',      fld:'is_known_identity',  color:'#34d399'},
+    {sel:'.cv',           fld:'match_confidence',   color:'#93a3bd'}
+  ],
+  'C-TREND':[
+    {sel:'.trendbars .tb', fld:'event_ts',    color:'#9cc3f5'},
+    {sel:'.delta',         fld:'trend_delta', color:'#f3cd86'}
+  ],
+  'C-DETER':[
+    {sel:'.act.danger',    fld:'siren',         color:'#f3cd86'},
+    {sel:'.act:not(.danger)',fld:'lights',      color:'#9cc3f5'},
+    {sel:'.toggle',        fld:'auto_escalate', color:'#93a3bd'}
+  ],
+  'C-REMINDER':[
+    {sel:'.reminder b',    fld:'triggers',    color:'#7eecc4'},
+    {sel:'.reminder span', fld:'status_line', color:'#9cc3f5'}
   ]
 };
 /* Per-component field availability in the Wyze codebase today.
@@ -3982,31 +4087,110 @@ const MAPLINES={
    mark on every data-tag chip (bound list + endpoint sections). */
 const FIELD_STATUS={
   'C-AGENT':{
-    have:    ['id','name','icon','template_id','last_run_ts','fresh','signal_type'],
-    missing: ['priority','state.w','state.c','thumb_grad','thumb_tag']
+    // GET /api/agents (agent_id, identity.name, provenance.template_id, triggers) +
+    // GET /api/household/visual-memories (runs[].status_line/relevance_score/created_at).
+    // No agents/{id}/state or /thumb endpoint, no icon/priority field today.
+    have:    ['agent_id','name','template_id','triggers','last_run_ts','status_line','relevance_score'],
+    missing: ['icon','priority','state.w','state.c','fresh','thumb_grad','signal_type']
   },
   'C-STATE':{
-    have:    ['subject','state.since_ts'],
-    missing: ['state.w','state.label']
+    // Present-tense state is the VLM status_line from visual-memories (freetext);
+    // there is no structured state word / label / since-timestamp field.
+    have:    ['status_line'],
+    missing: ['subject','state.w','state.label','state.since_ts','confidence']
   },
   'C-FEED':{
-    have:    ['event_ts','tag_list','tag_conf','event_count','categories[]'],
-    missing: ['vlm_caption']
+    // events/filter (event_ts, tag_list, event_resources) + events/insights (vlm_insight)
+    // + events/tags (categories). No per-tag confidence or root event_count on filter.
+    have:    ['event_ts','tag_list','event_resources','vlm_insight','categories[]'],
+    missing: ['tag_conf','event_count']
   },
   'C-RECAP':{
-    have:    ['title','narrative','highlights[]'],
-    missing: ['tone']
+    // GET /api/stories returns title, narrative, tone, highlights — all present.
+    have:    ['title','narrative','highlights[]','tone'],
+    missing: []
   },
   'C-ACT':{
-    have:    ['power_on','power_off','power_state','last_change_ts','talk_session_id']
+    // power_on / power_off / power_status (is_on) exist. No two-way-talk endpoint,
+    // and power_status has no last_change_ts.
+    have:    ['power_on','power_off','power_state'],
+    missing: ['talk_session_id','last_change_ts']
   },
   'C-READOUT':{
-    have:    ['value','unit','meter_label'],
-    missing: ['confidence']
+    // capture_snapshot.url is real; the numeric read is VLM-derived — there is no
+    // OCR endpoint, so value/unit/meter_label/confidence are not API fields.
+    have:    ['url'],
+    missing: ['value','unit','meter_label','confidence']
   },
   'C-SOS':{
-    have:    ['name','method','priority','phone']
-  }
+    // Closest is GET /api/household/profile (members[].name). No escalation-tree
+    // store, so method / priority / phone are not available.
+    have:    ['name'],
+    missing: ['method','priority','phone']
+  },
+  'C-GROUPED':{
+    // GET /api/eventgroups (title, score, event_count) + artifact.gif_url — all real.
+    have:    ['title','score','event_count','gif_url','group_id','clip_urls'],
+    missing: []
+  },
+  'C-DAYTREND':{
+    // Hourly bars are binned from events/filter event_ts; the peak callout and
+    // night-graph segments are derived (no session-segmentation store).
+    have:    ['event_ts'],
+    missing: ['peak']
+  },
+  'C-MONTHTREND':{
+    // eventgroups/digest gives date + total_events; per-day cells derive from event_ts.
+    have:    ['date','total_events','daily_count'],
+    missing: []
+  },
+  'C-INSIGHT':{
+    // Composed: stories.narrative + events/filter event_ts series + events insights.
+    have:    ['narrative','event_ts','vlm_insight','tone','why_it_matters','cadence','next_run'],
+    missing: []
+  },
+  'C-TILES':{
+    // devices/home (device_name, is_online, firmware_ver) + eventgroups.event_count.
+    // Camera vitals (pulse/temp) are not available.
+    have:    ['device_name','is_online','firmware_ver','event_count','online_count','alerts_count'],
+    missing: ['vitals','uptime']
+  },
+  'C-ASSIST':{
+    // skills/suggest (name, rationale, instructions) is real; /api/chat is an SSE
+    // stream (answer not a JSON field) and there is no suggested-questions endpoint.
+    have:    ['name','instructions','rationale','messages[]'],
+    missing: ['answer','suggestion']
+  },
+  'C-LEARN':{
+    // GET /api/household/learnings → fact, category, confidence — all real.
+    have:    ['fact','category','confidence'],
+    missing: []
+  },
+  // --- Stage C: components on shared module previews ---
+  'C-LIVE':{      // stream_params + power_status are real; resolution/recording not returned
+    have:['signaling_url','auth_token','ice_servers','is_on'], missing:['resolution','recording_time'] },
+  'C-RECVIDEO':{  // activity scrub from events/filter event_ts; no 24/7 record index
+    have:['event_ts'], missing:['continuous_record'] },
+  'C-SNAP':{      // capture_snapshot + thumbnails + eventgroup artifact overlays; VLM verdict conf derived
+    have:['url','content_type','captured_at','bbox_xywh','video_description'], missing:['confidence'] },
+  'C-TIMELAPSE':{ // device_name is real; no frame-sequence store at all
+    have:['device_name'], missing:['frame_sequence','frame_day','frame_count'] },
+  'C-GALLERY':{   // eventgroups + reid identities
+    have:['ai_tags','thumbnail_url','entity_type','image_url','identity_name','count'], missing:[] },
+  'C-MULTIVIEW':{ // devices/home + stream_params; aligned-pair store missing
+    have:['device_name','device_mac','signaling_url'], missing:[] },
+  'C-LOG':{       // visual-memories status_line/summary/created_at; delta is derived
+    have:['status_line','summary','created_at'], missing:['delta'] },
+  'C-VISIT':{     // reid appearances + events/filter + events/video_url; verify/conf derived
+    have:['event_ts','tag_list','timestamp_ms','thumbnail_url','device_mac','clip_url'], missing:['verify_status','match_confidence'] },
+  'C-IDCARD':{    // reid/identities — full record; per-match confidence not returned
+    have:['identity_name','image_url','last_recognized_ts','is_known_identity','entity_type','attributes'], missing:['match_confidence'] },
+  'C-TREND':{     // events/filter event_ts counts; period-delta derived
+    have:['event_ts'], missing:['trend_delta'] },
+  'C-DETER':{     // no siren/lights/deterrent endpoint
+    have:[], missing:['siren','lights','auto_escalate'] },
+  'C-REMINDER':{  // agents.triggers (schedule) + visual-memories status_line
+    have:['triggers','status_line'], missing:[] }
 };
 function fieldStatus(compId,fld){
   const fs=FIELD_STATUS[compId]; if(!fs) return null;
@@ -4019,35 +4203,35 @@ function fieldStatMark(st){
   if(st==='missing') return ' <i class="fmark fmark-missing" title="Not in Wyze API yet">&#10007;</i>';
   return '';
 }
-/* ---------- v2.5 — trimmed realistic set (24): retire library-ish, repurpose a few, + Learnings ---------- */
+/* ---------- v2.5 — trimmed realistic set (26): retire library-ish, repurpose a few, + Learnings ---------- */
 const V25=[
  // ——— Agent surfaces (1) ———
  {id:'C-AGENT',grp:'Agent surfaces',name:'Agent widget',primary:'',folds:[],tag:'new',
   modes:['signal thumb','priority dot','state pill','timestamp','template name','7 card states'],
   src:[
-    {ep:'GET /api/agents',fields:['id','name','icon','template_id','priority']},
-    {ep:'GET /api/agents/{id}/state',fields:['state.w (state word)','state.c (state color)','last_run_ts','fresh']},
-    {ep:'GET /api/agents/{id}/thumb',fields:['thumb_grad','thumb_tag','signal_type (live/snap/score…)']}
+    {ep:'GET /api/agents',fields:['agent_id','name (identity.name)','template_id (provenance.template_id)','triggers']},
+    {ep:'GET /api/household/visual-memories',fields:['status_line','relevance_score','last_run_ts (runs[].created_at)']},
+    {ep:'— not in API yet (no state/thumb endpoint, no icon/priority field)',fields:['state.w','state.c','fresh','thumb_grad','signal_type','icon','priority']}
   ],
   use:'The agent\'s home-wall entry. A tappable widget showing the latest signal (rounded thumb), the current state (color pill), how recent it is, and the template name. Tap to open the agent panel. Renders identically in 7 card states: action required / needs attention / all clear / quiet / running / no runs / paused.'},
  // ——— Camera surfaces (4) ———
  {id:'C-LIVE',grp:'Camera surfaces',name:'Live view',primary:'M-LIVE',folds:['M-LIVE','M-PTZ'],modes:['live','pan / tilt / zoom'],use:'Real-time stream; PTZ controls when supported. Action controls render directly under this in a generated UI.'},
  {id:'C-RECVIDEO',grp:'Camera surfaces',name:'Continuous record',primary:'M-FOOTAGE',folds:['M-FOOTAGE'],modes:['24/7 scrub'],use:'The full continuous 24/7 record, scrubbable. (Standalone event-clip module dropped — clips live in Grouped clips.)'},
- {id:'C-SNAP',grp:'Camera surfaces',name:'Snapshot',primary:'M-SNAP',folds:['M-SNAP'],modes:['single still'],use:'A single still frame on demand or on event.'},
+ {id:'C-SNAP',grp:'Camera surfaces',name:'Snapshot',primary:'M-SNAP',folds:['M-SNAP'],modes:['single still'],src:[{ep:'POST /api/devices/{mac}/capture_snapshot',fields:['url','content_type']},{ep:'POST /api/devices/thumbnails',fields:['captured_at']},{ep:'GET /api/eventgroups/{id}/artifact',fields:['bbox_xywh','video_description']}],use:'A single still frame on demand or on event. Annotated/fused overlays come from the eventgroup artifact.'},
  {id:'C-TIMELAPSE',grp:'Camera surfaces',name:'Time-lapse',primary:'M-TIMELAPSE',folds:['M-TIMELAPSE'],modes:['accelerated sequence'],use:'A long span compressed into an accelerated sequence.'},
  // ——— Collections (3) ———
  {id:'C-GALLERY',grp:'Collections',name:'Gallery',primary:'M-GALLERY',folds:['M-GALLERY'],modes:['browsable collection'],use:'A browsable image collection grouped by entity.'},
  {id:'C-MULTIVIEW',grp:'Collections',name:'Multi-view',primary:'M-GRID',folds:['M-COMPARE','M-GRID'],modes:['compare pair','synced grid'],use:'A before/after pair, or a synchronized multi-camera grid.'},
  {id:'C-GROUPED',grp:'Collections',name:'Grouped clips',primary:'M-REEL',folds:['M-REEL','M-GROUPS'],modes:['groups by event','score-ranked','clip thumbs'],src:[{ep:'GET /api/eventgroups',fields:['group_id','title','score','event_count','clip_urls']},{ep:'GET /api/eventgroups/{id}/artifact',fields:['gif_url','chips']}],use:'Clips bucketed into event groups like the home wall — title, clip count, score-ranked, with thumbnails. Replaces the highlight reel and clips-by-trigger.'},
  // ——— Records & lists (4) ———
- {id:'C-FEED',grp:'Records & lists',name:'Event feed',primary:'M-FEED',folds:['M-FEED'],modes:['tagged cards','filter chips','load more'],src:[{ep:'POST /api/events/filter',fields:['event_ts','tag_list','tag_conf','event_count']},{ep:'POST /api/events/insights',fields:['vlm_caption']},{ep:'GET /api/events/filter-categories',fields:['categories[]']}],use:'AI-tagged event cards with filter chips — shows several rows with a More button to page further back.'},
+ {id:'C-FEED',grp:'Records & lists',name:'Event feed',primary:'M-FEED',folds:['M-FEED'],modes:['tagged cards','filter chips','load more'],src:[{ep:'POST /api/events/filter',fields:['event_ts','tag_list','event_resources']},{ep:'POST /api/events/insights',fields:['vlm_insight (video_description)']},{ep:'GET /api/events/tags',fields:['categories[] (event_tags)']},{ep:'— not on events/filter (UI-aggregated)',fields:['tag_conf','event_count']}],use:'AI-tagged event cards with filter chips — shows several rows with a More button to page further back.'},
  {id:'C-LOG',grp:'Records & lists',name:'Log / journal',primary:'M-LOG',folds:['M-LOG','M-JOURNAL'],modes:['running log','narrative journal'],src:[{ep:'GET /api/household/visual-memories',fields:['status_line','summary']},{ep:'GET /api/stories'}],use:'A timestamped record — a terse running log, or a narrative journal.'},
- {id:'C-VISIT',grp:'Records & lists',name:'Visit sheet',primary:'M-TIMESHEET',folds:['M-TIMESHEET'],modes:['arrival / departure rows'],src:[{ep:'POST /api/events/filter',fields:['event_ts','tag_list']},{ep:'GET /api/reid/identities/{id}/appearances'}],use:'Attendance / visit verification — arrival, departure and dwell per subject.'},
+ {id:'C-VISIT',grp:'Records & lists',name:'Visit sheet',primary:'M-TIMESHEET',folds:['M-TIMESHEET'],modes:['arrival / departure rows'],src:[{ep:'POST /api/events/filter',fields:['event_ts','tag_list']},{ep:'GET /api/reid/identities/{id}/appearances',fields:['device_mac','timestamp_ms','thumbnail_url']}],use:'Attendance / visit verification — arrival, departure and dwell per subject.'},
  {id:'C-IDCARD',grp:'Records & lists',name:'Identity card',primary:'M-IDCARD',folds:['M-IDCARD'],modes:['recognized subject'],use:'A recognized-subject detail card (face / plate, last seen, appearances).'},
  // ——— Status & readouts (3) ———
- {id:'C-STATE',grp:'Status & readouts',name:'State (large)',primary:'M-STATE',folds:['M-STATE'],modes:['big state word + duration'],src:[{ep:'GET /api/agents/{id}',fields:['subject']},{ep:'GET /api/agents/{id}/state',fields:['state.w (state word)','state.label','state.since_ts']}],use:'The current state shown as a large word with how long it has held.'},
- {id:'C-TILES',grp:'Status & readouts',name:'Tiles (metrics + fleet)',primary:'M-VITALS',folds:['M-VITALS','M-KPI','M-DEVMAP','M-HEALTH'],modes:['metric tiles','device / fleet health'],use:'A grid of tiles — live vitals or headline KPIs, plus per-device fleet health (online + firmware). Combines the metric tiles and the fleet roll-up into one grid.'},
- {id:'C-READOUT',grp:'Status & readouts',name:'Number readout',primary:'M-READOUT',folds:['M-READOUT','M-GAUGE'],modes:['large number / OCR'],src:[{ep:'POST /api/ocr/read',fields:['value','unit','confidence']},{ep:'GET /api/agents/{id}',fields:['meter_label']}],use:'One large number read from the scene — meter, count, or a gauge value as a number. (Score ring dropped.)'},
+ {id:'C-STATE',grp:'Status & readouts',name:'State (large)',primary:'M-STATE',folds:['M-STATE'],modes:['big state word + duration'],src:[{ep:'GET /api/household/visual-memories',fields:['status_line']},{ep:'— parsed from status_line (no structured state field)',fields:['subject','state.w (state word)','state.label','state.since_ts']}],use:'The current state shown as a large word with how long it has held. The present-tense state is the VLM status_line ("Door closed (3h)"); the word, label and duration are parsed from it.'},
+ {id:'C-TILES',grp:'Status & readouts',name:'Tiles (metrics + fleet)',primary:'M-VITALS',folds:['M-VITALS','M-KPI','M-DEVMAP','M-HEALTH'],modes:['metric tiles','device / fleet health'],src:[{ep:'GET /api/devices/home',fields:['device_name','is_online','firmware_ver']},{ep:'GET /api/eventgroups',fields:['event_count']},{ep:'— camera vitals not available',fields:['vitals']}],use:'A grid of tiles — live vitals or headline KPIs, plus per-device fleet health (online + firmware). Combines the metric tiles and the fleet roll-up into one grid. Vitals (pulse/temp) are not camera-derivable.'},
+ {id:'C-READOUT',grp:'Status & readouts',name:'Number readout',primary:'M-READOUT',folds:['M-READOUT','M-GAUGE'],modes:['large number / OCR'],src:[{ep:'POST /api/devices/{mac}/capture_snapshot',fields:['url']},{ep:'— VLM read (tools/vlm.py); no OCR endpoint',fields:['value','unit','meter_label','confidence']}],use:'One large number read from the scene — meter, count, or a gauge value as a number. The frame is real (capture_snapshot); the number itself is VLM-derived (no OCR endpoint). (Score ring dropped.)'},
  // ——— Charts & trends (3) ———
  {id:'C-DAYTREND',grp:'Charts & trends',name:'Day trend',primary:'M-SCRUB',folds:['M-SCRUB','M-NIGHTGRAPH'],modes:['today by hour'],use:'Activity across today by hour — combines the scrubber and night-graph into one day view.'},
  {id:'C-TREND',grp:'Charts & trends',name:'Week trend',primary:'M-TREND',folds:['M-TREND'],modes:['this week by day'],use:'A metric across the last 7 days.'},
@@ -4055,14 +4239,14 @@ const V25=[
  // ——— AI (4) ———
  {id:'C-RECAP',grp:'AI',name:'AI recap (large)',primary:'M-RECAP',folds:['M-RECAP'],modes:['large narrative + tone'],src:[{ep:'GET /api/stories',fields:['title','narrative','tone','highlights[]']}],use:'An AI plain-language summary of a period, shown as a large readable block.'},
  {id:'C-INSIGHT',grp:'AI',name:'Insight',primary:'',folds:[],tag:'new',modes:['text only (large)','text + chart','text + stats / list','adjustable period'],src:[{ep:'GET /api/household/visual/digests/latest'},{ep:'POST /api/events/insights',fields:['vlm_insight']},{ep:'GET /api/stories',fields:['narrative','why_it_matters','tone']},{ep:'POST /api/events/filter',fields:['event_ts (chart series)']}],use:'The agent’s periodic finding — a large plain-text takeaway on its own, or text plus whatever fits — a chart, stat tiles, or a short list — synthesized from its goal, context and memory. (No single insights endpoint yet — composed from the visual digest, per-event VLM insights, stories, and event counts.) Delivery cadence (daily / weekly / monthly) is set per agent.'},
- {id:'C-ASSIST',grp:'AI',name:'Assistant + suggestions',primary:'',folds:[],tag:'new',modes:['ask · answer','suggestion chips','create-agent'],src:[{ep:'POST /api/chat',fields:['answer','event_cards','media']},{ep:'GET /api/chat/history'},{ep:'POST /api/skills/suggest',fields:['name','instructions','rationale']}],use:'Ask-Home assistant — ask in plain language and get an answer with event / clip cards; offers categorized suggestion chips (insight / memory / config) and can propose a new agent to create.'},
+ {id:'C-ASSIST',grp:'AI',name:'Assistant + suggestions',primary:'',folds:[],tag:'new',modes:['ask · answer','suggestion chips','create-agent'],src:[{ep:'POST /api/chat (SSE stream)',fields:['answer (streamed tokens)']},{ep:'GET /api/chat/history',fields:['messages[]']},{ep:'POST /api/skills/suggest',fields:['name','instructions','rationale']},{ep:'— no suggested-questions endpoint',fields:['suggestion']}],use:'Ask-Home assistant — ask in plain language and get an answer with event / clip cards; offers categorized suggestion chips (insight / memory / config) and can propose a new agent to create.'},
  {id:'C-LEARN',grp:'AI',name:'Learnings card',primary:'',folds:[],tag:'new',modes:['2–3 recent learnings','confidence'],src:[{ep:'GET /api/household/learnings',fields:['fact','category','confidence']},{ep:'GET /api/household/visual/entities/{id}',fields:['page','recent_observations']}],use:'Surfaces 2–3 things the agent has recently learned or remembered (from the compiled household learnings + per-entity knowledge pages).'},
  // ——— Actions & alerts (3) ———
- {id:'C-ACT',grp:'Actions & alerts',name:'Quick actions',primary:'M-ACT',folds:['M-ACT','M-TALK'],modes:['power on / off','two-way talk'],src:[{ep:'POST /api/devices/{id}/command',fields:['power_on','power_off']},{ep:'POST /api/devices/{id}/talk',fields:['talk_session_id']},{ep:'GET /api/devices/{id}/state',fields:['power_state','last_change_ts']}],use:'A device action bar — power (on/off toggle icons) and two-way talk. In a generated UI this sits directly under the live view.'},
+ {id:'C-ACT',grp:'Actions & alerts',name:'Quick actions',primary:'M-ACT',folds:['M-ACT','M-TALK'],modes:['power on / off','two-way talk'],src:[{ep:'POST /api/devices/{mac}/power_on',fields:['power_on (success)']},{ep:'POST /api/devices/{mac}/power_off',fields:['power_off (success)']},{ep:'GET /api/devices/{mac}/power_status',fields:['power_state (is_on)']},{ep:'— no two-way-talk endpoint yet',fields:['talk_session_id','last_change_ts']}],use:'A device action bar — power (on/off toggle icons) and two-way talk. In a generated UI this sits directly under the live view.'},
  {id:'C-DETER',grp:'Actions & alerts',name:'Deterrent',primary:'M-DETER',folds:['M-DETER'],modes:['siren / lights'],use:'A siren / lights deterrent action.'},
  {id:'C-REMINDER',grp:'Actions & alerts',name:'Reminder & schedule',primary:'M-REMINDER',folds:['M-REMINDER'],modes:['schedule','elapsed reminder'],src:[{ep:'GET /api/agents',fields:['triggers (schedule config)']},{ep:'GET /api/household/visual-memories',fields:['status_line']}],use:'A schedule or elapsed-time reminder (e.g. “trash day in 2h”, “not seen since 9am”).'},
  // ——— Escalation (grouped under Actions & alerts) ———
- {id:'C-SOS',grp:'Actions & alerts',name:'Escalation',primary:'M-SOS',folds:['M-SOS'],modes:['caregiver call tree'],src:[{ep:'GET /api/escalation/contacts',fields:['name','method','priority','phone']}],use:'An emergency escalation / caregiver call tree.'},
+ {id:'C-SOS',grp:'Actions & alerts',name:'Escalation',primary:'M-SOS',folds:['M-SOS'],modes:['caregiver call tree'],src:[{ep:'GET /api/household/profile',fields:['name (members[].name)']},{ep:'— no escalation-tree store yet',fields:['method','priority','phone']}],use:'An emergency escalation / caregiver call tree. Members come from the household profile; the call-order / method / phone tree is not stored yet.'},
 ];
 /* v2.5-only custom renders (keyed by component id). Reuse the same component CSS classes. */
 const sosIco={call:'<path d="M5 4h4l2 5-3 2a11 11 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>',text:'<path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"/>',push:'<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/>'};
@@ -4072,12 +4256,12 @@ const MOD25={
  'C-FEED':`<div class="panel"><div class="ph"><b>Entry history</b></div><div class="chips2" style="margin-bottom:8px"><span class="fc on">All &middot; 24</span><span class="fc">Person &middot; 11</span><span class="fc">Vehicle &middot; 6</span><span class="fc">Pet &middot; 7</span></div>`+[['#f25c5c','Vehicle departed','8:02 AM &middot; &ldquo;a car backs out&rdquo;','VEHICLE&middot;92','#4f8ff022','#9cc3f5'],['#34d399','Person entered','7:55 AM &middot; &ldquo;someone walks up&rdquo;','PERSON&middot;88','#34d39922','#7eecc4'],['#f6b73c','Pet in the yard','7:31 AM &middot; &ldquo;a dog crosses&rdquo;','PET&middot;81','#f6b73c22','#f3cd86'],['#9cc3f5','Package dropped','7:12 AM &middot; &ldquo;a box by the door&rdquo;','PKG&middot;76','#a78bfa22','#c4b3f0']].map(([d,t,m,tag,bg,c])=>`<div class="feedrow"><span style="width:6px;height:6px;border-radius:50%;background:${d};flex:none"></span><div class="thumb"></div><div style="flex:1"><div class="ft">${t}</div><div class="fm">${m}</div></div><span class="etag" style="background:${bg};color:${c}">${tag}</span></div>`).join('')+`<button class="dc-more">More &middot; 20 earlier &rsaquo;</button></div>`,
  'C-GROUPED':`<div class="gcard"><div class="gcard-thumb" style="background:linear-gradient(150deg,#b1402f,#5a1c14)"><span class="gcard-gif">&#9654; GIF &middot; 0:06</span><span class="gcard-score" style="background:#f25c5c">score 4/5</span><div class="gcard-grad"></div><div class="gcard-info"><div class="gcard-title">Package delivery</div><div class="gcard-meta">3 clips &middot; Front door &middot; 2:14&ndash;2:17 PM</div></div></div></div>`,
  'C-DAYTREND':`<div class="panel"><div class="ph"><b>Today by hour</b><span class="delta up">&#9650; busier PM</span></div><div class="scrub" style="height:48px">${Array.from({length:24},(_,i)=>{const a=i>=16&&i<=18;const h=a?60+((i*17)%38):8+((i*13)%22);return `<div class="seg" style="height:${h}%;background:${a?'#f6b73c':'#3a5fa0'}"></div>`;}).join('')}<div class="pin" style="left:75%"></div><div class="axis"><span>12a</span><span>6a</span><span>12p</span><span>6p</span><span>now</span></div></div><div class="ngkey" style="margin-top:7px"><span><i style="background:#3a5fa0"></i>events / hr</span><span><i style="background:#f6b73c"></i>peak</span></div></div>`,
- 'C-MONTHTREND':`<div class="panel"><div class="ph"><b>June</b><span style="font-size:9px;color:var(--dim);font-family:var(--mono)">142 events &middot; busiest Tue</span></div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;font-size:7px;color:var(--dim);text-align:center;margin-bottom:3px">${['S','M','T','W','T','F','S'].map(d=>`<span>${d}</span>`).join('')}</div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px">${Array.from({length:35},(_,i)=>{const day=i-1;const has=day>=1&&day<=30;const cnt=has?((i*7+3)%9):0;const op=has?Math.min(0.16+cnt/10,1).toFixed(2):0;return `<div style="aspect-ratio:1;border-radius:3px;display:grid;place-items:center;font-size:13px;font-weight:800;color:${cnt>5?'#04231a':'#cfe3ff'};background:${has?`rgba(56,198,219,${op})`:'transparent'}${day===18?';box-shadow:0 0 0 1.5px #fff inset':''}">${has?cnt:''}</div>`;}).join('')}</div><div style="display:flex;justify-content:flex-end;align-items:center;gap:4px;font-size:7.5px;color:var(--dim);margin-top:6px">less<i style="width:9px;height:9px;border-radius:2px;background:rgba(56,198,219,.3)"></i><i style="width:9px;height:9px;border-radius:2px;background:rgba(56,198,219,.6)"></i><i style="width:9px;height:9px;border-radius:2px;background:#38c6db"></i>more</div></div>`,
+ 'C-MONTHTREND':`<div class="panel"><div class="ph"><b class="ml-month">June</b><span class="ml-mtotal" style="font-size:9px;color:var(--dim);font-family:var(--mono)">142 events &middot; busiest Tue</span></div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;font-size:7px;color:var(--dim);text-align:center;margin-bottom:3px">${['S','M','T','W','T','F','S'].map(d=>`<span>${d}</span>`).join('')}</div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px">${Array.from({length:35},(_,i)=>{const day=i-1;const has=day>=1&&day<=30;const cnt=has?((i*7+3)%9):0;const op=has?Math.min(0.16+cnt/10,1).toFixed(2):0;return `<div class="${has?'ml-daycell':''}" style="aspect-ratio:1;border-radius:3px;display:grid;place-items:center;font-size:13px;font-weight:800;color:${cnt>5?'#04231a':'#cfe3ff'};background:${has?`rgba(56,198,219,${op})`:'transparent'}${day===18?';box-shadow:0 0 0 1.5px #fff inset':''}">${has?cnt:''}</div>`;}).join('')}</div><div style="display:flex;justify-content:flex-end;align-items:center;gap:4px;font-size:7.5px;color:var(--dim);margin-top:6px">less<i style="width:9px;height:9px;border-radius:2px;background:rgba(56,198,219,.3)"></i><i style="width:9px;height:9px;border-radius:2px;background:rgba(56,198,219,.6)"></i><i style="width:9px;height:9px;border-radius:2px;background:#38c6db"></i>more</div></div>`,
  'C-INSIGHT':`<div class="panel"><div class="ph"><b>Weekly insight</b><span class="recap"><span class="ai">AI</span></span></div><div class="insbar">${['Daily','Weekly','Monthly'].map(p=>`<span class="insper${p==='Weekly'?' on':''}">${p}</span>`).join('')}<span class="insnext">next Mon 8 AM</span></div><div class="insfind big">Front-door traffic is up <b style="color:#7eecc4">22%</b> this week — visits cluster <b style="color:#e9eef6">1&ndash;3 PM</b>, with Saturday the busiest day.</div><div class="trendbars" style="margin:11px 0 3px">${[40,62,55,78,48,90,70].map((h,i)=>`<div class="tb" style="height:${h}%;${i===5?'background:linear-gradient(#34d399,#1f7a5a)':''}"></div>`).join('')}</div><div class="trendx">${['M','T','W','T','F','S','S'].map(d=>`<span>${d}</span>`).join('')}</div></div>`,
  'C-RECAP':`<div class="panel"><div class="ph"><b class="ml-title">Morning recap</b><span class="recap"><span class="ai">AI</span></span></div><span class="pvbadge ml-tone" style="background:#34d39922;color:#7eecc4;font-size:8px;display:inline-block;margin-bottom:10px">ALL CLEAR</span><div class="ml-narrative" style="font-size:16px;line-height:1.5;font-weight:600;color:#e9eef6">Slept <b style="color:#9cc3f5">10h 4m</b> with 2 brief wakings. One true-cry at <b style="color:#f3cd86">2:14</b>, self-settled in 3 min.</div><div class="ml-hi" style="display:flex;gap:5px;margin-top:11px"><span class="fc" style="font-size:8px">2:14 cry &middot; clip</span><span class="fc" style="font-size:8px">night graph</span></div></div>`,
  'C-ACT':`<div class="actions" style="margin-bottom:8px"><div class="act primary ml-pon"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>Power on</div><div class="act ml-poff"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="8" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>Power off</div></div><div class="actions" style="margin-bottom:8px"><div class="act ml-talk"><span class="ai">${aIcon('<path d="M3 11l16-5v12L3 13z"/><path d="M9 19a2.5 2.5 0 0 0 4 0"/>')}</span>Two-way talk</div></div><div class="ml-devstate" style="font-size:9px;color:#7eecc4">&#9679; Plug is ON &middot; confirmed 1s ago &middot; <span style="color:var(--dim)">sits under the live view</span></div>`,
  'C-READOUT':`<div class="panel"><div class="ph"><b>Number readout</b><span class="ml-conf" style="font-size:9px;color:var(--dim)">OCR &middot; live</span></div><div class="readout"><div class="rn"><span class="ml-value">04857</span><span class="ml-unit" style="font-size:18px;color:var(--mut)"> kWh</span></div><div class="ru ml-meter">utility meter</div><div class="rl">one large value read from the scene</div></div></div>`,
- 'C-TILES':`<div class="panel"><div class="ph"><b>Tiles &mdash; metrics + fleet</b><span style="font-size:9px;color:#7eecc4">3 / 4 online</span></div><div class="tilegrid">${[['Garage cam','online &middot; fw 4.36','#34d399'],['Front cam','online &middot; fw 4.36','#34d399'],['Yard cam','online &middot; fw 4.31','#34d399'],['Porch cam','offline &middot; 2h','#f25c5c']].map(([n,s,c])=>`<div class="gtile"><div class="gt-top"><span class="gt-dot" style="background:${c}"></span>${n}</div><div class="gt-sub">${s}</div></div>`).join('')}</div><div class="tilegrid" style="margin-top:7px">${[['38','events today'],['2','need attention'],['97%','uptime 7d']].map(([v,l])=>`<div class="gtile num"><b>${v}</b><span>${l}</span></div>`).join('')}</div></div>`,
+ 'C-TILES':`<div class="panel"><div class="ph"><b>Tiles &mdash; metrics + fleet</b><span class="ml-fleet" style="font-size:9px;color:#7eecc4">3 / 4 online</span></div><div class="tilegrid">${[['Garage cam','online &middot; fw 4.36','#34d399'],['Front cam','online &middot; fw 4.36','#34d399'],['Yard cam','online &middot; fw 4.31','#34d399'],['Porch cam','offline &middot; 2h','#f25c5c']].map(([n,s,c])=>`<div class="gtile"><div class="gt-top"><span class="gt-dot" style="background:${c}"></span>${n}</div><div class="gt-sub">${s}</div></div>`).join('')}</div><div class="tilegrid" style="margin-top:7px">${[['38','events today'],['2','need attention'],['97%','uptime 7d']].map(([v,l],i)=>`<div class="gtile num kpi${i}"><b>${v}</b><span>${l}</span></div>`).join('')}</div></div>`,
  'C-SOS':`<div class="panel"><div class="ph"><b>Escalation contacts</b><span style="font-size:9px;color:var(--dim)">call order</span></div><div class="sosbook">${[['Y','You','Push &middot; this phone','#4f8ff0','push'],['S','Sarah &middot; sister','Call &middot; (415) 555-0142','#f6b73c','call'],['M','Mike &middot; neighbor','Text &middot; (415) 555-0177','#34d399','text'],['D','Dr. Lee','Call &middot; clinic line','#a78bfa','call']].map(([ini,name,method,c,kind],i)=>`<div class="sosc"><span class="sosc-av" style="background:${c}22;color:${c}">${ini}</span><div class="sosc-main"><div class="sosc-name">${name}</div><div class="sosc-method"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco[kind]}</svg>${method}</div></div><span class="sosc-ord">${i+1}</span></div>`).join('')}</div></div>`,
  'C-ASSIST':`<div class="panel"><div class="ph"><b>Ask Home</b><span class="recap"><span class="ai">AI</span></span></div><div class="dc-lab" style="margin:0 0 8px">Suggested questions</div><div class="suglist">${[['#9cc3f5','What did I miss today?'],['#c4b3f0','When does the mail usually come?'],['#7eecc4','Is the garage closed right now?'],['#9cc3f5','Did anyone come to the door?'],['#c4b3f0','Who was the person at 2 PM?']].map(([c,q])=>`<div class="sugq"><i class="sugdot" style="background:${c}"></i><span class="sugq-t">${q}</span><span class="sugq-go">&rarr;</span></div>`).join('')}</div></div>`,
  'C-LEARN':`<div class="panel"><div class="ph"><b>What this agent learned</b><span class="recap"><span class="ai">AI</span></span></div>`+[['Mail usually arrives 1&ndash;3pm','routine','0.86'],['The garage is normally closed overnight','baseline','0.93'],['Recognizes the silver SUV as &ldquo;family car&rdquo;','identity','0.78']].map(([f,cat,c])=>`<div class="learnrow"><span class="lbulb"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f6b73c" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12c.5.5 1 1.2 1 2h6c0-.8.5-1.5 1-2a7 7 0 0 0-4-12z"/></svg></span><div style="flex:1;min-width:0"><div class="ft">${f}</div><div class="fm">${cat} &middot; remembered</div></div><span class="lconf">${c}</span></div>`).join('')+`<div class="ghost" style="display:block;margin-top:7px;padding:5px 9px"><span style="font-size:9px;color:var(--dim)">From household learnings + entity pages</span><span class="nodata">COMPILED</span></div></div>`,
