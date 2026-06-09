@@ -234,9 +234,11 @@
   .dc-row[data-maplines]{position:relative}
   .dc-maplines{position:absolute;inset:0;width:100%;height:100%;
     pointer-events:none;z-index:3;overflow:visible}
-  .dc-maplines path{fill:none;stroke-width:1.4;opacity:.55;
-    stroke-linecap:round;transition:opacity .15s, stroke-width .15s}
-  .dc-maplines circle{transition:r .15s, opacity .15s;opacity:.85}
+  /* All lines visible all the time — hover just nudges the highlighted
+     pair brighter; others stay at full visibility (not dimmed). */
+  .dc-maplines path{fill:none;stroke-width:1.8;opacity:.92;
+    stroke-linecap:round;transition:stroke-width .15s}
+  .dc-maplines circle{opacity:1;transition:r .15s}
   .dc-row[data-maplines] .modlive .ml-src,
   .dc-row[data-maplines] .dc-card .dc-f[data-fld]{position:relative}
   .dc-row[data-maplines] .ml-src{outline:1px dashed transparent;outline-offset:2px;
@@ -244,9 +246,8 @@
   .dc-row[data-maplines] .ml-src.hi{outline-color:currentColor}
   .dc-row[data-maplines] .dc-f[data-fld].hi{background:#4f8ff033;border-color:#4f8ff0;
     box-shadow:0 0 0 1px #4f8ff066 inset}
-  .dc-row[data-maplines] .dc-maplines path.hi{opacity:1;stroke-width:2.4}
-  .dc-row[data-maplines] .dc-maplines path.dim{opacity:.18}
-  .dc-row[data-maplines] .dc-maplines circle.hi{r:5;opacity:1}
+  .dc-row[data-maplines] .dc-maplines path.hi{stroke-width:3.2}
+  .dc-row[data-maplines] .dc-maplines circle.hi{r:5}
   .dc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
   .dc-head b{font-size:12.5px;color:var(--ink)}
   .dc-badge{font-size:9px;font-weight:800;letter-spacing:.6px;padding:3px 9px;
@@ -2082,8 +2083,8 @@ EMIT  -&gt; see §13
         <button class="dc-vertab" data-ver="v2">v2 <span class="dc-vn">30</span></button>
         <button class="dc-vertab on" data-ver="v25">v2.5 <span class="dc-vn">25</span> · latest</button>
         <span class="dc-laytoggle" id="dcLayToggle">
-          <button class="dc-lay" data-lay="list" title="List — component + data card">&#9776; List</button>
-          <button class="dc-lay on" data-lay="grid" title="Grid — components only, hover for data">&#9638; Grid</button>
+          <button class="dc-lay on" data-lay="list" title="List — component + data card + connecting lines">&#9776; List</button>
+          <button class="dc-lay" data-lay="grid" title="Grid — components only, hover for data">&#9638; Grid</button>
         </span>
       </div>
       <div class="dc-anchors" id="dcAnchors"></div>
@@ -4064,14 +4065,13 @@ function scheduleDrawMaplines(){
   _mlTimer=setTimeout(drawAllMaplines,80);
 }
 window.addEventListener('resize',scheduleDrawMaplines);
-/* hover a source or a target → highlight the matching line + both ends */
+/* hover a source or a target → highlight the matching line + both ends.
+   All other lines stay at full visibility (no dimming). */
 (function(){
   function setHover(row,idx,on){
     if(idx==null) return;
-    row.querySelectorAll('[data-ml-idx]').forEach(el=>{
-      const i=el.dataset.mlIdx, isMine=(i===String(idx));
-      el.classList.toggle('hi',on&&isMine);
-      if(el.tagName==='path'||el.tagName==='circle') el.classList.toggle('dim',on&&!isMine);
+    row.querySelectorAll('[data-ml-idx="'+idx+'"]').forEach(el=>{
+      el.classList.toggle('hi',on);
     });
   }
   document.addEventListener('mouseover',e=>{
@@ -4097,7 +4097,7 @@ function setDcLayout(lay){
   scheduleDrawMaplines();
 }
 document.querySelectorAll('#dcLayToggle .dc-lay').forEach(b=>b.addEventListener('click',()=>setDcLayout(b.dataset.lay)));
-setDcLayout('grid');
+setDcLayout('list');   /* default: List view so the connecting lines + data card are immediately visible */
 $('dcGrids').addEventListener('mouseover',e=>{
   if(dcLayout!=='grid')return;
   const row=e.target.closest('.dc-row'); if(!row||!$('dcGrids').contains(row))return;
