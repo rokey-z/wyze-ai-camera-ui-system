@@ -3060,7 +3060,10 @@ function agThumb(th){
   if(th.tag) ov.push(`<span class="agt-tag" style="background:${th.tc||'#9cc3f5'}">${th.tag}</span>`);
   return `<div class="agthumb agt-media" style="background:${th.grad}">${ov.join('')}</div>`;
 }
-function agPill(w,c,sm){return `<span class="agpill${sm?' agpill-sm':''}" style="color:${c};background:${c}24">${w}</span>`;}
+/* strip trailing duration like " · 2m" / " · 12h" so the state pill shows
+   just the state word (the timestamp is already shown on its own line) */
+function stripStateDur(w){return (w||'').replace(/\s*·\s*\d+\s*[smhd]\s*$/i,'');}
+function agPill(w,c,sm){return `<span class="agpill${sm?' agpill-sm':''}" style="color:${c};background:${c}24">${stripStateDur(w)}</span>`;}
 function agCardHTML(t,tpl){
   const p=PRI[t.pri]||PRI.P3;
   const st=t.state||{w:t.title,c:p.c};
