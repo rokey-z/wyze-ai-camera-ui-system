@@ -262,6 +262,15 @@
     font-family:var(--mono);font-size:10.5px;color:#cdd9ea}
   .dc-bound-f::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--c,#9cc3f5);flex:none}
   .dc-bound-f.hi{background:#22324d;color:#fff}
+  /* dc-card split layout — only when MAPLINES present. Bound chips
+     dock on the LEFT (closest to the incoming lines), rest of the
+     reference docs (modes / endpoints / description) on the RIGHT. */
+  .dc-card-split .dc-card-body{display:grid;grid-template-columns:minmax(180px,260px) minmax(0,1fr);
+    gap:14px;align-items:start;margin-top:10px}
+  .dc-card-split .dc-card-bound{min-width:0}
+  .dc-card-split .dc-card-bound .dc-bound{margin-bottom:0}
+  .dc-card-split .dc-card-rest{min-width:0}
+  .dc-card-split .dc-card-rest .dc-sec:first-child{margin-top:0}
   .dc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
   .dc-head b{font-size:12.5px;color:var(--ink)}
   .dc-badge{font-size:9px;font-weight:800;letter-spacing:.6px;padding:3px 9px;
@@ -3875,19 +3884,26 @@ function v2Card(v,opt){
       }).join('')
       +`</div></div>`;
   }
+  /* when a component has maplines, split the card body into two
+     columns: bound chips on the LEFT (closest to the lines arriving
+     from the preview), everything else on the RIGHT. Cards without
+     maplines render as a single column as before. */
+  const rightHtml=
+     (v.folds.length?`<div class="dc-sec"><div class="dc-lab">${merged?'Consolidates':'From v1.5'}</div><div class="dc-contract">${v.folds.map(f=>`<span class="dc-c">${f}</span>`).join('')}</div></div>`:'')
+    +`<div class="dc-sec"><div class="dc-lab">Adjustable modes</div><div class="dc-contract">${v.modes.map(m=>`<span class="dc-c dc-modepill">${m}</span>`).join('')}</div></div>`
+    +`<div class="dc-sec"><div class="dc-lab">Wyze AI One source</div>${dcSources(srcs)}</div>`
+    +(cv.length?`<div class="dc-cov">${cv.join('')}</div>`:'')
+    +`<div class="dc-note">${v.use}</div>`;
   return `<div class="dc-row dc-solo"${hasMap?' data-maplines="'+v.id+'"':''}>`
     +(hasMap?'<svg class="dc-maplines" aria-hidden="true"></svg>':'')
     +`<div class="dc-left"><div class="modlive">${comp}</div>`
       +`<div class="dc-modes">${v.modes.map(m=>`<span class="dc-mode">${m}</span>`).join('')}</div>`
       +`<div class="dc-meta"><span class="dc-id">${v.id}</span></div></div>`
-    +`<div class="dc-card">`
+    +`<div class="dc-card${hasMap?' dc-card-split':''}">`
       +`<div class="dc-head"><b>${v.name}</b><span class="dc-badge dc-${vcls}">${badge}</span></div>`
-      +boundHtml
-      +(v.folds.length?`<div class="dc-sec"><div class="dc-lab">${merged?'Consolidates':'From v1.5'}</div><div class="dc-contract">${v.folds.map(f=>`<span class="dc-c">${f}</span>`).join('')}</div></div>`:'')
-      +`<div class="dc-sec"><div class="dc-lab">Adjustable modes</div><div class="dc-contract">${v.modes.map(m=>`<span class="dc-c dc-modepill">${m}</span>`).join('')}</div></div>`
-      +`<div class="dc-sec"><div class="dc-lab">Wyze AI One source</div>${dcSources(srcs)}</div>`
-      +(cv.length?`<div class="dc-cov">${cv.join('')}</div>`:'')
-      +`<div class="dc-note">${v.use}</div>`
+      +(hasMap
+         ?`<div class="dc-card-body"><div class="dc-card-bound">${boundHtml}</div><div class="dc-card-rest">${rightHtml}</div></div>`
+         :rightHtml)
     +`</div></div>`;
 }
 /* ---------- visual-element → data-field mapping registry ---------
