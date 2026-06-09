@@ -228,6 +228,25 @@
   .dc-meta .dc-fn{font-size:10.5px;color:var(--mut);margin-top:2px;display:block;line-height:1.4}
 
   .dc-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 15px}
+  /* connecting lines: each visual element in the live preview is linked to
+     the data field that drives it. Lives in an absolute SVG overlay above
+     the .dc-row grid; pointer-events stays off so chips remain interactive. */
+  .dc-row[data-maplines]{position:relative}
+  .dc-maplines{position:absolute;inset:0;width:100%;height:100%;
+    pointer-events:none;z-index:3;overflow:visible}
+  .dc-maplines path{fill:none;stroke-width:1.4;opacity:.55;
+    stroke-linecap:round;transition:opacity .15s, stroke-width .15s}
+  .dc-maplines circle{transition:r .15s, opacity .15s;opacity:.85}
+  .dc-row[data-maplines] .modlive .ml-src,
+  .dc-row[data-maplines] .dc-card .dc-f[data-fld]{position:relative}
+  .dc-row[data-maplines] .ml-src{outline:1px dashed transparent;outline-offset:2px;
+    border-radius:6px;transition:outline-color .15s, background .15s}
+  .dc-row[data-maplines] .ml-src.hi{outline-color:currentColor}
+  .dc-row[data-maplines] .dc-f[data-fld].hi{background:#4f8ff033;border-color:#4f8ff0;
+    box-shadow:0 0 0 1px #4f8ff066 inset}
+  .dc-row[data-maplines] .dc-maplines path.hi{opacity:1;stroke-width:2.4}
+  .dc-row[data-maplines] .dc-maplines path.dim{opacity:.18}
+  .dc-row[data-maplines] .dc-maplines circle.hi{r:5;opacity:1}
   .dc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
   .dc-head b{font-size:12.5px;color:var(--ink)}
   .dc-badge{font-size:9px;font-weight:800;letter-spacing:.6px;padding:3px 9px;
@@ -3751,7 +3770,12 @@ const DC_LABEL={have:'HAVE',partial:'PARTIAL',missing:'MISSING'};
 function dcSources(srcs){
   if(!srcs||!srcs.length) return `<div class="dc-nosrc">No Wyze AI One source available yet.</div>`;
   return srcs.map(s=>`<div class="dc-src"><code class="dc-ep">${s.ep}</code>`
-    +((s.fields&&s.fields.length)?`<div class="dc-fields">${s.fields.map(f=>`<span class="dc-f">${f}</span>`).join('')}</div>`:'')
+    +((s.fields&&s.fields.length)?`<div class="dc-fields">${s.fields.map(f=>{
+        /* extract the bare key from "state.w (state word)" -> "state.w" so we can
+           join field chips to visual elements via data-fld */
+        const key=String(f).split(/[\s(]/)[0];
+        return `<span class="dc-f" data-fld="${key}">${f}</span>`;
+      }).join('')}</div>`:'')
     +`</div>`).join('');
 }
 /* ---------- v2 — consolidated set (42 components → 11 adjustable ones) ---------- */
@@ -3814,7 +3838,9 @@ function v2Card(v,opt){
   if(cov.missing)cv.push(`<span class="dc-cv dc-missing">${cov.missing} missing</span>`);
   const isnew=v.tag==='new', merged=v.folds.length>1;
   const tagtxt=isnew?'new':(merged?'merged':'kept'), badge=isnew?'new in v2.5':(merged?'merges '+v.folds.length:'kept as-is');
-  return `<div class="dc-row dc-solo">`
+  const hasMap = (typeof MAPLINES !== 'undefined') && MAPLINES[v.id];
+  return `<div class="dc-row dc-solo"${hasMap?' data-maplines="'+v.id+'"':''}>`
+    +(hasMap?'<svg class="dc-maplines" aria-hidden="true"></svg>':'')
     +`<div class="dc-left"><div class="modlive">${comp}</div>`
       +`<div class="dc-modes">${v.modes.map(m=>`<span class="dc-mode">${m}</span>`).join('')}</div>`
       +`<div class="dc-meta"><span class="dc-id">${v.id}</span></div></div>`
@@ -3827,6 +3853,22 @@ function v2Card(v,opt){
       +`<div class="dc-note">${v.use}</div>`
     +`</div></div>`;
 }
+/* ---------- visual-element → data-field mapping registry ---------
+   Each entry maps a CSS selector inside the live component preview to a
+   field key declared in the component's data card (matches data-fld="…").
+   v2Card draws a bezier line from source to target for each entry when
+   the row is rendered in List mode. Empty/missing targets are skipped.
+   --------------------------------------------------------------------- */
+const MAPLINES={
+  'C-AGENT':[
+    {sel:'.aghome .agcard .agthumb', fld:'thumb_grad', color:'#9cc3f5'},
+    {sel:'.aghome .agcard .agt-tag', fld:'thumb_tag',  color:'#f3cd86'},
+    {sel:'.aghome .agcard .agalert', fld:'priority',   color:'#ff9a9a'},
+    {sel:'.aghome .agcard .agpill',  fld:'state.w',    color:'#7eecc4'},
+    {sel:'.aghome .agcard .agsub',   fld:'last_run_ts',color:'#c4b3f0'},
+    {sel:'.aghome .agcard .agname',  fld:'name',       color:'#cdd9ea'}
+  ]
+};
 /* ---------- v2.5 — trimmed realistic set (24): retire library-ish, repurpose a few, + Learnings ---------- */
 const V25=[
  // ——— Agent surfaces (1) ———
@@ -3927,6 +3969,7 @@ function renderDcVer(ver){
     $('dcGrids').innerHTML=groups.map((g,gi)=>`<div class="famblock dc-fam" data-grp="g${gi}"><h3>${g.name} <span style="color:var(--dim);font-weight:600">${g.items.length}</span></h3>`+g.items.map(v=>v2Card(v,opt)).join('')+`</div>`).join('');
     $('dcAnchors').innerHTML=groups.map((g,gi)=>`<button class="dc-anchor" data-grp="g${gi}">${g.name} <span>${g.items.length}</span></button>`).join('');
     $('dcSummary').innerHTML='';   /* v2 / v2.5 stats were non-interactive — removed */
+    if(typeof scheduleDrawMaplines==='function') scheduleDrawMaplines();
     return;
   }
   $('dcGrids').innerHTML=FAMILIES.map(([fam,mods],gi)=>`<div class="famblock dc-fam" data-grp="g${gi}"><h3>${fam}</h3>`+mods.map(([id,fn])=>dcRowSolo(id,fn,ver)).join('')+`</div>`).join('');
@@ -3971,6 +4014,78 @@ renderDcVer('v25');
   screen.addEventListener('mouseleave',()=>{pop.style.display='none';});
 })();
 
+/* ---------- maplines: draw bezier curves from each visual element to its
+   corresponding data-card field. Only renders in List view (Grid view
+   floats the data card on hover, where lines wouldn't make sense). */
+function drawMaplinesRow(row){
+  const id=row.dataset.maplines, mapping=MAPLINES[id]; if(!mapping) return;
+  const svg=row.querySelector(':scope > .dc-maplines'); if(!svg) return;
+  const rowRect=row.getBoundingClientRect();
+  if(rowRect.width<200){ svg.innerHTML=''; return; }
+  svg.setAttribute('viewBox',`0 0 ${rowRect.width} ${rowRect.height}`);
+  svg.setAttribute('width',rowRect.width);
+  svg.setAttribute('height',rowRect.height);
+  let html='';
+  mapping.forEach((m,i)=>{
+    const src=row.querySelector(m.sel);
+    const tgt=row.querySelector('.dc-card [data-fld="'+m.fld.replace(/"/g,'\\"')+'"]');
+    if(!src||!tgt){ return; }
+    src.classList.add('ml-src');
+    src.dataset.mlIdx=i; tgt.dataset.mlIdx=i;
+    const sr=src.getBoundingClientRect(), tr=tgt.getBoundingClientRect();
+    const x1=sr.right-rowRect.left, y1=sr.top+sr.height/2-rowRect.top;
+    const x2=tr.left -rowRect.left, y2=tr.top+tr.height/2-rowRect.top;
+    const dx=Math.max(40,(x2-x1)*0.45);
+    const d=`M${x1.toFixed(1)} ${y1.toFixed(1)} C${(x1+dx).toFixed(1)} ${y1.toFixed(1)} ${(x2-dx).toFixed(1)} ${y2.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}`;
+    html+=`<path d="${d}" stroke="${m.color}" data-ml-idx="${i}"/>`
+        +`<circle cx="${x1.toFixed(1)}" cy="${y1.toFixed(1)}" r="3" fill="${m.color}" data-ml-idx="${i}"/>`
+        +`<circle cx="${x2.toFixed(1)}" cy="${y2.toFixed(1)}" r="3" fill="${m.color}" data-ml-idx="${i}"/>`;
+  });
+  svg.innerHTML=html;
+}
+function drawAllMaplines(){
+  const root=document.getElementById('dcGrids'); if(!root) return;
+  if(root.classList.contains('dc-gridmode')){
+    root.querySelectorAll('.dc-maplines').forEach(s=>s.innerHTML='');
+    return;
+  }
+  root.querySelectorAll('.dc-row[data-maplines]').forEach(drawMaplinesRow);
+}
+/* var (not let) so the binding is initialized at hoist-time — this
+   function gets called from renderDcVer() before the script reaches
+   this line, and let would TDZ. */
+var _mlRaf=0, _mlTimer=0;
+function scheduleDrawMaplines(){
+  cancelAnimationFrame(_mlRaf); clearTimeout(_mlTimer);
+  /* double-rAF so we draw after the class toggle has reflowed; the
+     setTimeout fallback runs at ~80ms in case rAF is throttled (e.g.
+     background tab) or the SVG was inserted between two paints. */
+  _mlRaf=requestAnimationFrame(()=>requestAnimationFrame(drawAllMaplines));
+  _mlTimer=setTimeout(drawAllMaplines,80);
+}
+window.addEventListener('resize',scheduleDrawMaplines);
+/* hover a source or a target → highlight the matching line + both ends */
+(function(){
+  function setHover(row,idx,on){
+    if(idx==null) return;
+    row.querySelectorAll('[data-ml-idx]').forEach(el=>{
+      const i=el.dataset.mlIdx, isMine=(i===String(idx));
+      el.classList.toggle('hi',on&&isMine);
+      if(el.tagName==='path'||el.tagName==='circle') el.classList.toggle('dim',on&&!isMine);
+    });
+  }
+  document.addEventListener('mouseover',e=>{
+    const el=e.target.closest('[data-ml-idx]'); if(!el) return;
+    const row=el.closest('.dc-row[data-maplines]'); if(!row) return;
+    setHover(row,el.dataset.mlIdx,true);
+  });
+  document.addEventListener('mouseout',e=>{
+    const el=e.target.closest('[data-ml-idx]'); if(!el) return;
+    const row=el.closest('.dc-row[data-maplines]'); if(!row) return;
+    setHover(row,el.dataset.mlIdx,false);
+  });
+})();
+
 /* list / grid view toggle — grid shows components only, hovering a cell floats in its data card */
 let dcLayout='grid';
 function dcHidePops(){document.querySelectorAll('#dcGrids .dc-card').forEach(c=>{c.style.display='';c.style.left='';c.style.top='';});}
@@ -3979,6 +4094,7 @@ function setDcLayout(lay){
   $('dcGrids').classList.toggle('dc-gridmode',lay==='grid');
   document.querySelectorAll('#dcLayToggle .dc-lay').forEach(b=>b.classList.toggle('on',b.dataset.lay===lay));
   dcHidePops();
+  scheduleDrawMaplines();
 }
 document.querySelectorAll('#dcLayToggle .dc-lay').forEach(b=>b.addEventListener('click',()=>setDcLayout(b.dataset.lay)));
 setDcLayout('grid');
