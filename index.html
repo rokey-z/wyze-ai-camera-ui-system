@@ -92,7 +92,7 @@
   .agtime.stale{color:var(--dim);background:var(--bg)}
   .agtitle{font-size:12px;font-weight:700;text-align:center;line-height:1.32}
   .agname{display:flex;align-items:center;justify-content:center;gap:4px;font-size:9.5px;
-    font-weight:500;color:var(--mut);margin-top:6px}
+    font-weight:500;color:var(--mut);margin-top:6px;text-transform:uppercase;letter-spacing:.5px}
   .agdot{width:7px;height:7px;border-radius:50%;flex:none}
   .agemoji{font-size:11px}
   .agt-media{position:relative}
@@ -3815,9 +3815,9 @@ function v2Card(v,opt){
   const isnew=v.tag==='new', merged=v.folds.length>1;
   const tagtxt=isnew?'new':(merged?'merged':'kept'), badge=isnew?'new in v2.5':(merged?'merges '+v.folds.length:'kept as-is');
   return `<div class="dc-row dc-solo">`
-    +`<div class="dc-left"><span class="dc-vlab ${vcls}">${vlab} · ${tagtxt}</span><div class="modlive">${comp}</div>`
+    +`<div class="dc-left"><div class="modlive">${comp}</div>`
       +`<div class="dc-modes">${v.modes.map(m=>`<span class="dc-mode">${m}</span>`).join('')}</div>`
-      +`<div class="dc-meta"><span class="dc-id">${v.id}</span><span class="dc-fn">${v.name}</span></div></div>`
+      +`<div class="dc-meta"><span class="dc-id">${v.id}</span></div></div>`
     +`<div class="dc-card">`
       +`<div class="dc-head"><b>${v.name}</b><span class="dc-badge dc-${vcls}">${badge}</span></div>`
       +(v.folds.length?`<div class="dc-sec"><div class="dc-lab">${merged?'Consolidates':'From v1.5'}</div><div class="dc-contract">${v.folds.map(f=>`<span class="dc-c">${f}</span>`).join('')}</div></div>`:'')
