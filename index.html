@@ -41,7 +41,7 @@
   .tplgrouphd{font-size:9.5px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;
     color:var(--blue);margin:0 0 7px;display:flex;gap:6px;align-items:center}
   .tplgrouphd span{color:var(--dim);font-family:var(--mono);font-size:9px}
-  .tplgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .tplgrid{display:grid;grid-template-columns:1fr;gap:8px}
   .tplemoji{font-size:18px;line-height:1;flex:none;width:24px;text-align:center}
   /* real Wyze agent-template card in the trace */
   .tplcard{background:#0e1726;border:1px solid #2a3a55;border-radius:12px;padding:13px 14px;margin-top:6px}
@@ -107,7 +107,7 @@
   .agsub-t{font-family:var(--mono);color:var(--mut)}
   .agname .ic,.agsub .ic{width:14px;height:14px;flex:none;vertical-align:-2px}
   /* states showcase */
-  .agstates{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-top:6px;justify-items:center}
+  .agstates{display:grid;grid-template-columns:1fr;gap:9px;margin-top:6px;justify-items:center}
   /* card states are the same vertical-pill shape/ratio as the hero card, just smaller */
   .agms{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--card);
     border:1px solid var(--line);border-radius:34px;padding:16px 9px 14px;width:100px}
@@ -404,7 +404,7 @@
   .gcard-meta{font-size:10px;color:#d6def0;margin-top:3px}
   /* assistant — suggested questions list */
   .suglist{display:flex;flex-direction:column;gap:6px}
-  .sugq{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:9px;
+  .sugq{display:flex;align-items:center;gap:9px;padding:9px 14px;border-radius:999px;
     background:var(--bg);border:1px solid var(--line);cursor:pointer;transition:border-color .12s}
   .sugq:hover{border-color:var(--blue)}
   .sugdot{flex:none;width:7px;height:7px;border-radius:50%}
@@ -435,9 +435,12 @@
   .sosc-method svg{flex:none;opacity:.85}
   .sosc-ord{flex:none;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;
     font-size:9px;font-weight:800;color:var(--dim);background:var(--bg);border:1px solid var(--line)}
+  .sosc-acts{display:flex;gap:5px;flex:none}
+  .sosc-act{display:grid;place-items:center;width:26px;height:26px;border-radius:8px;
+    border:1px solid var(--line);background:#1b2940;color:#9cc3f5}
   .learnrow{display:flex;align-items:center;gap:8px;padding:7px 2px;border-top:1px solid var(--line)}
   .learnrow:first-of-type{border-top:0}
-  .learnrow .ft{font-size:10.5px;line-height:1.3}
+  .learnrow .ft{font-size:13px;font-weight:600;line-height:1.3}
   .learnrow .fm{font-size:8px}
   .lbulb{flex:none;width:21px;height:21px;border-radius:6px;display:grid;place-items:center;
     background:#f6b73c14;border:1px solid #f6b73c33}
@@ -448,6 +451,18 @@
   .gt-top{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--ink)}
   .gt-dot{width:7px;height:7px;border-radius:50%;flex:none}
   .gt-sub{font-size:9px;color:var(--mut);margin-top:3px}
+  .gt-pill{display:inline-flex;align-items:center;gap:5px;font-size:9px;font-weight:700;
+    padding:2px 8px;border-radius:999px}
+  /* horizontally scrollable event strip — ~3.2 thumbs visible (next peeks in) */
+  .estrip{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+  .estrip::-webkit-scrollbar{height:5px}
+  .estrip::-webkit-scrollbar-thumb{background:#2a3a55;border-radius:3px}
+  .ethumb{flex:0 0 calc(31.25% - 5px);aspect-ratio:4/3;border-radius:9px;position:relative;
+    overflow:hidden;border:1px solid var(--line);scroll-snap-align:start}
+  .ethumb-tag{position:absolute;top:5px;left:5px;font-size:7px;font-weight:800;
+    padding:1px 5px;border-radius:4px;letter-spacing:.3px}
+  .ethumb-t{position:absolute;bottom:5px;right:5px;font-size:7.5px;font-family:var(--mono);
+    color:#cfe3ff;background:#0007;padding:1px 5px;border-radius:4px}
   .gtile.num{text-align:center;padding:8px 6px}
   .gtile.num b{font-family:var(--mono);font-size:19px;font-weight:800;color:#9cc3f5;display:block;line-height:1}
   .gtile.num span{font-size:8px;color:var(--dim);text-transform:uppercase;letter-spacing:.4px}
@@ -488,30 +503,32 @@
   .pvthumb{width:26px;height:18px;border-radius:3px;flex:none;
     background:linear-gradient(150deg,#2a3f63,#0f1a2c)}
 
-  .toprow{margin-top:18px;display:grid;grid-template-columns:.67fr 1.7fr;
+  .toprow{margin-top:18px;display:grid;grid-template-columns:.395fr auto 1.7fr;
     gap:22px;align-items:start}
   /* playground sits on top of the agent-templates row */
   #pane-gen.on{display:flex;flex-direction:column}
   #pane-gen .playrow{order:-1}
   #pane-gen .toprow{order:0}
-  /* home-wall entry card sits to the LEFT of the phone preview */
-  .previewrow{display:flex;align-items:flex-start;gap:18px;justify-content:center}
+  /* Agent Widget is its OWN toprow column (between the console and the phone) */
+  .toprow > #tplHomeCard{width:150px;align-self:start}
+  .previewrow{display:flex;justify-content:center;align-items:flex-start}
   .phonecol{display:flex;flex-direction:column;align-items:center;gap:14px}
-  .previewrow #tplHomeCard{width:330px;flex:none;order:2}   /* Agent Widget on the right */
-  .previewrow .phonecol{order:1}                            /* phone preview on the left */
+  /* center-align the widget + card-states within the column */
+  #tplHomeCard{text-align:center}
+  #tplHomeCard .aghome{justify-content:center}
+  #tplHomeCard .agstates{justify-items:center}
   /* Keep .toprow left/right layout at every width; only relax internal
      sticky/height constraints below the desktop comfort zone. */
   @media(max-width:1080px){
     .toprow{gap:14px}
     .console,.phonewrap,.trace{position:static;height:auto;overflow:visible}
-    .previewrow{flex-wrap:wrap}
     .intents{flex:none;max-height:none}
   }
 
   /* generation trace — sits at the bottom of the preview section, left-aligned */
   .trace{background:var(--panel);border:1px solid var(--line);
     border-radius:var(--radius);padding:16px 18px 18px;margin-top:22px}
-  .phonewrap .previewrow{align-self:stretch;justify-content:flex-start}
+  .phonewrap .previewrow{align-self:stretch}
   .phonewrap .trace{align-self:stretch}
   .tracegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:6px 26px}
   .tracecol{min-width:0}
@@ -589,9 +606,15 @@
   .statebig .sbw{font-size:27px;font-weight:800;letter-spacing:-1px;line-height:1.05}
   .statebig .sbs{font-size:11px;color:var(--mut);margin-top:7px}
   /* hover-a-component -> latest (v2.5) component card popover */
-  .comppop{position:fixed;z-index:90;width:302px;max-height:84vh;overflow:auto;pointer-events:none;
+  .comppop{position:fixed;z-index:90;width:600px;max-width:94vw;max-height:84vh;overflow:auto;pointer-events:none;
     background:var(--card);border:1px solid #34d39966;border-radius:13px;padding:13px 14px;
     box-shadow:0 16px 50px #000c}
+  /* the data-check row renders cleanly inside the hover popover (no divider/padding) */
+  .comppop .dc-row{border-top:0;padding:0;gap:16px}
+  /* hover card: keep the description text, drop the "Wyze AI One source" section */
+  .comppop .dc-card-rest{display:none}
+  .comppop .dc-card-body{grid-template-columns:1fr}
+  .comppop .dc-note{display:block;margin-top:10px}
   .comppop-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px}
   .comppop-h b{font-size:13px;color:var(--ink)}
   .comppop-id{flex:none;font-family:var(--mono);font-size:8.5px;font-weight:800;letter-spacing:.3px;
@@ -696,8 +719,8 @@
 
   .conf{display:flex;align-items:center;gap:8px;background:#a78bfa14;border:1px solid #a78bfa3a;
     border-radius:10px;padding:9px 11px}
-  .conf .cd{font-size:10.5px;color:#cbbdf6;line-height:1.45}
-  .conf .cv{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--violet);margin-left:auto}
+  .conf .cd{font-size:10.5px;color:#cbbdf6;line-height:1.45;margin-left:auto;text-align:right}
+  .conf .cv{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--violet)}
 
   .promptbox{background:#0e1726;border:1px dashed #a78bfa55;border-radius:10px;padding:10px 11px}
   .promptbox .pl{font-size:9px;color:var(--violet);font-family:var(--mono);
@@ -768,12 +791,18 @@
   .compare .cf{flex:1;border-radius:9px;overflow:hidden;border:1px solid var(--line)}
   .compare .cimg{aspect-ratio:4/3}
   .compare .clab{font-size:9px;text-align:center;padding:4px;color:var(--mut);background:var(--card)}
-  .reminder{display:flex;align-items:center;gap:11px;background:#34d39912;
+  .reminder{display:flex;align-items:flex-start;gap:11px;background:#34d39912;
     border:1px solid #34d39940;border-radius:11px;padding:11px 13px}
   .reminder .rc{width:34px;height:34px;border-radius:9px;background:#34d399;
     display:grid;place-items:center;flex:none}
   .reminder b{font-size:12px}
   .reminder span{font-size:10.5px;color:var(--mut);display:block;margin-top:1px}
+  /* reminder action buttons: compact icon+text rows, side by side at the bottom */
+  .reminder .actions{width:100%;margin-top:9px}
+  .reminder .act{flex-direction:row;align-items:center;justify-content:center;
+    gap:6px;padding:7px 10px;border-radius:9px}
+  .reminder .act .ai{margin:0;display:flex}
+  .reminder .act .ai svg{width:14px;height:14px}
 
   /* --- v3 vision-signal styles --- */
   .sigtag{position:absolute;left:9px;top:9px;font-size:8px;font-weight:800;
@@ -1322,10 +1351,12 @@
         <div class="intents" id="intents"></div>
       </div>
 
-      <!-- CENTER: home-wall entry card (left) + phone preview -->
+      <!-- MIDDLE: Agent Widget — its own column -->
+      <div id="tplHomeCard"></div>
+
+      <!-- RIGHT: phone preview -->
       <div class="phonewrap">
         <div class="previewrow">
-          <div id="tplHomeCard"></div>
           <div class="phonecol">
             <div class="phone">
               <div class="notch"></div>
@@ -2121,7 +2152,7 @@ EMIT  -&gt; see §13
         <button class="dc-vertab" data-ver="v1">v1 <span class="dc-vn">42</span></button>
         <button class="dc-vertab" data-ver="v15">v1.5 <span class="dc-vn">42</span></button>
         <button class="dc-vertab" data-ver="v2">v2 <span class="dc-vn">30</span></button>
-        <button class="dc-vertab on" data-ver="v25">v2.5 <span class="dc-vn">26</span> · latest</button>
+        <button class="dc-vertab on" data-ver="v25">v3.0 <span class="dc-vn">27</span> · latest</button>
         <span class="dc-laytoggle" id="dcLayToggle">
           <button class="dc-lay on" data-lay="list" title="List — component + data card + connecting lines">&#9776; List</button>
           <button class="dc-lay" data-lay="grid" title="Grid — components only, hover for data">&#9638; Grid</button>
@@ -2410,7 +2441,7 @@ function slot(id,html){
   return `<div class="slot"><div class="slotlab">${id}</div>${html}</div>`;
 }
 /* v1.5 affordance helpers (hoisted; reused across the generated samples) */
-function vConf(v,txt){return `<div class="conf" style="margin-top:9px;padding:8px 11px"><div class="cd">${txt||'AI confidence · tap a detection to correct'}</div><div class="cv">${v}</div></div>`;}
+function vConf(v,txt){return `<div class="conf" style="margin-top:9px;padding:8px 11px"><div class="cv">${v}</div><div class="cd">${txt||'AI confidence · tap a detection to correct'}</div></div>`;}
 function vCorrect(label){return `<span class="fixchip">&#9998; ${label||'correct'}</span>`;}
 function vDelta(t,up){return `<span class="delta ${up?'up':'down'}">${up?'&#9650;':'&#9660;'} ${t}</span>`;}
 
@@ -2574,7 +2605,7 @@ const SCREENS = {
         <div class="gcell" style="background:linear-gradient(150deg,#9aa3ad,#3f464e)"><span>Chickadee</span></div>
         <div class="gcell new" style="background:linear-gradient(150deg,#c0563f,#5a2316)"><span>Robin</span></div>
       </div></div>`)}
-   ${slot('M-IDCARD · S2',`<div class="panel"><div class="ph"><b>Selected visit</b>
+   ${slot('M-IDCARD · S2',`<div class="panel"><div class="ph"><b>ID Card</b>
       <span class="mi">M-IDCARD</span></div>
       <div class="idcard"><div class="pic"></div>
         <div><div class="nm">Northern Cardinal</div>
@@ -3027,27 +3058,66 @@ function stp(txt,c){return `<div class="strip" style="background:${c}16;border:1
 function fdp(ttl,rows){return `<div class="panel"><div class="ph"><b>${ttl}</b></div>`+rows.map(r=>`<div class="feedrow"><div class="thumb"></div><div style="flex:1"><div class="ft">${r[0]}</div><div class="fm">${r[1]}</div></div>${r[2]?`<span class="etag" style="background:${r[3]}22;color:${r[3]}">${r[2]}</span>`:''}</div>`).join('')+`</div>`;}
 function actb(items){return `<div class="actions">`+items.map(i=>`<div class="act ${i[1]||''}">${i[0]}</div>`).join('')+`</div>`;}
 function vb(g,inner,sig){return `<div class="hero"><div class="videobox" style="background:${g}">${sigTag(sig||'live')}${inner||''}</div></div>`;}
+/* ---- v3 component renderers — reproduce the v3 component designs (MOD25/MODFULL15),
+   parameterized so the rebuilt templates render the real component look with their own data ---- */
+function v3State(subj,state,c,label,dur,conf){
+  return `<div class="panel" style="text-align:center;padding:18px 12px 14px"><div class="ml-subj" style="font-size:9px;letter-spacing:1px;color:var(--dim);text-transform:uppercase;margin-bottom:7px">${subj}</div><div class="ml-state" style="font-size:32px;font-weight:800;letter-spacing:-1.5px;color:${c};line-height:1.04">${state}</div><div style="font-size:11px;color:var(--mut);margin-top:8px"><span class="ml-label">${label}</span> &middot; <span class="ml-dur" style="font-family:var(--mono);color:${c};font-weight:700">${dur}</span></div></div>`+(conf?cf15('confidence '+conf,'state from VLM &middot; tap to correct'):'');
+}
+function v3Live(grad,name,time,inner){
+  return `<div class="hero"><div class="videobox" style="background:${grad}">${sigTag('live')}<span style="position:absolute;right:7px;top:7px;font-size:7px;font-weight:800;background:#0009;color:#cfe3ff;padding:2px 6px;border-radius:5px">1080p &middot; &#9679; REC</span>${inner||''}<div class="vname">${name}</div>${time?`<div class="vtime">${time}</div>`:''}</div></div>`;
+}
+function v3Feed(ttl,chips,rows){
+  return `<div class="panel"><div class="ph"><b>${ttl}</b></div>`+(chips&&chips.length?`<div class="chips2" style="margin-bottom:8px">${chips.map((ch,i)=>`<span class="fc${i===0?' on':''}">${ch}</span>`).join('')}</div>`:'')+rows.map(([t,m,tag,c])=>`<div class="feedrow"><div class="thumb"></div><div style="flex:1"><div class="ft">${t}</div><div class="fm">${m}</div></div>${tag?`<span class="etag" style="background:${c}22;color:${c}">${tag}</span>`:''}</div>`).join('')+`<button class="dc-more">More &middot; earlier &rsaquo;</button></div>`;
+}
+function v3Recap(ttl,tone,toneC,narrative,chips){
+  return `<div class="panel"><div class="ph"><b>${ttl}</b><span class="recap"><span class="ai">AI</span></span></div>${tone?`<span class="pvbadge" style="background:${toneC}22;color:${toneC};font-size:8px;display:inline-block;margin-bottom:10px">${tone}</span>`:''}<div style="font-size:15px;line-height:1.5;font-weight:600;color:#e9eef6">${narrative}</div>${chips&&chips.length?`<div style="display:flex;gap:5px;margin-top:11px">${chips.map(ch=>`<span class="fc" style="font-size:8px">${ch}</span>`).join('')}</div>`:''}</div>`;
+}
+function v3Snap(grad,aC,aT,fIcon,fC,fT,fSub,conf){
+  return `<div class="hero"><div class="videobox" style="background:${grad}">${sigTag('snap')}<div class="annbox" style="left:20%;top:30%;width:60%;height:40%;border-color:${aC}"></div><div class="annbadge" style="left:20%;top:30%;background:${aC};color:#0a0f18">${aT}</div><div class="fused"><div>${fIcon}</div><div><div class="fs" style="color:${fC};font-size:16px">${fT}</div><div class="fsub">${fSub}</div></div></div></div></div>`+(conf?cf15('confidence '+conf,'tap to correct'):'');
+}
+function v3Learn(rows){
+  return `<div class="panel"><div class="ph"><b>What this agent learned</b><span class="recap"><span class="ai">AI</span></span></div>`+rows.map(([f,cat,c])=>`<div class="learnrow"><span class="lbulb"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f6b73c" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12c.5.5 1 1.2 1 2h6c0-.8.5-1.5 1-2a7 7 0 0 0-4-12z"/></svg></span><div style="flex:1;min-width:0"><div class="ft">${f}</div><div class="fm">${cat} &middot; remembered</div></div><span class="lconf">${c}</span></div>`).join('')+`</div>`;
+}
+function v3Deter(){
+  return `<div class="ghost" style="display:block;padding:11px"><div class="actions" style="margin-bottom:8px"><div class="act danger"><span class="ai">${aIcon('<path d="M3 11l18-5v12L3 14v-3zM11 19v-5"/>')}</span>Siren</div><div class="act"><span class="ai">${aIcon('<circle cx="12" cy="10" r="6"/><path d="M9 20h6M10 23h4"/>')}</span>Lights</div></div><span class="nodata">NO DETERRENT API</span></div>`;
+}
+function v3Reminder(iconPath,title,sub,accent){
+  const a=accent||'#34d399';
+  return `<div class="reminder" style="background:${a}12;border-color:${a}40;align-items:flex-start"><div class="rc" style="background:${a}">${aIcon(iconPath)}</div><div style="flex:1"><b>${title}</b><span>${sub}</span><div class="actions" style="margin-top:8px"><div class="act"><span class="ai">${aIcon('<circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/>')}</span>Snooze</div><div class="act primary"><span class="ai">${aIcon('<path d="M20 6L9 17l-5-5"/>')}</span>Done</div></div></div></div>`;
+}
+function v3Sos(cs){
+  return `<div class="panel"><div class="ph"><b>Escalation contacts</b><span style="font-size:9px;color:var(--dim)">call order</span></div><div class="sosbook">`+cs.map(([ini,name,c])=>`<div class="sosc"><span class="sosc-av" style="background:${c}22;color:${c}">${ini}</span><div class="sosc-main"><div class="sosc-name">${name}</div></div><div class="sosc-acts"><span class="sosc-act" title="Call"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco.call}</svg></span><span class="sosc-act" title="Message"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco.text}</svg></span></div></div>`).join('')+`</div></div>`;
+}
+function v3Day(ttl,delta,bars){
+  return `<div class="panel"><div class="ph"><b>${ttl}</b>${delta?`<span class="delta up">${delta}</span>`:''}</div><div class="scrub" style="height:46px">${bars.map(([h,hot])=>`<div class="seg" style="height:${h}%;background:${hot?'#f6b73c':'#3a5fa0'}"></div>`).join('')}<div class="pin" style="left:72%"></div><div class="axis"><span>12a</span><span>6a</span><span>12p</span><span>6p</span><span>now</span></div></div></div>`;
+}
+function v3Tiles(ttl,note,devices,kpis){
+  let h=`<div class="panel"><div class="ph"><b>${ttl}</b>${note?`<span style="font-size:9px;color:#7eecc4">${note}</span>`:''}</div>`;
+  if(devices&&devices.length) h+=`<div class="tilegrid">${devices.map(([n,s,c])=>`<div class="gtile"><div class="gt-top">${n}</div><div class="gt-sub"><span class="gt-pill" style="color:${c};background:${c}1f"><span class="gt-dot" style="background:${c}"></span>${s}</span></div></div>`).join('')}</div>`;
+  if(kpis&&kpis.length) h+=`<div class="tilegrid"${devices&&devices.length?' style="margin-top:7px"':''}>${kpis.map(([v,l,c])=>`<div class="gtile num"${c?` style="border-color:${c}55;background:${c}10"`:''}><b${c?` style="color:${c}"`:''}>${v}</b><span${c?` style="color:${c}"`:''}>${l}</span></div>`).join('')}</div>`;
+  return h+`</div>`;
+}
 const TPLVIEW={
  'night_watcher':{arche:{key:'event',name:'Event Watcher',color:'#6b8cff',q:'Anything unusual after hours?'},frame:{Subject:'Home perimeter — all cameras',Condition:'After-hours person or vehicle',Question:'Is anything unusual tonight?',Urgency:'High',Cadence:'Continuous + 30-min sweep',Output:'Alert + nightly log'},mods:[['C-LIVE','req','hero'],['C-STATE','req',''],['C-FEED','req',''],['C-DETER','cond',''],['C-RECAP','req','']],tiers:[['#34d399','Tier 1','person / vehicle classifiers'],['#a78bfa','Tier 3','VLM judges &ldquo;unusual for this hour&rdquo;']],policy:'Low-noise overnight — escalate only on an unfamiliar person/vehicle after the start time.',
-   screen:()=>tbar('Night Watcher','Event Watcher')+`<div class="ui">`+slot('C-STATE · S0',stState('Armed','all quiet &middot; 11:42 PM','#6b8cff'))+slot('C-LIVE · S1',vb('linear-gradient(165deg,#10182b,#070b14)',`<div class="annbox" style="left:18%;top:32%;width:28%;height:48%;border-color:#f25c5c"></div><div class="annbadge" style="left:18%;top:32%;background:#f25c5c;color:#fff">person</div><div class="vname">Side gate &middot; night vision</div><div class="vtime">23:31</div>`))+slot('C-FEED · S3',fdp('Tonight',[['Person at side gate','11:31 PM &middot; unfamiliar','REVIEW','#ff9a9a'],['Vehicle slowed at curb','10:58 PM &middot; street','VEHICLE','#9cc3f5'],['Raccoon crossed yard','10:12 PM &middot; dismissed','ANIMAL','#7eecc4']]))+slot('C-RECAP · S5',`<div class="panel"><div class="ph"><b>Overnight recap</b><span class="recap"><span class="ai">AI</span></span></div><span class="pvbadge" style="background:#f6b73c22;color:#f3cd86;font-size:8px;display:inline-block;margin-bottom:10px">1 TO REVIEW</span><div style="font-size:15px;line-height:1.5;font-weight:600;color:#e9eef6">Quiet night overall — one <b style="color:#f3cd86">unfamiliar person</b> at the side gate at <b style="color:#9cc3f5">2:14a</b> (gone in 40s). 3 cars passed; the cat set off 2 clips.</div><div style="display:flex;gap:5px;margin-top:11px"><span class="fc" style="font-size:8px">2:14 person &middot; clip</span><span class="fc" style="font-size:8px">full timeline</span></div></div>`)+slot('C-DETER · Sa',actb([['Talk','primary'],['Siren','danger'],['Lights','']]))+slot('Tier-3 binding',vConf('0.93','Unusual-for-hour &middot; VLM &middot; tap to correct'))+`</div>`},
+   screen:()=>tbar('Night Watcher','Event Watcher')+`<div class="ui">`+slot('C-STATE · S0',v3State('Home perimeter','Armed','#6b8cff','all quiet','11:42 PM'))+slot('C-LIVE · S1',v3Live('linear-gradient(165deg,#10182b,#070b14)','Side gate &middot; night vision','23:31',`<div class="annbox" style="left:18%;top:32%;width:28%;height:48%;border-color:#f25c5c"></div><div class="annbadge" style="left:18%;top:32%;background:#f25c5c;color:#fff">person</div>`))+slot('C-FEED · S3',v3Feed('Tonight',['All &middot; 12','Person &middot; 4','Vehicle &middot; 6','Animal &middot; 2'],[['Person at side gate','11:31 PM &middot; unfamiliar','REVIEW','#ff9a9a'],['Vehicle slowed at curb','10:58 PM &middot; street','VEHICLE','#9cc3f5'],['Raccoon crossed yard','10:12 PM &middot; dismissed','ANIMAL','#7eecc4']]))+slot('C-RECAP · S5',v3Recap('Overnight recap','1 TO REVIEW','#f3cd86','Quiet night overall — one <b style="color:#f3cd86">unfamiliar person</b> at the side gate at <b style="color:#9cc3f5">2:14a</b> (gone in 40s). 3 cars passed; the cat set off 2 clips.',['2:14 person &middot; clip','full timeline']))+slot('C-DETER · Sa',v3Deter())+slot('Tier-3 binding',vConf('0.93','Unusual-for-hour &middot; VLM &middot; tap to correct'))+`</div>`},
  'garage_door_watcher':{arche:{key:'state',name:'State Monitor',color:'#4f8ff0',q:'Is the door open — and for how long?'},frame:{Subject:'Garage door',Condition:'Open / closed state',Question:'Is it open, and for how long?',Urgency:'Medium',Cadence:'Snapshot check + motion',Output:'Glance + left-open alert'},mods:[['C-SNAP','req','hero'],['C-STATE','req',''],['C-ACT','cond',''],['C-LEARN','cond','']],tiers:[['#4f8ff0','Tier 2','door open/closed from segmentation; duration from state-change times']],policy:'Alert only when open past the threshold or after hours — never on steady closed.',
-   screen:()=>tbar('Garage Door Watcher','State Monitor')+`<div class="ui">`+slot('C-STATE · S0',stState('OPEN','garage door &middot; 12 min','#f6b73c'))+slot('C-SNAP · S1',`<div class="hero"><div class="videobox" style="background:linear-gradient(165deg,#2c3d5b,#0d1626)">${sigTag('snap')}<div class="annbox" style="left:20%;top:30%;width:60%;height:40%;border-color:#f6b73c"></div><div class="annbadge" style="left:20%;top:30%;background:#f6b73c;color:#3a2a05">garage door &middot; open</div><div class="fused"><div><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#f3cd86" stroke-width="2.4"><path d="M12 9v4M12 17h.01M10.3 3.9 2 18a2 2 0 0 0 1.7 3h16.6A2 2 0 0 0 22 18L13.7 3.9z"/></svg></div><div><div class="fs" style="color:#f3cd86;font-size:16px">Open &middot; 12 min</div><div class="fsub">annotated snapshot &middot; 4:18 PM</div></div></div></div></div>`)+slot('C-LEARN · S5',`<div class="panel"><div class="ph"><b>What this agent learned</b><span class="recap"><span class="ai">AI</span></span></div>`+[['Normally closed overnight — open now is unusual','baseline','0.94'],['Opens 7&ndash;8 AM on weekday mornings','routine','0.88'],['The silver SUV is the &ldquo;family car&rdquo;','identity','0.81']].map(([f,cat,c])=>`<div class="learnrow"><span class="lbulb"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f6b73c" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12c.5.5 1 1.2 1 2h6c0-.8.5-1.5 1-2a7 7 0 0 0-4-12z"/></svg></span><div style="flex:1;min-width:0"><div class="ft">${f}</div><div class="fm">${cat} &middot; remembered</div></div><span class="lconf">${c}</span></div>`).join('')+`<div class="ghost" style="display:block;margin-top:7px;padding:5px 9px"><span style="font-size:9px;color:var(--dim)">From household learnings + entity pages</span><span class="nodata">COMPILED</span></div></div>`)+slot('Tier-2 binding',vConf('0.98','Open/closed via segmentation')+`<div style="margin-top:7px">${vCorrect('correct')}</div>`)+`</div>`},
+   screen:()=>tbar('Garage Door Watcher','State Monitor')+`<div class="ui">`+slot('C-STATE · S0',v3State('Garage door','OPEN','#f6b73c','left open','12 min'))+slot('C-SNAP · S1',v3Snap('linear-gradient(165deg,#2c3d5b,#0d1626)','#f6b73c','garage door &middot; open','<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#f3cd86" stroke-width="2.4"><path d="M12 9v4M12 17h.01M10.3 3.9 2 18a2 2 0 0 0 1.7 3h16.6A2 2 0 0 0 22 18L13.7 3.9z"/></svg>','#f3cd86','Open &middot; 12 min','annotated snapshot &middot; 4:18 PM'))+slot('C-LEARN · S5',v3Learn([['Normally closed overnight — open now is unusual','baseline','0.94'],['Opens 7&ndash;8 AM on weekday mornings','routine','0.88'],['The silver SUV is the &ldquo;family car&rdquo;','identity','0.81']]))+slot('Tier-2 binding',vConf('0.98','Open/closed via segmentation')+`<div style="margin-top:7px">${vCorrect('correct')}</div>`)+`</div>`},
  'package_reminder':{arche:{key:'event',name:'Event Watcher',color:'#f6b73c',q:'Did a package arrive — still out?'},frame:{Subject:'Front porch',Condition:'Package present / still outside',Question:'Did a package arrive, and is it still out?',Urgency:'Medium',Cadence:'Event + periodic still-out check',Output:'Alert + reminder'},mods:[['C-LIVE','req','hero'],['C-STATE','req',''],['C-REMINDER','req',''],['C-FEED','cond','']],tiers:[['#34d399','Tier 1','package + courier detection'],['#4f8ff0','Tier 2','still-present tracking across checks']],policy:'Notify on arrival, then a single reminder if it sits past the dwell window.',
-   screen:()=>tbar('Package Reminder','Event Watcher')+`<div class="ui">`+slot('C-STATE · S0',stState('1 package','on the porch &middot; 2h 14m','#f6b73c'))+slot('C-LIVE · S1',vb('linear-gradient(165deg,#243a5e,#0f1a2c)',`<div style="position:absolute;left:50%;top:54%;transform:translate(-50%,-50%);width:52px;height:38px;border:2px solid #f6b73c;border-radius:4px"></div><div style="position:absolute;left:50%;top:80%;transform:translateX(-50%);font-size:8px;font-weight:700;background:#f6b73cdd;color:#3a2a05;padding:2px 6px;border-radius:4px">PACKAGE</div><div class="vname">Doorbell cam</div>`))+slot('C-REMINDER · S2',`<div class="reminder" style="background:#f6b73c12;border-color:#f6b73c40"><div class="rc" style="background:#f6b73c">${aIcon('<path d="M12 2s6 7 6 11a6 6 0 0 1-12 0z"/>')}</div><div style="flex:1"><b>Still outside &middot; 2h</b><span>Delivered 1:46 PM &middot; bring it in</span></div></div>`)+slot('C-FEED · S3',fdp('Today',[['Package placed','1:46 PM &middot; courier','PACKAGE','#f3cd86'],['Familiar face &mdash; mail carrier','1:46 PM','KNOWN','#7eecc4']]))+`</div>`},
+   screen:()=>tbar('Package Reminder','Event Watcher')+`<div class="ui">`+slot('C-STATE · S0',v3State('Front porch','1 package','#f6b73c','on the porch','2h 14m'))+slot('C-LIVE · S1',v3Live('linear-gradient(165deg,#243a5e,#0f1a2c)','Doorbell cam','',`<div style="position:absolute;left:50%;top:54%;transform:translate(-50%,-50%);width:52px;height:38px;border:2px solid #f6b73c;border-radius:4px"></div><div style="position:absolute;left:50%;top:80%;transform:translateX(-50%);font-size:8px;font-weight:700;background:#f6b73cdd;color:#3a2a05;padding:2px 6px;border-radius:4px">PACKAGE</div>`))+slot('C-REMINDER · S2',v3Reminder('<path d="M12 2s6 7 6 11a6 6 0 0 1-12 0z"/>','Still outside &middot; 2h','Delivered 1:46 PM &middot; bring it in','#f6b73c'))+slot('C-FEED · S3',v3Feed('Today',null,[['Package placed','1:46 PM &middot; courier','PACKAGE','#f3cd86'],['Familiar face &mdash; mail carrier','1:46 PM','KNOWN','#7eecc4']]))+`</div>`},
  'trash_bin_checker':{arche:{key:'verifier',name:'Attendance Verifier',color:'#34d399',q:'Bins out — did the truck come?'},frame:{Subject:'Curb / trash bins',Condition:'Bins out + truck arrival',Question:'Did the bins make it out and the truck arrive?',Urgency:'Low',Cadence:'Collection-day window',Output:'Milestone log'},mods:[['C-SNAP','req','hero'],['C-STATE','req',''],['C-FEED','req',''],['C-MONTHTREND','cond','']],tiers:[['#34d399','Tier 1','vehicle (truck) detection'],['#a78bfa','Tier 3','VLM confirms bins are at the curb']],policy:'One quiet milestone note — bins out, then truck arrived. No steady-state pings.',
-   screen:()=>tbar('Trash Bin Checker','Attendance Verifier')+`<div class="ui">`+slot('C-STATE · S0',stState('Bins out &check;','truck not arrived yet','#f6b73c'))+slot('C-SNAP · S1',`<div class="hero"><div class="videobox" style="background:linear-gradient(165deg,#2a3340,#10141b)">${sigTag('snap')}<div class="annbox" style="left:22%;top:46%;width:54%;height:34%;border-color:#34d399"></div><div class="annbadge" style="left:22%;top:46%;background:#34d399;color:#04231a">2 bins at curb</div><div class="vname">Driveway cam &middot; 7:04 AM</div></div></div>`)+slot('C-FEED · S3',fdp('Collection day',[['Bins placed at curb','7:02 AM','BINS','#7eecc4'],['Truck expected','~9:00 AM &middot; last week 9:08','ETA','#9cc3f5']]))+slot('C-MONTHTREND · S4',monthCal('Pickups','every Tue',d=>[3,10,17,24,31].includes(d)?1:0))+`</div>`},
+   screen:()=>tbar('Trash Bin Checker','Attendance Verifier')+`<div class="ui">`+slot('C-STATE · S0',v3State('Curb / bins','Bins out','#f6b73c','awaiting truck','7:02 AM'))+slot('C-SNAP · S1',v3Snap('linear-gradient(165deg,#2a3340,#10141b)','#34d399','at curb','<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7eecc4" stroke-width="2.4"><path d="M5 12l5 5L20 7"/></svg>','#7eecc4','2 bins at curb','Driveway cam &middot; 7:04 AM'))+slot('C-FEED · S3',v3Feed('Collection day',null,[['Bins placed at curb','7:02 AM','BINS','#7eecc4'],['Truck expected','~9:00 AM &middot; last week 9:08','ETA','#9cc3f5']]))+slot('C-MONTHTREND · S4',monthCal('Pickups','every Tue',d=>[3,10,17,24,31].includes(d)?1:0))+`</div>`},
  'camera_health_check':{arche:{key:'ops',name:'Operations Console',color:'#7aa3c8',q:'Are all cameras healthy?'},frame:{Subject:'Camera fleet',Condition:'Image quality / online / stale',Question:'Is every camera healthy and current?',Urgency:'Low',Cadence:'Daily sweep',Output:'Per-camera health report'},mods:[['C-STATE','req','hero'],['C-TILES','req','']],tiers:[['#a78bfa','Tier 3','VLM rates each snapshot for blur / dark / obstruction']],policy:'Daily report; alert immediately on offline or a sudden quality drop.',
-   screen:()=>tbar('Camera Health Check','Operations Console')+`<div class="ui">`+slot('C-STATE · S0',stState('3 / 4 OK','1 camera needs attention','#7aa3c8'))+slot('C-TILES · S2',`<div class="panel"><div class="ph"><b>Fleet today</b><span style="font-size:9px;color:#7eecc4">3 / 4 online</span></div><div class="tilegrid"><div class="gtile num"><b>3<span style="font-size:12px;color:var(--mut)">/4</span></b><span>online</span></div><div class="gtile num"><b>3</b><span>quality OK</span></div><div class="gtile num" style="border-color:#f25c5c55;background:#f25c5c10"><b style="color:#ff9a9a">1</b><span style="color:#ff9a9a">issues</span></div></div></div>`)+slot('C-TILES · S1',`<div class="panel"><div class="ph"><b>Per-camera health</b><span style="font-size:9px;color:#7eecc4">3 / 4 online</span></div><div class="tilegrid"><div class="gtile"><div class="gt-top"><span class="gt-dot" style="background:#34d399"></span>Front door</div><div class="gt-sub">clear &middot; fw 4.36</div></div><div class="gtile"><div class="gt-top"><span class="gt-dot" style="background:#34d399"></span>Backyard</div><div class="gt-sub">clear</div></div><div class="gtile"><div class="gt-top"><span class="gt-dot" style="background:#f6b73c"></span>Garage</div><div class="gt-sub" style="color:#f3cd86">spider web &middot; blurry</div></div><div class="gtile" style="border-color:#f25c5c55;background:#f25c5c10"><div class="gt-top"><span class="gt-dot" style="background:#f25c5c"></span>Side yard</div><div class="gt-sub" style="color:#ff9a9a">offline 2h</div></div></div></div>`)+slot('Tier-3 binding',vConf('0.95','Per-snapshot quality score &middot; VLM'))+`</div>`},
+   screen:()=>tbar('Camera Health Check','Operations Console')+`<div class="ui">`+slot('C-STATE · S0',v3State('Camera fleet','3 / 4 OK','#7aa3c8','1 needs attention','daily sweep'))+slot('C-TILES · S2',v3Tiles('Fleet today','3 / 4 online',null,[['3 / 4','online'],['3','quality OK'],['1','issues','#f25c5c']]))+slot('C-TILES · S1',v3Tiles('Per-camera health','3 / 4 online',[['Front door','clear','#34d399'],['Backyard','clear','#34d399'],['Garage','spider web','#f6b73c'],['Side yard','offline 2h','#f25c5c']],null))+slot('Tier-3 binding',vConf('0.95','Per-snapshot quality score &middot; VLM'))+`</div>`},
  'general_monitoring':{arche:{key:'event',name:'Event Watcher',color:'#4f8ff0',q:'What notable activity happened?'},frame:{Subject:'Assigned cameras',Condition:'Notable person / motion',Question:'What notable activity happened?',Urgency:'Medium',Cadence:'Event + daily sweep',Output:'Feed + daily summary'},mods:[['C-LIVE','req','hero'],['C-FEED','req',''],['C-RECAP','req','']],tiers:[['#34d399','Tier 1','person / vehicle / animal classifiers']],policy:'Surface notable events; compile a once-daily summary.',
-   screen:()=>tbar('General Monitoring','Event Watcher')+`<div class="ui">`+slot('C-STATE · S0',stState('All quiet','6 events today','#4f8ff0'))+slot('C-LIVE · S1',vb('linear-gradient(165deg,#1d2d49,#0f1828)',`<div class="vname">Backyard cam</div><div class="vtime">14:09</div>`))+slot('C-FEED · S3',`<div class="chips2"><span class="fc on">All &middot; 6</span><span class="fc">Person &middot; 3</span><span class="fc">Vehicle &middot; 1</span><span class="fc">Animal &middot; 2</span></div>`)+slot('C-RECAP · S4',`<div class="panel"><div class="ph"><b>Daily summary</b><span class="recap"><span class="ai">AI</span></span></div><div class="recap">Quiet day. 3 family arrivals, a delivery at 1 PM, and two cats in the yard. Nothing unusual.</div></div>`)+`</div>`},
+   screen:()=>tbar('General Monitoring','Event Watcher')+`<div class="ui">`+slot('C-STATE · S0',v3State('Assigned cameras','All quiet','#4f8ff0','6 events today','last 24h'))+slot('C-LIVE · S1',v3Live('linear-gradient(165deg,#1d2d49,#0f1828)','Backyard cam','14:09'))+slot('C-FEED · S3',v3Feed('Today',['All &middot; 6','Person &middot; 3','Vehicle &middot; 1','Animal &middot; 2'],[['Family arrival','1:02 PM &middot; known','PERSON','#7eecc4'],['Delivery dropped','1:00 PM','PKG','#9cc3f5'],['Cat in the yard','11:30 AM','ANIMAL','#f3cd86']]))+slot('C-RECAP · S4',v3Recap('Daily summary',null,null,'Quiet day. 3 family arrivals, a delivery at 1 PM, and two cats in the yard. Nothing unusual.',null))+`</div>`},
  'baby_monitor':{arche:{key:'well',name:'Wellbeing Monitor',color:'#f472b6',q:'Is the baby safe and settled?'},frame:{Subject:'Nursery / baby',Condition:'Sleep, sound, safety',Question:'Is the baby safe and settled?',Urgency:'High',Cadence:'Continuous overnight',Output:'Reassurance + escalation'},mods:[['C-STATE','req',''],['C-LIVE','req','hero'],['C-TILES','cond',''],['C-SOS','req',''],['C-RECAP','req','']],tiers:[['#a78bfa','Tier 3','VLM watches for covered face / rollover / distress']],policy:'Reassure quietly; escalate immediately on a covered face or true cry.',
-   screen:()=>tbar('Baby Monitor','Wellbeing Monitor')+`<div class="ui">`+slot('C-STATE · S0',stState('Asleep','calm &middot; 6h 12m','#4f8ff0'))+slot('C-LIVE · S1',vb('linear-gradient(165deg,#10182b,#070b14)',`<div style="position:absolute;inset:0;display:grid;place-items:center;color:#3a567f;font-size:11px">night vision</div><div class="vname">Crib cam &middot; overhead</div><div class="vtime">02:14</div>`))+slot('C-TILES · S2',`<div class="panel"><div class="ph"><b>Live monitoring</b></div><div class="tilegrid"><div class="gtile num"><b>38<span style="font-size:12px;color:var(--mut)">/min</span></b><span>breathing</span></div><div class="gtile num"><b>69<span style="font-size:12px;color:var(--mut)">&deg;F</span></b><span>room</span></div><div class="gtile num"><b style="color:#7eecc4;font-size:14px">Quiet</b><span>sound</span></div></div></div>`)+slot('C-RECAP · S5',`<div class="panel"><div class="ph"><b>Overnight recap</b><span class="recap"><span class="ai">AI</span></span></div><span class="pvbadge" style="background:#34d39922;color:#7eecc4;font-size:8px;display:inline-block;margin-bottom:10px">SLEPT WELL</span><div style="font-size:15px;line-height:1.5;font-weight:600;color:#e9eef6">Slept <b style="color:#9cc3f5">10h 4m</b> with 2 brief wakings. One true-cry at <b style="color:#f3cd86">2:14a</b> — self-settled in 3 min.</div><div style="display:flex;gap:5px;margin-top:11px"><span class="fc" style="font-size:8px">2:14 cry &middot; clip</span><span class="fc" style="font-size:8px">sleep graph</span></div></div>`)+slot('C-SOS · Sa',sosBook([['P','Partner','Call &middot; this phone','#4f8ff0','call'],['G','Grandparent','Text &middot; (415) 555-0199','#f6b73c','text']]))+`</div>`},
+   screen:()=>tbar('Baby Monitor','Wellbeing Monitor')+`<div class="ui">`+slot('C-STATE · S0',v3State('Nursery','Asleep','#4f8ff0','calm','6h 12m'))+slot('C-LIVE · S1',v3Live('linear-gradient(165deg,#10182b,#070b14)','Crib cam &middot; overhead','02:14',`<div style="position:absolute;inset:0;display:grid;place-items:center;color:#3a567f;font-size:11px">night vision</div>`))+slot('C-TILES · S2',v3Tiles('Live monitoring',null,null,[['38','breathing /min'],['69&deg;','room temp'],['Quiet','sound']]))+slot('C-RECAP · S5',v3Recap('Overnight recap','SLEPT WELL','#7eecc4','Slept <b style="color:#9cc3f5">10h 4m</b> with 2 brief wakings. One true-cry at <b style="color:#f3cd86">2:14a</b> — self-settled in 3 min.',['2:14 cry &middot; clip','sleep graph']))+slot('C-SOS · Sa',v3Sos([['P','Partner','#4f8ff0'],['G','Grandparent','#f6b73c']]))+`</div>`},
  'pet_monitoring':{arche:{key:'well',name:'Wellbeing Monitor',color:'#34d399',q:'Is the pet OK — did it escape?'},frame:{Subject:'Dog — &ldquo;Cooper&rdquo;',Condition:'Activity, distress, exit',Question:'Is the pet OK and not loose?',Urgency:'Medium',Cadence:'Continuous + checks',Output:'Updates + escape alert'},mods:[['C-STATE','req',''],['C-LIVE','req','hero'],['C-DAYTREND','req',''],['C-FEED','cond','']],tiers:[['#34d399','Tier 1','pet detection'],['#a78bfa','Tier 3','VLM reads activity / distress, watches exits']],policy:'Calm updates; alert immediately if the pet reaches an exit or shows distress.',
-   screen:()=>tbar('Pet Monitoring','Wellbeing Monitor')+`<div class="ui">`+slot('C-STATE · S0',stState('Resting','Cooper &middot; calm','#34d399'))+slot('C-LIVE · S1',vb('linear-gradient(165deg,#243018,#0e1208)',`<div class="vname">Living room cam</div><div class="vtime">14:09</div>`))+slot('C-DAYTREND · S3',`<div class="panel"><div class="ph"><b>Today&rsquo;s activity</b></div><div class="scrub" style="height:34px">${[20,60,40,75,30,55,25,45].map((h,i)=>`<div class="seg" style="height:${h}%;background:${[1,3,5].includes(i)?'#34d399':'#26344f'}"></div>`).join('')}<div class="axis"><span>6a</span><span>12p</span><span>now</span></div></div></div>`)+slot('C-FEED · S3',fdp('Recent',[['Active &mdash; play in yard','11:20 AM','ACTIVE','#7eecc4'],['Near back door','10:05 AM &middot; no exit','WATCH','#f3cd86']]))+`</div>`},
+   screen:()=>tbar('Pet Monitoring','Wellbeing Monitor')+`<div class="ui">`+slot('C-STATE · S0',v3State('Dog &mdash; Cooper','Resting','#34d399','calm','since 1:40 PM'))+slot('C-LIVE · S1',v3Live('linear-gradient(165deg,#243018,#0e1208)','Living room cam','14:09'))+slot('C-DAYTREND · S3',v3Day('Today&rsquo;s activity','&#9650; active AM',[[20,0],[60,1],[40,0],[75,1],[30,0],[55,1],[25,0],[45,0]]))+slot('C-FEED · S3',v3Feed('Recent',null,[['Active &mdash; play in yard','11:20 AM','ACTIVE','#7eecc4'],['Near back door','10:05 AM &middot; no exit','WATCH','#f3cd86']]))+`</div>`},
  'school_bus_watch':{arche:{key:'event',name:'Event Watcher',color:'#f6b73c',q:'Did the bus come — on time?'},frame:{Subject:'Street / school bus',Condition:'Bus arrival in window',Question:'Did the bus arrive on time?',Urgency:'Medium',Cadence:'Pickup + dropoff windows',Output:'Arrival alert + late flag'},mods:[['C-LIVE','req','hero'],['C-STATE','req',''],['C-FEED','req',''],['C-REMINDER','cond','']],tiers:[['#34d399','Tier 1','vehicle detection'],['#a78bfa','Tier 3','VLM confirms it is a school bus']],policy:'Alert on arrival within the window; flag if the bus is late past the buffer.',
-   screen:()=>tbar('School Bus Watch','Event Watcher')+`<div class="ui">`+slot('C-STATE · S0',stState('Next 3:00 PM','afternoon dropoff','#f6b73c'))+slot('C-LIVE · S1',vb('linear-gradient(165deg,#2a2f3a,#10131a)',`<div style="position:absolute;left:40%;top:48%;width:46px;height:22px;border:2px solid #f6b73c;border-radius:3px"></div><div class="annbadge" style="left:40%;top:42%;background:#f6b73c;color:#3a2a05">school bus</div><div class="vname">Street cam</div><div class="vtime">07:32</div>`))+slot('C-FEED · S3',fdp('Today',[['Bus arrived &mdash; morning','7:32 AM &middot; on time','ON TIME','#7eecc4'],['Emma boarded','7:33 AM','BOARDED','#9cc3f5']]))+slot('C-REMINDER · S2',`<div class="reminder"><div class="rc">${aIcon('<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/>')}</div><div style="flex:1"><b>Dropoff at 3:00 PM</b><span>watching the afternoon window</span></div></div>`)+`</div>`},
+   screen:()=>tbar('School Bus Watch','Event Watcher')+`<div class="ui">`+slot('C-STATE · S0',v3State('Street / bus','3:00 PM','#f6b73c','next dropoff','afternoon'))+slot('C-LIVE · S1',v3Live('linear-gradient(165deg,#2a2f3a,#10131a)','Street cam','07:32',`<div style="position:absolute;left:40%;top:48%;width:46px;height:22px;border:2px solid #f6b73c;border-radius:3px"></div><div class="annbadge" style="left:40%;top:42%;background:#f6b73c;color:#3a2a05">school bus</div>`))+slot('C-FEED · S3',v3Feed('Today',null,[['Bus arrived &mdash; morning','7:32 AM &middot; on time','ON TIME','#7eecc4'],['Emma boarded','7:33 AM','BOARDED','#9cc3f5']]))+slot('C-REMINDER · S2',v3Reminder('<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/>','Dropoff at 3:00 PM','watching the afternoon window','#f6b73c'))+`</div>`},
  'kids_watch':{arche:{key:'well',name:'Wellbeing Monitor',color:'#f472b6',q:'Are the kids safe in the zone?'},frame:{Subject:'Play area / children',Condition:'Zone departure, stranger',Question:'Are the children safe in the zone?',Urgency:'High',Cadence:'Continuous in window',Output:'Safety alert'},mods:[['C-LIVE','req','hero'],['C-FEED','req',''],['C-SOS','cond','']],tiers:[['#34d399','Tier 1','person + child / adult'],['#a78bfa','Tier 3','VLM flags zone-exit, unknown adult, pool approach']],policy:'Err toward alerting — leaving the zone, an unknown adult, or pool approach all escalate.',
-   screen:()=>tbar('Kids Watch','Wellbeing Monitor')+`<div class="ui">`+slot('C-STATE · S0',stState('Safe','2 kids in zone','#34d399'))+slot('C-LIVE · S1',vb('linear-gradient(165deg,#22303f,#0c1119)',`<div class="annbox" style="left:14%;top:36%;width:72%;height:46%;border-style:dashed;border-color:#f6b73c"></div><div class="annbadge" style="left:14%;top:36%">watch zone</div><div class="vname">Backyard &middot; play area</div>`))+slot('C-FEED · S3',fdp('Today',[['Left zone &mdash; returned','4:10 PM &middot; 40s','OK','#7eecc4'],['Unknown adult','none today','CLEAR','#9cc3f5']]))+slot('C-SOS · Sa',sosBook([['Y','You','Push &middot; this phone','#4f8ff0','push'],['P','Partner','Call &middot; (415) 555-0142','#f6b73c','call']]))+`</div>`},
+   screen:()=>tbar('Kids Watch','Wellbeing Monitor')+`<div class="ui">`+slot('C-STATE · S0',v3State('Play area','Safe','#34d399','2 kids in zone','now'))+slot('C-LIVE · S1',v3Live('linear-gradient(165deg,#22303f,#0c1119)','Backyard &middot; play area','',`<div class="annbox" style="left:14%;top:36%;width:72%;height:46%;border-style:dashed;border-color:#f6b73c"></div><div class="annbadge" style="left:14%;top:36%">watch zone</div>`))+slot('C-FEED · S3',v3Feed('Today',null,[['Left zone &mdash; returned','4:10 PM &middot; 40s','OK','#7eecc4'],['Unknown adult','none today','CLEAR','#9cc3f5']]))+slot('C-SOS · Sa',v3Sos([['Y','You','#4f8ff0'],['P','Partner','#f6b73c']]))+`</div>`},
  'cat_monitoring':{arche:{key:'disc',name:'Discovery / State',color:'#a78bfa',q:'Where is the cat — indoors?'},frame:{Subject:'Cat — &ldquo;Mochi&rdquo;',Condition:'Location, indoor-only',Question:'Where is the cat, and is it inside?',Urgency:'Low',Cadence:'Continuous + checks',Output:'Activity + indoor-rule alert'},mods:[['C-STATE','req',''],['C-LIVE','req','hero'],['C-FEED','req','']],tiers:[['#34d399','Tier 1','pet detection + re-ID'],['#a78bfa','Tier 3','VLM tracks indoor vs outdoor']],policy:'Quiet activity log; alert only if indoor-only is on and the cat is seen outside.',
    screen:()=>tbar('Cat Monitoring','Discovery')+`<div class="ui">`+slot('C-STATE · S0',stState('Indoors','Mochi &middot; active','#a78bfa'))+slot('C-LIVE · S1',vb('linear-gradient(165deg,#241a30,#0e0a16)',`<div class="vname">Living room cam</div><div class="vtime">14:09</div>`))+slot('C-FEED · S3',fdp('Today',[['On the windowsill','2:10 PM','INDOOR','#c4b3f0'],['Near cat door','1:02 PM &middot; stayed in','WATCH','#f3cd86'],['Napping on sofa','11:30 AM','INDOOR','#c4b3f0']]))+`</div>`},
  'bird_monitoring':{arche:{key:'disc',name:'Discovery / Collection',color:'#34d399',q:'Which species visited?'},frame:{Subject:'Feeder / backyard',Condition:'Bird visits + feeder level',Question:'Which species visited, and is the feeder full?',Urgency:'Low',Cadence:'Hourly + motion',Output:'Species log + feeder status'},mods:[['C-GALLERY','req','hero'],['C-READOUT','req',''],['C-TREND','cond',''],['C-INSIGHT','cond','']],tiers:[['#a78bfa','Tier 3','open-vocabulary species recognition']],policy:'Log every visit; one gentle nudge when the feeder runs low.',
@@ -3061,7 +3131,7 @@ const TPLVIEW={
  'fall_detection':{arche:{key:'well',name:'Wellbeing Monitor',color:'#f25c5c',q:'Has anyone fallen?'},frame:{Subject:'Room / person',Condition:'Sudden fall / collapse',Question:'Has a person fallen and not recovered?',Urgency:'Critical',Cadence:'Continuous + 15-min heartbeat',Output:'Immediate escalation'},mods:[['C-LIVE','req','hero'],['C-STATE','req',''],['C-SOS','req',''],['C-RECAP','req','']],tiers:[['#34d399','Tier 1','pose / person'],['#a78bfa','Tier 3','VLM classifies upright→floor without recovery']],policy:'Escalate within seconds on a confirmed fall; ignore bending, sitting, and pets.',
    screen:()=>tbar('Fall Detection','Wellbeing Monitor')+`<div class="ui">`+slot('C-STATE · S0',stState('Upright','no falls &middot; monitoring','#34d399'))+slot('C-LIVE · S1',vb('linear-gradient(165deg,#1c2436,#0c1320)',`<div style="position:absolute;inset:0;display:grid;place-items:center"><svg width="42" height="56" viewBox="0 0 24 30" fill="none" stroke="#4f8ff0" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="4" r="3"/><path d="M12 7v9M12 10l-5 3M12 10l5 3M12 16l-4 8M12 16l4 8"/></svg></div><div class="vname">Living room &middot; privacy — pose only</div><div class="vtime">abstracted</div>`))+slot('C-RECAP · S5',`<div class="panel"><div class="ph"><b>Today&rsquo;s recap</b><span class="recap"><span class="ai">AI</span></span></div><span class="pvbadge" style="background:#34d39922;color:#7eecc4;font-size:8px;display:inline-block;margin-bottom:10px">NO FALLS</span><div style="font-size:15px;line-height:1.5;font-weight:600;color:#e9eef6">Up and about all day — <b style="color:#7eecc4">no falls</b> detected. Most active <b style="color:#e9eef6">8&ndash;10a</b> and after lunch; last seen upright at <b style="color:#9cc3f5">6:40p</b>.</div><div style="display:flex;gap:5px;margin-top:11px"><span class="fc" style="font-size:8px">activity by hour</span><span class="fc" style="font-size:8px">mobility steady</span></div></div>`)+slot('C-SOS · Sa',sosBook([['Y','You','Push &middot; this phone','#4f8ff0','push'],['S','Sarah &middot; sister','Call &middot; (415) 555-0142','#f6b73c','call'],['N','Neighbor','Text &middot; (415) 555-0177','#34d399','text']]))+slot('Tier-3 binding',vConf('0.95','Fall classifier &middot; privacy pose model')+`<div style="margin-top:7px">${vCorrect('correct')}</div>`)+`</div>`},
  'senior_care':{arche:{key:'well',name:'Wellbeing Monitor',color:'#34d399',q:'Is the routine normal today?'},frame:{Subject:'Elderly resident',Condition:'Daily routine + inactivity',Question:'Is today&rsquo;s routine normal?',Urgency:'High',Cadence:'Routine checks + heartbeat',Output:'Daily recap + inactivity alert'},mods:[['C-STATE','req','hero'],['C-DAYTREND','req',''],['C-SOS','req',''],['C-RECAP','req',''],['C-ASSIST','cond','']],tiers:[['#34d399','Tier 1','person / motion'],['#a78bfa','Tier 3','VLM reads activity vs the 30-day pattern']],policy:'Quiet most days; alert if no activity within the inactivity threshold or routine breaks.',
-   screen:()=>tbar('Senior Care','Wellbeing Monitor')+`<div class="ui">`+slot('C-STATE · S0',stState('Active','last motion 9:12 AM','#34d399'))+slot('C-STATE · S1',`<div class="hero"><div class="bigstate"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#7eecc4" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><div class="val" style="color:#7eecc4;font-size:20px">Moving normally</div><div class="meta">Up at 7:40 AM &middot; 3 active periods</div></div></div>`)+slot('C-DAYTREND · S3',`<div class="panel"><div class="ph"><b>Today&rsquo;s activity</b></div><div class="scrub" style="height:34px">${[15,70,55,20,65,40,18,52].map((h,i)=>`<div class="seg" style="height:${h}%;background:${[1,2,4,5,7].includes(i)?'#34d399':'#26344f'}"></div>`).join('')}<div class="axis"><span>6a</span><span>12p</span><span>now</span></div></div></div>`)+slot('C-ASSIST · S5',`<div class="panel"><div class="ph"><b>Ask about Mom</b><span class="recap"><span class="ai">AI</span></span></div><div class="dc-lab" style="margin:0 0 8px">Suggested questions</div><div class="suglist">${[['#7eecc4','How has Mom been this week?'],['#9cc3f5','When was she last active?'],['#c4b3f0','Did she take her morning walk?'],['#9cc3f5','Any missed meals today?']].map(([c,q])=>`<div class="sugq"><i class="sugdot" style="background:${c}"></i><span class="sugq-t">${q}</span><span class="sugq-go">&rarr;</span></div>`).join('')}</div></div>`)+slot('C-SOS · Sa',sosBook([['Y','You','Push &middot; this phone','#4f8ff0','push'],['S','Sarah &middot; sister','Call &middot; (415) 555-0142','#f6b73c','call']]))+`</div>`},
+   screen:()=>tbar('Senior Care','Wellbeing Monitor')+`<div class="ui">`+slot('C-STATE · S0',stState('Active','last motion 9:12 AM','#34d399'))+slot('C-STATE · S1',`<div class="hero"><div class="bigstate"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#7eecc4" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg><div class="val" style="color:#7eecc4;font-size:20px">Moving normally</div><div class="meta">Up at 7:40 AM &middot; 3 active periods</div></div></div>`)+slot('C-DAYTREND · S3',`<div class="panel"><div class="ph"><b>Today&rsquo;s activity</b></div><div class="scrub" style="height:34px">${[15,70,55,20,65,40,18,52].map((h,i)=>`<div class="seg" style="height:${h}%;background:${[1,2,4,5,7].includes(i)?'#34d399':'#26344f'}"></div>`).join('')}<div class="axis"><span>6a</span><span>12p</span><span>now</span></div></div></div>`)+slot('C-ASSIST · S5',`<div class="panel"><div class="ph"><b>Ask about Mom</b><span class="recap"><span class="ai">AI</span></span></div><div class="dc-lab" style="margin:0 0 8px">Suggested questions</div><div class="suglist">${[['#7eecc4','How has Mom been this week?'],['#9cc3f5','When was she last active?'],['#c4b3f0','Did she take her morning walk?'],['#9cc3f5','Any missed meals today?']].map(([c,q])=>`<div class="sugq"><span class="sugq-t">${q}</span><span class="sugq-go">&rarr;</span></div>`).join('')}</div></div>`)+slot('C-SOS · Sa',sosBook([['Y','You','Push &middot; this phone','#4f8ff0','push'],['S','Sarah &middot; sister','Call &middot; (415) 555-0142','#f6b73c','call']]))+`</div>`},
  'stove_watch':{arche:{key:'state',name:'State Monitor',color:'#f25c5c',q:'Is the stove on and unattended?'},frame:{Subject:'Kitchen stove',Condition:'Active burner + person presence',Question:'Is the stove on and unattended?',Urgency:'High',Cadence:'Continuous + motion',Output:'Hazard alert'},mods:[['C-SNAP','req','hero'],['C-STATE','req','']],tiers:[['#a78bfa','Tier 3','VLM detects an active/glowing element and whether a person is present']],policy:'Alert only when the stove is active AND no person is present past the threshold.',
    screen:()=>tbar('Stove Watch','State Monitor')+`<div class="ui">`+slot('C-STATE · S0',stState('OFF','stove &middot; kitchen clear','#34d399'))+slot('C-SNAP · S1',`<div class="hero"><div class="videobox" style="background:linear-gradient(165deg,#2a241c,#120e09)">${sigTag('snap')}<div class="annbox" style="left:30%;top:30%;width:36%;height:34%;border-color:#34d399"></div><div class="annbadge" style="left:30%;top:30%;background:#34d399;color:#04231a">cooktop &middot; off</div><div class="vname">Cooktop cam &middot; 4:02 PM</div></div></div>`)+slot('Tier-3 binding',vConf('0.94','Active-burner + presence &middot; calibrated')+`<div style="margin-top:7px">${vCorrect('correct')}</div>`)+`</div>`},
  'pool_watch':{arche:{key:'event',name:'Event Watcher',color:'#38c6db',q:'Anyone in the pool area unsafely?'},frame:{Subject:'Pool area',Condition:'Person / child / pet access',Question:'Is anyone in the pool area unsafely?',Urgency:'Critical',Cadence:'Continuous',Output:'Safety alert'},mods:[['C-LIVE','req','hero'],['C-FEED','req',''],['C-SOS','cond','']],tiers:[['#34d399','Tier 1','person / child / pet'],['#a78bfa','Tier 3','VLM enforces pool hours and unaccompanied-child rules']],policy:'Life-safety — alert immediately on an unaccompanied child or a pet at the pool.',
@@ -3417,7 +3487,7 @@ const MODFULL={
  /* G · Detection & Config */
  'M-ZONE':`<div class="hero"><div class="videobox" style="background:linear-gradient(165deg,#22303f,#0c1119)">${sigTag('live')}<div class="annbox" style="left:14%;top:40%;width:72%;height:40%;border-style:dashed"></div><div class="annbadge" style="left:14%;top:40%">watch zone</div><div class="vname">Edit detection zone</div></div></div>`,
  'M-PROMPT':`<div class="promptbox"><div class="pl">Tier-3 detector &middot; M-PROMPT</div><div class="pt">&ldquo;Is a visible flame or glowing hot element present on the stovetop?&rdquo;</div></div>`,
- 'M-IDCARD':`<div class="panel"><div class="ph"><b>Selected visit</b></div><div class="idcard"><div class="pic"></div><div><div class="nm">Northern Cardinal</div><div class="sci">Cardinalis cardinalis</div><div class="meta">1:52 PM &middot; 41-second stay<br>Adult male &middot; 9th species</div></div></div></div>`,
+ 'M-IDCARD':`<div class="panel"><div class="ph"><b>ID Card</b></div><div class="idcard"><div class="pic"></div><div><div class="nm">Northern Cardinal</div><div class="sci">Cardinalis cardinalis</div><div class="meta">1:52 PM &middot; 41-second stay<br>Adult male &middot; 9th species</div></div></div></div>`,
  'M-RULES':`<div class="panel"><div class="ph"><b>Thresholds &amp; escalation</b></div><label class="toggle on" style="display:flex;justify-content:space-between;width:100%;padding:7px 0">Notify me<span class="tg"></span></label><label class="toggle on" style="display:flex;justify-content:space-between;width:100%;padding:7px 0;border-top:1px solid var(--line)">Escalate after 6 min<span class="tg"></span></label><label class="toggle" style="display:flex;justify-content:space-between;width:100%;padding:7px 0;border-top:1px solid var(--line)">Auto-record clip<span class="tg"></span></label></div>`,
  /* H · Fleet & Escalation */
  'M-DEVMAP':`<div class="panel"><div class="ph"><b>Device map</b></div><div style="position:relative;height:72px;background:#0e1a2c;border-radius:8px">${[[20,32],[58,54],[80,22]].map(([x,y])=>`<div style="position:absolute;left:${x}%;top:${y}%;width:12px;height:12px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#4f8ff0;box-shadow:0 0 0 3px #4f8ff033"></div>`).join('')}</div></div>`,
@@ -3510,19 +3580,19 @@ $('sigRow').innerHTML=SIGNALS.map(([n,d])=>`<span class="sigchip"><b>${n}</b> &m
    needs data Wyze AI One can't supply yet, the element is rendered as a dashed "ghost"
    with a NO-DATA pill (per design-review decision D3). Shown side-by-side with v1 in
    the Data check tab only; the Library tab keeps v1. */
-const cf15=(v,t)=>`<div class="conf" style="margin-top:7px;padding:7px 9px"><div class="cd">${t||'VLM confidence · tap a detection to correct'}</div><div class="cv">${v}</div></div>`;
+const cf15=(v,t)=>`<div class="conf" style="margin-top:7px;padding:7px 9px"><div class="cv">${v}</div><div class="cd">${t||'VLM confidence · tap a detection to correct'}</div></div>`;
 const MODFULL15={
  'M-LIVE':`<div class="hero"><div class="videobox" style="background:linear-gradient(165deg,#1d2d49,#0f1828)">${sigTag('live')}<span class="ml-res" style="position:absolute;right:7px;top:7px;font-size:7px;font-weight:800;background:#0009;color:#cfe3ff;padding:2px 6px;border-radius:5px">1080p · &#9679; REC</span><div class="vname">Front cam &middot; online</div><div class="vtime">14:09</div></div></div>`,
  'M-SNAP':MODFULL['M-SNAP']+cf15('0.94','AI verdict: Closed &middot; 0.94 &middot; tap to correct'),
  'M-CLIP':MODFULL['M-CLIP']+`<div class="scrub" style="height:18px;margin-top:7px"><div style="position:absolute;left:0;top:0;bottom:0;width:38%;background:#4f8ff033"></div><div class="pin" style="left:38%"></div></div>`+cf15('0.91','Trigger: person &middot; 0.91'),
- 'M-FOOTAGE':`<div class="hero" style="margin-bottom:8px"><div class="videobox" style="background:linear-gradient(165deg,#1c2740,#0c1119)"><div class="sigtag" style="background:#5a6b82dd;color:#fff">EVENTS</div><div class="vname">Activity scrubber</div><div class="vtime">last 24h</div></div></div>`+scrub()+`<div class="ghost" style="display:block;margin-top:8px;padding:8px"><div class="ml-cont" style="font-size:9px;color:var(--dim);text-align:center">24/7 continuous record</div><span class="nodata">NO DATA</span></div>`,
+ 'M-FOOTAGE':`<div class="hero" style="margin-bottom:8px"><div class="videobox" style="background:linear-gradient(165deg,#1c2740,#0c1119)"><div class="sigtag" style="background:#5a6b82dd;color:#fff">EVENTS</div><div class="vname">Activity scrubber</div><div class="vtime">last 24h</div></div></div>`+scrub(),
  'M-TIMELAPSE':MODFULL['M-TIMELAPSE']+`<div class="ghost" style="display:block;margin-top:8px;padding:7px 9px"><div style="font-size:9px;color:var(--dim)">Periodic frame store &middot; 1/day</div><span class="nodata">NEEDS STORE</span></div>`,
  'M-REEL':MODFULL['M-REEL']+`<div style="display:flex;gap:3px;margin-top:7px">${[0,1,2,3,4,5,6,7].map(i=>`<div style="flex:1;height:4px;border-radius:2px;background:${i<3?'#a78bfa':'#26344f'}"></div>`).join('')}</div><div style="font-size:9px;color:var(--dim);margin-top:5px">8 clips &middot; auto-compiled</div>`,
  'M-GALLERY':`<div class="panel"><div class="ph"><b>Today&rsquo;s visitors</b><span class="sigtag sig-coll" style="position:static">6</span></div><div class="chips2" style="margin-bottom:8px"><span class="fc on">All 6</span><span class="fc">New 2</span><span class="fc">Songbirds 4</span></div><div class="gallery"><div class="gcell new" style="background:linear-gradient(150deg,#b1402f,#5a1c14)"><span>Cardinal</span></div><div class="gcell" style="background:linear-gradient(150deg,#3a67c4,#16304f)"><span>Blue Jay</span></div><div class="gcell new" style="background:linear-gradient(150deg,#caa23f,#5c4715)"><span>Robin</span></div></div></div>`,
  'M-COMPARE':`<div class="panel"><div class="ph"><b>Then &amp; now</b><span class="delta up">&#9650; 17 cm</span></div><div class="compare"><div class="cf"><div class="cimg" style="background:linear-gradient(160deg,#1f3a2c,#0f1d16)"></div><div class="clab">Day 1 &middot; 41 cm</div></div><div class="cf"><div class="cimg" style="background:linear-gradient(160deg,#2c6b47,#16331f)"></div><div class="clab">Day 47 &middot; 58 cm</div></div></div><div class="ghost" style="display:block;margin-top:7px;padding:6px 9px"><span style="font-size:9px;color:var(--dim)">Time-aligned pair store</span><span class="nodata">NEEDS STORE</span></div></div>`,
  'M-GRID':`<div class="panel"><div class="ph"><b>All sites</b><span class="sigtag sig-multi" style="position:static">4 LIVE</span></div><div class="gallery" style="grid-template-columns:1fr 1fr">${[['Lakeside','#2a3b58,#0d1626','#34d399'],['Downtown','#3a2f28,#160f0b','#f25c5c'],['Cabin','#2c5a3e,#13261a','#34d399'],['Midtown','#2f4452,#141d24','#34d399']].map(([n,g,dot])=>`<div class="gcell" style="aspect-ratio:16/10;background:linear-gradient(150deg,${g})"><span style="display:flex;align-items:center;gap:3px"><i style="width:5px;height:5px;border-radius:50%;background:${dot}"></i>${n}</span></div>`).join('')}</div></div>`,
  'M-PTZ':`<div class="hero" style="margin-bottom:8px"><div class="videobox" style="background:linear-gradient(165deg,#22345a,#0e1828)">${sigTag('live')}<div class="vname">Driveway cam</div></div></div><div class="ghost" style="display:block;padding:9px"><div style="display:grid;grid-template-columns:repeat(3,24px);gap:3px;justify-content:center">${['','&#9650;','','&#9664;','&#10043;','&#9654;'].map(s=>`<div style="height:24px;border-radius:4px;background:${s?'#26344f':'transparent'};display:grid;place-items:center;color:#9cc3f5;font-size:10px">${s}</div>`).join('')}</div><span class="nodata">NO PTZ API</span></div>`,
- 'M-STATE':`<div class="strip" style="background:#34d39916;border:1px solid #34d39944;color:#7eecc4"><span class="pulse" style="background:#34d399"></span>Door CLOSED &middot; secure<span style="margin-left:auto;font-family:var(--mono);font-size:11px;color:#7eecc4;font-weight:700">3h 42m</span></div>`+cf15('0.96','State + time-in-state from VLM &middot; tap to correct'),
+ 'M-STATE':`<div class="strip" style="background:#34d39916;border:1px solid #34d39944;color:#7eecc4"><span class="pulse" style="background:#34d399"></span>Door CLOSED &middot; secure<span style="margin-left:auto;font-family:var(--mono);font-size:11px;color:#7eecc4;font-weight:700">3h 42m</span></div>`+cf15('confidence 0.96','tap to correct'),
  'M-DURATION':`<div class="panel"><div class="ph"><b>Time in state</b><span style="font-size:9px;color:var(--dim);font-family:var(--mono)">avg 2:10</span></div><div class="duration"><div class="clock" style="color:#7eecc4">3:42</div><div class="barwrap"><div class="dbar"><i style="width:37%;background:#34d399"></i></div><div class="dthresh">Alert at 10:00 &middot; derived from state-change events</div></div></div></div>`,
  'M-VITALS':`<div class="panel"><div class="ph"><b>Live monitoring</b></div><div class="vitals"><div class="vit"><div class="vn">Occupancy</div><div class="vv">2<small> ppl</small></div></div><div class="vit ghost"><div class="vn">Breathing</div><div class="vv">38</div><span class="nodata">NO DATA</span></div><div class="vit ghost"><div class="vn">SpO&#8322;</div><div class="vv">97</div><span class="nodata">NO DATA</span></div></div><div style="font-size:9px;color:var(--dim);margin-top:6px">Occupancy from detections &middot; vitals need a sensor</div></div>`,
  'M-SCORE':`<div class="hero"><div class="bigstate">${ring(0.87,'#f472b6','87')}<div class="lab" style="margin-top:8px">Sleep score <span class="delta up">&#9650; 4</span></div><div style="display:flex;gap:2px;align-items:flex-end;height:18px;justify-content:center;margin-top:6px">${[60,55,70,65,80,75,87].map(h=>`<div style="width:7px;height:${h}%;border-radius:1px;background:#f472b6aa"></div>`).join('')}</div><div class="ghost" style="display:inline-block;margin-top:7px;padding:3px 9px"><span style="font-size:9px;color:var(--dim)">vs baseline 79&ndash;84</span><span class="nodata">DERIVE</span></div></div></div>`,
@@ -3538,12 +3608,12 @@ const MODFULL15={
  'M-RECAP':`<div class="panel"><div class="ph"><b>Morning recap</b><span class="recap"><span class="ai">AI</span></span></div><span class="pvbadge" style="background:#34d39922;color:#7eecc4;font-size:8px;display:inline-block;margin-bottom:7px">ALL CLEAR</span><div class="recap">Slept 10h 4m, 2 brief wakings. One true-cry at 2:14, self-settled in 3 min.</div><div style="display:flex;gap:5px;margin-top:8px"><span class="fc" style="font-size:8px">2:14 cry &middot; clip</span><span class="fc" style="font-size:8px">night graph</span></div></div>`,
  'M-KPI':`<div class="panel"><div class="ph"><b>Across all sites</b></div><div class="vitals"><div class="vit"><div class="vn">Events</div><div class="vv">24<span class="delta up" style="font-size:8px">&#9650;6</span></div></div><div class="vit"><div class="vn">Online</div><div class="vv">3<small>/4</small></div></div><div class="vit" style="border-color:#f25c5c55;background:#f25c5c10"><div class="vn" style="color:#ff9a9a">Alerts</div><div class="vv" style="color:#ff9a9a">1</div></div></div></div>`,
  'M-TALK':`<div class="ghost" style="display:block;padding:11px"><div class="act primary" style="margin-bottom:8px"><span class="ai">${aIcon('<path d="M12 1a4 4 0 0 0-4 4v6a4 4 0 0 0 8 0V5a4 4 0 0 0-4-4z"/><path d="M5 10v1a7 7 0 0 0 14 0v-1"/>')}</span>Hold to talk</div><div style="display:flex;gap:2px;align-items:flex-end;height:16px">${[3,6,9,12,8,5,10,14,7,4].map(h=>`<div style="flex:1;height:${h*6}%;background:#4f8ff0;border-radius:1px"></div>`).join('')}</div><span class="nodata">NO 2-WAY AUDIO</span></div>`,
- 'M-DETER':`<div class="ghost" style="display:block;padding:11px"><div class="actions" style="margin-bottom:8px"><div class="act danger"><span class="ai">${aIcon('<path d="M3 11l18-5v12L3 14v-3zM11 19v-5"/>')}</span>Siren</div><div class="act"><span class="ai">${aIcon('<circle cx="12" cy="10" r="6"/><path d="M9 20h6M10 23h4"/>')}</span>Lights</div></div><label class="toggle on" style="display:flex;justify-content:space-between;width:100%">Auto-escalate on linger<span class="tg"></span></label><span class="nodata">NO DETERRENT API</span></div>`,
+ 'M-DETER':`<div class="ghost" style="display:block;padding:11px"><div class="actions" style="margin-bottom:8px"><div class="act danger"><span class="ai">${aIcon('<path d="M3 11l18-5v12L3 14v-3zM11 19v-5"/>')}</span>Siren</div><div class="act"><span class="ai">${aIcon('<circle cx="12" cy="10" r="6"/><path d="M9 20h6M10 23h4"/>')}</span>Lights</div></div><span class="nodata">NO DETERRENT API</span></div>`,
  'M-PLAY':`<div class="ghost" style="display:block;padding:11px"><div class="actions"><div class="act primary"><span class="ai">${aIcon('<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/>')}</span>Laser</div><div class="act"><span class="ai">${aIcon('<path d="M12 3v18M3 12h18"/>')}</span>Treat</div></div><div style="font-size:9px;color:var(--dim);margin-top:7px">Cooldown 30s</div><span class="nodata">NO ACCESSORY API</span></div>`,
  'M-ACT':`<div class="actions" style="margin-bottom:8px"><div class="act primary"><span class="ai">${aIcon('<path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"/>')}</span>Power on</div><div class="act"><span class="ai">${aIcon('<path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"/>')}</span>Power off</div></div><div style="font-size:9px;color:#7eecc4;margin-bottom:8px">&#9679; Plug is ON &middot; confirmed 1s ago</div><div class="ghost" style="display:block;padding:7px 9px"><span style="font-size:9px;color:var(--dim)">Open / close / custom commands</span><span class="nodata">POWER ONLY</span></div>`,
  'M-ZONE':`<div class="hero" style="margin-bottom:8px"><div class="videobox" style="background:linear-gradient(165deg,#22303f,#0c1119)">${sigTag('live')}<div class="annbox" style="left:14%;top:38%;width:72%;height:42%;border-style:dashed"></div>${[[14,38],[86,38],[14,80],[86,80]].map(([x,y])=>`<div style="position:absolute;left:${x}%;top:${y}%;width:8px;height:8px;border-radius:50%;background:#f6b73c;transform:translate(-50%,-50%)"></div>`).join('')}<div class="annbadge" style="left:14%;top:38%">watch zone</div></div></div><div class="ghost" style="display:flex;gap:8px;align-items:center;padding:7px 9px"><label class="toggle on" style="flex:1;justify-content:space-between;display:flex">Zone enabled<span class="tg"></span></label><span class="nodata">NO ZONE STORE</span></div>`,
  'M-PROMPT':`<div class="promptbox"><div class="pl">Tier-3 detector &middot; M-PROMPT</div><div class="pt">&ldquo;Is a visible flame or glowing hot element present on the stovetop?&rdquo;</div></div><div class="conf" style="margin-top:7px;padding:7px 9px"><div class="cd">Threshold &middot; calibrating (4/6 confirmed)</div><div class="cv">0.80</div></div><div style="height:5px;border-radius:3px;background:#0e1726;margin-top:7px;position:relative"><div style="width:80%;height:100%;border-radius:3px;background:#a78bfa"></div><div style="position:absolute;left:80%;top:-3px;width:11px;height:11px;border-radius:50%;background:#fff"></div></div><div style="margin-top:8px"><span class="fixchip">&#9998; correct last detection</span></div>`,
- 'M-IDCARD':`<div class="panel"><div class="ph"><b>Selected visit</b><span class="pvbadge" style="background:#34d39922;color:#7eecc4;font-size:8px">KNOWN</span></div><div class="idcard"><div class="pic"></div><div><div class="nm">Northern Cardinal</div><div class="sci">Cardinalis cardinalis</div><div class="meta">Last seen 1:52 PM &middot; 9 visits &middot; 2 cams</div></div></div>${cf15('0.93','Match confidence &middot; tap to relabel')}</div>`,
+ 'M-IDCARD':`<div class="panel"><div class="ph"><b>ID Card</b><span class="pvbadge" style="background:#34d39922;color:#7eecc4;font-size:8px">KNOWN</span></div><div class="idcard"><div class="pic"></div><div><div class="nm">Northern Cardinal</div><div class="sci">Cardinalis cardinalis</div><div class="meta">Last seen 1:52 PM &middot; 9 visits &middot; 2 cams</div></div></div>${cf15('0.93','Match confidence &middot; tap to relabel')}</div>`,
  'M-RULES':`<div class="panel"><div class="ph"><b>Thresholds &amp; escalation</b></div><label class="toggle on" style="display:flex;justify-content:space-between;width:100%;padding:6px 0">Notify me<span class="tg"></span></label><div style="padding:6px 0;border-top:1px solid var(--line)"><div style="font-size:10px;color:var(--mut);margin-bottom:5px">Sensitivity &middot; 7/10</div><div style="height:5px;border-radius:3px;background:#0e1726;position:relative"><div style="width:70%;height:100%;border-radius:3px;background:#4f8ff0"></div></div></div><div style="display:flex;gap:5px;padding:6px 0 0;border-top:1px solid var(--line)"><span class="fc">Quiet 10p&ndash;7a</span><span class="fc on">Escalate &rarr; partner</span></div></div>`,
  'M-DEVMAP':`<div class="panel"><div class="ph"><b>Devices</b><span style="font-size:9px;color:#7eecc4">3 online</span></div><div class="invrow"><span style="width:6px;height:6px;border-radius:50%;background:#34d399;flex:none"></span><span class="in">Garage cam</span><span class="roletag" style="color:#7eecc4;border-color:#34d39940">online</span></div><div class="invrow"><span style="width:6px;height:6px;border-radius:50%;background:#f25c5c;flex:none"></span><span class="in">Porch cam</span><span class="roletag" style="color:#ff9a9a;border-color:#f25c5c40">offline</span></div><div class="ghost" style="display:block;margin-top:7px;height:40px;background:#0e1a2c;border-radius:6px"><span class="nodata">NO FLOORPLAN</span></div></div>`,
  'M-HEALTH':`<div class="panel"><div class="ph"><b>Device health</b></div><div class="invrow"><span class="in">Garage cam</span><span class="roletag" style="color:#7eecc4;border-color:#34d39940;background:#34d39912">online &middot; fw 4.36</span></div><div class="invrow" style="gap:7px"><span class="in">Battery</span><span class="ghost" style="padding:1px 6px;font-size:10px;color:var(--mut)">31%<span class="nodata">NO DATA</span></span><span class="ghost" style="padding:1px 6px;font-size:10px;color:var(--mut)">signal<span class="nodata">NO DATA</span></span></div></div>`,
@@ -3552,11 +3622,11 @@ const MODFULL15={
  'M-JOURNAL':`<div class="panel"><div class="ph"><b>Activity journal</b></div><div class="logrow"><span class="lt">2d ago</span><span class="lv" style="color:#9be0ec">Aide visit</span><span class="ld">53m</span></div><div class="logrow"><span class="lt">May 16</span><span class="lv" style="color:#9be0ec">Med reminder</span><span class="ld">done</span></div><div class="ghost" style="display:block;margin-top:7px;padding:7px 9px"><span style="font-size:9px;color:var(--dim)">+ Add manual entry</span><span class="nodata">NO JOURNAL STORE</span></div></div>`,
  'M-READOUT':`<div class="panel"><div class="readout" style="padding:13px"><div class="rn">04857.2</div><div class="ru">m&sup3; &middot; gas meter</div><div class="rl">read 2:00 PM &middot; OCR</div></div>${cf15('0.97','Reading confidence &middot; tap to correct')}<div style="margin-top:8px;display:flex;gap:5px"><span class="fixchip">&#9998; correct</span><span class="fixchip" style="color:#9cc3f5;background:#4f8ff014;border-color:#4f8ff044">read aloud</span></div></div>`,
  'M-GAUGE':`<div class="panel"><div class="ph"><b>Pressure</b></div><div style="display:grid;place-items:center;padding:2px 0"><svg width="118" height="70" viewBox="0 0 66 40"><path d="M8 34a25 25 0 0 1 50 0" stroke="#1e2c44" stroke-width="6" fill="none" stroke-linecap="round"/><path d="M8 34a25 25 0 0 1 50 0" stroke="#38c6db" stroke-width="6" fill="none" stroke-linecap="round" stroke-dasharray="79" stroke-dashoffset="30"/><line x1="33" y1="34" x2="47" y2="18" stroke="#e9eef6" stroke-width="2"/><circle cx="33" cy="34" r="3" fill="#e9eef6"/></svg></div><div class="ghost" style="display:block;padding:5px 9px"><span style="font-size:9px;color:var(--dim)">Safe-range band 34&ndash;40</span><span class="nodata">NO BAND CONFIG</span></div>${cf15('0.95','Value via VLM &middot; tap to correct')}</div>`,
- 'M-LOG':`<div class="panel"><div class="ph"><b>Reading log</b><span class="fixchip" style="color:#9cc3f5;background:#4f8ff014;border-color:#4f8ff044">export</span></div><div class="logrow"><span class="lt">2:00 PM</span><span class="lv">04857.2</span><span class="ld">+1.4</span></div><div class="logrow"><span class="lt">1:00 PM</span><span class="lv">04855.8</span><span class="ld">+1.1</span></div><div class="ghost" style="display:block;margin-top:6px;padding:5px 9px"><span style="font-size:9px;color:var(--dim)">Hourly auto-readings</span><span class="nodata">NEEDS SCHEDULE</span></div></div>`,
+ 'M-LOG':`<div class="panel"><div class="ph"><b>Reading log</b></div><div class="logrow"><span class="lt">2:00 PM</span><span class="lv">04857.2</span><span class="ld">+1.4</span></div><div class="logrow"><span class="lt">1:00 PM</span><span class="lv">04855.8</span><span class="ld">+1.1</span></div></div>`,
  'M-INVENTORY':`<div class="panel"><div class="ph"><b>Inventory</b><span class="pvbadge" style="background:#f25c5c22;color:#ff9a9a;font-size:8px">2 LOW</span></div><div class="ghost" style="display:block"><div class="invrow"><div class="invthumb" style="background:linear-gradient(150deg,#52402f,#241b13)"></div><span class="in">Coffee beans</span><div class="stockbar"><i style="width:14%;background:#f25c5c"></i></div><span class="invflag" style="background:#f25c5c22;color:#ff9a9a">RESTOCK</span></div><div class="invrow"><div class="invthumb" style="background:linear-gradient(150deg,#3f5230,#1c2415)"></div><span class="in">Paper towels</span><div class="stockbar"><i style="width:66%;background:#34d399"></i></div><span class="invflag" style="background:#34d39922;color:#7eecc4">OK</span></div><span class="nodata">NEEDS VLM SCAN</span></div></div>`,
  'M-CAPTURE':`<div class="capbtn">${aIcon('<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>')}<div class="ct">Scan the shelf</div><div class="cs">AI counts the items</div></div><div class="capstrip" style="margin-top:8px"><i style="background:linear-gradient(150deg,#3f5230,#1c2415)"></i><i style="background:linear-gradient(150deg,#52402f,#241b13)"></i><i style="background:linear-gradient(150deg,#2f4452,#141d24)"></i><div style="display:grid;place-items:center;font-size:10px;color:var(--dim);width:40px">+8</div></div>`,
  'M-TIMESHEET':`<div class="panel"><div class="ph"><b>Visit verification</b></div><div class="tsrow"><div class="cliptip" style="background:linear-gradient(150deg,#2c5a3e,#13261a)"><span class="ctg" style="background:#34d399;color:#04231a">CLIP</span></div><div style="flex:1"><div class="tn">Today, Tue</div><div class="tm">9:12 &rarr; 10:05 AM</div></div><div class="tsdur"><div class="dd" style="color:#7eecc4">53m</div><div class="ds" style="color:#7eecc4">VERIFIED</div></div></div><div class="tsrow"><div class="cliptip" style="background:linear-gradient(150deg,#5a4a2c,#26200f)"><span class="ctg" style="background:#f6b73c;color:#3a2a05">CLIP</span></div><div style="flex:1"><div class="tn">Tue, May 13</div><div class="tm">9:05 &rarr; 9:34 AM</div></div><div class="tsdur"><div class="dd" style="color:#f3cd86">29m</div><div class="ds" style="color:#f3cd86">SHORT</div></div></div>${cf15('0.90','Identity match &middot; tap to correct')}</div>`,
- 'M-REMINDER':`<div class="reminder"><div class="rc">${aIcon('<path d="M12 2s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/>')}</div><div style="flex:1"><b>Water in 2 days</b><span>next check Thu 9 AM</span><div style="display:flex;gap:5px;margin-top:6px"><span class="fc" style="font-size:8px">Snooze</span><span class="fc on" style="font-size:8px">Done</span></div></div></div>`,
+ 'M-REMINDER':`<div class="reminder"><div class="rc">${aIcon('<path d="M12 2s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/>')}</div><div style="flex:1"><b>Water in 2 days</b><span>next check Thu 9 AM</span><div class="actions" style="margin-top:7px"><div class="act"><span class="ai">${aIcon('<circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/>')}</span>Snooze</div><div class="act primary"><span class="ai">${aIcon('<path d="M20 6L9 17l-5-5"/>')}</span>Done</div></div></div></div>`,
  'M-CALENDAR':`<div class="panel"><div class="ph"><b>May</b><span style="font-size:9px;color:var(--dim);font-family:var(--mono)">busiest: Tue</span></div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;font-size:7px;color:var(--dim);text-align:center;margin-bottom:3px">${['S','M','T','W','T','F','S'].map(d=>`<span>${d}</span>`).join('')}</div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px">${Array.from({length:35},(_,i)=>{const day=i-2;const has=day>=1&&day<=31;const op=has?(0.18+((i*29)%80)/100):0;return `<div style="aspect-ratio:1;border-radius:3px;background:${has?'#38c6db':'transparent'};opacity:${has?Math.min(op,1).toFixed(2):0}${day===14?';box-shadow:0 0 0 1.5px #fff inset':''}"></div>`;}).join('')}</div><div style="display:flex;justify-content:flex-end;align-items:center;gap:4px;font-size:7.5px;color:var(--dim);margin-top:6px">less<i style="width:9px;height:9px;border-radius:2px;background:#38c6db;opacity:.28"></i><i style="width:9px;height:9px;border-radius:2px;background:#38c6db;opacity:.6"></i><i style="width:9px;height:9px;border-radius:2px;background:#38c6db"></i>more</div></div>`,
 };
 /* what each v1.5 adds, and any data it needs that we don't have yet */
@@ -3878,7 +3948,7 @@ function v2Card(v,opt){
   if(cov.partial)cv.push(`<span class="dc-cv dc-partial">${cov.partial} partial</span>`);
   if(cov.missing)cv.push(`<span class="dc-cv dc-missing">${cov.missing} missing</span>`);
   const isnew=v.tag==='new', merged=v.folds.length>1;
-  const tagtxt=isnew?'new':(merged?'merged':'kept'), badge=isnew?'new in v2.5':(merged?'merges '+v.folds.length:'kept as-is');
+  const tagtxt=isnew?'new':(merged?'merged':'kept'), badge=isnew?'new in v3.0':(merged?'merges '+v.folds.length:'kept as-is');
   const hasMap = (typeof MAPLINES !== 'undefined') && MAPLINES[v.id];
   /* if this component has mapped fields, render a "Bound to visual"
      section at the TOP of the card, in visual order (MAPLINES order).
@@ -3969,22 +4039,27 @@ const MAPLINES={
     {sel:'.ml-value', fld:'value',      color:'#7eecc4'},
     {sel:'.ml-unit',  fld:'unit',       color:'#9cc3f5'},
     {sel:'.ml-meter', fld:'meter_label',color:'#c4b3f0'},
-    {sel:'.ml-conf',  fld:'confidence', color:'#f3cd86'}
+    {sel:'.cv',       fld:'confidence', color:'#f3cd86'}
   ],
   'C-SOS':[
-    {sel:'.sosc .sosc-name',   fld:'name',     color:'#9cc3f5'},
-    {sel:'.sosc .sosc-method', fld:'method',   color:'#7eecc4'},
-    {sel:'.sosc .sosc-ord',    fld:'priority', color:'#f3cd86'}
+    {sel:'.sosc .sosc-name',   fld:'name',     color:'#9cc3f5'}
   ],
   'C-GROUPED':[
-    {sel:'.gcard-title', fld:'title',       color:'#9cc3f5'},
-    {sel:'.gcard-gif',   fld:'gif_url',     color:'#c4b3f0'},
-    {sel:'.gcard-score', fld:'score',       color:'#f3cd86'},
-    {sel:'.gcard-meta',  fld:'event_count', color:'#7eecc4'}
+    {sel:'.gcard-thumb', fld:'thumbnail_url', color:'#34d399'},
+    {sel:'.gcard-title', fld:'title',        color:'#9cc3f5'},
+    {sel:'.gcard-gif',   fld:'gif_url',      color:'#c4b3f0'},
+    {sel:'.cv',          fld:'score',        color:'#f3cd86'},
+    {sel:'.gcard-meta',  fld:'event_count',  color:'#7eecc4'}
+  ],
+  'C-STRIP':[
+    {sel:'.estrip .ethumb',     fld:'event_resources', color:'#9cc3f5'},
+    {sel:'.estrip .ethumb-tag', fld:'tag_list',        color:'#7eecc4'},
+    {sel:'.estrip .ethumb-t',   fld:'event_ts',        color:'#f3cd86'}
   ],
   'C-DAYTREND':[
-    {sel:'.scrub .seg', fld:'event_ts', color:'#9cc3f5'},
-    {sel:'.delta',      fld:'peak',     color:'#f3cd86'}
+    {sel:'.scrub .seg', fld:'event_ts',  color:'#9cc3f5'},
+    {sel:'.scrub .pin', fld:'now_marker',color:'#ff9a9a'},
+    {sel:'.delta',      fld:'peak',      color:'#f3cd86'}
   ],
   'C-MONTHTREND':[
     {sel:'.ml-month',   fld:'date',         color:'#9cc3f5'},
@@ -3993,14 +4068,12 @@ const MAPLINES={
   ],
   'C-INSIGHT':[
     {sel:'.insfind',       fld:'narrative', color:'#7eecc4'},
-    {sel:'.insper.on',     fld:'cadence',   color:'#c4b3f0'},
-    {sel:'.insnext',       fld:'next_run',  color:'#f3cd86'},
     {sel:'.trendbars .tb', fld:'event_ts',  color:'#9cc3f5'}
   ],
   'C-TILES':[
     {sel:'.ml-fleet',         fld:'online_count', color:'#34d399'},
-    {sel:'.tilegrid .gt-top', fld:'device_name',  color:'#9cc3f5'},
-    {sel:'.tilegrid .gt-sub', fld:'firmware_ver', color:'#7eecc4'},
+    {sel:'.tilegrid .gt-top', fld:'device_name', color:'#9cc3f5'},
+    {sel:'.tilegrid .gt-sub', fld:'is_online',   color:'#34d399'},
     {sel:'.kpi0 b',           fld:'event_count',  color:'#f3cd86'},
     {sel:'.kpi1 b',           fld:'alerts_count', color:'#ff9a9a'},
     {sel:'.kpi2 b',           fld:'uptime',       color:'#93a3bd'}
@@ -4021,7 +4094,8 @@ const MAPLINES={
   ],
   'C-RECVIDEO':[
     {sel:'.scrub .seg', fld:'event_ts',          color:'#9cc3f5'},
-    {sel:'.ml-cont',    fld:'continuous_record', color:'#ff9a9a'}
+    {sel:'.scrub .pin', fld:'playhead',          color:'#f3cd86'},
+    {sel:'.videobox',   fld:'continuous_record', color:'#ff9a9a'}
   ],
   'C-SNAP':[
     {sel:'.videobox', fld:'url',               color:'#9cc3f5'},
@@ -4031,7 +4105,7 @@ const MAPLINES={
     {sel:'.cv',       fld:'confidence',        color:'#93a3bd'}
   ],
   'C-TIMELAPSE':[
-    {sel:'.lapsetrack', fld:'frame_sequence', color:'#9cc3f5'},
+    {sel:'.lapse .videobox', fld:'frame_sequence', color:'#9cc3f5'},
     {sel:'.vname',      fld:'device_name',    color:'#7eecc4'},
     {sel:'.vtime',      fld:'frame_day',      color:'#f3cd86'},
     {sel:'.ld2',        fld:'frame_count',    color:'#93a3bd'}
@@ -4044,8 +4118,9 @@ const MAPLINES={
     {sel:'.chips2 .fc:not(.on)', fld:'entity_type',   color:'#93a3bd'}
   ],
   'C-MULTIVIEW':[
-    {sel:'.gallery .gcell', fld:'device_name',   color:'#9cc3f5'},
-    {sel:'.sig-multi',      fld:'signaling_url', color:'#7eecc4'}
+    {sel:'.gallery .gcell',   fld:'device_name',   color:'#9cc3f5'},
+    {sel:'.gallery .gcell i', fld:'is_online',     color:'#34d399'},
+    {sel:'.sig-multi',        fld:'signaling_url', color:'#7eecc4'}
   ],
   'C-LOG':[
     {sel:'.logrow .lt', fld:'created_at',  color:'#9cc3f5'},
@@ -4073,9 +4148,8 @@ const MAPLINES={
     {sel:'.delta',         fld:'trend_delta', color:'#f3cd86'}
   ],
   'C-DETER':[
-    {sel:'.act.danger',    fld:'siren',         color:'#f3cd86'},
-    {sel:'.act:not(.danger)',fld:'lights',      color:'#9cc3f5'},
-    {sel:'.toggle',        fld:'auto_escalate', color:'#93a3bd'}
+    {sel:'.act.danger',      fld:'siren',  color:'#f3cd86'},
+    {sel:'.act:not(.danger)',fld:'lights', color:'#9cc3f5'}
   ],
   'C-REMINDER':[
     {sel:'.reminder b',    fld:'triggers',    color:'#7eecc4'},
@@ -4129,15 +4203,17 @@ const FIELD_STATUS={
     missing: ['method','priority','phone']
   },
   'C-GROUPED':{
-    // GET /api/eventgroups (title, score, event_count) + artifact.gif_url — all real.
-    have:    ['title','score','event_count','gif_url','group_id','clip_urls'],
+    // GET /api/eventgroups (title, score, event_count, thumbnail_url) + artifact.gif_url.
+    have:    ['title','score','event_count','gif_url','thumbnail_url','group_id','clip_urls'],
     missing: []
   },
+  'C-STRIP':{   // events/filter (event_ts, tag_list, event_resources) + events/video_url
+    have:['event_ts','tag_list','event_resources','url'], missing:[] },
   'C-DAYTREND':{
     // Hourly bars are binned from events/filter event_ts; the peak callout and
     // night-graph segments are derived (no session-segmentation store).
     have:    ['event_ts'],
-    missing: ['peak']
+    missing: ['peak','now_marker']
   },
   'C-MONTHTREND':{
     // eventgroups/digest gives date + total_events; per-day cells derive from event_ts.
@@ -4146,13 +4222,13 @@ const FIELD_STATUS={
   },
   'C-INSIGHT':{
     // Composed: stories.narrative + events/filter event_ts series + events insights.
-    have:    ['narrative','event_ts','vlm_insight','tone','why_it_matters','cadence','next_run'],
+    have:    ['narrative','event_ts','vlm_insight','tone','why_it_matters'],
     missing: []
   },
   'C-TILES':{
-    // devices/home (device_name, is_online, firmware_ver) + eventgroups.event_count.
+    // devices/home (device_name, is_online) + eventgroups.event_count.
     // Camera vitals (pulse/temp) are not available.
-    have:    ['device_name','is_online','firmware_ver','event_count','online_count','alerts_count'],
+    have:    ['device_name','is_online','event_count','online_count','alerts_count'],
     missing: ['vitals','uptime']
   },
   'C-ASSIST':{
@@ -4170,15 +4246,15 @@ const FIELD_STATUS={
   'C-LIVE':{      // stream_params + power_status are real; resolution/recording not returned
     have:['signaling_url','auth_token','ice_servers','is_on'], missing:['resolution','recording_time'] },
   'C-RECVIDEO':{  // activity scrub from events/filter event_ts; no 24/7 record index
-    have:['event_ts'], missing:['continuous_record'] },
+    have:['event_ts'], missing:['continuous_record','playhead'] },
   'C-SNAP':{      // capture_snapshot + thumbnails + eventgroup artifact overlays; VLM verdict conf derived
     have:['url','content_type','captured_at','bbox_xywh','video_description'], missing:['confidence'] },
   'C-TIMELAPSE':{ // device_name is real; no frame-sequence store at all
     have:['device_name'], missing:['frame_sequence','frame_day','frame_count'] },
   'C-GALLERY':{   // eventgroups + reid identities
     have:['ai_tags','thumbnail_url','entity_type','image_url','identity_name','count'], missing:[] },
-  'C-MULTIVIEW':{ // devices/home + stream_params; aligned-pair store missing
-    have:['device_name','device_mac','signaling_url'], missing:[] },
+  'C-MULTIVIEW':{ // devices/home (device_name, is_online) + stream_params
+    have:['device_name','device_mac','signaling_url','is_online'], missing:[] },
   'C-LOG':{       // visual-memories status_line/summary/created_at; delta is derived
     have:['status_line','summary','created_at'], missing:['delta'] },
   'C-VISIT':{     // reid appearances + events/filter + events/video_url; verify/conf derived
@@ -4188,7 +4264,7 @@ const FIELD_STATUS={
   'C-TREND':{     // events/filter event_ts counts; period-delta derived
     have:['event_ts'], missing:['trend_delta'] },
   'C-DETER':{     // no siren/lights/deterrent endpoint
-    have:[], missing:['siren','lights','auto_escalate'] },
+    have:[], missing:['siren','lights'] },
   'C-REMINDER':{  // agents.triggers (schedule) + visual-memories status_line
     have:['triggers','status_line'], missing:[] }
 };
@@ -4223,6 +4299,7 @@ const V25=[
  {id:'C-GALLERY',grp:'Collections',name:'Gallery',primary:'M-GALLERY',folds:['M-GALLERY'],modes:['browsable collection'],use:'A browsable image collection grouped by entity.'},
  {id:'C-MULTIVIEW',grp:'Collections',name:'Multi-view',primary:'M-GRID',folds:['M-COMPARE','M-GRID'],modes:['compare pair','synced grid'],use:'A before/after pair, or a synchronized multi-camera grid.'},
  {id:'C-GROUPED',grp:'Collections',name:'Grouped clips',primary:'M-REEL',folds:['M-REEL','M-GROUPS'],modes:['groups by event','score-ranked','clip thumbs'],src:[{ep:'GET /api/eventgroups',fields:['group_id','title','score','event_count','clip_urls']},{ep:'GET /api/eventgroups/{id}/artifact',fields:['gif_url','chips']}],use:'Clips bucketed into event groups like the home wall — title, clip count, score-ranked, with thumbnails. Replaces the highlight reel and clips-by-trigger.'},
+ {id:'C-STRIP',grp:'Collections',name:'Event strip',primary:'M-CLIP',folds:['M-CLIP','M-GALLERY'],tag:'new',modes:['horizontal scroll','tag + time'],src:[{ep:'POST /api/events/filter',fields:['event_ts','tag_list','event_resources']},{ep:'POST /api/events/video_url',fields:['url']}],use:'A horizontally scrollable strip of recent event thumbnails — swipe along the timeline, tap a thumb to open its clip. Shows ~3 at a time with the next peeking in to signal there are more.'},
  // ——— Records & lists (4) ———
  {id:'C-FEED',grp:'Records & lists',name:'Event feed',primary:'M-FEED',folds:['M-FEED'],modes:['tagged cards','filter chips','load more'],src:[{ep:'POST /api/events/filter',fields:['event_ts','tag_list','event_resources']},{ep:'POST /api/events/insights',fields:['vlm_insight (video_description)']},{ep:'GET /api/events/tags',fields:['categories[] (event_tags)']},{ep:'— not on events/filter (UI-aggregated)',fields:['tag_conf','event_count']}],use:'AI-tagged event cards with filter chips — shows several rows with a More button to page further back.'},
  {id:'C-LOG',grp:'Records & lists',name:'Log / journal',primary:'M-LOG',folds:['M-LOG','M-JOURNAL'],modes:['running log','narrative journal'],src:[{ep:'GET /api/household/visual-memories',fields:['status_line','summary']},{ep:'GET /api/stories'}],use:'A timestamped record — a terse running log, or a narrative journal.'},
@@ -4230,7 +4307,7 @@ const V25=[
  {id:'C-IDCARD',grp:'Records & lists',name:'Identity card',primary:'M-IDCARD',folds:['M-IDCARD'],modes:['recognized subject'],use:'A recognized-subject detail card (face / plate, last seen, appearances).'},
  // ——— Status & readouts (3) ———
  {id:'C-STATE',grp:'Status & readouts',name:'State (large)',primary:'M-STATE',folds:['M-STATE'],modes:['big state word + duration'],src:[{ep:'GET /api/household/visual-memories',fields:['status_line']},{ep:'— parsed from status_line (no structured state field)',fields:['subject','state.w (state word)','state.label','state.since_ts']}],use:'The current state shown as a large word with how long it has held. The present-tense state is the VLM status_line ("Door closed (3h)"); the word, label and duration are parsed from it.'},
- {id:'C-TILES',grp:'Status & readouts',name:'Tiles (metrics + fleet)',primary:'M-VITALS',folds:['M-VITALS','M-KPI','M-DEVMAP','M-HEALTH'],modes:['metric tiles','device / fleet health'],src:[{ep:'GET /api/devices/home',fields:['device_name','is_online','firmware_ver']},{ep:'GET /api/eventgroups',fields:['event_count']},{ep:'— camera vitals not available',fields:['vitals']}],use:'A grid of tiles — live vitals or headline KPIs, plus per-device fleet health (online + firmware). Combines the metric tiles and the fleet roll-up into one grid. Vitals (pulse/temp) are not camera-derivable.'},
+ {id:'C-TILES',grp:'Status & readouts',name:'Tiles (metrics + fleet)',primary:'M-VITALS',folds:['M-VITALS','M-KPI','M-DEVMAP','M-HEALTH'],modes:['metric tiles','device / fleet health'],src:[{ep:'GET /api/devices/home',fields:['device_name','is_online']},{ep:'GET /api/eventgroups',fields:['event_count']},{ep:'— camera vitals not available',fields:['vitals']}],use:'A grid of tiles — live vitals or headline KPIs, plus per-device fleet health (online + firmware). Combines the metric tiles and the fleet roll-up into one grid. Vitals (pulse/temp) are not camera-derivable.'},
  {id:'C-READOUT',grp:'Status & readouts',name:'Number readout',primary:'M-READOUT',folds:['M-READOUT','M-GAUGE'],modes:['large number / OCR'],src:[{ep:'POST /api/devices/{mac}/capture_snapshot',fields:['url']},{ep:'— VLM read (tools/vlm.py); no OCR endpoint',fields:['value','unit','meter_label','confidence']}],use:'One large number read from the scene — meter, count, or a gauge value as a number. The frame is real (capture_snapshot); the number itself is VLM-derived (no OCR endpoint). (Score ring dropped.)'},
  // ——— Charts & trends (3) ———
  {id:'C-DAYTREND',grp:'Charts & trends',name:'Day trend',primary:'M-SCRUB',folds:['M-SCRUB','M-NIGHTGRAPH'],modes:['today by hour'],use:'Activity across today by hour — combines the scrubber and night-graph into one day view.'},
@@ -4252,19 +4329,20 @@ const V25=[
 const sosIco={call:'<path d="M5 4h4l2 5-3 2a11 11 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>',text:'<path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"/>',push:'<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/>'};
 const MOD25={
  'C-AGENT':`<div class="aghome" style="padding:6px 0 4px">`+agCardHTML(AGCARD.night_watcher||{th:{grad:'linear-gradient(150deg,#10182b,#070b14)',tag:'PERSON',tc:'#f25c5c'},state:{w:'PERSON · 2m',c:'#f25c5c'},title:'Unfamiliar at side gate',pri:'P1',time:'2m ago',fresh:true},{name:'Night Watcher'})+`</div>`,
- 'C-STATE':`<div class="panel" style="text-align:center;padding:20px 12px 16px"><div class="ml-subj" style="font-size:9px;letter-spacing:1px;color:var(--dim);text-transform:uppercase;margin-bottom:7px">Garage door</div><div class="ml-state" style="font-size:36px;font-weight:800;letter-spacing:-1.5px;color:#7eecc4;line-height:1">CLOSED</div><div style="font-size:11px;color:var(--mut);margin-top:8px"><span class="ml-label">secure</span> &middot; <span class="ml-dur" style="font-family:var(--mono);color:#7eecc4;font-weight:700">3h 42m</span></div></div>`+cf15('0.96','State + time-in-state from VLM &middot; tap to correct'),
- 'C-FEED':`<div class="panel"><div class="ph"><b>Entry history</b></div><div class="chips2" style="margin-bottom:8px"><span class="fc on">All &middot; 24</span><span class="fc">Person &middot; 11</span><span class="fc">Vehicle &middot; 6</span><span class="fc">Pet &middot; 7</span></div>`+[['#f25c5c','Vehicle departed','8:02 AM &middot; &ldquo;a car backs out&rdquo;','VEHICLE&middot;92','#4f8ff022','#9cc3f5'],['#34d399','Person entered','7:55 AM &middot; &ldquo;someone walks up&rdquo;','PERSON&middot;88','#34d39922','#7eecc4'],['#f6b73c','Pet in the yard','7:31 AM &middot; &ldquo;a dog crosses&rdquo;','PET&middot;81','#f6b73c22','#f3cd86'],['#9cc3f5','Package dropped','7:12 AM &middot; &ldquo;a box by the door&rdquo;','PKG&middot;76','#a78bfa22','#c4b3f0']].map(([d,t,m,tag,bg,c])=>`<div class="feedrow"><span style="width:6px;height:6px;border-radius:50%;background:${d};flex:none"></span><div class="thumb"></div><div style="flex:1"><div class="ft">${t}</div><div class="fm">${m}</div></div><span class="etag" style="background:${bg};color:${c}">${tag}</span></div>`).join('')+`<button class="dc-more">More &middot; 20 earlier &rsaquo;</button></div>`,
- 'C-GROUPED':`<div class="gcard"><div class="gcard-thumb" style="background:linear-gradient(150deg,#b1402f,#5a1c14)"><span class="gcard-gif">&#9654; GIF &middot; 0:06</span><span class="gcard-score" style="background:#f25c5c">score 4/5</span><div class="gcard-grad"></div><div class="gcard-info"><div class="gcard-title">Package delivery</div><div class="gcard-meta">3 clips &middot; Front door &middot; 2:14&ndash;2:17 PM</div></div></div></div>`,
+ 'C-STATE':`<div class="panel" style="text-align:center;padding:20px 12px 16px"><div class="ml-subj" style="font-size:9px;letter-spacing:1px;color:var(--dim);text-transform:uppercase;margin-bottom:7px">Garage door</div><div class="ml-state" style="font-size:36px;font-weight:800;letter-spacing:-1.5px;color:#7eecc4;line-height:1">CLOSED</div><div style="font-size:11px;color:var(--mut);margin-top:8px"><span class="ml-label">secure</span> &middot; <span class="ml-dur" style="font-family:var(--mono);color:#7eecc4;font-weight:700">3h 42m</span></div></div>`+cf15('confidence 0.96','tap to correct'),
+ 'C-FEED':`<div class="panel"><div class="ph"><b>Entry history</b></div><div class="chips2" style="margin-bottom:8px"><span class="fc on">All &middot; 24</span><span class="fc">Person &middot; 11</span><span class="fc">Vehicle &middot; 6</span><span class="fc">Pet &middot; 7</span></div>`+[['#f25c5c','Vehicle departed','8:02 AM &middot; &ldquo;a car backs out&rdquo;','VEHICLE&middot;92','#4f8ff022','#9cc3f5'],['#34d399','Person entered','7:55 AM &middot; &ldquo;someone walks up&rdquo;','PERSON&middot;88','#34d39922','#7eecc4'],['#f6b73c','Pet in the yard','7:31 AM &middot; &ldquo;a dog crosses&rdquo;','PET&middot;81','#f6b73c22','#f3cd86'],['#9cc3f5','Package dropped','7:12 AM &middot; &ldquo;a box by the door&rdquo;','PKG&middot;76','#a78bfa22','#c4b3f0']].map(([d,t,m,tag,bg,c])=>`<div class="feedrow"><div class="thumb"></div><div style="flex:1"><div class="ft">${t}</div><div class="fm">${m}</div></div><span class="etag" style="background:${bg};color:${c}">${tag}</span></div>`).join('')+`<button class="dc-more">More &middot; 20 earlier &rsaquo;</button></div>`,
+ 'C-GROUPED':`<div class="gcard"><div class="gcard-thumb" style="background:linear-gradient(150deg,#b1402f,#5a1c14)"><span class="gcard-gif">&#9654; GIF &middot; 0:06</span><div class="gcard-grad"></div><div class="gcard-info"><div class="gcard-title">Package delivery</div><div class="gcard-meta">3 clips &middot; Front door &middot; 2:14&ndash;2:17 PM</div></div></div></div>`+cf15('score 4/5','event-group ranking'),
+ 'C-STRIP':`<div class="panel"><div class="ph"><b>Recent events</b><span style="font-size:9px;color:var(--dim)">24 today</span></div><div class="estrip">${[['#4f8ff0','#9cc3f5','PERSON','8:02'],['#34d399','#7eecc4','VEHICLE','7:55'],['#f6b73c','#f3cd86','PET','7:31'],['#a78bfa','#c4b3f0','PKG','7:12'],['#f25c5c','#ff9a9a','PERSON','6:40']].map(([g1,c,tag,t])=>`<div class="ethumb" style="background:linear-gradient(150deg,${g1}40,#0c1119)"><span class="ethumb-tag" style="color:${c};background:${c}26">${tag}</span><span class="ethumb-t">${t}</span></div>`).join('')}</div></div>`,
  'C-DAYTREND':`<div class="panel"><div class="ph"><b>Today by hour</b><span class="delta up">&#9650; busier PM</span></div><div class="scrub" style="height:48px">${Array.from({length:24},(_,i)=>{const a=i>=16&&i<=18;const h=a?60+((i*17)%38):8+((i*13)%22);return `<div class="seg" style="height:${h}%;background:${a?'#f6b73c':'#3a5fa0'}"></div>`;}).join('')}<div class="pin" style="left:75%"></div><div class="axis"><span>12a</span><span>6a</span><span>12p</span><span>6p</span><span>now</span></div></div><div class="ngkey" style="margin-top:7px"><span><i style="background:#3a5fa0"></i>events / hr</span><span><i style="background:#f6b73c"></i>peak</span></div></div>`,
  'C-MONTHTREND':`<div class="panel"><div class="ph"><b class="ml-month">June</b><span class="ml-mtotal" style="font-size:9px;color:var(--dim);font-family:var(--mono)">142 events &middot; busiest Tue</span></div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;font-size:7px;color:var(--dim);text-align:center;margin-bottom:3px">${['S','M','T','W','T','F','S'].map(d=>`<span>${d}</span>`).join('')}</div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px">${Array.from({length:35},(_,i)=>{const day=i-1;const has=day>=1&&day<=30;const cnt=has?((i*7+3)%9):0;const op=has?Math.min(0.16+cnt/10,1).toFixed(2):0;return `<div class="${has?'ml-daycell':''}" style="aspect-ratio:1;border-radius:3px;display:grid;place-items:center;font-size:13px;font-weight:800;color:${cnt>5?'#04231a':'#cfe3ff'};background:${has?`rgba(56,198,219,${op})`:'transparent'}${day===18?';box-shadow:0 0 0 1.5px #fff inset':''}">${has?cnt:''}</div>`;}).join('')}</div><div style="display:flex;justify-content:flex-end;align-items:center;gap:4px;font-size:7.5px;color:var(--dim);margin-top:6px">less<i style="width:9px;height:9px;border-radius:2px;background:rgba(56,198,219,.3)"></i><i style="width:9px;height:9px;border-radius:2px;background:rgba(56,198,219,.6)"></i><i style="width:9px;height:9px;border-radius:2px;background:#38c6db"></i>more</div></div>`,
- 'C-INSIGHT':`<div class="panel"><div class="ph"><b>Weekly insight</b><span class="recap"><span class="ai">AI</span></span></div><div class="insbar">${['Daily','Weekly','Monthly'].map(p=>`<span class="insper${p==='Weekly'?' on':''}">${p}</span>`).join('')}<span class="insnext">next Mon 8 AM</span></div><div class="insfind big">Front-door traffic is up <b style="color:#7eecc4">22%</b> this week — visits cluster <b style="color:#e9eef6">1&ndash;3 PM</b>, with Saturday the busiest day.</div><div class="trendbars" style="margin:11px 0 3px">${[40,62,55,78,48,90,70].map((h,i)=>`<div class="tb" style="height:${h}%;${i===5?'background:linear-gradient(#34d399,#1f7a5a)':''}"></div>`).join('')}</div><div class="trendx">${['M','T','W','T','F','S','S'].map(d=>`<span>${d}</span>`).join('')}</div></div>`,
+ 'C-INSIGHT':`<div class="panel"><div class="ph"><b>Weekly insight</b><span class="recap"><span class="ai">AI</span></span></div><div class="insfind big">Front-door traffic is up <b style="color:#7eecc4">22%</b> this week — visits cluster <b style="color:#e9eef6">1&ndash;3 PM</b>, with Saturday the busiest day.</div><div class="trendbars" style="margin:11px 0 3px">${[40,62,55,78,48,90,70].map((h,i)=>`<div class="tb" style="height:${h}%;${i===5?'background:linear-gradient(#34d399,#1f7a5a)':''}"></div>`).join('')}</div><div class="trendx">${['M','T','W','T','F','S','S'].map(d=>`<span>${d}</span>`).join('')}</div></div>`,
  'C-RECAP':`<div class="panel"><div class="ph"><b class="ml-title">Morning recap</b><span class="recap"><span class="ai">AI</span></span></div><span class="pvbadge ml-tone" style="background:#34d39922;color:#7eecc4;font-size:8px;display:inline-block;margin-bottom:10px">ALL CLEAR</span><div class="ml-narrative" style="font-size:16px;line-height:1.5;font-weight:600;color:#e9eef6">Slept <b style="color:#9cc3f5">10h 4m</b> with 2 brief wakings. One true-cry at <b style="color:#f3cd86">2:14</b>, self-settled in 3 min.</div><div class="ml-hi" style="display:flex;gap:5px;margin-top:11px"><span class="fc" style="font-size:8px">2:14 cry &middot; clip</span><span class="fc" style="font-size:8px">night graph</span></div></div>`,
  'C-ACT':`<div class="actions" style="margin-bottom:8px"><div class="act primary ml-pon"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>Power on</div><div class="act ml-poff"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="8" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>Power off</div></div><div class="actions" style="margin-bottom:8px"><div class="act ml-talk"><span class="ai">${aIcon('<path d="M3 11l16-5v12L3 13z"/><path d="M9 19a2.5 2.5 0 0 0 4 0"/>')}</span>Two-way talk</div></div><div class="ml-devstate" style="font-size:9px;color:#7eecc4">&#9679; Plug is ON &middot; confirmed 1s ago &middot; <span style="color:var(--dim)">sits under the live view</span></div>`,
- 'C-READOUT':`<div class="panel"><div class="ph"><b>Number readout</b><span class="ml-conf" style="font-size:9px;color:var(--dim)">OCR &middot; live</span></div><div class="readout"><div class="rn"><span class="ml-value">04857</span><span class="ml-unit" style="font-size:18px;color:var(--mut)"> kWh</span></div><div class="ru ml-meter">utility meter</div><div class="rl">one large value read from the scene</div></div></div>`,
- 'C-TILES':`<div class="panel"><div class="ph"><b>Tiles &mdash; metrics + fleet</b><span class="ml-fleet" style="font-size:9px;color:#7eecc4">3 / 4 online</span></div><div class="tilegrid">${[['Garage cam','online &middot; fw 4.36','#34d399'],['Front cam','online &middot; fw 4.36','#34d399'],['Yard cam','online &middot; fw 4.31','#34d399'],['Porch cam','offline &middot; 2h','#f25c5c']].map(([n,s,c])=>`<div class="gtile"><div class="gt-top"><span class="gt-dot" style="background:${c}"></span>${n}</div><div class="gt-sub">${s}</div></div>`).join('')}</div><div class="tilegrid" style="margin-top:7px">${[['38','events today'],['2','need attention'],['97%','uptime 7d']].map(([v,l],i)=>`<div class="gtile num kpi${i}"><b>${v}</b><span>${l}</span></div>`).join('')}</div></div>`,
- 'C-SOS':`<div class="panel"><div class="ph"><b>Escalation contacts</b><span style="font-size:9px;color:var(--dim)">call order</span></div><div class="sosbook">${[['Y','You','Push &middot; this phone','#4f8ff0','push'],['S','Sarah &middot; sister','Call &middot; (415) 555-0142','#f6b73c','call'],['M','Mike &middot; neighbor','Text &middot; (415) 555-0177','#34d399','text'],['D','Dr. Lee','Call &middot; clinic line','#a78bfa','call']].map(([ini,name,method,c,kind],i)=>`<div class="sosc"><span class="sosc-av" style="background:${c}22;color:${c}">${ini}</span><div class="sosc-main"><div class="sosc-name">${name}</div><div class="sosc-method"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco[kind]}</svg>${method}</div></div><span class="sosc-ord">${i+1}</span></div>`).join('')}</div></div>`,
- 'C-ASSIST':`<div class="panel"><div class="ph"><b>Ask Home</b><span class="recap"><span class="ai">AI</span></span></div><div class="dc-lab" style="margin:0 0 8px">Suggested questions</div><div class="suglist">${[['#9cc3f5','What did I miss today?'],['#c4b3f0','When does the mail usually come?'],['#7eecc4','Is the garage closed right now?'],['#9cc3f5','Did anyone come to the door?'],['#c4b3f0','Who was the person at 2 PM?']].map(([c,q])=>`<div class="sugq"><i class="sugdot" style="background:${c}"></i><span class="sugq-t">${q}</span><span class="sugq-go">&rarr;</span></div>`).join('')}</div></div>`,
- 'C-LEARN':`<div class="panel"><div class="ph"><b>What this agent learned</b><span class="recap"><span class="ai">AI</span></span></div>`+[['Mail usually arrives 1&ndash;3pm','routine','0.86'],['The garage is normally closed overnight','baseline','0.93'],['Recognizes the silver SUV as &ldquo;family car&rdquo;','identity','0.78']].map(([f,cat,c])=>`<div class="learnrow"><span class="lbulb"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f6b73c" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12c.5.5 1 1.2 1 2h6c0-.8.5-1.5 1-2a7 7 0 0 0-4-12z"/></svg></span><div style="flex:1;min-width:0"><div class="ft">${f}</div><div class="fm">${cat} &middot; remembered</div></div><span class="lconf">${c}</span></div>`).join('')+`<div class="ghost" style="display:block;margin-top:7px;padding:5px 9px"><span style="font-size:9px;color:var(--dim)">From household learnings + entity pages</span><span class="nodata">COMPILED</span></div></div>`,
+ 'C-READOUT':`<div class="panel"><div class="ph"><b>Number readout</b></div><div class="readout"><div class="rn"><span class="ml-value">04857</span><span class="ml-unit" style="font-size:18px;color:var(--mut)"> kWh</span></div><div class="ru ml-meter">utility meter</div></div>`+cf15('confidence 0.91','tap to correct')+`</div>`,
+ 'C-TILES':`<div class="panel"><div class="ph"><b>Tiles &mdash; metrics + fleet</b><span class="ml-fleet" style="font-size:9px;color:#7eecc4">3 / 4 online</span></div><div class="tilegrid">${[['Garage cam','online','#34d399'],['Front cam','online','#34d399'],['Yard cam','online','#34d399'],['Porch cam','offline &middot; 2h','#f25c5c']].map(([n,s,c])=>`<div class="gtile"><div class="gt-top">${n}</div><div class="gt-sub"><span class="gt-pill" style="color:${c};background:${c}1f"><span class="gt-dot" style="background:${c}"></span>${s}</span></div></div>`).join('')}</div><div class="tilegrid" style="margin-top:7px">${[['38','events today'],['2','need attention'],['97%','uptime 7d']].map(([v,l],i)=>`<div class="gtile num kpi${i}"><b>${v}</b><span>${l}</span></div>`).join('')}</div></div>`,
+ 'C-SOS':`<div class="panel"><div class="ph"><b>Escalation contacts</b><span style="font-size:9px;color:var(--dim)">call order</span></div><div class="sosbook">${[['Y','You','Push &middot; this phone','#4f8ff0','push'],['S','Sarah &middot; sister','Call &middot; (415) 555-0142','#f6b73c','call'],['M','Mike &middot; neighbor','Text &middot; (415) 555-0177','#34d399','text'],['D','Dr. Lee','Call &middot; clinic line','#a78bfa','call']].map(([ini,name,method,c,kind],i)=>`<div class="sosc"><span class="sosc-av" style="background:${c}22;color:${c}">${ini}</span><div class="sosc-main"><div class="sosc-name">${name}</div></div><div class="sosc-acts"><span class="sosc-act" title="Call"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco.call}</svg></span><span class="sosc-act" title="Message"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco.text}</svg></span></div></div>`).join('')}</div></div>`,
+ 'C-ASSIST':`<div class="panel"><div class="ph"><b>Ask Home</b><span class="recap"><span class="ai">AI</span></span></div><div class="dc-lab" style="margin:0 0 8px">Suggested questions</div><div class="suglist">${[['#9cc3f5','What did I miss today?'],['#c4b3f0','When does the mail usually come?'],['#7eecc4','Is the garage closed right now?'],['#9cc3f5','Did anyone come to the door?'],['#c4b3f0','Who was the person at 2 PM?']].map(([c,q])=>`<div class="sugq"><span class="sugq-t">${q}</span><span class="sugq-go">&rarr;</span></div>`).join('')}</div></div>`,
+ 'C-LEARN':`<div class="panel"><div class="ph"><b>What this agent learned</b><span class="recap"><span class="ai">AI</span></span></div>`+[['Mail usually arrives 1&ndash;3pm','routine','0.86'],['The garage is normally closed overnight','baseline','0.93'],['Recognizes the silver SUV as &ldquo;family car&rdquo;','identity','0.78']].map(([f,cat,c])=>`<div class="learnrow"><span class="lbulb"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f6b73c" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12c.5.5 1 1.2 1 2h6c0-.8.5-1.5 1-2a7 7 0 0 0-4-12z"/></svg></span><div style="flex:1;min-width:0"><div class="ft">${f}</div><div class="fm">${cat} &middot; remembered</div></div><span class="lconf">${c}</span></div>`).join('')+`</div>`,
 };
 function dcRowSolo(id,fn,ver){
   const d=DATACHECK[id]||{status:'missing',contract:[],sources:[],note:'Not yet mapped.'};
@@ -4298,7 +4376,7 @@ function renderDcVer(ver){
   document.querySelectorAll('#dcVerTabs .dc-vertab').forEach(b=>b.classList.toggle('on',b.dataset.ver===ver));
   $('dcOpps').style.display='';
   if(ver==='v2'||ver==='v25'){
-    const SET=ver==='v25'?V25:V2, opt=ver==='v25'?{rmap:MOD25,vlab:'v2.5',vcls:'v25'}:undefined;
+    const SET=ver==='v25'?V25:V2, opt=ver==='v25'?{rmap:MOD25,vlab:'v3.0',vcls:'v25'}:undefined;
     const groups=[]; SET.forEach(v=>{let g=groups.find(x=>x.name===v.grp); if(!g){g={name:v.grp,items:[]};groups.push(g);} g.items.push(v);});
     $('dcGrids').innerHTML=groups.map((g,gi)=>`<div class="famblock dc-fam" data-grp="g${gi}"><h3>${g.name} <span style="color:var(--dim);font-weight:600">${g.items.length}</span></h3>`+g.items.map(v=>v2Card(v,opt)).join('')+`</div>`).join('');
     $('dcAnchors').innerHTML=groups.map((g,gi)=>`<button class="dc-anchor" data-grp="g${gi}">${g.name} <span>${g.items.length}</span></button>`).join('');
@@ -4327,11 +4405,10 @@ renderDcVer('v25');
   document.body.appendChild(pop);
   function cardFor(id){
     const v=V25.find(x=>x.id===id); if(!v) return '';
-    const comp=(MOD25&&MOD25[id])||MODFULL15[v.primary]||MODFULL[v.primary]||'';
-    return `<div class="comppop-h"><b>${v.name}</b><span class="comppop-id">${v.id} &middot; v2.5</span></div>`
-      +`<div class="comppop-live">${comp}</div>`
-      +`<div class="dc-modes" style="margin-top:9px">${v.modes.map(m=>`<span class="dc-mode">${m}</span>`).join('')}</div>`
-      +`<div class="comppop-use">${v.use}</div>`;
+    /* the SAME default Components data card — live preview + "Bound to visual
+       elements" chips (have/missing) + Wyze AI One source — with connecting
+       lines drawn after it's placed. */
+    return v2Card(v,{rmap:MOD25,vlab:'v3.0',vcls:'v25'});
   }
   screen.addEventListener('mouseover',e=>{
     const slot=e.target.closest('.slot'); if(!slot){pop.style.display='none';return;}
@@ -4340,10 +4417,13 @@ renderDcVer('v25');
     const html=/^C-/.test(id)?cardFor(id):'';
     if(!html){pop.style.display='none';return;}
     pop.innerHTML=html; pop.style.display='block';
-    const r=slot.getBoundingClientRect(), W=302, gap=12, h=pop.offsetHeight;
+    const W=pop.offsetWidth, gap=12, h=pop.offsetHeight, r=slot.getBoundingClientRect();
     let left=r.right+gap; if(left+W>window.innerWidth-8) left=r.left-W-gap; if(left<8) left=8;
     let top=r.top; if(top+h>window.innerHeight-8) top=Math.max(8,window.innerHeight-8-h);
     pop.style.left=left+'px'; pop.style.top=top+'px';
+    /* draw the bezier connecting lines inside the popover's data row */
+    const row=pop.querySelector('.dc-row[data-maplines]');
+    if(row && typeof drawMaplinesRow==='function') drawMaplinesRow(row);
   });
   screen.addEventListener('mouseleave',()=>{pop.style.display='none';});
 })();
