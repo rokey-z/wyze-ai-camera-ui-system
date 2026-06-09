@@ -239,10 +239,11 @@
   .dc-maplines path{fill:none;stroke-width:1.8;opacity:.92;
     stroke-linecap:round;transition:stroke-width .15s}
   .dc-maplines circle{opacity:1;transition:r .15s}
-  .dc-row[data-maplines] .modlive .ml-src,
-  .dc-row[data-maplines] .dc-card .dc-f[data-fld]{position:relative}
+  /* Hover-only outline. Do NOT change border-radius (would re-shape
+     circular .agthumb) or position (would override .agt-tag's absolute
+     positioning that centers it on the thumb). */
   .dc-row[data-maplines] .ml-src{outline:1px dashed transparent;outline-offset:2px;
-    border-radius:6px;transition:outline-color .15s, background .15s}
+    transition:outline-color .15s}
   .dc-row[data-maplines] .ml-src.hi{outline-color:currentColor}
   .dc-row[data-maplines] .dc-f[data-fld].hi{background:#4f8ff033;border-color:#4f8ff0;
     box-shadow:0 0 0 1px #4f8ff066 inset}
