@@ -256,12 +256,20 @@
   .dc-bound{padding:8px 10px;background:#0c1422;border:1px solid var(--line);border-radius:9px;margin-bottom:10px}
   .dc-bound .dc-lab{margin-bottom:7px}
   .dc-bound-list{display:flex;flex-direction:column;gap:5px}
+  /* Bound chip: status icon (✓ / ~ / ✗) on the LEFT, then the field
+     name. Chip uses a colored left border to mark its line color. */
   .dc-bound-f{display:inline-flex;align-items:center;gap:7px;width:fit-content;
-    padding:5px 11px 5px 9px;background:#1b2940;border:1px solid var(--line);
+    padding:5px 11px 5px 8px;background:#1b2940;border:1px solid var(--line);
     border-left:3px solid var(--c,#9cc3f5);border-radius:7px;
     font-family:var(--mono);font-size:10.5px;color:#cdd9ea}
-  .dc-bound-f::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--c,#9cc3f5);flex:none}
   .dc-bound-f.hi{background:#22324d;color:#fff}
+  .dc-bound-f .bf-stat{display:inline-flex;align-items:center;justify-content:center;
+    width:14px;height:14px;border-radius:50%;font-size:9px;font-weight:800;
+    font-style:normal;line-height:1;flex:none;font-family:var(--sans);
+    border:1px solid transparent}
+  .dc-bound-f.dc-have    .bf-stat{background:#34d39922;color:#7eecc4;border-color:#34d39955}
+  .dc-bound-f.dc-partial .bf-stat{background:#f6b73c1a;color:#f3cd86;border-color:#f6b73c55}
+  .dc-bound-f.dc-missing .bf-stat{background:#f25c5c1a;color:#ff9a9a;border-color:#f25c5c55}
   /* dc-card split layout — only when MAPLINES present. Bound chips
      dock on the LEFT (closest to the incoming lines), rest of the
      reference docs (modes / endpoints / description) on the RIGHT. */
@@ -3871,6 +3879,9 @@ function v2Card(v,opt){
      line crossings. The endpoint blocks below stay as full reference. */
   let boundHtml='';
   if(hasMap){
+    /* status icon: ✓ have, ~ partial, ✗ missing */
+    const STAT_ICO={have:'&#10003;',partial:'~',missing:'&#10007;'};
+    const STAT_TITLE={have:'In Wyze AI One today',partial:'Partial: needs derivation or schema work',missing:'Not in Wyze API yet — UI synthesises'};
     boundHtml=`<div class="dc-sec dc-bound"><div class="dc-lab">Bound to visual elements</div><div class="dc-bound-list">`
       +hasMap.map(m=>{
         /* find the human-readable field text from the src list */
@@ -3880,7 +3891,8 @@ function v2Card(v,opt){
           const f=s.fields.find(x=>String(x).split(/[\s(]/)[0]===m.fld);
           if(f){ lbl=String(f); break; }
         }
-        return `<span class="dc-f dc-bound-f" data-fld="${m.fld}" style="--c:${m.color}">${lbl}</span>`;
+        const st=m.status||'have';
+        return `<span class="dc-f dc-bound-f dc-${st}" data-fld="${m.fld}" style="--c:${m.color}" title="${STAT_TITLE[st]}"><i class="bf-stat">${STAT_ICO[st]}</i>${lbl}</span>`;
       }).join('')
       +`</div></div>`;
   }
@@ -3913,13 +3925,15 @@ function v2Card(v,opt){
    the row is rendered in List mode. Empty/missing targets are skipped.
    --------------------------------------------------------------------- */
 const MAPLINES={
+  /* status: 'have' (in the codebase today), 'partial' (some pieces present;
+     needs derivation or schema work), 'missing' (not in Wyze API yet) */
   'C-AGENT':[
-    {sel:'.aghome .agcard .agthumb', fld:'thumb_grad', color:'#9cc3f5'},
-    {sel:'.aghome .agcard .agt-tag', fld:'thumb_tag',  color:'#f3cd86'},
-    {sel:'.aghome .agcard .agalert', fld:'priority',   color:'#ff9a9a'},
-    {sel:'.aghome .agcard .agpill',  fld:'state.w',    color:'#7eecc4'},
-    {sel:'.aghome .agcard .agsub',   fld:'last_run_ts',color:'#c4b3f0'},
-    {sel:'.aghome .agcard .agname',  fld:'name',       color:'#cdd9ea'}
+    {sel:'.aghome .agcard .agthumb', fld:'thumb_grad', color:'#9cc3f5', status:'missing'},
+    {sel:'.aghome .agcard .agt-tag', fld:'thumb_tag',  color:'#f3cd86', status:'partial'},
+    {sel:'.aghome .agcard .agalert', fld:'priority',   color:'#ff9a9a', status:'partial'},
+    {sel:'.aghome .agcard .agpill',  fld:'state.w',    color:'#7eecc4', status:'partial'},
+    {sel:'.aghome .agcard .agsub',   fld:'last_run_ts',color:'#c4b3f0', status:'have'},
+    {sel:'.aghome .agcard .agname',  fld:'name',       color:'#cdd9ea', status:'have'}
   ]
 };
 /* ---------- v2.5 — trimmed realistic set (24): retire library-ish, repurpose a few, + Learnings ---------- */
