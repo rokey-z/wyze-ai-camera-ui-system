@@ -3060,8 +3060,8 @@ function agCardHTML(t,tpl){
   const dot=(t.fresh&&p.dot)?`<span class="agalert" style="background:${p.dot}"></span>`:'';
   return `<div class="agcard${t.off?' agoff':''}"><div class="agthumb-wrap">${agThumb(t.th)}${dot}</div>`
     +`<div class="agtitle">${agPill(st.w,st.c)}</div>`
-    +`<div class="agname">${tpl.name}</div>`
-    +`<div class="agsub">${t.time}</div></div>`;
+    +`<div class="agsub">${t.time}</div>`
+    +`<div class="agname">${tpl.name}</div></div>`;
 }
 function agStates(t,tpl){
   const S=[{lab:'Action required',pri:'P0',time:'now',fresh:true},{lab:'Needs attention',pri:'P1',time:'3m ago',fresh:true},
