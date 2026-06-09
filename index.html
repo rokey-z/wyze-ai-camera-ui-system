@@ -248,6 +248,19 @@
     box-shadow:0 0 0 1px #4f8ff066 inset}
   .dc-row[data-maplines] .dc-maplines path.hi{stroke-width:3.2}
   .dc-row[data-maplines] .dc-maplines circle.hi{r:5}
+  /* "Bound to visual elements" section — vertical stack of chips in
+     mapline visual order, each colored to match its line. Sits at the
+     top of the data card; line endpoints fan out to these chips, so
+     no crossings. */
+  .dc-bound{padding:8px 10px;background:#0c1422;border:1px solid var(--line);border-radius:9px;margin-bottom:10px}
+  .dc-bound .dc-lab{margin-bottom:7px}
+  .dc-bound-list{display:flex;flex-direction:column;gap:5px}
+  .dc-bound-f{display:inline-flex;align-items:center;gap:7px;width:fit-content;
+    padding:5px 11px 5px 9px;background:#1b2940;border:1px solid var(--line);
+    border-left:3px solid var(--c,#9cc3f5);border-radius:7px;
+    font-family:var(--mono);font-size:10.5px;color:#cdd9ea}
+  .dc-bound-f::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--c,#9cc3f5);flex:none}
+  .dc-bound-f.hi{background:#22324d;color:#fff}
   .dc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
   .dc-head b{font-size:12.5px;color:var(--ink)}
   .dc-badge{font-size:9px;font-weight:800;letter-spacing:.6px;padding:3px 9px;
@@ -3840,6 +3853,27 @@ function v2Card(v,opt){
   const isnew=v.tag==='new', merged=v.folds.length>1;
   const tagtxt=isnew?'new':(merged?'merged':'kept'), badge=isnew?'new in v2.5':(merged?'merges '+v.folds.length:'kept as-is');
   const hasMap = (typeof MAPLINES !== 'undefined') && MAPLINES[v.id];
+  /* if this component has mapped fields, render a "Bound to visual"
+     section at the TOP of the card, in visual order (MAPLINES order).
+     Lines will target these chips first (querySelector picks the
+     earliest match in DOM order) — so the line endpoints land in a
+     vertical stack that matches the source elements, eliminating
+     line crossings. The endpoint blocks below stay as full reference. */
+  let boundHtml='';
+  if(hasMap){
+    boundHtml=`<div class="dc-sec dc-bound"><div class="dc-lab">Bound to visual elements</div><div class="dc-bound-list">`
+      +hasMap.map(m=>{
+        /* find the human-readable field text from the src list */
+        let lbl=m.fld;
+        for(const s of srcs){
+          if(!s.fields) continue;
+          const f=s.fields.find(x=>String(x).split(/[\s(]/)[0]===m.fld);
+          if(f){ lbl=String(f); break; }
+        }
+        return `<span class="dc-f dc-bound-f" data-fld="${m.fld}" style="--c:${m.color}">${lbl}</span>`;
+      }).join('')
+      +`</div></div>`;
+  }
   return `<div class="dc-row dc-solo"${hasMap?' data-maplines="'+v.id+'"':''}>`
     +(hasMap?'<svg class="dc-maplines" aria-hidden="true"></svg>':'')
     +`<div class="dc-left"><div class="modlive">${comp}</div>`
@@ -3847,6 +3881,7 @@ function v2Card(v,opt){
       +`<div class="dc-meta"><span class="dc-id">${v.id}</span></div></div>`
     +`<div class="dc-card">`
       +`<div class="dc-head"><b>${v.name}</b><span class="dc-badge dc-${vcls}">${badge}</span></div>`
+      +boundHtml
       +(v.folds.length?`<div class="dc-sec"><div class="dc-lab">${merged?'Consolidates':'From v1.5'}</div><div class="dc-contract">${v.folds.map(f=>`<span class="dc-c">${f}</span>`).join('')}</div></div>`:'')
       +`<div class="dc-sec"><div class="dc-lab">Adjustable modes</div><div class="dc-contract">${v.modes.map(m=>`<span class="dc-c dc-modepill">${m}</span>`).join('')}</div></div>`
       +`<div class="dc-sec"><div class="dc-lab">Wyze AI One source</div>${dcSources(srcs)}</div>`
