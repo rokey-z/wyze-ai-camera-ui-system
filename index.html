@@ -71,6 +71,8 @@
   /* Home-wall agent entry card (adaptive circular thumb) */
   .aghint{font-size:9.5px;color:var(--dim);margin:2px 0 9px;line-height:1.4}
   .aghome{display:flex;justify-content:center}
+  /* widget pill + template name below it */
+  .agwrap{display:flex;flex-direction:column;align-items:center}
   .agcard{width:130px;display:flex;flex-direction:column;align-items:center;gap:7px;position:relative;
     background:var(--card);border:1px solid var(--line);border-radius:50px;padding:28px 13px 26px}
   .agthumb-wrap{position:relative;width:96px;height:96px}
@@ -111,7 +113,7 @@
   /* card states are the same vertical-pill shape/ratio as the hero card, just smaller */
   .agms{display:flex;flex-direction:column;align-items:center;gap:6px;background:var(--card);
     border:1px solid var(--line);border-radius:34px;padding:16px 9px 14px;width:100px}
-  .agcard.agoff,.agms.agoff{opacity:.5;filter:grayscale(.65)}
+  .agwrap.agoff,.agcard.agoff,.agms.agoff{opacity:.5;filter:grayscale(.65)}
   .agms .agthumb-wrap,.agms .agthumb{width:72px;height:72px}
   .agms .agt-word{font-size:13px;padding:0 4px}
   .agms .agt-num{font-size:22px}
@@ -125,8 +127,8 @@
   .agms .agtitle{font-size:10px;line-height:1.25}
   .agms .agtitle .agpill{font-size:9.5px;padding:3px 9px;letter-spacing:.1px}
   .agms .agsub{font-size:9.5px;margin-top:1px;max-width:92px}
-  .agms .agname{font-size:8px;margin-top:3px;gap:3px}
-  .agms .agname .ic{width:10px;height:10px}
+  .agwrap-sm .agname{font-size:8px;margin-top:5px;gap:3px}
+  .agwrap-sm .agname .ic{width:10px;height:10px}
   .agms-time{font-size:9px;font-weight:700;padding:2px 8px;border-radius:999px;font-family:var(--mono)}
   .agms-time.fresh{color:#7eecc4;background:#34d39915}
   .agms-time.stale{color:var(--dim);background:var(--bg)}
@@ -392,6 +394,81 @@
     font-family:inherit;font-size:10px;font-weight:700;color:#9cc3f5;background:#4f8ff012;
     border:1px solid #4f8ff033;transition:.12s}
   .dc-more:hover{background:#4f8ff022;border-color:#4f8ff066}
+  /* ===== Elements tab — bipartite canvas: chip-level UI elements ⇆ data fields ===== */
+  #elCanvas{position:relative;display:grid;
+    grid-template-columns:minmax(300px,340px) minmax(260px,300px) minmax(0,1fr);gap:0 26px;
+    align-items:start;margin-top:6px}
+  /* the bezier gutter lives between the UI column and the data panel */
+  .el-col-data{margin-left:140px}
+  /* components column — sticky is SAFE here (no lines attach to it);
+     scrolls internally when the previews exceed the viewport */
+  .el-col-comps{position:sticky;top:70px;align-self:start;
+    max-height:calc(100vh - 90px);overflow-y:auto}
+  .el-comppanel{padding:13px 14px}
+  .el-compfor{font-size:12px;font-weight:700;color:var(--ink);margin-top:4px}
+  .el-complist{display:flex;flex-direction:column;gap:10px;margin-top:9px}
+  .el-comp{cursor:pointer;border:1px solid var(--line);background:var(--card);
+    border-radius:9px;padding:9px 10px 10px;transition:border-color .12s,background .12s}
+  .el-comp:hover{border-color:var(--blue);background:#4f8ff00d}
+  .el-comp b{font-family:var(--mono);font-size:10.5px;color:#9cc3f5;margin-right:7px}
+  .el-comp .cn{font-size:11px;color:var(--ink)}
+  .el-comp .cf{display:block;font-family:var(--mono);font-size:9px;color:var(--dim);margin-top:2px}
+  /* the REAL component preview, rendered at Components-tab size */
+  .el-comp-prev{pointer-events:none;margin-top:8px}
+  .el-comp-prev .el-mark{outline:1.5px dashed #9cc3f5;outline-offset:2px}
+  .el-comp-hint{font-size:10.5px;color:var(--dim);font-style:italic;line-height:1.5}
+  .el-net{position:absolute;inset:0;width:100%;height:100%;
+    pointer-events:none;z-index:3;overflow:visible}
+  /* lines hidden by default — they appear only for the hovered chip / field */
+  .el-net path{fill:none;stroke-width:1.8;opacity:0;stroke-linecap:round;
+    transition:stroke-width .15s,opacity .15s}
+  .el-net path.el-poss{stroke-dasharray:5 4}
+  .el-net circle{opacity:0;transition:r .15s,opacity .15s}
+  .el-net path.hi{stroke-width:3.2;opacity:1}
+  .el-net path.el-poss.hi{opacity:.8}
+  .el-net circle.hi{r:5;opacity:1}
+  /* left column — groups also carry .dc-fam for the h3 chrome.
+     Chips are flat rows separated by divider lines (no card background). */
+  #elUiCol .el-fam{display:flex;flex-direction:column;gap:0;margin-top:18px}
+  #elUiCol .el-fam:first-child{margin-top:0}
+  .el-chip{position:relative;display:flex;align-items:center;justify-content:space-between;
+    gap:14px;padding:13px 2px;border-top:1px solid var(--line);
+    cursor:pointer;transition:background .15s}
+  #elUiCol .el-fam .el-chip:first-of-type{border-top:0}
+  .el-chip.hi{background:#4f8ff00d}
+  /* click-locked element: hover state pinned until clicked again */
+  .el-chip.el-locked{background:#4f8ff012;box-shadow:inset 2px 0 0 var(--blue)}
+  /* element name — regular weight, to the RIGHT of the element preview */
+  .el-chip-name{flex:0 1 auto;min-width:70px;font-size:11.5px;font-weight:400;color:var(--ink);text-align:right;line-height:1.35}
+  .el-chip-prev{pointer-events:none}
+  .el-chip-prev .panel,.el-chip-prev .actions,.el-chip-prev .reminder,
+  .el-chip-prev .chips2,.el-chip-prev .tilegrid,.el-chip-prev .lapsebar,
+  .el-chip-prev .hero,.el-chip-prev .lapse,.el-chip-prev .aghome{margin:0}
+  .el-chip-prev{flex:1;min-width:0}
+  .el-chip.hi .el-src{outline:1px dashed currentColor;outline-offset:2px}
+  /* right panel — STATIC by design: lines are drawn in canvas coordinates,
+     a sticky panel would move relative to the canvas on scroll and detach them */
+  .el-fieldpanel{position:static}
+  .el-epgrp{margin-bottom:13px}
+  .el-epgrp:last-child{margin-bottom:0}
+  .el-epgrp .dc-ep{display:block;width:fit-content;margin-bottom:7px}
+  .el-ep-note{font-size:10px;color:var(--dim);font-style:italic;margin-bottom:7px}
+  .el-fldlist{display:flex;flex-direction:column;gap:5px}
+  .el-fld{font-size:11px;cursor:default}
+  .el-fld.hi{background:#22324d;border-color:var(--c,#9cc3f5);color:#fff}
+  /* legend (lives inside #elSummary) */
+  .el-legend{display:inline-flex;align-items:center;gap:14px;font-size:10.5px;
+    color:var(--mut);padding:6px 4px}
+  .el-legend span{display:inline-flex;align-items:center;gap:6px}
+  .el-lk{display:inline-block;width:20px;border-top:2px solid #9cc3f5}
+  .el-lk-dash{border-top-style:dashed;opacity:.6}
+  @media (max-width:860px){
+    #elCanvas{grid-template-columns:1fr;gap:24px 0}
+    .el-net{display:none}
+    .el-col-comps{display:none}
+    .el-col-data{margin-left:0}
+  }
+  .fmark-mixed{background:#f6b73c1c;color:#f3cd86;border-color:#f6b73c66}
   /* grouped clips — one full-card gif cover with info overlaid */
   .gcard-thumb{position:relative;width:100%;aspect-ratio:16/10;border-radius:11px;overflow:hidden}
   .gcard-gif{position:absolute;top:8px;left:8px;font-size:8px;font-weight:800;letter-spacing:.3px;
@@ -611,15 +688,18 @@
   .statebig{text-align:center;border-radius:14px;padding:17px 14px 14px}
   .statebig .sbw{font-size:27px;font-weight:800;letter-spacing:-1px;line-height:1.05}
   .statebig .sbs{font-size:11px;color:var(--mut);margin-top:7px}
-  /* hover-a-component -> latest (v2.5) component card popover */
-  .comppop{position:fixed;z-index:90;width:600px;max-width:94vw;max-height:84vh;overflow:auto;pointer-events:none;
+  /* hover-a-component -> latest component card popover. Renders the SAME
+     .dc-row the Components tab shows, at the same footprint — preview 1.7fr |
+     split data card 1fr — so the hover card matches the Components list view
+     ratio exactly (just capped to the viewport). */
+  /* all hover popovers dock at a FIXED position at the top of the screen
+     (centered, below the sticky tab bar) instead of floating by the anchor */
+  .comppop{position:fixed;z-index:90;top:70px;left:50%;transform:translateX(-50%);
+    width:1228px;max-width:94vw;max-height:calc(100vh - 86px);overflow:auto;pointer-events:none;
     background:var(--card);border:1px solid #34d39966;border-radius:13px;padding:13px 14px;
     box-shadow:0 16px 50px #000c}
   /* the data-check row renders cleanly inside the hover popover (no divider/padding) */
-  .comppop .dc-row{border-top:0;padding:0;gap:16px}
-  /* hover card: keep the description text, drop the "Wyze AI One source" section */
-  .comppop .dc-card-rest{display:none}
-  .comppop .dc-card-body{grid-template-columns:1fr}
+  .comppop .dc-row{border-top:0;padding:0;gap:20px}
   .comppop .dc-note{display:block;margin-top:10px}
   .comppop-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px}
   .comppop-h b{font-size:13px;color:var(--ink)}
@@ -797,17 +877,19 @@
   .compare .cf{flex:1;border-radius:9px;overflow:hidden;border:1px solid var(--line)}
   .compare .cimg{aspect-ratio:4/3}
   .compare .clab{font-size:9px;text-align:center;padding:4px;color:var(--mut);background:var(--card)}
-  .reminder{display:flex;align-items:flex-start;gap:11px;background:#34d39912;
+  .reminder{display:flex;flex-wrap:wrap;align-items:flex-start;gap:11px;background:#34d39912;
     border:1px solid #34d39940;border-radius:11px;padding:11px 13px}
   .reminder .rc{width:34px;height:34px;border-radius:9px;background:#34d399;
     display:grid;place-items:center;flex:none}
   .reminder b{font-size:12px}
   .reminder span{font-size:10.5px;color:var(--mut);display:block;margin-top:1px}
-  /* reminder action buttons: compact icon+text rows, side by side at the bottom */
-  .reminder .actions{width:100%;margin-top:9px}
-  .reminder .act{flex-direction:row;align-items:center;justify-content:center;
+  /* reminder action buttons: their own full-width row BELOW the content
+     (icon + title/sub on top, buttons wrap to the next line and split the
+     card width). Icon centered with the label on one line. */
+  .reminder .actions{width:100%;margin-top:0}
+  .reminder .act{display:flex;flex-direction:row;align-items:center;justify-content:center;
     gap:6px;padding:7px 10px;border-radius:9px}
-  .reminder .act .ai{margin:0;display:flex}
+  .reminder .act .ai{margin:0;display:flex;align-items:center}
   .reminder .act .ai svg{width:14px;height:14px}
 
   /* --- v3 vision-signal styles --- */
@@ -1308,7 +1390,8 @@
   </header>
 
   <div class="tabs">
-    <div class="tab on" data-tab="data">Components</div>
+    <div class="tab on" data-tab="elem">Elements</div>
+    <div class="tab" data-tab="data">Components</div>
     <div class="tab" data-tab="gen">Templates</div>
     <div class="tab" data-tab="comp">Spec</div>
     <div class="tab" data-tab="builder">.MD</div>
@@ -2153,7 +2236,7 @@ EMIT  -&gt; see §13
       </div>
     </div>
 
-  <div class="tabpane on" id="pane-data">
+  <div class="tabpane" id="pane-data">
     <div class="dc-stickyhdr">
       <div class="dc-vertabs" id="dcVerTabs">
         <button class="dc-vertab" data-ver="v1">v1 <span class="dc-vn">42</span></button>
@@ -2170,6 +2253,30 @@ EMIT  -&gt; see §13
     </div>
     <div id="dcGrids"></div>
     <div id="dcOpps"></div>
+  </div>
+
+  <!-- ============ TAB: ELEMENTS — each element = one data source ============ -->
+  <div class="tabpane on" id="pane-elem">
+    <div class="dc-stickyhdr">
+      <div class="dc-cap" style="padding-top:8px">Chip-level <b>UI elements</b> (left) connect many-to-many with the
+        <b>data fields</b> that can fill them (right) — one element can be filled by different fields, and one field
+        can fill different elements. <b>Hover an element or a field</b> to see its connections.
+        Solid = bound in a component today &middot; dashed = possible fill.</div>
+      <div class="dc-anchors" id="elAnchors"></div>
+      <div class="dc-summary" id="elSummary"></div>
+    </div>
+    <div id="elCanvas">
+      <svg class="el-net" aria-hidden="true"></svg>
+      <div class="el-col-comps"><div class="dc-card el-comppanel">
+        <div class="dc-lab">Used in components</div>
+        <div class="el-compfor" id="elCompFor">&mdash;</div>
+        <div class="el-complist" id="elCompList">
+          <div class="el-comp-hint">Hover a UI element to see which components use it.</div>
+        </div>
+      </div></div>
+      <div id="elUiCol"></div>
+      <div class="el-col-data"><div class="dc-card el-fieldpanel" id="elFieldPanel"></div></div>
+    </div>
   </div>
 
   <footer>
@@ -2554,7 +2661,7 @@ function v3State(subj,state,c,label,dur,conf){
   return `<div class="panel" style="text-align:center;padding:18px 12px 14px"><div class="ml-subj" style="font-size:9px;letter-spacing:1px;color:var(--dim);text-transform:uppercase;margin-bottom:7px">${subj}</div><div class="ml-state" style="font-size:32px;font-weight:800;letter-spacing:-1.5px;color:${c};line-height:1.04">${state}</div><div style="font-size:11px;color:var(--mut);margin-top:8px"><span class="ml-label">${label}</span> &middot; <span class="ml-dur" style="font-family:var(--mono);color:${c};font-weight:700">${dur}</span></div></div>`+(conf?cf15('confidence '+conf,'state from VLM &middot; tap to correct'):'');
 }
 function v3Live(grad,name,time,inner){
-  return `<div class="hero"><div class="videobox" style="background:${grad}">${sigTag('live')}<span style="position:absolute;right:7px;top:7px;font-size:7px;font-weight:800;background:#0009;color:#cfe3ff;padding:2px 6px;border-radius:5px">1080p &middot; &#9679; REC</span>${inner||''}<div class="vname">${name}</div>${time?`<div class="vtime">${time}</div>`:''}</div></div>`;
+  return `<div class="hero"><div class="videobox" style="background:${grad}">${sigTag('live')}${inner||''}<div class="vname">${name}</div>${time?`<div class="vtime">${time}</div>`:''}</div></div>`;
 }
 function v3Feed(ttl,chips,rows){
   return `<div class="panel"><div class="ph"><b>${ttl}</b></div>`+(chips&&chips.length?`<div class="chips2" style="margin-bottom:8px">${chips.map((ch,i)=>`<span class="fc${i===0?' on':''}">${ch}</span>`).join('')}</div>`:'')+rows.map(([t,m,tag,c])=>`<div class="feedrow"><div class="thumb"></div><div style="flex:1"><div class="ft">${t}</div><div class="fm">${m}</div></div>${tag?`<span class="etag" style="background:${c}22;color:${c}">${tag}</span>`:''}</div>`).join('')+`<button class="dc-more">More &middot; earlier &rsaquo;</button></div>`;
@@ -2573,7 +2680,8 @@ function v3Deter(){
 }
 function v3Reminder(iconPath,title,sub,accent){
   const a=accent||'#34d399';
-  return `<div class="reminder" style="background:${a}12;border-color:${a}40;align-items:flex-start"><div class="rc" style="background:${a}">${aIcon(iconPath)}</div><div style="flex:1"><b>${title}</b><span>${sub}</span><div class="actions" style="margin-top:8px"><div class="act"><span class="ai">${aIcon('<circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/>')}</span>Snooze</div><div class="act primary"><span class="ai">${aIcon('<path d="M20 6L9 17l-5-5"/>')}</span>Done</div></div></div></div>`;
+  /* content row (icon + title/sub) on top; the 2 buttons below span the full card width */
+  return `<div class="reminder" style="background:${a}12;border-color:${a}40;align-items:flex-start"><div class="rc" style="background:${a}">${aIcon(iconPath)}</div><div style="flex:1"><b>${title}</b><span>${sub}</span></div><div class="actions"><div class="act"><span class="ai">${aIcon('<circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/>')}</span>Snooze</div><div class="act primary"><span class="ai">${aIcon('<path d="M20 6L9 17l-5-5"/>')}</span>Done</div></div></div>`;
 }
 function v3Sos(cs){
   return `<div class="panel"><div class="ph"><b>Escalation contacts</b><span style="font-size:9px;color:var(--dim)">call order</span></div><div class="sosbook">`+cs.map(([ini,name,c])=>`<div class="sosc"><span class="sosc-av" style="background:${c}22;color:${c}">${ini}</span><div class="sosc-main"><div class="sosc-name">${name}</div></div><div class="sosc-acts"><span class="sosc-act" title="Call"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco.call}</svg></span><span class="sosc-act" title="Message"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco.text}</svg></span></div></div>`).join('')+`</div></div>`;
@@ -2710,9 +2818,10 @@ function agCardHTML(t,tpl){
   const p=PRI[t.pri]||PRI.P3;
   const st=t.state||{w:t.title,c:p.c};
   const dot=(t.fresh&&p.dot)?`<span class="agalert" style="background:${p.dot}"></span>`:'';
-  return `<div class="agcard${t.off?' agoff':''}"><div class="agthumb-wrap">${agThumb(t.th)}</div>`
+  /* template name sits BELOW the widget pill, not inside it */
+  return `<div class="agwrap${t.off?' agoff':''}"><div class="agcard"><div class="agthumb-wrap">${agThumb(t.th)}</div>`
     +`<div class="agtitle">${agPill(st.w,st.c)}</div>`
-    +`<div class="agsub">${dot}${t.time}</div>`
+    +`<div class="agsub">${dot}${t.time}</div></div>`
     +`<div class="agname">${tpl.name}</div></div>`;
 }
 function agStates(t,tpl){
@@ -2731,9 +2840,9 @@ function agStates(t,tpl){
     const pill=s.none?agPill('No runs','#93a3bd'):s.run?agPill('Working…','#9cc3f5'):agPill(s.lab,pc);
     const tnew=s.fresh && p.dot && !s.none && !s.run;
     const dot=tnew?`<span class="agalert" style="background:${p.dot}"></span>`:'';
-    return `<div class="agms${s.paused?' agoff':''}"><div class="agthumb-wrap">${thumb}</div>`
+    return `<div class="agwrap agwrap-sm${s.paused?' agoff':''}"><div class="agms"><div class="agthumb-wrap">${thumb}</div>`
       +`<div class="agtitle">${pill}</div>`
-      +`<div class="agsub">${dot}${s.time}</div>`
+      +`<div class="agsub">${dot}${s.time}</div></div>`
       +`<div class="agname">${tpl.name}</div></div>`;
   }).join('');
 }
@@ -3113,11 +3222,11 @@ $('sigRow').innerHTML=SIGNALS.map(([n,d])=>`<span class="sigchip"><b>${n}</b> &m
    the Data check tab only; the Library tab keeps v1. */
 const cf15=(v,t)=>`<div class="conf" style="margin-top:7px;padding:7px 9px"><div class="cv">${v}</div><div class="cd">${t||'VLM confidence · tap a detection to correct'}</div></div>`;
 const MODFULL15={
- 'M-LIVE':`<div class="hero"><div class="videobox" style="background:linear-gradient(165deg,#1d2d49,#0f1828)">${sigTag('live')}<span class="ml-res" style="position:absolute;right:7px;top:7px;font-size:7px;font-weight:800;background:#0009;color:#cfe3ff;padding:2px 6px;border-radius:5px">1080p · &#9679; REC</span><div class="vname">Front cam &middot; online</div><div class="vtime">14:09</div></div></div>`,
+ 'M-LIVE':`<div class="hero"><div class="videobox" style="background:linear-gradient(165deg,#1d2d49,#0f1828)">${sigTag('live')}<div class="vname">Front cam &middot; online</div><div class="vtime">14:09</div></div></div>`,
  'M-SNAP':MODFULL['M-SNAP']+cf15('0.94','AI verdict: Closed &middot; 0.94 &middot; tap to correct'),
  'M-CLIP':MODFULL['M-CLIP']+`<div class="scrub" style="height:18px;margin-top:7px"><div style="position:absolute;left:0;top:0;bottom:0;width:38%;background:#4f8ff033"></div><div class="pin" style="left:38%"></div></div>`+cf15('0.91','Trigger: person &middot; 0.91'),
  'M-FOOTAGE':`<div class="hero" style="margin-bottom:8px"><div class="videobox" style="background:linear-gradient(165deg,#1c2740,#0c1119)"><div class="sigtag" style="background:#5a6b82dd;color:#fff">EVENTS</div><div class="vname">Activity scrubber</div><div class="vtime">last 24h</div></div></div>`+scrub(),
- 'M-TIMELAPSE':MODFULL['M-TIMELAPSE']+`<div class="ghost" style="display:block;margin-top:8px;padding:7px 9px"><div style="font-size:9px;color:var(--dim)">Periodic frame store &middot; 1/day</div><span class="nodata">NEEDS STORE</span></div>`,
+ 'M-TIMELAPSE':MODFULL['M-TIMELAPSE'],
  'M-REEL':MODFULL['M-REEL']+`<div style="display:flex;gap:3px;margin-top:7px">${[0,1,2,3,4,5,6,7].map(i=>`<div style="flex:1;height:4px;border-radius:2px;background:${i<3?'#a78bfa':'#26344f'}"></div>`).join('')}</div><div style="font-size:9px;color:var(--dim);margin-top:5px">8 clips &middot; auto-compiled</div>`,
  'M-GALLERY':`<div class="panel"><div class="ph"><b>Today&rsquo;s visitors</b><span class="sigtag sig-coll" style="position:static">6</span></div><div class="chips2" style="margin-bottom:8px"><span class="fc on">All 6</span><span class="fc">New 2</span><span class="fc">Songbirds 4</span></div><div class="gallery"><div class="gcell new" style="background:linear-gradient(150deg,#b1402f,#5a1c14)"><span>Cardinal</span></div><div class="gcell" style="background:linear-gradient(150deg,#3a67c4,#16304f)"><span>Blue Jay</span></div><div class="gcell new" style="background:linear-gradient(150deg,#caa23f,#5c4715)"><span>Robin</span></div></div></div>`,
  'M-COMPARE':`<div class="panel"><div class="ph"><b>Then &amp; now</b><span class="delta up">&#9650; 17 cm</span></div><div class="compare"><div class="cf"><div class="cimg" style="background:linear-gradient(160deg,#1f3a2c,#0f1d16)"></div><div class="clab">Day 1 &middot; 41 cm</div></div><div class="cf"><div class="cimg" style="background:linear-gradient(160deg,#2c6b47,#16331f)"></div><div class="clab">Day 47 &middot; 58 cm</div></div></div><div class="ghost" style="display:block;margin-top:7px;padding:6px 9px"><span style="font-size:9px;color:var(--dim)">Time-aligned pair store</span><span class="nodata">NEEDS STORE</span></div></div>`,
@@ -3157,9 +3266,10 @@ const MODFULL15={
  'M-INVENTORY':`<div class="panel"><div class="ph"><b>Inventory</b><span class="pvbadge" style="background:#f25c5c22;color:#ff9a9a;font-size:8px">2 LOW</span></div><div class="ghost" style="display:block"><div class="invrow"><div class="invthumb" style="background:linear-gradient(150deg,#52402f,#241b13)"></div><span class="in">Coffee beans</span><div class="stockbar"><i style="width:14%;background:#f25c5c"></i></div><span class="invflag" style="background:#f25c5c22;color:#ff9a9a">RESTOCK</span></div><div class="invrow"><div class="invthumb" style="background:linear-gradient(150deg,#3f5230,#1c2415)"></div><span class="in">Paper towels</span><div class="stockbar"><i style="width:66%;background:#34d399"></i></div><span class="invflag" style="background:#34d39922;color:#7eecc4">OK</span></div><span class="nodata">NEEDS VLM SCAN</span></div></div>`,
  'M-CAPTURE':`<div class="capbtn">${aIcon('<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>')}<div class="ct">Scan the shelf</div><div class="cs">AI counts the items</div></div><div class="capstrip" style="margin-top:8px"><i style="background:linear-gradient(150deg,#3f5230,#1c2415)"></i><i style="background:linear-gradient(150deg,#52402f,#241b13)"></i><i style="background:linear-gradient(150deg,#2f4452,#141d24)"></i><div style="display:grid;place-items:center;font-size:10px;color:var(--dim);width:40px">+8</div></div>`,
  'M-TIMESHEET':`<div class="panel"><div class="ph"><b>Visit verification</b></div><div class="tsrow"><div class="cliptip" style="background:linear-gradient(150deg,#2c5a3e,#13261a)"><span class="ctg" style="background:#34d399;color:#04231a">CLIP</span></div><div style="flex:1"><div class="tn">Today, Tue</div><div class="tm">9:12 &rarr; 10:05 AM</div></div><div class="tsdur"><div class="dd" style="color:#7eecc4">53m</div><div class="ds" style="color:#7eecc4">VERIFIED</div></div></div><div class="tsrow"><div class="cliptip" style="background:linear-gradient(150deg,#5a4a2c,#26200f)"><span class="ctg" style="background:#f6b73c;color:#3a2a05">CLIP</span></div><div style="flex:1"><div class="tn">Tue, May 13</div><div class="tm">9:05 &rarr; 9:34 AM</div></div><div class="tsdur"><div class="dd" style="color:#f3cd86">29m</div><div class="ds" style="color:#f3cd86">SHORT</div></div></div>${cf15('0.90','Identity match &middot; tap to correct')}</div>`,
- 'M-REMINDER':`<div class="reminder"><div class="rc">${aIcon('<path d="M12 2s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/>')}</div><div style="flex:1"><b>Water in 2 days</b><span>next check Thu 9 AM</span><div class="actions" style="margin-top:7px"><div class="act"><span class="ai">${aIcon('<circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/>')}</span>Snooze</div><div class="act primary"><span class="ai">${aIcon('<path d="M20 6L9 17l-5-5"/>')}</span>Done</div></div></div></div>`,
+ 'M-REMINDER':`<div class="reminder"><div class="rc">${aIcon('<path d="M12 2s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/>')}</div><div style="flex:1"><b>Water in 2 days</b><span>next check Thu 9 AM</span></div><div class="actions"><div class="act"><span class="ai">${aIcon('<circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/>')}</span>Snooze</div><div class="act primary"><span class="ai">${aIcon('<path d="M20 6L9 17l-5-5"/>')}</span>Done</div></div></div>`,
  'M-CALENDAR':`<div class="panel"><div class="ph"><b>May</b><span style="font-size:9px;color:var(--dim);font-family:var(--mono)">busiest: Tue</span></div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;font-size:7px;color:var(--dim);text-align:center;margin-bottom:3px">${['S','M','T','W','T','F','S'].map(d=>`<span>${d}</span>`).join('')}</div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px">${Array.from({length:35},(_,i)=>{const day=i-2;const has=day>=1&&day<=31;const op=has?(0.18+((i*29)%80)/100):0;return `<div style="aspect-ratio:1;border-radius:3px;background:${has?'#38c6db':'transparent'};opacity:${has?Math.min(op,1).toFixed(2):0}${day===14?';box-shadow:0 0 0 1.5px #fff inset':''}"></div>`;}).join('')}</div><div style="display:flex;justify-content:flex-end;align-items:center;gap:4px;font-size:7.5px;color:var(--dim);margin-top:6px">less<i style="width:9px;height:9px;border-radius:2px;background:#38c6db;opacity:.28"></i><i style="width:9px;height:9px;border-radius:2px;background:#38c6db;opacity:.6"></i><i style="width:9px;height:9px;border-radius:2px;background:#38c6db"></i>more</div></div>`,
 };
+
 /* what each v1.5 adds, and any data it needs that we don't have yet */
 const MOD15={
  'M-LIVE':{a:'Online + resolution badge, recording indicator.'},
@@ -3470,8 +3580,7 @@ function v2Card(v,opt){
   opt=opt||{};
   const comp=(opt.rmap&&opt.rmap[v.id])||MODFULL15[v.primary]||MODFULL[v.primary]||'';
   const vlab=opt.vlab||'v2', vcls=opt.vcls||'v2';
-  let srcs=v.src;
-  if(!srcs){ const seen={}; srcs=[]; v.folds.forEach(f=>((DATACHECK[f]||{}).sources||[]).forEach(s=>{ if(!seen[s.ep]){seen[s.ep]=1;srcs.push(s);} })); }
+  let srcs=effectiveSrcs(v);
   const cov={have:0,partial:0,missing:0};
   v.folds.forEach(f=>{cov[(DATACHECK[f]||{}).status||'missing']++;});
   const cv=[];
@@ -3538,12 +3647,10 @@ const MAPLINES={
     {sel:'.aghome .agcard .agalert', fld:'priority',   color:'#ff9a9a'},
     {sel:'.aghome .agcard .agpill',  fld:'state.w',    color:'#7eecc4'},
     {sel:'.aghome .agcard .agsub',   fld:'last_run_ts',color:'#c4b3f0'},
-    {sel:'.aghome .agcard .agname',  fld:'name',       color:'#cdd9ea'}
+    {sel:'.aghome .agname',          fld:'name',       color:'#cdd9ea'}
   ],
   'C-STATE':[
-    {sel:'.ml-subj',  fld:'subject',         color:'#9cc3f5'},
     {sel:'.ml-state', fld:'state.w',         color:'#7eecc4'},
-    {sel:'.ml-label', fld:'state.label',     color:'#c4b3f0'},
     {sel:'.ml-dur',   fld:'state.since_ts',  color:'#f3cd86'},
     {sel:'.cv',       fld:'confidence',      color:'#93a3bd'}
   ],
@@ -3557,8 +3664,7 @@ const MAPLINES={
   'C-RECAP':[
     {sel:'.ml-title',     fld:'title',       color:'#9cc3f5'},
     {sel:'.ml-tone',      fld:'tone',        color:'#f3cd86'},
-    {sel:'.ml-narrative', fld:'narrative',   color:'#7eecc4'},
-    {sel:'.ml-hi .fc',    fld:'highlights[]',color:'#c4b3f0'}
+    {sel:'.ml-narrative', fld:'narrative',   color:'#7eecc4'}
   ],
   'C-ACT':[
     {sel:'.ml-pon',      fld:'power_on',       color:'#7eecc4'},
@@ -3620,7 +3726,6 @@ const MAPLINES={
   'C-LIVE':[
     {sel:'.videobox', fld:'signaling_url',  color:'#9cc3f5'},
     {sel:'.vname',    fld:'is_on',          color:'#7eecc4'},
-    {sel:'.ml-res',   fld:'resolution',     color:'#f3cd86'},
     {sel:'.vtime',    fld:'recording_time', color:'#93a3bd'}
   ],
   'C-RECVIDEO':[
@@ -3702,7 +3807,7 @@ const FIELD_STATUS={
     // Present-tense state is the VLM status_line from visual-memories (freetext);
     // there is no structured state word / label / since-timestamp field.
     have:    ['status_line'],
-    missing: ['subject','state.w','state.label','state.since_ts','confidence']
+    missing: ['state.w','state.since_ts','confidence']
   },
   'C-FEED':{
     // events/filter (event_ts, tag_list, event_resources) + events/insights (vlm_insight)
@@ -3712,7 +3817,7 @@ const FIELD_STATUS={
   },
   'C-RECAP':{
     // GET /api/stories returns title, narrative, tone, highlights — all present.
-    have:    ['title','narrative','highlights[]','tone'],
+    have:    ['title','narrative','tone'],
     missing: []
   },
   'C-ACT':{
@@ -3837,7 +3942,7 @@ const V25=[
  {id:'C-VISIT',grp:'Records & lists',name:'Visit sheet',primary:'M-TIMESHEET',folds:['M-TIMESHEET'],modes:['arrival / departure rows'],src:[{ep:'POST /api/events/filter',fields:['event_ts','tag_list']},{ep:'GET /api/reid/identities/{id}/appearances',fields:['device_mac','timestamp_ms','thumbnail_url']}],use:'Attendance / visit verification — arrival, departure and dwell per subject.'},
  {id:'C-IDCARD',grp:'Records & lists',name:'Identity card',primary:'M-IDCARD',folds:['M-IDCARD'],modes:['recognized subject'],use:'A recognized-subject detail card (face / plate, last seen, appearances).'},
  // ——— Status & readouts (3) ———
- {id:'C-STATE',grp:'Status & readouts',name:'State (large)',primary:'M-STATE',folds:['M-STATE'],modes:['big state word + duration'],src:[{ep:'GET /api/household/visual-memories',fields:['status_line']},{ep:'— parsed from status_line (no structured state field)',fields:['subject','state.w (state word)','state.label','state.since_ts']}],use:'The current state shown as a large word with how long it has held. The present-tense state is the VLM status_line ("Door closed (3h)"); the word, label and duration are parsed from it.'},
+ {id:'C-STATE',grp:'Status & readouts',name:'State (large)',primary:'M-STATE',folds:['M-STATE'],modes:['big state word + duration'],src:[{ep:'GET /api/household/visual-memories',fields:['status_line']},{ep:'— parsed from status_line (no structured state field)',fields:['state.w (state word)','state.since_ts']}],use:'The current state shown as a large word with how long it has held. The present-tense state is the VLM status_line ("Door closed (3h)"); the word, label and duration are parsed from it.'},
  {id:'C-TILES',grp:'Status & readouts',name:'Tiles (metrics + fleet)',primary:'M-VITALS',folds:['M-VITALS','M-KPI','M-DEVMAP','M-HEALTH'],modes:['metric tiles','device / fleet health'],src:[{ep:'GET /api/devices/home',fields:['device_name','is_online']},{ep:'GET /api/eventgroups',fields:['event_count']},{ep:'— camera vitals not available',fields:['vitals']}],use:'A grid of tiles — live vitals or headline KPIs, plus per-device fleet health (online + firmware). Combines the metric tiles and the fleet roll-up into one grid. Vitals (pulse/temp) are not camera-derivable.'},
  {id:'C-READOUT',grp:'Status & readouts',name:'Number readout',primary:'M-READOUT',folds:['M-READOUT','M-GAUGE'],modes:['large number / OCR'],src:[{ep:'POST /api/devices/{mac}/capture_snapshot',fields:['url']},{ep:'— VLM read (tools/vlm.py); no OCR endpoint',fields:['value','unit','meter_label','confidence']}],use:'One large number read from the scene — meter, count, or a gauge value as a number. The frame is real (capture_snapshot); the number itself is VLM-derived (no OCR endpoint). (Score ring dropped.)'},
  // ——— Charts & trends (3) ———
@@ -3845,7 +3950,7 @@ const V25=[
  {id:'C-TREND',grp:'Charts & trends',name:'Week trend',primary:'M-TREND',folds:['M-TREND'],modes:['this week by day'],use:'A metric across the last 7 days.'},
  {id:'C-MONTHTREND',grp:'Charts & trends',name:'Month trend',primary:'M-CALENDAR',folds:['M-CALENDAR'],modes:['calendar w/ counts'],src:[{ep:'POST /api/eventgroups/digest'},{ep:'POST /api/events/filter (daily counts)'}],use:'A month calendar with the event count printed in each day cell.'},
  // ——— AI (4) ———
- {id:'C-RECAP',grp:'AI',name:'AI recap (large)',primary:'M-RECAP',folds:['M-RECAP'],modes:['large narrative + tone'],src:[{ep:'GET /api/stories',fields:['title','narrative','tone','highlights[]']}],use:'An AI plain-language summary of a period, shown as a large readable block.'},
+ {id:'C-RECAP',grp:'AI',name:'AI recap (large)',primary:'M-RECAP',folds:['M-RECAP'],modes:['large narrative + tone'],src:[{ep:'GET /api/stories',fields:['title','narrative','tone']}],use:'An AI plain-language summary of a period, shown as a large readable block.'},
  {id:'C-INSIGHT',grp:'AI',name:'Insight',primary:'',folds:[],tag:'new',modes:['text only (large)','text + chart','text + stats / list','adjustable period'],src:[{ep:'GET /api/household/visual/digests/latest'},{ep:'POST /api/events/insights',fields:['vlm_insight']},{ep:'GET /api/stories',fields:['narrative','why_it_matters','tone']},{ep:'POST /api/events/filter',fields:['event_ts (chart series)']}],use:'The agent’s periodic finding — a large plain-text takeaway on its own, or text plus whatever fits — a chart, stat tiles, or a short list — synthesized from its goal, context and memory. (No single insights endpoint yet — composed from the visual digest, per-event VLM insights, stories, and event counts.) Delivery cadence (daily / weekly / monthly) is set per agent.'},
  {id:'C-ASSIST',grp:'AI',name:'Assistant + suggestions',primary:'',folds:[],tag:'new',modes:['ask · answer','suggestion chips','create-agent'],src:[{ep:'POST /api/chat (SSE stream)',fields:['answer (streamed tokens)']},{ep:'GET /api/chat/history',fields:['messages[]']},{ep:'POST /api/skills/suggest',fields:['name','instructions','rationale']},{ep:'— no suggested-questions endpoint',fields:['suggestion']}],use:'Ask-Home assistant — ask in plain language and get an answer with event / clip cards; offers categorized suggestion chips (insight / memory / config) and can propose a new agent to create.'},
  {id:'C-LEARN',grp:'AI',name:'Learnings card',primary:'',folds:[],tag:'new',modes:['2–3 recent learnings','confidence'],src:[{ep:'GET /api/household/learnings',fields:['fact','category','confidence']},{ep:'GET /api/household/visual/entities/{id}',fields:['page','recent_observations']}],use:'Surfaces 2–3 things the agent has recently learned or remembered (from the compiled household learnings + per-entity knowledge pages).'},
@@ -3875,6 +3980,458 @@ const MOD25={
  'C-ASSIST':`<div class="panel"><div class="ph"><b>Ask Home</b><span class="recap"><span class="ai">AI</span></span></div><div class="dc-lab" style="margin:0 0 8px">Suggested questions</div><div class="suglist">${[['#9cc3f5','What did I miss today?'],['#c4b3f0','When does the mail usually come?'],['#7eecc4','Is the garage closed right now?'],['#9cc3f5','Did anyone come to the door?'],['#c4b3f0','Who was the person at 2 PM?']].map(([c,q])=>`<div class="sugq"><span class="sugq-t">${q}</span><span class="sugq-go">&rarr;</span></div>`).join('')}</div></div>`,
  'C-LEARN':`<div class="panel"><div class="ph"><b>What this agent learned</b><span class="recap"><span class="ai">AI</span></span></div>`+[['Mail usually arrives 1&ndash;3pm','routine','0.86'],['The garage is normally closed overnight','baseline','0.93'],['Recognizes the silver SUV as &ldquo;family car&rdquo;','identity','0.78']].map(([f,cat,c])=>`<div class="learnrow"><span class="lbulb"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f6b73c" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12c.5.5 1 1.2 1 2h6c0-.8.5-1.5 1-2a7 7 0 0 0-4-12z"/></svg></span><div style="flex:1;min-width:0"><div class="ft">${f}</div><div class="fm">${cat} &middot; remembered</div></div><span class="lconf">${c}</span></div>`).join('')+`</div>`,
 };
+/* ====================================================================
+   ELEMENTS TAB — each element = ONE data source (field). Components are
+   combinations of elements. Decomposition is derived at runtime from
+   MAPLINES (visual bindings) + V25 srcs (endpoints) + FIELD_STATUS (✓/✗);
+   only archetype / label / preview are hand-authored (ELEMS below).
+   ==================================================================== */
+/* src derivation shared with v2Card: explicit src or folded DATACHECK sources */
+function effectiveSrcs(v){
+  if(v.src) return v.src;
+  const seen={},out=[];
+  (v.folds||[]).forEach(f=>((DATACHECK[f]||{}).sources||[]).forEach(s=>{ if(!seen[s.ep]){seen[s.ep]=1;out.push(s);} }));
+  return out;
+}
+/* mark the first node whose class list contains the exact token `cls` as the
+   element source (line start). Token-bounded so 'agthumb' ≠ 'agthumb-wrap'. */
+function elMark(html,cls){
+  const esc=cls.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  return html.replace(new RegExp('class="((?:[^"]* )?'+esc+'(?: [^"]*)?)"'),'class="$1 el-src"');
+}
+/* --- mini builders: exact component sub-markup (same classes ⇒ same size) --- */
+const elState=m=>`<div class="panel" style="text-align:center;padding:20px 12px 16px"><div class="ml-state${m==='state'?' el-src':''}" style="font-size:36px;font-weight:800;letter-spacing:-1.5px;color:#7eecc4;line-height:1">CLOSED</div><div style="font-size:11px;color:var(--mut);margin-top:8px"><span class="ml-dur${m==='dur'?' el-src':''}" style="font-family:var(--mono);color:#7eecc4;font-weight:700">3h 42m</span></div></div>`;
+const elFeedRow=m=>`<div class="panel"><div class="feedrow"><div class="thumb"></div><div style="flex:1"><div class="ft${m==='ft'?' el-src':''}">Vehicle departed</div><div class="fm${m==='fm'?' el-src':''}">8:02 AM &middot; &ldquo;a car backs out&rdquo;</div></div><span class="etag${m==='etag'?' el-src':''}" style="background:#4f8ff022;color:#9cc3f5">VEHICLE&middot;92</span></div></div>`;
+const elLearnRow=m=>`<div class="panel"><div class="learnrow"><span class="lbulb"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f6b73c" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12c.5.5 1 1.2 1 2h6c0-.8.5-1.5 1-2a7 7 0 0 0-4-12z"/></svg></span><div style="flex:1;min-width:0"><div class="ft${m==='ft'?' el-src':''}">Mail usually arrives 1&ndash;3pm</div><div class="fm${m==='fm'?' el-src':''}">routine &middot; remembered</div></div><span class="lconf">0.86</span></div></div>`;
+const elLogRow=m=>`<div class="panel"><div class="logrow"><span class="lt${m==='lt'?' el-src':''}">2:00 PM</span><span class="lv${m==='lv'?' el-src':''}">04857.2</span><span class="ld${m==='ld'?' el-src':''}">+1.4</span></div></div>`;
+const elTsRow=m=>`<div class="panel"><div class="tsrow"><div class="cliptip" style="background:linear-gradient(150deg,#2c5a3e,#13261a)"><span class="ctg${m==='ctg'?' el-src':''}" style="background:#34d399;color:#04231a">CLIP</span></div><div style="flex:1"><div class="tn">Today, Tue</div><div class="tm${m==='tm'?' el-src':''}">9:12 &rarr; 10:05 AM</div></div><div class="tsdur"><div class="dd" style="color:#7eecc4">53m</div><div class="ds${m==='ds'?' el-src':''}" style="color:#7eecc4">VERIFIED</div></div></div></div>`;
+const elCalHead=m=>`<div class="panel"><div class="ph"><b class="ml-month${m==='month'?' el-src':''}">June</b><span class="ml-mtotal${m==='total'?' el-src':''}" style="font-size:9px;color:var(--dim);font-family:var(--mono)">142 events &middot; busiest Tue</span></div></div>`;
+const elThumb=m=>`<div class="panel"><div class="estrip"><div class="ethumb${m==='ethumb'?' el-src':''}" style="background:linear-gradient(150deg,#4f8ff040,#0c1119)"><span class="ethumb-tag${m==='tag'?' el-src':''}" style="color:#9cc3f5;background:#9cc3f526">PERSON</span><span class="ethumb-t">8:02</span></div></div></div>`;
+const elDevTile=m=>`<div class="tilegrid"><div class="gtile"><div class="gt-top${m==='top'?' el-src':''}">Garage cam</div><div class="gt-sub"><span class="gt-pill${m==='pill'?' el-src':''}" style="color:#34d399;background:#34d3991f"><span class="gt-dot" style="background:#34d399"></span>online</span></div></div></div>`;
+const elKpi=(v,l)=>`<div class="tilegrid"><div class="gtile num"><b class="el-src">${v}</b><span>${l}</span></div></div>`;
+const elAgentB=cls=>elMark(MOD25['C-AGENT'],cls);
+const elLiveB=cls=>elMark(MODFULL15['M-LIVE'],cls);
+const elSnapB=cls=>elMark(MODFULL['M-SNAP'],cls);
+const elLapseB=cls=>elMark(MODFULL['M-TIMELAPSE'],cls);
+const elFootB=cls=>elMark(MODFULL15['M-FOOTAGE'],cls);
+const elIdB=cls=>elMark(MODFULL15['M-IDCARD'],cls);
+const elGcardB=cls=>elMark(MOD25['C-GROUPED'],cls);
+const elScrubB=cls=>elMark(MOD25['C-DAYTREND'],cls);
+const elTrendB=cls=>elMark(MODFULL15['M-TREND'],cls);
+const elReadB=cls=>elMark(MOD25['C-READOUT'],cls);
+/* --- archetype groups (render order) --- */
+const EL_ARCHS=[['media','Media & thumbnails'],['time','Timestamps & durations'],['text','Text & titles'],
+ ['tag','Tags & badges'],['chart','Charts & meters'],['num','Numbers & readouts'],
+ ['conf','Confidence & scores'],['ident','Identity'],['status','Status & state'],['action','Actions & controls']];
+/* --- the 74 elements: fld → {arch, label, desc, prev, ctx?} --- */
+const ELEMS={
+ /* text */
+ 'title':{arch:'text',label:'Title',desc:'Heading of an AI recap or event group',prev:()=>`<div class="panel"><div class="ph"><b class="ml-title el-src">Morning recap</b><span class="recap"><span class="ai">AI</span></span></div></div>`,ctx:{'C-RECAP':'recap heading','C-GROUPED':'clip-group title'}},
+ 'narrative':{arch:'text',label:'Narrative text',desc:'AI plain-language summary block',prev:()=>`<div class="panel"><div class="ml-narrative el-src" style="font-size:16px;line-height:1.5;font-weight:600;color:#e9eef6">Slept <b style="color:#9cc3f5">10h 4m</b> with 2 brief wakings.</div></div>`,ctx:{'C-RECAP':'recap body','C-INSIGHT':'finding text'}},
+ 'vlm_insight':{arch:'text',label:'VLM insight line',desc:'Per-event one-line description from the VLM',prev:()=>elFeedRow('fm')},
+ 'fact':{arch:'text',label:'Learned fact',desc:'A remembered household learning',prev:()=>elLearnRow('ft')},
+ 'suggestion':{arch:'text',label:'Suggested question',desc:'Assistant suggestion chip text',prev:()=>`<div class="panel"><div class="suglist"><div class="sugq"><span class="sugq-t el-src">What did I miss today?</span><span class="sugq-go">&rarr;</span></div></div></div>`},
+ 'status_line':{arch:'text',label:'Status line',desc:'VLM present-tense status sentence',prev:()=>`<div class="panel"><div class="logrow"><span class="lt">2:00 PM</span><span class="lv el-src">Door closed (3h)</span><span class="ld">OK</span></div></div>`,ctx:{'C-LOG':'log value','C-REMINDER':'reminder subline'}},
+ 'video_description':{arch:'text',label:'Scene description',desc:'VLM verdict text fused onto the frame',prev:()=>elSnapB('fs')},
+ /* time */
+ 'event_ts':{arch:'time',label:'Event timestamp',desc:'When an event happened — drives rows, bars and dwell math',prev:()=>elFeedRow('ft'),ctx:{'C-FEED':'feed row','C-STRIP':'thumb time','C-DAYTREND':'hour bars','C-INSIGHT':'chart series','C-RECVIDEO':'scrub bars','C-VISIT':'dwell calc','C-TREND':'day bars'}},
+ 'last_run_ts':{arch:'time',label:'Last-run time',desc:'How recent the agent’s latest signal is',prev:()=>elAgentB('agsub')},
+ 'state.since_ts':{arch:'time',label:'Time in state',desc:'How long the current state has held',prev:()=>elState('dur')},
+ 'captured_at':{arch:'time',label:'Capture time',desc:'When the snapshot was taken',prev:()=>elSnapB('fsub')},
+ 'created_at':{arch:'time',label:'Log time',desc:'Timestamp of a log entry',prev:()=>elLogRow('lt')},
+ 'timestamp_ms':{arch:'time',label:'Appearance time',desc:'Re-ID appearance timestamp',prev:()=>elTsRow('tm')},
+ 'last_recognized_ts':{arch:'time',label:'Last seen',desc:'When the identity was last recognized',prev:()=>elIdB('meta')},
+ 'recording_time':{arch:'time',label:'Stream clock',desc:'Current time on the live stream',prev:()=>elLiveB('vtime')},
+ 'frame_day':{arch:'time',label:'Frame day',desc:'Day index of the time-lapse frame',prev:()=>elLapseB('vtime')},
+ 'date':{arch:'time',label:'Month',desc:'Calendar month being summarized',prev:()=>elCalHead('month')},
+ /* tag */
+ 'tag_list':{arch:'tag',label:'Event tag',desc:'Classifier tag on an event',prev:()=>elThumb('tag')},
+ 'tag_conf':{arch:'tag',label:'Tag + confidence',desc:'Tag chip with its classifier score',prev:()=>elFeedRow('etag')},
+ 'categories[]':{arch:'tag',label:'Category chips',desc:'Available event categories for filtering',prev:()=>`<div class="chips2"><span class="fc on">All &middot; 24</span><span class="fc el-src">Person &middot; 11</span><span class="fc">Vehicle &middot; 6</span></div>`},
+ 'ai_tags':{arch:'tag',label:'AI tag filter',desc:'AI-generated tags over a collection',prev:()=>`<div class="chips2"><span class="fc on el-src">All 6</span><span class="fc">New 2</span><span class="fc">Songbirds 4</span></div>`},
+ 'entity_type':{arch:'tag',label:'Entity type',desc:'Kind of recognized entity (species, person, vehicle)',prev:()=>`<div class="chips2"><span class="fc on">All 6</span><span class="fc">New 2</span><span class="fc el-src">Songbirds 4</span></div>`},
+ 'tone':{arch:'tag',label:'Tone badge',desc:'Overall tone of the recap period',prev:()=>`<div class="panel"><span class="pvbadge ml-tone el-src" style="background:#34d39922;color:#7eecc4;font-size:8px;display:inline-block">ALL CLEAR</span></div>`},
+ 'priority':{arch:'tag',label:'Priority dot',desc:'Urgency marker on the widget timestamp',prev:()=>elAgentB('agalert')},
+ 'is_known_identity':{arch:'tag',label:'Known badge',desc:'Whether the subject matches a saved identity',prev:()=>elIdB('pvbadge')},
+ 'verify_status':{arch:'tag',label:'Verify status',desc:'Visit verification verdict',prev:()=>elTsRow('ds')},
+ 'category':{arch:'tag',label:'Learning category',desc:'What kind of learning was remembered',prev:()=>elLearnRow('fm')},
+ /* media */
+ 'thumbnail_url':{arch:'media',label:'Thumbnail',desc:'Representative still for a group, cell or clip',prev:()=>elGcardB('gcard-thumb'),ctx:{'C-GROUPED':'group cover','C-GALLERY':'gallery cell','C-VISIT':'clip tip'}},
+ 'thumb_grad':{arch:'media',label:'Signal thumb',desc:'Latest-signal image in the agent widget',prev:()=>elAgentB('agthumb')},
+ 'gif_url':{arch:'media',label:'GIF preview',desc:'Animated preview of the event group',prev:()=>elGcardB('gcard-gif')},
+ 'image_url':{arch:'media',label:'Identity photo',desc:'Best face / subject crop for the identity',prev:()=>elIdB('pic')},
+ 'url':{arch:'media',label:'Snapshot frame',desc:'The captured still image',prev:()=>elSnapB('videobox')},
+ 'signaling_url':{arch:'media',label:'Live stream',desc:'WebRTC signaling for the live view',prev:()=>elLiveB('videobox'),ctx:{'C-LIVE':'hero stream','C-MULTIVIEW':'grid streams'}},
+ 'continuous_record':{arch:'media',label:'24/7 record',desc:'The continuous recording being scrubbed',prev:()=>elFootB('videobox')},
+ 'frame_sequence':{arch:'media',label:'Frame sequence',desc:'Stored daily frames compiled into the lapse',prev:()=>elLapseB('videobox')},
+ 'clip_url':{arch:'media',label:'Event clip',desc:'Playable clip behind the row',prev:()=>elTsRow('ctg')},
+ 'event_resources':{arch:'media',label:'Event media',desc:'Thumb / clip resources attached to an event',prev:()=>elThumb('ethumb')},
+ 'bbox_xywh':{arch:'media',label:'Detection box',desc:'Detector bounding box drawn on the frame',prev:()=>elSnapB('annbadge')},
+ /* chart */
+ 'now_marker':{arch:'chart',label:'Now marker',desc:'Current-time pin on the day chart',prev:()=>elScrubB('pin')},
+ 'playhead':{arch:'chart',label:'Playhead',desc:'Scrub position in the continuous record',prev:()=>elFootB('pin')},
+ 'peak':{arch:'chart',label:'Peak note',desc:'Busiest stretch called out on the day chart',prev:()=>elScrubB('delta')},
+ 'trend_delta':{arch:'chart',label:'Trend delta',desc:'Change vs the prior period',prev:()=>elTrendB('delta')},
+ 'delta':{arch:'chart',label:'Reading delta',desc:'Change since the previous log entry',prev:()=>elLogRow('ld')},
+ 'daily_count':{arch:'chart',label:'Day cell count',desc:'Events per day printed in the calendar cell',prev:()=>`<div class="panel"><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px">${[3,6,2,8,4,1,5].map((c,i)=>`<div class="ml-daycell${i===3?' el-src':''}" style="aspect-ratio:1;border-radius:3px;display:grid;place-items:center;font-size:13px;font-weight:800;color:${c>5?'#04231a':'#cfe3ff'};background:rgba(56,198,219,${Math.min(0.16+c/10,1).toFixed(2)})">${c}</div>`).join('')}</div></div>`},
+ /* num */
+ 'value':{arch:'num',label:'Readout value',desc:'The number read from the scene by the VLM',prev:()=>elReadB('ml-value')},
+ 'unit':{arch:'num',label:'Readout unit',desc:'Unit of the read value',prev:()=>elReadB('ml-unit')},
+ 'meter_label':{arch:'num',label:'Meter label',desc:'What instrument the number came from',prev:()=>elReadB('ml-meter')},
+ 'event_count':{arch:'num',label:'Event count',desc:'How many events in the bucket / period',prev:()=>`<div class="chips2"><span class="fc on el-src">All &middot; 24</span><span class="fc">Person &middot; 11</span><span class="fc">Vehicle &middot; 6</span></div>`,ctx:{'C-FEED':'filter-chip total','C-GROUPED':'clip count','C-TILES':'KPI tile'}},
+ 'count':{arch:'num',label:'Collection count',desc:'Items in the collection',prev:()=>`<div class="panel"><div class="ph"><b>Today&rsquo;s visitors</b><span class="sigtag sig-coll el-src" style="position:static">6</span></div></div>`},
+ 'total_events':{arch:'num',label:'Month total',desc:'Total events across the month',prev:()=>elCalHead('total')},
+ 'alerts_count':{arch:'num',label:'Alerts count',desc:'Items needing attention',prev:()=>elKpi('2','need attention')},
+ 'uptime':{arch:'num',label:'Uptime',desc:'Fleet availability over the window',prev:()=>elKpi('97%','uptime 7d')},
+ 'online_count':{arch:'num',label:'Online count',desc:'Devices online vs total',prev:()=>`<div class="panel"><div class="ph"><b>Fleet</b><span class="ml-fleet el-src" style="font-size:9px;color:#7eecc4">3 / 4 online</span></div></div>`},
+ 'frame_count':{arch:'num',label:'Frame count',desc:'Frames captured so far in the lapse',prev:()=>`<div class="lapsebar"><div class="lp">${aIcon('<path d="M6 4l14 8-14 8z"/>')}</div><div class="lapsetrack"><i style="width:72%"></i><b style="left:72%"></b></div><div class="ld2 el-src">d47 / 47</div></div>`},
+ /* status */
+ 'state.w':{arch:'status',label:'State word',desc:'Current state as a single word',prev:()=>elState('state'),ctx:{'C-AGENT':'state pill','C-STATE':'36px state word'}},
+ 'is_online':{arch:'status',label:'Online status',desc:'Device connectivity pill',prev:()=>elDevTile('pill'),ctx:{'C-TILES':'fleet tile','C-MULTIVIEW':'cell dot'}},
+ 'is_on':{arch:'status',label:'Camera on/off',desc:'Whether the camera is powered and streaming',prev:()=>elLiveB('vname')},
+ 'power_state':{arch:'status',label:'Device power state',desc:'Confirmed plug / device power readback',prev:()=>`<div class="ml-devstate el-src" style="font-size:9px;color:#7eecc4">&#9679; Plug is ON &middot; confirmed 1s ago</div>`},
+ /* conf */
+ 'confidence':{arch:'conf',label:'Confidence value',desc:'Model confidence for the shown verdict',prev:()=>elMark(cf15('confidence 0.96','tap to correct'),'cv'),ctx:{'C-STATE':'state read','C-READOUT':'VLM read','C-LEARN':'learning','C-SNAP':'verdict'}},
+ 'match_confidence':{arch:'conf',label:'Match confidence',desc:'Identity-match certainty',prev:()=>elMark(cf15('confidence 0.93','match &middot; tap to relabel'),'cv')},
+ 'score':{arch:'conf',label:'Group score',desc:'Event-group ranking score',prev:()=>elMark(cf15('score 4/5','event-group ranking'),'cv')},
+ /* action */
+ 'power_on':{arch:'action',label:'Power on',desc:'Turn the device on',prev:()=>`<div class="actions"><div class="act primary ml-pon el-src"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>Power on</div><div class="act ml-poff"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="8" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>Power off</div></div>`},
+ 'power_off':{arch:'action',label:'Power off',desc:'Turn the device off',prev:()=>`<div class="actions"><div class="act primary ml-pon"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>Power on</div><div class="act ml-poff el-src"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="8" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>Power off</div></div>`},
+ 'talk_session_id':{arch:'action',label:'Two-way talk',desc:'Push-to-talk session through the camera',prev:()=>`<div class="actions"><div class="act ml-talk el-src"><span class="ai">${aIcon('<path d="M3 11l16-5v12L3 13z"/><path d="M9 19a2.5 2.5 0 0 0 4 0"/>')}</span>Two-way talk</div></div>`},
+ 'siren':{arch:'action',label:'Siren',desc:'Trigger the deterrent siren',prev:()=>`<div class="actions"><div class="act danger el-src"><span class="ai">${aIcon('<path d="M3 11l18-5v12L3 14v-3zM11 19v-5"/>')}</span>Siren</div><div class="act"><span class="ai">${aIcon('<circle cx="12" cy="10" r="6"/><path d="M9 20h6M10 23h4"/>')}</span>Lights</div></div>`},
+ 'lights':{arch:'action',label:'Lights',desc:'Flash the deterrent lights',prev:()=>`<div class="actions"><div class="act danger"><span class="ai">${aIcon('<path d="M3 11l18-5v12L3 14v-3zM11 19v-5"/>')}</span>Siren</div><div class="act el-src"><span class="ai">${aIcon('<circle cx="12" cy="10" r="6"/><path d="M9 20h6M10 23h4"/>')}</span>Lights</div></div>`},
+ 'triggers':{arch:'action',label:'Schedule trigger',desc:'Agent schedule that fires the reminder',prev:()=>`<div class="reminder"><div class="rc">${aIcon('<path d="M12 2s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/>')}</div><div style="flex:1"><b class="el-src">Water in 2 days</b><span>next check Thu 9 AM</span></div></div>`},
+ /* ident */
+ 'name':{arch:'ident',label:'Name',desc:'Template or household-member name',prev:()=>elAgentB('agname'),ctx:{'C-AGENT':'template name','C-SOS':'contact name'}},
+ 'identity_name':{arch:'ident',label:'Identity name',desc:'Recognized subject’s name',prev:()=>elIdB('nm'),ctx:{'C-GALLERY':'cell label','C-IDCARD':'card name'}},
+ 'attributes':{arch:'ident',label:'Attributes',desc:'Identity attributes (species, descriptors)',prev:()=>elIdB('sci')},
+ 'device_name':{arch:'ident',label:'Device name',desc:'Camera / device display name',prev:()=>elDevTile('top'),ctx:{'C-TILES':'fleet tile','C-TIMELAPSE':'camera name','C-MULTIVIEW':'grid cell'}},
+};
+/* --- runtime derivation: MAPLINES → deduped elements with endpoints + status --- */
+function deriveElements(){
+  const map={};
+  Object.entries(MAPLINES).forEach(([cid,arr])=>arr.forEach(m=>{
+    const e=map[m.fld]||(map[m.fld]={fld:m.fld,usages:[]});
+    e.usages.push({comp:cid,sel:m.sel,color:m.color,status:fieldStatus(cid,m.fld)||'missing'});
+  }));
+  Object.values(map).forEach(e=>{
+    e.color=e.usages[0].color;
+    const st=new Set(e.usages.map(u=>u.status));
+    e.status=st.size>1?'mixed':[...st][0];
+    const seen={}; e.eps=[];
+    e.usages.forEach(u=>{
+      const v=V25.find(x=>x.id===u.comp); if(!v) return;
+      effectiveSrcs(v).forEach(s=>(s.fields||[]).forEach(f=>{
+        const key=String(f).split(/[\s(]/)[0];
+        if(key!==e.fld||seen[s.ep]) return;
+        seen[s.ep]=1;
+        e.eps.push({ep:s.ep,label:String(f),pseudo:/^—/.test(s.ep)});
+      }));
+    });
+  });
+  return map;
+}
+/* ---- UI-element registry: 35 chip-level visual primitives (display order) ---- */
+const UIELS=[
+ /* media */
+ {id:'round-thumb',arch:'media',label:'Round signal thumb',desc:'Rounded latest-signal image in the agent widget',prev:()=>`<div class="agthumb-wrap"><div class="agthumb" style="background:linear-gradient(150deg,#10182b,#070b14)"><span class="agt-tag" style="background:#f25c5c22;color:#ff9a9a">PERSON</span></div></div>`},
+ {id:'video-box',arch:'media',label:'Video surface',desc:'Large playable media surface — live, record, still or lapse',prev:()=>`<div class="hero" style="width:180px"><div class="videobox" style="background:linear-gradient(165deg,#1d2d49,#0f1828)"></div></div>`},
+ {id:'full-card-cover',arch:'media',label:'Full-card cover',desc:'Full-bleed cover image with info overlaid',prev:()=>`<div class="gcard-thumb" style="width:180px;background:linear-gradient(150deg,#2a3b58,#0d1626)"><div class="gcard-grad"></div></div>`},
+ {id:'media-cell',arch:'media',label:'Small media cell',desc:'Small media cell in a strip, grid or row',prev:()=>`<div class="estrip" style="padding-bottom:0"><div class="ethumb" style="background:linear-gradient(150deg,#4f8ff040,#0c1119)"></div></div>`},
+ {id:'identity-portrait',arch:'media',label:'Identity portrait',desc:'Square best-crop photo on the identity card',prev:()=>`<div class="idcard"><div class="pic"></div></div>`},
+ {id:'detection-box',arch:'media',label:'Detection overlay',desc:'Bounding-box annotation drawn on the frame',prev:()=>`<div class="hero" style="width:180px"><div class="videobox" style="background:linear-gradient(165deg,#2c3d5b,#0d1626)"><div class="annbox" style="left:16%;top:24%;width:64%;height:50%"></div><div class="annbadge" style="left:16%;top:24%">garage door</div></div></div>`},
+ /* time */
+ {id:'time-caption',arch:'time',label:'Time caption',desc:'Small absolute or relative time label',prev:()=>`<div class="logrow" style="border-top:0;padding:0;justify-content:flex-start"><span class="lt" style="font-size:11px">2:00 PM &middot; 2m ago</span></div>`},
+ {id:'duration-readout',arch:'time',label:'Duration readout',desc:'Bold mono elapsed-time value',prev:()=>`<span class="ml-dur" style="font-family:var(--mono);color:#7eecc4;font-weight:700;font-size:15px">3h 42m</span>`},
+ {id:'media-time-overlay',arch:'time',label:'Media time overlay',desc:'Tiny clock / day chip on media chrome',prev:()=>`<span class="vtime" style="position:static;display:inline-block">14:09</span>`},
+ /* text */
+ {id:'card-title',arch:'text',label:'Card title',desc:'Bold heading of a panel or card',prev:()=>`<b style="font-size:13px;color:var(--ink)">Morning recap</b>`},
+ {id:'narrative-block',arch:'text',label:'Narrative block',desc:'Large AI plain-language text block',prev:()=>`<div style="font-size:15px;line-height:1.5;font-weight:600;color:#e9eef6">Slept <b style="color:#9cc3f5">10h 4m</b> with 2 brief wakings.</div>`},
+ {id:'row-headline',arch:'text',label:'Row headline',desc:'Bold first line of a list row',prev:()=>`<div class="feedrow" style="border-top:0;padding:0"><div style="flex:1"><div class="ft">Vehicle departed</div></div></div>`},
+ {id:'caption-line',arch:'text',label:'Caption / meta line',desc:'Dim secondary line under a headline',prev:()=>`<div class="feedrow" style="border-top:0;padding:0"><div style="flex:1"><div class="fm">8:02 AM &middot; &ldquo;a car backs out&rdquo;</div></div></div>`},
+ {id:'status-line',arch:'text',label:'Status line',desc:'One-line present-tense status sentence',prev:()=>`<div class="logrow" style="border-top:0;padding:0;justify-content:flex-start"><span class="lv">Door closed (3h)</span></div>`},
+ {id:'suggestion-chip',arch:'text',label:'Suggestion chip',desc:'Tappable suggested-question chip',prev:()=>`<div class="suglist"><div class="sugq"><span class="sugq-t">What did I miss today?</span><span class="sugq-go">&rarr;</span></div></div>`},
+ /* tag */
+ {id:'filter-chip',arch:'tag',label:'Filter chip row',desc:'Category filter chips with counts',prev:()=>`<div class="chips2" style="margin:0"><span class="fc on">All &middot; 24</span><span class="fc">Person &middot; 11</span></div>`},
+ {id:'tag-badge',arch:'tag',label:'Tag badge',desc:'Classifier tag chip on a row or thumb',prev:()=>`<span class="etag" style="background:#4f8ff022;color:#9cc3f5;margin-left:0;display:inline-block">VEHICLE&middot;92</span>`},
+ {id:'verdict-badge',arch:'tag',label:'Verdict badge',desc:'Small uppercase verdict pill',prev:()=>`<span class="pvbadge" style="background:#34d39922;color:#7eecc4;display:inline-block">ALL CLEAR</span>`},
+ {id:'priority-dot',arch:'tag',label:'Priority dot',desc:'Urgency marker dot',prev:()=>`<span class="agalert" style="position:static;display:inline-block;width:13px;height:13px;border:none;background:#f25c5c"></span>`},
+ /* chart */
+ {id:'activity-bars',arch:'chart',label:'Activity bars',desc:'Binned bar series over time',prev:()=>`<div class="scrub" style="height:38px">`+Array.from({length:20},(_,i)=>{const a=i>=12&&i<=14;return `<div class="seg" style="height:${a?62+(i%3)*12:10+((i*13)%22)}%;background:${a?'#f6b73c':'#3a5fa0'}"></div>`;}).join('')+`</div>`},
+ {id:'scrub-pin',arch:'chart',label:'Scrub pin',desc:'Position marker on a time axis',prev:()=>`<div class="scrub" style="height:30px"><div class="pin" style="left:55%"></div></div>`},
+ {id:'delta-callout',arch:'chart',label:'Delta callout',desc:'Change indicator vs the prior period',prev:()=>`<span class="delta up" style="margin-left:0">&#9650; 22%</span>`},
+ {id:'calendar-day-cell',arch:'chart',label:'Calendar day cell',desc:'Per-day count cell in a month grid',prev:()=>`<div class="ml-daycell" style="width:36px;aspect-ratio:1;border-radius:4px;display:grid;place-items:center;font-size:14px;font-weight:800;color:#04231a;background:rgba(56,198,219,.85)">8</div>`},
+ /* num */
+ {id:'number-readout',arch:'num',label:'Number readout',desc:'Giant value + unit + meter label',prev:()=>`<div class="readout" style="padding:0;text-align:left"><div class="rn" style="font-size:30px">04857<span style="font-size:15px;color:var(--mut);letter-spacing:0"> kWh</span></div></div>`},
+ {id:'kpi-tile',arch:'num',label:'KPI tile',desc:'Big-number stat tile',prev:()=>elKpi('38','events today')},
+ {id:'stat-chip',arch:'num',label:'Stat chip',desc:'Small mono summary stat',prev:()=>`<span style="font-size:10.5px;color:#7eecc4;font-family:var(--mono)">3 / 4 online</span>`},
+ /* conf */
+ {id:'confidence-readout',arch:'conf',label:'Confidence readout',desc:'Confidence / score block',prev:()=>elMark(cf15('confidence 0.96','tap to correct'),'cv')},
+ /* ident */
+ {id:'name-label',arch:'ident',label:'Name label',desc:'Standalone person / agent / subject name',prev:()=>`<div class="agname" style="margin:0;justify-content:flex-start">Night Watcher</div>`},
+ {id:'cell-label',arch:'ident',label:'Tile / cell label',desc:'Name label inside a tile or media cell',prev:()=>`<div class="gt-top">Garage cam</div>`},
+ /* status */
+ {id:'state-pill',arch:'status',label:'State pill',desc:'Compact colored state pill',prev:()=>agPill('PERSON &middot; 2m','#f25c5c')},
+ {id:'state-word',arch:'status',label:'Large state word',desc:'Large state word',prev:()=>`<div class="ml-state" style="font-size:32px;font-weight:800;letter-spacing:-1.5px;color:#7eecc4;line-height:1">CLOSED</div>`},
+ {id:'online-pill',arch:'status',label:'Online indicator',desc:'Connectivity dot pill',prev:()=>`<span class="gt-pill" style="color:#34d399;background:#34d3991f"><span class="gt-dot" style="background:#34d399"></span>online</span>`},
+ {id:'video-title-overlay',arch:'status',label:'Video title overlay',desc:'Camera-name overlay on media chrome',prev:()=>`<span class="vname" style="position:static;display:inline-block">Front cam &middot; online</span>`},
+ /* action */
+ {id:'action-button',arch:'action',label:'Action button',desc:'Tappable command button',prev:()=>`<div class="actions" style="max-width:150px"><div class="act primary"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>Power on</div></div>`},
+];
+/* ---- selector → UI element: translates every MAPLINES binding (verbatim sels).
+   MAPLINES stays the single source of truth for which solid pairs exist. ---- */
+const SEL2UI={
+ 'C-AGENT':{'.aghome .agcard .agthumb':'round-thumb','.aghome .agcard .agalert':'priority-dot','.aghome .agcard .agpill':'state-pill','.aghome .agcard .agsub':'time-caption','.aghome .agname':'name-label'},
+ 'C-STATE':{'.ml-state':'state-word','.ml-dur':'duration-readout','.cv':'confidence-readout'},
+ 'C-FEED':{'.chips2 .fc.on':'filter-chip','.chips2 .fc:not(.on)':'filter-chip','.feedrow .ft':'row-headline','.feedrow .fm':'caption-line','.feedrow .etag':'tag-badge'},
+ 'C-RECAP':{'.ml-title':'card-title','.ml-tone':'verdict-badge','.ml-narrative':'narrative-block'},
+ 'C-ACT':{'.ml-pon':'action-button','.ml-poff':'action-button','.ml-talk':'action-button','.ml-devstate':'status-line'},
+ 'C-READOUT':{'.ml-value':'number-readout','.ml-unit':'number-readout','.ml-meter':'number-readout','.cv':'confidence-readout'},
+ 'C-SOS':{'.sosc .sosc-name':'name-label'},
+ 'C-GROUPED':{'.gcard-thumb':'full-card-cover','.gcard-title':'card-title','.gcard-gif':'full-card-cover','.cv':'confidence-readout','.gcard-meta':'caption-line'},
+ 'C-STRIP':{'.estrip .ethumb':'media-cell','.estrip .ethumb-tag':'tag-badge','.estrip .ethumb-t':'media-time-overlay'},
+ 'C-DAYTREND':{'.scrub .seg':'activity-bars','.scrub .pin':'scrub-pin','.delta':'delta-callout'},
+ 'C-MONTHTREND':{'.ml-month':'card-title','.ml-mtotal':'stat-chip','.ml-daycell':'calendar-day-cell'},
+ 'C-INSIGHT':{'.insfind':'narrative-block','.trendbars .tb':'activity-bars'},
+ 'C-TILES':{'.ml-fleet':'stat-chip','.tilegrid .gt-top':'cell-label','.tilegrid .gt-sub':'online-pill','.kpi0 b':'kpi-tile','.kpi1 b':'kpi-tile','.kpi2 b':'kpi-tile'},
+ 'C-ASSIST':{'.sugq-t':'suggestion-chip'},
+ 'C-LEARN':{'.learnrow .ft':'row-headline','.learnrow .fm':'caption-line','.learnrow .lconf':'confidence-readout'},
+ 'C-LIVE':{'.videobox':'video-box','.vname':'video-title-overlay','.vtime':'media-time-overlay'},
+ 'C-RECVIDEO':{'.scrub .seg':'activity-bars','.scrub .pin':'scrub-pin','.videobox':'video-box'},
+ 'C-SNAP':{'.videobox':'video-box','.annbadge':'detection-box','.fsub':'time-caption','.fs':'caption-line','.cv':'confidence-readout'},
+ 'C-TIMELAPSE':{'.lapse .videobox':'video-box','.vname':'video-title-overlay','.vtime':'media-time-overlay','.ld2':'stat-chip'},
+ 'C-GALLERY':{'.gallery .gcell':'media-cell','.gallery .gcell span':'cell-label','.sig-coll':'stat-chip','.chips2 .fc.on':'filter-chip','.chips2 .fc:not(.on)':'filter-chip'},
+ 'C-MULTIVIEW':{'.gallery .gcell':'cell-label','.gallery .gcell i':'online-pill','.sig-multi':'media-cell'},
+ 'C-LOG':{'.logrow .lt':'time-caption','.logrow .lv':'status-line','.logrow .ld':'delta-callout'},
+ 'C-VISIT':{'.tsrow .tm':'time-caption','.tsrow .cliptip':'media-cell','.tsrow .ctg':'media-cell','.tsrow .dd':'duration-readout','.tsrow .ds':'verdict-badge','.cv':'confidence-readout'},
+ 'C-IDCARD':{'.idcard .nm':'name-label','.idcard .sci':'caption-line','.idcard .pic':'identity-portrait','.idcard .meta':'time-caption','.pvbadge':'verdict-badge','.cv':'confidence-readout'},
+ 'C-TREND':{'.trendbars .tb':'activity-bars','.delta':'delta-callout'},
+ 'C-DETER':{'.act.danger':'action-button','.act:not(.danger)':'action-button'},
+ 'C-REMINDER':{'.reminder b':'row-headline','.reminder span':'status-line'},
+};
+/* ---- curated possible fills (dashed lines): same UI element, other plausible fields ---- */
+const POSSIBLE_PAIRS=[
+ {ui:'round-thumb',fld:'thumbnail_url',why:'latest event-group still as the signal thumb'},
+ {ui:'round-thumb',fld:'signaling_url',why:'grab a live frame for the signal thumb'},
+ {ui:'round-thumb',fld:'gif_url',why:'animated signal thumb'},
+ {ui:'video-box',fld:'thumbnail_url',why:'poster frame while the stream connects'},
+ {ui:'video-box',fld:'clip_url',why:'event-clip playback in the same surface'},
+ {ui:'media-cell',fld:'gif_url',why:'micro animated preview in a cell'},
+ {ui:'identity-portrait',fld:'thumbnail_url',why:'best ReID-appearance crop as the photo'},
+ {ui:'narrative-block',fld:'vlm_insight',why:'a single VLM insight as the large finding'},
+ {ui:'state-word',fld:'power_state',why:'binary device power as the state word'},
+];
+/* ---- consolidated right panel: every field exactly once, grouped by endpoint ---- */
+const FIELD_GROUPS=[
+ {ep:'POST /api/devices/{mac}/stream_params',fields:['signaling_url']},
+ {ep:'POST /api/devices/{mac}/capture_snapshot',fields:['url']},
+ {ep:'POST /api/devices/thumbnails',fields:['captured_at']},
+ {ep:'GET /api/eventgroups',fields:['thumbnail_url','ai_tags','score','event_count','alerts_count']},
+ {ep:'GET /api/eventgroups/{id}/artifact',fields:['gif_url','bbox_xywh','video_description']},
+ {ep:'POST /api/events/filter',fields:['event_ts','tag_list','event_resources','daily_count']},
+ {ep:'POST /api/events/video_url',fields:['clip_url']},
+ {ep:'POST /api/events/insights',fields:['vlm_insight']},
+ {ep:'GET /api/events/tags',fields:['categories[]']},
+ {ep:'GET /api/stories',fields:['title','narrative','tone']},
+ {ep:'POST /api/eventgroups/digest',fields:['date','total_events']},
+ {ep:'GET /api/household/visual-memories',fields:['status_line','last_run_ts','created_at']},
+ {ep:'GET /api/household/learnings',fields:['fact','category','confidence']},
+ {ep:'GET /api/agents',fields:['name','triggers']},
+ {ep:'GET /api/reid/identities',fields:['identity_name','entity_type','image_url','attributes','is_known_identity','last_recognized_ts']},
+ {ep:'GET /api/reid/identities/{id}/appearances',fields:['timestamp_ms']},
+ {ep:'GET /api/devices/home',fields:['device_name','is_online','online_count']},
+ {ep:'GET /api/devices/{mac}/power_status',fields:['is_on','power_state']},
+ {ep:'POST /api/devices/{mac}/power_on &middot; power_off',fields:['power_on','power_off']},
+ {ep:'&mdash; not in API yet',pseudo:true,fields:['thumb_grad','continuous_record','frame_sequence','recording_time','frame_day','suggestion','tag_conf','priority','value','unit','meter_label','frame_count','uptime','match_confidence','state.w','state.since_ts','talk_session_id','siren','lights']},
+ {ep:'&mdash; derived in UI',pseudo:true,fields:['verify_status','now_marker','playhead','peak','trend_delta','delta','count']},
+];
+var EL_PAIRS=[];   /* [{ui,fld,kind:'real'|'poss',color}] — array index = line id */
+var EL_UIINFO={};  /* ui → {compId:{flds:[…],sels:[…]}} — feeds the "Used in components" panel */
+function renderElCanvas(){
+  const uiCol=document.getElementById('elUiCol'); if(!uiCol) return;
+  const map=deriveElements();
+  /* flatten pairs: solid from MAPLINES × SEL2UI (deduped per ui→fld), then possible */
+  EL_PAIRS=[]; const pairIdx={}, uiPairs={}, fldPairs={}, uiInfo={};
+  Object.entries(MAPLINES).forEach(([cid,arr])=>arr.forEach(m=>{
+    const ui=(SEL2UI[cid]||{})[m.sel];
+    if(!ui){ console.warn('Elements: unmapped selector',cid,m.sel); return; }
+    const inf=(uiInfo[ui]||(uiInfo[ui]={}));
+    const ci=(inf[cid]||(inf[cid]={flds:[],sels:[]}));
+    ci.flds.push(m.fld); ci.sels.push(m.sel);
+    const k=ui+'>'+m.fld;
+    if(pairIdx[k]==null){
+      pairIdx[k]=EL_PAIRS.push({ui,fld:m.fld,kind:'real',color:(map[m.fld]||{}).color||m.color})-1;
+      (uiPairs[ui]||(uiPairs[ui]=[])).push(pairIdx[k]);
+      (fldPairs[m.fld]||(fldPairs[m.fld]=[])).push(pairIdx[k]);
+    }
+  }));
+  const realCount=EL_PAIRS.length;
+  POSSIBLE_PAIRS.forEach(p=>{
+    if(!map[p.fld]){ console.warn('Elements: possible pair with unknown field',p.fld); return; }
+    if(pairIdx[p.ui+'>'+p.fld]!=null){ console.warn('Elements: possible pair duplicates a real one',p.ui,p.fld); return; }
+    const i=EL_PAIRS.push({ui:p.ui,fld:p.fld,kind:'poss',color:map[p.fld].color})-1;
+    (uiPairs[p.ui]||(uiPairs[p.ui]=[])).push(i);
+    (fldPairs[p.fld]||(fldPairs[p.fld]=[])).push(i);
+  });
+  Object.keys(map).filter(f=>!fldPairs[f]).forEach(f=>console.warn('Elements: field unclaimed by any UI element',f));
+  EL_UIINFO=uiInfo;
+  /* UI column: archetype groups of chips (components shown in the side panel on hover) */
+  uiCol.innerHTML=EL_ARCHS.map(([k,label])=>{
+    const chips=UIELS.filter(u=>u.arch===k);
+    if(!chips.length) return '';
+    return `<div class="famblock dc-fam el-fam" data-grp="${k}"><h3>${label}</h3>`
+      +chips.map(u=>
+        `<div class="el-chip" data-ui="${u.id}" data-pairs="${(uiPairs[u.id]||[]).join(' ')}" title="${u.desc}">`
+        +`<div class="el-chip-prev">${u.prev()}</div>`
+        +`<span class="el-chip-name">${u.label}</span></div>`
+      ).join('')+`</div>`;
+  }).join('');
+  /* right column: ONE consolidated field panel, every field once */
+  const placed={};
+  const grpHtml=FIELD_GROUPS.map(g=>{
+    const chips=g.fields.map(f=>{
+      const e=map[f];
+      if(!e){ console.warn('Elements: FIELD_GROUPS names unknown field',f); return ''; }
+      placed[f]=1;
+      const d=ELEMS[f]||{};
+      const mark=e.status==='mixed'?' <i class="fmark fmark-mixed">&plusmn;</i>':fieldStatMark(e.status);
+      return `<span class="dc-f dc-bound-f el-fld" data-fld="${f}" data-pairs="${(fldPairs[f]||[]).join(' ')}" style="--c:${e.color}" title="${(d.label||f)+(d.desc?' &mdash; '+d.desc:'')}">${f}${mark}</span>`;
+    }).join('');
+    return `<div class="el-epgrp">`+(g.pseudo?`<div class="el-ep-note">${g.ep}</div>`:`<code class="dc-ep">${g.ep}</code>`)+`<div class="el-fldlist">${chips}</div></div>`;
+  }).join('');
+  Object.keys(map).filter(f=>!placed[f]).forEach(f=>console.warn('Elements: field missing from FIELD_GROUPS',f));
+  document.getElementById('elFieldPanel').innerHTML=
+    `<div class="dc-head"><b>Wyze AI One data fields</b><span style="font-size:9px;color:var(--dim);font-family:var(--mono)">every field once</span></div>`+grpHtml;
+  /* header: anchors + summary + legend */
+  document.getElementById('elAnchors').innerHTML=EL_ARCHS.map(([k,label])=>{
+    const n=UIELS.filter(u=>u.arch===k).length;
+    return n?`<span class="dc-anchor" data-grp="${k}">${label} <b>${n}</b></span>`:'';
+  }).join('');
+  document.getElementById('elSummary').innerHTML=
+    `<span class="dc-stat dc-total dc-on"><b>${UIELS.length}</b> UI elements</span>`
+    +`<span class="dc-stat"><b>${Object.keys(map).length}</b> data fields</span>`
+    +`<span class="dc-stat dc-have"><b>${realCount}</b> bindings</span>`
+    +`<span class="dc-stat"><b>${EL_PAIRS.length-realCount}</b> possible fills</span>`
+    +`<span class="el-legend"><span><i class="el-lk"></i> bound today</span><span><i class="el-lk el-lk-dash"></i> possible fill</span></span>`;
+}
+/* one pane-level SVG: a bezier per (UI element, field) pair */
+function drawElNet(){
+  const pane=document.getElementById('pane-elem');
+  if(!pane||!pane.classList.contains('on')) return;
+  const cv=document.getElementById('elCanvas'); const svg=cv&&cv.querySelector('.el-net'); if(!svg) return;
+  /* pin the components column below the sticky header (its height varies with width) */
+  const hdr=pane.querySelector('.dc-stickyhdr'), cc=cv.querySelector('.el-col-comps');
+  if(hdr&&cc){ const top=60+hdr.offsetHeight+10;
+    cc.style.top=top+'px'; cc.style.maxHeight='calc(100vh - '+(top+14)+'px)'; }
+  const cr=cv.getBoundingClientRect();
+  if(cr.width<560){ svg.innerHTML=''; return; }
+  svg.setAttribute('viewBox',`0 0 ${cr.width} ${cr.height}`);
+  svg.setAttribute('width',cr.width); svg.setAttribute('height',cr.height);
+  const uiR=new Map(), fldR=new Map();
+  cv.querySelectorAll('.el-chip[data-ui]').forEach(n=>uiR.set(n.dataset.ui,n.getBoundingClientRect()));
+  cv.querySelectorAll('.el-fld[data-fld]').forEach(n=>fldR.set(n.dataset.fld,n.getBoundingClientRect()));
+  let html='';
+  EL_PAIRS.forEach((p,i)=>{
+    const s=uiR.get(p.ui), t=fldR.get(p.fld); if(!s||!t) return;
+    const x1=s.right-cr.left, y1=s.top+s.height/2-cr.top;
+    const x2=t.left -cr.left, y2=t.top+t.height/2-cr.top;
+    const dx=Math.max(40,(x2-x1)*0.45);
+    const d=`M${x1.toFixed(1)} ${y1.toFixed(1)} C${(x1+dx).toFixed(1)} ${y1.toFixed(1)} ${(x2-dx).toFixed(1)} ${y2.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}`;
+    const poss=p.kind==='poss';
+    html+=`<path d="${d}" stroke="${p.color}"${poss?' class="el-poss"':''} data-pair="${i}"/>`;
+    if(poss){
+      html+=`<circle cx="${x1.toFixed(1)}" cy="${y1.toFixed(1)}" r="3" fill="none" stroke="${p.color}" stroke-width="1.4" data-pair="${i}"/>`
+          +`<circle cx="${x2.toFixed(1)}" cy="${y2.toFixed(1)}" r="3" fill="none" stroke="${p.color}" stroke-width="1.4" data-pair="${i}"/>`;
+    }else{
+      html+=`<circle cx="${x1.toFixed(1)}" cy="${y1.toFixed(1)}" r="3" fill="${p.color}" data-pair="${i}"/>`
+          +`<circle cx="${x2.toFixed(1)}" cy="${y2.toFixed(1)}" r="3" fill="${p.color}" data-pair="${i}"/>`;
+    }
+  });
+  svg.innerHTML=html;
+}
+var _elRaf=0,_elTimer=0;
+function scheduleDrawElemLines(){
+  cancelAnimationFrame(_elRaf); clearTimeout(_elTimer);
+  _elRaf=requestAnimationFrame(()=>requestAnimationFrame(drawElNet));
+  _elTimer=setTimeout(drawElNet,80);
+}
+window.addEventListener('resize',scheduleDrawElemLines);
+/* comp id in a chip note -> jump to that component in the Components tab (v3 list view) */
+function gotoComponent(id){
+  if(typeof dcVer!=='undefined'&&dcVer!=='v25') renderDcVer('v25');
+  if(typeof dcLayout!=='undefined'&&dcLayout!=='list') setDcLayout('list');
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x.dataset.tab==='data'));
+  document.querySelectorAll('.tabpane').forEach(pn=>pn.classList.toggle('on',pn.id==='pane-data'));
+  scheduleDrawMaplines();
+  const row=document.querySelector('#dcGrids .dc-row[data-maplines="'+id+'"]');
+  /* scroll after the pane swap + line draw have reflowed; instant scroll so the
+     smooth animation can't be cancelled by the reflow */
+  if(row) setTimeout(()=>row.scrollIntoView({block:'center'}),150);
+}
+/* side panel: which components use the hovered UI element (persists after
+   mouse-leave so the component cards stay clickable) */
+function showElComps(ui){
+  const list=document.getElementById('elCompList'); if(!list) return;
+  const u=UIELS.find(x=>x.id===ui)||{label:ui};
+  document.getElementById('elCompFor').innerHTML=u.label;
+  const info=EL_UIINFO[ui]||{};
+  const comps=Object.keys(info);
+  list.innerHTML=comps.length?comps.map(cid=>{
+    const v=V25.find(x=>x.id===cid)||{};
+    /* the REAL component preview — same markup resolution as the Components tab */
+    const prev=MOD25[cid]||MODFULL15[v.primary]||MODFULL[v.primary]||'';
+    return `<div class="el-comp" data-comp="${cid}"><b>${cid}</b><span class="cn">${v.name||''}</span>`
+      +`<span class="cf">${info[cid].flds.join(' &middot; ')}</span>`
+      +`<div class="modlive el-comp-prev">${prev}</div></div>`;
+  }).join(''):`<div class="el-comp-hint">No component binds this element yet &mdash; possible fills only.</div>`;
+  /* outline where this element lives inside each component preview */
+  comps.forEach(cid=>{
+    const card=list.querySelector(`.el-comp[data-comp="${cid}"] .el-comp-prev`); if(!card) return;
+    info[cid].sels.forEach(sel=>{
+      try{ card.querySelectorAll(sel).forEach(n=>n.classList.add('el-mark')); }catch(e){}
+    });
+  });
+}
+/* hover a chip on either side -> highlight all its lines + counterparts.
+   Click a UI element chip to LOCK its hover state (click again to unlock,
+   click another chip to move the lock). Click comp cards to jump. */
+(function(){
+  const cv=document.getElementById('elCanvas'); if(!cv) return;
+  let lock=null;
+  function setHi(el,on){
+    (el.dataset.pairs||'').split(' ').forEach(i=>{ if(i==='') return;
+      cv.querySelectorAll('[data-pair="'+i+'"],[data-pairs~="'+i+'"]').forEach(n=>n.classList.toggle('hi',on));
+    });
+  }
+  cv.addEventListener('mouseover',e=>{
+    const c=e.target.closest('[data-pairs]'); if(!c||c.contains(e.relatedTarget)) return;
+    setHi(c,true);
+    if(c.dataset.ui) showElComps(c.dataset.ui);
+  });
+  cv.addEventListener('mouseout',e=>{
+    const c=e.target.closest('[data-pairs]'); if(!c||c.contains(e.relatedTarget)) return;
+    if(c!==lock) setHi(c,false);
+    if(lock){ setHi(lock,true); showElComps(lock.dataset.ui); }  /* re-assert the locked state */
+  });
+  cv.addEventListener('click',e=>{
+    const u=e.target.closest('.el-use,.el-comp'); if(u){ gotoComponent(u.dataset.comp); return; }
+    const chip=e.target.closest('.el-chip[data-ui]'); if(!chip) return;
+    if(lock===chip){
+      lock=null; chip.classList.remove('el-locked'); setHi(chip,false);
+    }else{
+      if(lock){ lock.classList.remove('el-locked'); setHi(lock,false); }
+      lock=chip; chip.classList.add('el-locked');
+      setHi(chip,true); showElComps(chip.dataset.ui);
+    }
+  });
+})();
+document.getElementById('elAnchors').addEventListener('click',e=>{
+  const a=e.target.closest('.dc-anchor'); if(!a) return;
+  const fam=document.querySelector('.el-fam[data-grp="'+a.dataset.grp+'"]');
+  if(fam) fam.scrollIntoView({behavior:'smooth',block:'start'});
+});
+renderElCanvas();
+scheduleDrawElemLines();   /* Elements is the default tab — draw its lines at startup */
 function dcRowSolo(id,fn,ver){
   const d=DATACHECK[id]||{status:'missing',contract:[],sources:[],note:'Not yet mapped.'};
   const comp=(ver==='v15'?MODFULL15[id]:MODFULL[id])||MODPREV[id]||'';
@@ -3929,7 +4486,8 @@ document.querySelectorAll('#dcVerTabs .dc-vertab').forEach(b=>b.addEventListener
 document.getElementById('dcAnchors').addEventListener('click',e=>{const a=e.target.closest('.dc-anchor'); if(!a) return; const fam=document.querySelector('.dc-fam[data-grp="'+a.dataset.grp+'"]'); if(fam) fam.scrollIntoView({behavior:'smooth',block:'start'});});
 renderDcVer('v25');
 
-/* hover a component in a template preview -> show its latest (v2.5) component card */
+/* hover a component in a template preview -> show its latest (v3) component card.
+   Also: hovering the Agent Widget column shows the C-AGENT card. */
 (function(){
   const screen=document.getElementById('screen'); if(!screen) return;
   const pop=document.createElement('div'); pop.className='comppop'; pop.style.display='none';
@@ -3941,22 +4499,33 @@ renderDcVer('v25');
        lines drawn after it's placed. */
     return v2Card(v,{rmap:MOD25,vlab:'v3.0',vcls:'v25'});
   }
+  function showPop(html){
+    /* docked at the top of the screen via .comppop CSS — no per-anchor math */
+    pop.innerHTML=html; pop.style.display='block';
+    /* draw the bezier connecting lines inside the popover's data row */
+    const row=pop.querySelector('.dc-row[data-maplines]');
+    if(row && typeof drawMaplinesRow==='function') drawMaplinesRow(row);
+  }
   screen.addEventListener('mouseover',e=>{
     const slot=e.target.closest('.slot'); if(!slot){pop.style.display='none';return;}
     const lab=slot.querySelector('.slotlab');
     const id=lab?(lab.textContent.split(' ')[0]||'').trim():'';
     const html=/^C-/.test(id)?cardFor(id):'';
     if(!html){pop.style.display='none';return;}
-    pop.innerHTML=html; pop.style.display='block';
-    const W=pop.offsetWidth, gap=12, h=pop.offsetHeight, r=slot.getBoundingClientRect();
-    let left=r.right+gap; if(left+W>window.innerWidth-8) left=r.left-W-gap; if(left<8) left=8;
-    let top=r.top; if(top+h>window.innerHeight-8) top=Math.max(8,window.innerHeight-8-h);
-    pop.style.left=left+'px'; pop.style.top=top+'px';
-    /* draw the bezier connecting lines inside the popover's data row */
-    const row=pop.querySelector('.dc-row[data-maplines]');
-    if(row && typeof drawMaplinesRow==='function') drawMaplinesRow(row);
+    showPop(html);
   });
   screen.addEventListener('mouseleave',()=>{pop.style.display='none';});
+  /* Agent Widget column (widget + card states) -> C-AGENT card */
+  const agCol=document.getElementById('tplHomeCard');
+  if(agCol){
+    agCol.addEventListener('mouseover',e=>{
+      const anchor=e.target.closest('.aghome, .agstates'); if(!anchor){pop.style.display='none';return;}
+      const html=cardFor('C-AGENT');
+      if(!html){pop.style.display='none';return;}
+      showPop(html);
+    });
+    agCol.addEventListener('mouseleave',()=>{pop.style.display='none';});
+  }
 })();
 
 /* ---------- maplines: draw bezier curves from each visual element to its
@@ -4047,10 +4616,8 @@ $('dcGrids').addEventListener('mouseover',e=>{
   const row=e.target.closest('.dc-row'); if(!row||!$('dcGrids').contains(row))return;
   const card=row.querySelector('.dc-card'); if(!card)return;
   card.style.display='block';
-  const r=row.getBoundingClientRect(), W=330, gap=10, h=card.offsetHeight;
-  let left=r.right+gap; if(left+W>window.innerWidth-8) left=r.left-W-gap; if(left<8) left=8;
-  let top=r.top; if(top+h>window.innerHeight-8) top=Math.max(8,window.innerHeight-8-h);
-  card.style.left=left+'px'; card.style.top=top+'px';
+  /* docked at the top of the screen (centered, below the sticky tabs) */
+  card.style.left=Math.max(8,(window.innerWidth-330)/2)+'px'; card.style.top='70px';
 });
 $('dcGrids').addEventListener('mouseout',e=>{
   if(dcLayout!=='grid')return;
@@ -4064,6 +4631,9 @@ document.querySelectorAll('.tab').forEach(tb=>tb.addEventListener('click',()=>{
   const t=tb.dataset.tab;
   document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===tb));
   document.querySelectorAll('.tabpane').forEach(pn=>pn.classList.toggle('on',pn.id==='pane-'+t));
+  /* connecting lines can only be measured while their pane is visible */
+  if(t==='elem') scheduleDrawElemLines();
+  if(t==='data') scheduleDrawMaplines();
 }));
 /* ---------- component browse filters ---------- */
 const modMeta={};
@@ -4282,11 +4852,9 @@ function xScrollDocForFilter(key,val){
       pop.innerHTML='<div class="mpv">'+pv+'</div><div class="mpl">'+m+'</div>'+
         '<div class="mpf">'+(modFn[m]||'')+'</div>';
       pop.style.display='block';
-      var r=a.getBoundingClientRect();
-      var left=r.left, top=r.bottom+9;
-      if(left+226>window.innerWidth)left=window.innerWidth-230;
-      if(top+pop.offsetHeight>window.innerHeight)top=r.top-pop.offsetHeight-9;
-      pop.style.left=Math.max(8,left)+'px';pop.style.top=Math.max(8,top)+'px';
+      /* docked at the top of the screen (centered, below the sticky tabs) */
+      pop.style.left=Math.max(8,(window.innerWidth-pop.offsetWidth)/2)+'px';
+      pop.style.top='70px';
     });
     a.addEventListener('mouseleave',function(){pop.style.display='none';});
   });
