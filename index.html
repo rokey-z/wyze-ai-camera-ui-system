@@ -4355,7 +4355,7 @@ const RECIPES={
      r=>`<div class="learnrow"><span class="lbulb"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f6b73c" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12c.5.5 1 1.2 1 2h6c0-.8.5-1.5 1-2a7 7 0 0 0-4-12z"/></svg></span><div style="flex:1;min-width:0"><div class="ft">${r[0]}</div><div class="fm">${r[1]} &middot; remembered</div></div><span class="lconf">${r[2]}</span></div>`))},
  'C-LIVE':{q:'stream_params · live',hero:true,
   render:()=>RB.media('linear-gradient(165deg,#1d2d49,#0f1828)','live',
-   RB.leaf('name-tag','text-tagline',RB.vname('Front cam &middot; online')),
+   RB.leaf('device-name','text-tagline',RB.vname('Front cam &middot; online')),
    RB.leaf('absolute-time','text-tagline',RB.vtime('14:09')))},
  'C-RECVIDEO':{q:'events · bin 30min · span 24h + record scrub',hero:true,
   render:()=>RB.stack(
@@ -4649,6 +4649,9 @@ const EL_REGISTRY=[
  {id:'category-count',grp:'count-agg',label:'Category count',desc:'Instances grouped + counted per category — the filter row',sig:'category · count · category',formats:['filter','badge'],layouts:['standalone'],action:'filter',accepts:['id','count'],
   sample:{tag:'All &middot; 24',sub:'Person &middot; 11'}},
  /* type-count aggregation */
+ {id:'instance-tag',grp:'count-agg',label:'Instance tag',desc:'The instance by name only — no count attached',sig:'instance · none',formats:['filter','badge','text-small','text-tagline'],layouts:['standalone','overlay'],action:'filter',accepts:['text','id'],
+  sample:{txt:'Cat',tag:'Cat'},
+  stage:{'filter':s=>`<div class="chips2" style="margin:0"><span class="fc on">${s.txt}</span><span class="fc">Person</span></div>`}},
  {id:'instance-count',grp:'count-agg',label:'Instance count',desc:'How many — events, devices online, frames, sightings',sig:'instance/device · count',formats:['tile','text-small','badge','text-tagline','filter'],layouts:['standalone','overlay'],action:'navigate',accepts:['count'],
   sample:{txt:'4',name:'Cats',sub:'cats today'},
   stage:{'tile':s=>FMT_STAGE['block'](s),
@@ -4677,14 +4680,8 @@ const EL_REGISTRY=[
  {id:'trend-delta',grp:'compare',label:'Trend delta',desc:'Change vs the prior period — or the peak callout',sig:'instance · trend · time',formats:['badge','text-small'],layouts:['standalone'],action:'open-chat',accepts:['number'],
   sample:{tag:'&#9650; 22%',c:'#7eecc4'},stage:{badge:s=>`<span class="delta up" style="margin-left:0">${s.tag}</span>`}},
  /* name tags */
- {id:'name-tag',grp:'nametags',label:'Name tag',desc:'Generic name label — camera overlays, grid cells, contacts',sig:'agent/identity/device · none',formats:['text-tagline','text-small','badge'],layouts:['standalone','overlay'],action:'navigate',accepts:['text'],
-  sample:{txt:'Front cam',tag:'FRONT CAM'},stage:{'text-tagline':s=>`<div class="agname" style="margin:0;justify-content:flex-start">${s.txt}</div>`}},
- {id:'agent-name',grp:'nametags',label:'Agent name',desc:'Which agent — the watcher&rsquo;s display name',sig:'agent · none',formats:['text-tagline','text-small','badge'],layouts:['standalone','overlay'],action:'navigate',accepts:['text'],
-  sample:{txt:'Night Watcher',tag:'NIGHT WATCHER'},stage:{'text-tagline':s=>`<div class="agname" style="margin:0;justify-content:flex-start">${s.txt}</div>`}},
- {id:'instance-name',grp:'nametags',label:'Instance name',desc:'Recognized identity — person or pet display name',sig:'identity · none',formats:['text-tagline','text-small','badge'],layouts:['standalone','overlay'],action:'navigate',accepts:['text'],
+ {id:'name-tag',grp:'nametags',label:'Name tag',desc:'Who or what by name — agent, person / pet identity, scene object, contact (device name lives in Devices)',sig:'agent/identity/instance · none',formats:['badge','text-small','text-tagline'],layouts:['standalone','overlay'],action:'navigate',accepts:['text','id'],
   sample:{txt:'Cooper',tag:'COOPER'}},
- {id:'object-name',grp:'nametags',label:'Object name',desc:'Named thing in the scene (garage door, package) — no field bound yet',sig:'instance · none',formats:['text-tagline','text-small','badge'],layouts:['standalone','overlay'],action:'navigate',accepts:['text'],
-  sample:{txt:'Garage door',tag:'GARAGE DOOR'}},
  {id:'attribute-tag',grp:'nametags',label:'Attribute tag',desc:'Identity / device attributes (species, descriptors, battery)',sig:'identity/device · none',formats:['text-tagline','text-small','badge'],layouts:['standalone'],action:'none',accepts:['text','bool'],
   sample:{txt:'Cardinalis cardinalis'},stage:{'text-tagline':s=>`<div class="sci" style="font-style:italic;font-size:10px;color:var(--mut)">${s.txt}</div>`}},
  /* chat */
@@ -4729,7 +4726,7 @@ const EL_REGISTRY=[
    MAPLINES stays the single source of truth for which solid pairs exist. ---- */
 const T=(el,fmt,lay)=>({el,fmt,lay:lay||'standalone'});
 const SEL2UI={
- 'C-AGENT':{'.aghome .agcard .agthumb':T('media','small-thumb'),'.aghome .agcard .agalert':T('priority-marker','dot'),'.aghome .agcard .agpill':T('state','badge'),'.aghome .agcard .agsub':T('relative-time','text-tagline'),'.aghome .agname':T('agent-name','text-tagline')},
+ 'C-AGENT':{'.aghome .agcard .agthumb':T('media','small-thumb'),'.aghome .agcard .agalert':T('priority-marker','dot'),'.aghome .agcard .agpill':T('state','badge'),'.aghome .agcard .agsub':T('relative-time','text-tagline'),'.aghome .agname':T('name-tag','text-tagline')},
  'C-STATE':{'.ml-state':T('state','text-large'),'.ml-dur':T('duration','text-large'),'.cv':T('confidence','button-pill')},
  'C-FEED':{'.chips2 .fc.on':T('category-count','filter'),'.chips2 .fc:not(.on)':T('category-count','filter'),'.feedrow .thumb':T('media','small-thumb'),'.feedrow .ft':T('description','text-small'),'.feedrow .fm':T('absolute-time','text-tagline'),'.feedrow .etag':T('category-tag','badge')},
  'C-RECAP':{'.ml-title':T('description','text-small'),'.ml-tone':T('state','badge'),'.ml-narrative':T('insight','text-medium')},
@@ -4748,11 +4745,11 @@ const SEL2UI={
  'C-RECVIDEO':{'.scrub .seg':T('time-trend','daily-chart'),'.scrub .pin':T('time-trend','daily-chart','overlay'),'.vname':T('device-name','text-tagline','overlay'),'.videobox':T('media','full-card')},
  'C-SNAP':{'.videobox':T('media','full-card'),'.annbadge':T('detection-marker','bound-box','overlay'),'.fsub':T('absolute-time','text-tagline','overlay'),'.fs':T('description','text-small','overlay'),'.cv':T('confidence','button-pill')},
  'C-TIMELAPSE':{'.lapse .videobox':T('media','full-card'),'.vname':T('device-name','text-tagline','overlay'),'.vtime':T('absolute-time','text-tagline','overlay'),'.ld2':T('instance-count','text-small'),'.lapsetrack b':T('time-trend','daily-chart','overlay')},
- 'C-GALLERY':{'.gallery .gcell':T('media','small-thumb'),'.gallery .gcell span':T('instance-name','text-tagline','overlay'),'.sig-coll':T('instance-count','badge'),'.chips2 .fc.on':T('category-count','filter'),'.chips2 .fc:not(.on)':T('category-count','filter')},
+ 'C-GALLERY':{'.gallery .gcell':T('media','small-thumb'),'.gallery .gcell span':T('name-tag','text-tagline','overlay'),'.sig-coll':T('instance-count','badge'),'.chips2 .fc.on':T('category-count','filter'),'.chips2 .fc:not(.on)':T('category-count','filter')},
  'C-MULTIVIEW':{'.gallery .gcell':T('device-name','text-tagline','overlay'),'.gallery .gcell i':T('state','badge','overlay'),'.sig-multi':T('media','small-thumb')},
  'C-LOG':{'.logrow .lt':T('absolute-time','text-small'),'.logrow .lv':T('state','text-small'),'.logrow .ld':T('trend-delta','text-small')},
  'C-VISIT':{'.tsrow .tn':T('absolute-time','text-small'),'.tsrow .tm':T('absolute-time','text-tagline'),'.tsrow .cliptip':T('media','small-thumb'),'.tsrow .ctg':T('media','small-thumb','overlay'),'.tsrow .dd':T('duration','text-small'),'.tsrow .ds':T('state','badge'),'.cv':T('confidence','button-pill')},
- 'C-IDCARD':{'.idcard .nm':T('instance-name','text-small'),'.idcard .sci':T('attribute-tag','text-tagline'),'.idcard .pic':T('media','square'),'.idcard .meta':T('absolute-time','text-tagline'),'.pvbadge':T('state','badge'),'.cv':T('confidence','button-pill')},
+ 'C-IDCARD':{'.idcard .nm':T('name-tag','text-small'),'.idcard .sci':T('attribute-tag','text-tagline'),'.idcard .pic':T('media','square'),'.idcard .meta':T('absolute-time','text-tagline'),'.pvbadge':T('state','badge'),'.cv':T('confidence','button-pill')},
  'C-TREND':{'.trendbars .tb':T('time-trend','weekly-chart'),'.delta':T('trend-delta','badge')},
  'C-DETER':{'.act.danger':T('device-control','button-pill'),'.act:not(.danger)':T('device-control','button-pill')},
  'C-REMINDER':{'.reminder b':T('absolute-time','text-small'),'.reminder span':T('state','text-small')},
