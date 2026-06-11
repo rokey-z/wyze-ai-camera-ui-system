@@ -4672,8 +4672,10 @@ const EL_REGISTRY=[
  {id:'relative-time',grp:'timestamps',label:'Relative time',desc:'Elapsed since — recency stamps like &ldquo;2m ago&rdquo;',sig:'any · none · time',formats:['text-tagline','text-small'],layouts:['standalone','overlay'],action:'navigate',accepts:['time'],
   sample:{txt:'&#9679; 2m ago'}},
  /* priority & confidence */
- {id:'priority-marker',grp:'priority-conf',label:'Priority marker',desc:'Urgency / ranking — agent alert level, group score',sig:'agent/instance · none · score',formats:['dot','badge'],layouts:['standalone','overlay'],action:'navigate',accepts:['score'],
-  sample:{c:'#f25c5c',tag:'P1'}},
+ {id:'priority-marker',grp:'priority-conf',label:'Priority marker',desc:'Urgency / ranking — three levels: P1 urgent, P2 notable, P3 routine',sig:'agent/instance · none · score',formats:['dot','badge'],layouts:['standalone','overlay'],action:'navigate',accepts:['score'],
+  sample:{c:'#f25c5c',tag:'P1'},stage:{
+   dot:s=>`<span style="display:inline-flex;gap:12px;align-items:center">${[['#f25c5c','P1'],['#f6b73c','P2'],['#4f8ff0','P3']].map(([c,p])=>`<span style="display:inline-flex;align-items:center;gap:5px"><span style="width:13px;height:13px;border-radius:50%;background:${c};display:inline-block"></span><span style="font-size:8.5px;color:var(--dim);font-family:var(--mono)">${p}</span></span>`).join('')}</span>`,
+   badge:s=>`<span style="display:inline-flex;gap:6px">${[['#f25c5c','P1'],['#f6b73c','P2'],['#4f8ff0','P3']].map(([c,p])=>agPill(p,c)).join('')}</span>`}},
  {id:'confidence',grp:'chat',label:'Confidence',desc:'Attachable modifier — model confidence + tap-to-correct on any AI-derived element',sig:'modifier · score',formats:['button-pill'],layouts:['standalone'],action:'correct',accepts:['score'],
   sample:{txt:'confidence 0.96',sub:'tap to correct'},stage:{'button-pill':s=>cf15('confidence 0.96','tap to correct')}},
  /* compare */
@@ -4690,8 +4692,10 @@ const EL_REGISTRY=[
  {id:'suggestion',grp:'chat',label:'Suggestion',desc:'Proactive question / nudge — tap opens the chat sheet',sig:'agent · none',formats:['button'],layouts:['standalone'],action:'open-chat',accepts:['text'],
   sample:{tag:'What did I miss today?'},stage:{button:s=>`<div class="suglist"><div class="sugq"><span class="sugq-t">${s.tag}</span><span class="sugq-go">&rarr;</span></div></div>`}},
  /* description */
- {id:'description',grp:'description',label:'Description',desc:'Factual VLM text about ONE media item — event or group',sig:'instance/video · narrative',formats:['text-small','text-medium','text-tagline'],layouts:['standalone','overlay'],action:'open-clip',accepts:['text'],
-  modifier:{provenance:'vlm'},sample:{txt:'Vehicle departed &mdash; &ldquo;a car backs out&rdquo;'}},
+ {id:'description',grp:'description',label:'Description title',desc:'Short factual headline for ONE media item — event or group',sig:'instance/video · narrative',formats:['text-small','text-tagline'],layouts:['standalone','overlay'],action:'open-clip',accepts:['text'],
+  modifier:{provenance:'vlm'},sample:{txt:'Vehicle departed'}},
+ {id:'description-detail',grp:'description',label:'Description detail',desc:'The full VLM sentence behind the title — what actually happened',sig:'instance/video · narrative',formats:['text-medium','text-small'],layouts:['standalone','overlay'],action:'open-clip',accepts:['text'],
+  modifier:{provenance:'vlm'},sample:{txt:'A car backs out of the garage and turns left onto the street.'}},
  /* devices */
  {id:'device-name',grp:'devices',label:'Device name',desc:'Which camera / device — the tile and overlay label',sig:'device · none',formats:['text-tagline','text-small'],layouts:['standalone','overlay'],action:'navigate',accepts:['text','id'],
   sample:{txt:'Front door cam'}},
@@ -4743,7 +4747,7 @@ const SEL2UI={
  'C-LEARN':{'.learnrow .ft':T('insight','text-medium'),'.learnrow .fm':T('category-tag','text-tagline'),'.learnrow .lconf':T('confidence','button-pill')},
  'C-LIVE':{'.videobox':T('media','full-card'),'.vname':T('state','text-small','overlay'),'.vtime':T('absolute-time','text-tagline','overlay')},
  'C-RECVIDEO':{'.scrub .seg':T('time-trend','daily-chart'),'.scrub .pin':T('time-trend','daily-chart','overlay'),'.vname':T('device-name','text-tagline','overlay'),'.videobox':T('media','full-card')},
- 'C-SNAP':{'.videobox':T('media','full-card'),'.annbadge':T('detection-marker','bound-box','overlay'),'.fsub':T('absolute-time','text-tagline','overlay'),'.fs':T('description','text-small','overlay'),'.cv':T('confidence','button-pill')},
+ 'C-SNAP':{'.videobox':T('media','full-card'),'.annbadge':T('detection-marker','bound-box','overlay'),'.fsub':T('absolute-time','text-tagline','overlay'),'.fs':T('description-detail','text-small','overlay'),'.cv':T('confidence','button-pill')},
  'C-TIMELAPSE':{'.lapse .videobox':T('media','full-card'),'.vname':T('device-name','text-tagline','overlay'),'.vtime':T('absolute-time','text-tagline','overlay'),'.ld2':T('instance-count','text-small'),'.lapsetrack b':T('time-trend','daily-chart','overlay')},
  'C-GALLERY':{'.gallery .gcell':T('media','small-thumb'),'.gallery .gcell span':T('name-tag','text-tagline','overlay'),'.sig-coll':T('instance-count','badge'),'.chips2 .fc.on':T('category-count','filter'),'.chips2 .fc:not(.on)':T('category-count','filter')},
  'C-MULTIVIEW':{'.gallery .gcell':T('device-name','text-tagline','overlay'),'.gallery .gcell i':T('state','badge','overlay'),'.sig-multi':T('media','small-thumb')},
