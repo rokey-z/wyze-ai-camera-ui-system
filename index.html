@@ -4575,7 +4575,7 @@ const FMT_STAGE={
  'text-large':s=>`<div style="font-size:30px;font-weight:800;letter-spacing:-1.5px;color:${s.c||'#e9eef6'};line-height:1${s.mono?';font-family:var(--mono)':''}">${s.txt||s.tag||''}</div>`,
  'text-medium':s=>`<div style="font-size:15px;line-height:1.5;font-weight:600;color:#e9eef6">${s.txt||s.tag||''}</div>`,
  'text-small':s=>`<div style="font-size:12px;font-weight:600;color:var(--ink)">${s.txt||s.tag||''}</div>`,
- 'text-tagline':s=>`<div style="font-size:9.5px;letter-spacing:.4px;text-transform:uppercase;color:var(--mut)">${s.txt||s.tag||''}</div>`,
+ 'text-tagline':s=>`<div style="font-size:9.5px;letter-spacing:.4px;color:var(--mut)">${s.txt||s.tag||''}</div>`,
  'badge':s=>agPill(s.tag||s.txt,s.c||'#9cc3f5'),
  'dot':s=>`<span style="display:inline-block;width:13px;height:13px;border-radius:50%;background:${s.c||'#34d399'}"></span>`,
  'block':s=>`<div class="tilegrid"><div class="gtile num"><b>${s.txt}</b><span>${s.sub||''}</span></div></div>`,
@@ -4592,7 +4592,7 @@ const FMT_MICRO={
  'text-large':s=>`<b style="font-size:12px;font-weight:800;color:${s.c||'#e9eef6'}">${String(s.txt||'Aa').replace(/<[^>]*>/g,'').slice(0,6)}</b>`,
  'text-medium':s=>`<span style="font-size:10px;font-weight:600;color:#e9eef6">Aa</span>`,
  'text-small':s=>`<span style="font-size:9px;font-weight:600;color:var(--ink)">Aa</span>`,
- 'text-tagline':s=>`<span style="font-size:7.5px;letter-spacing:.4px;text-transform:uppercase;color:var(--mut)">TAG</span>`,
+ 'text-tagline':s=>`<span style="font-size:7.5px;letter-spacing:.4px;color:var(--mut)">Tag</span>`,
  'badge':s=>`<span style="font-size:7.5px;font-weight:800;padding:1px 6px;border-radius:999px;color:${s.c||'#9cc3f5'};background:${(s.c||'#9cc3f5')}22">${String(s.tag||s.txt||'PILL').replace(/<[^>]*>/g,'').slice(0,9)}</span>`,
  'dot':s=>`<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${s.c||'#34d399'}"></span>`,
  'block':s=>`<span style="display:inline-grid;place-items:center;width:24px;height:15px;border:1px solid var(--line);border-radius:3px;background:var(--card);font-size:7.5px;font-weight:800;color:var(--ink)">12</span>`,
@@ -4634,7 +4634,7 @@ const EL_REGISTRY=[
   sample:{txt:'38',name:'Events',sub:'events today'},
   stage:{'text-small':s=>`<div style="font-size:12px;font-weight:600;color:var(--ink)"><span style="color:var(--mut)">${s.name}</span> ${s.txt}</div>`,
          'badge':s=>agPill(`${s.name} &middot; ${s.txt}`,'#9cc3f5'),
-         'text-tagline':s=>`<div style="font-size:9.5px;letter-spacing:.4px;text-transform:uppercase;color:var(--mut)">${s.name} <b style="color:var(--ink)">${s.txt}</b></div>`}},
+         'text-tagline':s=>`<div style="font-size:9.5px;letter-spacing:.4px;color:var(--mut)">${s.name} <b style="color:var(--ink)">${s.txt}</b></div>`}},
  /* time aggregation */
  {id:'hour-activity',grp:'time-agg',label:'Hour activity',desc:'Activity within an hour, minute bins — no component renders it yet',sig:'instance · count · span:hour · bin:minute',formats:['chart'],layouts:['standalone'],action:'navigate',accepts:['time','count'],
   sample:{},stage:{chart:s=>`<div class="scrub" style="height:42px">${[34,52,40,66,28,58,45,38,60,30,48,36].map(h=>`<div class="seg" style="height:${h}%;background:#3a5fa0"></div>`).join('')}<div class="axis"><span>:00</span><span>:15</span><span>:30</span><span>:45</span><span>now</span></div></div>`}},
@@ -4671,8 +4671,8 @@ const EL_REGISTRY=[
  {id:'description',grp:'description',label:'Description',desc:'Factual VLM text about ONE media item — event or group',sig:'instance/video · narrative',formats:['text-small','text-medium','text-tagline'],layouts:['standalone','overlay'],action:'open-clip',accepts:['text'],
   modifier:{provenance:'vlm'},sample:{txt:'Vehicle departed &mdash; &ldquo;a car backs out&rdquo;'}},
  /* devices */
- {id:'device-control',grp:'devices',label:'Device control',desc:'Command button — power, talk, siren, lights',sig:'device · none',formats:['button'],layouts:['standalone','overlay'],action:'control',accepts:['command'],
-  sample:{txt:'Power on'}},
+ {id:'device-control',grp:'devices',label:'Device control',desc:'Command button — power, talk, siren, lights',sig:'device · none',formats:['button'],layouts:['standalone'],action:'control',accepts:['command'],
+  sample:{txt:'Power on'},stage:{button:s=>`<div class="actions" style="max-width:200px"><div class="act"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3" fill="#fff" stroke="none"/>')}</span></div><div class="act primary"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>${s.txt}</div></div>`}},
  /* escalation */
  {id:'contact-action',grp:'escalation',label:'Contact action',desc:'Escalation contact — name, number and the call / text actions',sig:'household · none',formats:['list','button'],layouts:['standalone'],action:'control',accepts:['command','text'],
   sample:{txt:'Sarah &middot; sister',sub:'(415) 555-0142'},stage:{
