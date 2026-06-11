@@ -4669,9 +4669,15 @@ const EL_REGISTRY=[
  {id:'trend-delta',grp:'compare',label:'Trend delta',desc:'Change vs the prior period — or the peak callout',sig:'instance · trend · time',formats:['badge','text-small'],layouts:['standalone'],action:'open-chat',accepts:['number'],
   sample:{tag:'&#9650; 22%',c:'#7eecc4'},stage:{badge:s=>`<span class="delta up" style="margin-left:0">${s.tag}</span>`}},
  /* name tags */
- {id:'name-tag',grp:'nametags',label:'Name tag',desc:'Agent / instance / object / device name',sig:'agent/identity/device · none',formats:['text-tagline','text-small'],layouts:['standalone','overlay'],action:'navigate',accepts:['text'],
-  sample:{txt:'Night Watcher'},stage:{'text-tagline':s=>`<div class="agname" style="margin:0;justify-content:flex-start">${s.txt}</div>`}},
- {id:'attribute-tag',grp:'nametags',label:'Attribute tag',desc:'Identity / device attributes (species, descriptors, battery)',sig:'identity/device · none',formats:['text-tagline','badge'],layouts:['standalone'],action:'none',accepts:['text','bool'],
+ {id:'name-tag',grp:'nametags',label:'Name tag',desc:'Generic name label — camera overlays, grid cells, contacts',sig:'agent/identity/device · none',formats:['text-tagline','text-small','badge'],layouts:['standalone','overlay'],action:'navigate',accepts:['text'],
+  sample:{txt:'Front cam',tag:'FRONT CAM'},stage:{'text-tagline':s=>`<div class="agname" style="margin:0;justify-content:flex-start">${s.txt}</div>`}},
+ {id:'agent-name',grp:'nametags',label:'Agent name',desc:'Which agent — the watcher&rsquo;s display name',sig:'agent · none',formats:['text-tagline','text-small','badge'],layouts:['standalone','overlay'],action:'navigate',accepts:['text'],
+  sample:{txt:'Night Watcher',tag:'NIGHT WATCHER'},stage:{'text-tagline':s=>`<div class="agname" style="margin:0;justify-content:flex-start">${s.txt}</div>`}},
+ {id:'instance-name',grp:'nametags',label:'Instance name',desc:'Recognized identity — person or pet display name',sig:'identity · none',formats:['text-tagline','text-small','badge'],layouts:['standalone','overlay'],action:'navigate',accepts:['text'],
+  sample:{txt:'Cooper',tag:'COOPER'}},
+ {id:'object-name',grp:'nametags',label:'Object name',desc:'Named thing in the scene (garage door, package) — no field bound yet',sig:'instance · none',formats:['text-tagline','text-small','badge'],layouts:['standalone','overlay'],action:'navigate',accepts:['text'],
+  sample:{txt:'Garage door',tag:'GARAGE DOOR'}},
+ {id:'attribute-tag',grp:'nametags',label:'Attribute tag',desc:'Identity / device attributes (species, descriptors, battery)',sig:'identity/device · none',formats:['text-tagline','text-small','badge'],layouts:['standalone'],action:'none',accepts:['text','bool'],
   sample:{txt:'Cardinalis cardinalis'},stage:{'text-tagline':s=>`<div class="sci" style="font-style:italic;font-size:10px;color:var(--mut)">${s.txt}</div>`}},
  /* chat */
  {id:'narrative',grp:'chat',label:'Insight',desc:'AI-synthesized prose over a period — tap opens the chat sheet',sig:'household/agent · narrative · time',formats:['text-medium','text-large'],layouts:['standalone'],action:'open-chat',accepts:['text'],
@@ -4705,7 +4711,7 @@ const EL_REGISTRY=[
    MAPLINES stays the single source of truth for which solid pairs exist. ---- */
 const T=(el,fmt,lay)=>({el,fmt,lay:lay||'standalone'});
 const SEL2UI={
- 'C-AGENT':{'.aghome .agcard .agthumb':T('media','small-thumb'),'.aghome .agcard .agalert':T('priority-marker','dot'),'.aghome .agcard .agpill':T('state','badge'),'.aghome .agcard .agsub':T('relative-time','text-tagline'),'.aghome .agname':T('name-tag','text-tagline')},
+ 'C-AGENT':{'.aghome .agcard .agthumb':T('media','small-thumb'),'.aghome .agcard .agalert':T('priority-marker','dot'),'.aghome .agcard .agpill':T('state','badge'),'.aghome .agcard .agsub':T('relative-time','text-tagline'),'.aghome .agname':T('agent-name','text-tagline')},
  'C-STATE':{'.ml-state':T('state','text-large'),'.ml-dur':T('duration','text-large'),'.cv':T('provenance','button-pill')},
  'C-FEED':{'.chips2 .fc.on':T('category-count','filter'),'.chips2 .fc:not(.on)':T('category-count','filter'),'.feedrow .thumb':T('media','small-thumb'),'.feedrow .ft':T('description','text-small'),'.feedrow .fm':T('absolute-time','text-tagline'),'.feedrow .etag':T('category-tag','badge')},
  'C-RECAP':{'.ml-title':T('description','text-small'),'.ml-tone':T('state','badge'),'.ml-narrative':T('narrative','text-medium')},
@@ -4724,11 +4730,11 @@ const SEL2UI={
  'C-RECVIDEO':{'.scrub .seg':T('time-trend','daily-chart'),'.scrub .pin':T('absolute-time','chart','overlay'),'.vname':T('name-tag','text-tagline','overlay'),'.videobox':T('media','full-card')},
  'C-SNAP':{'.videobox':T('media','full-card'),'.annbadge':T('detection-marker','bound-box','overlay'),'.fsub':T('absolute-time','text-tagline','overlay'),'.fs':T('description','text-small','overlay'),'.cv':T('provenance','button-pill')},
  'C-TIMELAPSE':{'.lapse .videobox':T('media','full-card'),'.vname':T('name-tag','text-tagline','overlay'),'.vtime':T('absolute-time','text-tagline','overlay'),'.ld2':T('instance-count','text-small'),'.lapsetrack b':T('absolute-time','chart','overlay')},
- 'C-GALLERY':{'.gallery .gcell':T('media','small-thumb'),'.gallery .gcell span':T('name-tag','text-tagline','overlay'),'.sig-coll':T('instance-count','badge'),'.chips2 .fc.on':T('category-count','filter'),'.chips2 .fc:not(.on)':T('category-count','filter')},
+ 'C-GALLERY':{'.gallery .gcell':T('media','small-thumb'),'.gallery .gcell span':T('instance-name','text-tagline','overlay'),'.sig-coll':T('instance-count','badge'),'.chips2 .fc.on':T('category-count','filter'),'.chips2 .fc:not(.on)':T('category-count','filter')},
  'C-MULTIVIEW':{'.gallery .gcell':T('name-tag','text-tagline','overlay'),'.gallery .gcell i':T('state','badge','overlay'),'.sig-multi':T('media','small-thumb')},
  'C-LOG':{'.logrow .lt':T('absolute-time','text-small'),'.logrow .lv':T('state','text-small'),'.logrow .ld':T('trend-delta','text-small')},
  'C-VISIT':{'.tsrow .tn':T('absolute-time','text-small'),'.tsrow .tm':T('absolute-time','text-tagline'),'.tsrow .cliptip':T('media','small-thumb'),'.tsrow .ctg':T('media','small-thumb','overlay'),'.tsrow .dd':T('duration','text-small'),'.tsrow .ds':T('state','badge'),'.cv':T('provenance','button-pill')},
- 'C-IDCARD':{'.idcard .nm':T('name-tag','text-small'),'.idcard .sci':T('attribute-tag','text-tagline'),'.idcard .pic':T('media','square'),'.idcard .meta':T('absolute-time','text-tagline'),'.pvbadge':T('state','badge'),'.cv':T('provenance','button-pill')},
+ 'C-IDCARD':{'.idcard .nm':T('instance-name','text-small'),'.idcard .sci':T('attribute-tag','text-tagline'),'.idcard .pic':T('media','square'),'.idcard .meta':T('absolute-time','text-tagline'),'.pvbadge':T('state','badge'),'.cv':T('provenance','button-pill')},
  'C-TREND':{'.trendbars .tb':T('time-trend','weekly-chart'),'.delta':T('trend-delta','badge')},
  'C-DETER':{'.act.danger':T('device-control','button-pill'),'.act:not(.danger)':T('device-control','button-pill')},
  'C-REMINDER':{'.reminder b':T('absolute-time','text-small'),'.reminder span':T('state','text-small')},
