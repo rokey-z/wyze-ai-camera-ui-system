@@ -396,10 +396,10 @@
   .dc-more:hover{background:#4f8ff022;border-color:#4f8ff066}
   /* ===== Elements tab — bipartite canvas: chip-level UI elements ⇆ data fields ===== */
   #elCanvas{position:relative;display:grid;
-    grid-template-columns:minmax(300px,340px) minmax(260px,300px) minmax(0,1fr);gap:0 26px;
+    grid-template-columns:minmax(300px,340px) minmax(280px,330px) minmax(0,1fr);gap:0 26px;
     align-items:start;margin-top:6px}
   /* the bezier gutter lives between the UI column and the data panel */
-  .el-col-data{margin-left:140px}
+  .el-col-data{margin-left:110px}
   /* components column — sticky is SAFE here (no lines attach to it);
      scrolls internally when the previews exceed the viewport */
   .el-col-comps{position:sticky;top:70px;align-self:start;
@@ -431,31 +431,53 @@
      Chips are flat rows separated by divider lines (no card background). */
   #elUiCol .el-fam{display:flex;flex-direction:column;gap:0;margin-top:18px}
   #elUiCol .el-fam:first-child{margin-top:0}
-  .el-chip{position:relative;display:flex;align-items:center;justify-content:space-between;
-    gap:14px;padding:13px 2px;border-top:1px solid var(--line);
+
+  .el-chip{position:relative;display:flex;flex-direction:column;align-items:stretch;gap:8px;
+    padding:12px 2px;border-top:1px solid var(--line);
     cursor:pointer;transition:background .15s}
   #elUiCol .el-fam .el-chip:first-of-type{border-top:0}
   .el-chip.hi{background:#4f8ff00d}
   /* click-locked element: hover state pinned until clicked again */
   .el-chip.el-locked{background:#4f8ff012;box-shadow:inset 2px 0 0 var(--blue)}
-  /* element name — regular weight, to the RIGHT of the element preview */
-  .el-chip-name{flex:0 1 auto;min-width:70px;font-size:11.5px;font-weight:400;color:var(--ink);text-align:right;line-height:1.35}
-  .el-chip-prev{pointer-events:none}
-  .el-chip-prev .panel,.el-chip-prev .actions,.el-chip-prev .reminder,
-  .el-chip-prev .chips2,.el-chip-prev .tilegrid,.el-chip-prev .lapsebar,
-  .el-chip-prev .hero,.el-chip-prev .lapse,.el-chip-prev .aghome{margin:0}
-  .el-chip-prev{flex:1;min-width:0}
+  .el-chip-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .el-chip-name{font-size:11.5px;font-weight:600;color:var(--ink)}
+  /* layout glyphs: standalone / overlay — valid ones lit, active one on */
+  .el-lay{display:inline-flex;gap:4px}
+  .el-lay-g{width:22px;height:16px;border:1px solid var(--line);border-radius:4px;
+    display:grid;place-items:center;color:var(--dim);opacity:.22}
+  .el-lay-g.ok{opacity:1;cursor:pointer}
+  .el-lay-g.on{border-color:#4f8ff088;background:#4f8ff014;color:#9cc3f5}
+  /* format strip: live micro-previews, click swaps the stage */
+  .el-fmts{display:flex;flex-wrap:wrap;gap:4px}
+  .el-fmt{display:inline-flex;align-items:center;height:22px;padding:0 6px;border:1px solid var(--line);
+    border-radius:6px;cursor:pointer;background:var(--card)}
+  .el-fmt .mi{display:flex;align-items:center;max-width:52px;max-height:16px;overflow:hidden}
+  .el-fmt.on{border-color:#4f8ff088;background:#4f8ff012;box-shadow:0 0 0 1px #4f8ff044 inset}
+  .el-modline{font-size:8.5px;font-family:var(--mono);color:#c4b3f0;opacity:.85}
+  /* component recipe chips (element·format·layout) */
+  .dc-rcp{font-family:var(--mono);font-size:8.5px;color:#9cc3f5;background:#4f8ff010;border-color:#4f8ff033 !important}
+  .dc-rcp.on{color:#cfe3ff;background:#4f8ff028;border-color:var(--blue) !important}
+  .el-comp-rcp{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+  .el-comp-rcp .dc-rcp{padding:2px 6px;border:1px solid;border-radius:5px}
+  .el-chip-stage{pointer-events:none}
+  .el-chip-stage .panel,.el-chip-stage .actions,.el-chip-stage .reminder,
+  .el-chip-stage .chips2,.el-chip-stage .tilegrid,.el-chip-stage .lapsebar,
+  .el-chip-stage .hero,.el-chip-stage .lapse,.el-chip-stage .aghome{margin:0}
   .el-chip.hi .el-src{outline:1px dashed currentColor;outline-offset:2px}
   /* right panel — STATIC by design: lines are drawn in canvas coordinates,
      a sticky panel would move relative to the canvas on scroll and detach them */
   .el-fieldpanel{position:static}
+  .el-fieldpanel .dc-head b{font-size:11.5px}
   .el-epgrp{margin-bottom:13px}
   .el-epgrp:last-child{margin-bottom:0}
-  .el-epgrp .dc-ep{display:block;width:fit-content;margin-bottom:7px}
-  .el-ep-note{font-size:10px;color:var(--dim);font-style:italic;margin-bottom:7px}
+  .el-epgrp .dc-ep{display:block;width:fit-content;margin-bottom:7px;font-size:9.5px}
+  .el-ep-note{font-size:9px;color:var(--dim);font-style:italic;margin-bottom:7px}
   .el-fldlist{display:flex;flex-direction:column;gap:5px}
-  .el-fld{font-size:11px;cursor:default}
+  .el-fld{font-size:10px;cursor:default}
   .el-fld.hi{background:#22324d;border-color:var(--c,#9cc3f5);color:#fff}
+  /* potential-but-unused backend fields: dimmed, dashed, no lines */
+  .el-fld-un{font-family:var(--mono);font-size:9px;color:var(--dim);background:transparent;
+    border:1px dashed #2a3a55;border-radius:6px;padding:3px 8px;width:fit-content}
   /* legend (lives inside #elSummary) */
   .el-legend{display:inline-flex;align-items:center;gap:14px;font-size:10.5px;
     color:var(--mut);padding:6px 4px}
@@ -2258,10 +2280,11 @@ EMIT  -&gt; see §13
   <!-- ============ TAB: ELEMENTS — each element = one data source ============ -->
   <div class="tabpane on" id="pane-elem">
     <div class="dc-stickyhdr">
-      <div class="dc-cap" style="padding-top:8px">Chip-level <b>UI elements</b> (left) connect many-to-many with the
-        <b>data fields</b> that can fill them (right) — one element can be filled by different fields, and one field
-        can fill different elements. <b>Hover an element or a field</b> to see its connections.
-        Solid = bound in a component today &middot; dashed = possible fill.</div>
+      <div class="dc-cap" style="padding-top:8px"><b>Semantic elements</b> (center) — units of meaning aggregated from the
+        <b>video &rarr; frame &rarr; instance</b> pipeline along time / camera / identity — connect many-to-many with the
+        <b>data fields</b> that fill them (right). Each element renders through a <b>Format</b> (click a chip in its strip)
+        and a <b>Layout</b> (standalone / overlay glyphs). <b>Hover</b> to see connections + the components using it;
+        <b>click</b> to lock. Solid = bound today &middot; dashed = possible fill.</div>
       <div class="dc-anchors" id="elAnchors"></div>
       <div class="dc-summary" id="elSummary"></div>
     </div>
@@ -3625,6 +3648,7 @@ function v2Card(v,opt){
     +(hasMap?'<svg class="dc-maplines" aria-hidden="true"></svg>':'')
     +`<div class="dc-left"><div class="modlive">${comp}</div>`
       +`<div class="dc-modes">${v.modes.map(m=>`<span class="dc-mode">${m}</span>`).join('')}</div>`
+      +((typeof SEL2UI!=='undefined'&&SEL2UI[v.id])?`<div class="dc-modes dc-recipe">${recipeOf(v.id).map(r=>`<span class="dc-mode dc-rcp">${r.key}</span>`).join('')}</div>`:'')
       +`<div class="dc-meta"><span class="dc-id">${v.id}</span></div>`
       +noteHtml
     +`</div>`
@@ -3644,7 +3668,7 @@ function v2Card(v,opt){
 const MAPLINES={
   'C-AGENT':[
     {sel:'.aghome .agcard .agthumb', fld:'thumb_grad', color:'#9cc3f5'},
-    {sel:'.aghome .agcard .agalert', fld:'priority',   color:'#ff9a9a'},
+    {sel:'.aghome .agcard .agalert', fld:'agent_priority', color:'#ff9a9a'},
     {sel:'.aghome .agcard .agpill',  fld:'state.w',    color:'#7eecc4'},
     {sel:'.aghome .agcard .agsub',   fld:'last_run_ts',color:'#c4b3f0'},
     {sel:'.aghome .agname',          fld:'name',       color:'#cdd9ea'}
@@ -3656,9 +3680,10 @@ const MAPLINES={
   ],
   'C-FEED':[
     {sel:'.chips2 .fc.on',      fld:'event_count', color:'#9cc3f5'},
-    {sel:'.chips2 .fc:not(.on)',fld:'categories[]',color:'#93a3bd'},
-    {sel:'.feedrow .ft',        fld:'event_ts',    color:'#7eecc4'},
-    {sel:'.feedrow .fm',        fld:'vlm_insight', color:'#c4b3f0'},
+    {sel:'.chips2 .fc:not(.on)',fld:'event_tags[]',color:'#93a3bd'},
+    {sel:'.feedrow .thumb',     fld:'event_resources', color:'#9cc3f5'},
+    {sel:'.feedrow .ft',        fld:'vlm_insight', color:'#7eecc4'},
+    {sel:'.feedrow .fm',        fld:'event_ts',    color:'#c4b3f0'},
     {sel:'.feedrow .etag',      fld:'tag_conf',    color:'#f3cd86'}
   ],
   'C-RECAP':[
@@ -3670,7 +3695,7 @@ const MAPLINES={
     {sel:'.ml-pon',      fld:'power_on',       color:'#7eecc4'},
     {sel:'.ml-poff',     fld:'power_off',      color:'#9cc3f5'},
     {sel:'.ml-talk',     fld:'talk_session_id',color:'#c4b3f0'},
-    {sel:'.ml-devstate', fld:'power_state',    color:'#f3cd86'}
+    {sel:'.ml-devstate', fld:'is_on',          color:'#f3cd86'}
   ],
   'C-READOUT':[
     {sel:'.ml-value', fld:'value',      color:'#7eecc4'},
@@ -3679,7 +3704,8 @@ const MAPLINES={
     {sel:'.cv',       fld:'confidence', color:'#f3cd86'}
   ],
   'C-SOS':[
-    {sel:'.sosc .sosc-name',   fld:'name',     color:'#9cc3f5'}
+    {sel:'.sosc .sosc-name',   fld:'name',     color:'#9cc3f5'},
+    {sel:'.sosc-acts .sosc-act',fld:'method',   color:'#c4b3f0'}
   ],
   'C-GROUPED':[
     {sel:'.gcard-thumb', fld:'thumbnail_url', color:'#34d399'},
@@ -3691,7 +3717,8 @@ const MAPLINES={
   'C-STRIP':[
     {sel:'.estrip .ethumb',     fld:'event_resources', color:'#9cc3f5'},
     {sel:'.estrip .ethumb-tag', fld:'tag_list',        color:'#7eecc4'},
-    {sel:'.estrip .ethumb-t',   fld:'event_ts',        color:'#f3cd86'}
+    {sel:'.estrip .ethumb-t',   fld:'event_ts',        color:'#f3cd86'},
+    {sel:'.ml-count',           fld:'event_count',     color:'#f3cd86'}
   ],
   'C-DAYTREND':[
     {sel:'.scrub .seg', fld:'event_ts',  color:'#9cc3f5'},
@@ -3731,6 +3758,7 @@ const MAPLINES={
   'C-RECVIDEO':[
     {sel:'.scrub .seg', fld:'event_ts',          color:'#9cc3f5'},
     {sel:'.scrub .pin', fld:'playhead',          color:'#f3cd86'},
+    {sel:'.vname',      fld:'device_name',       color:'#7eecc4'},
     {sel:'.videobox',   fld:'continuous_record', color:'#ff9a9a'}
   ],
   'C-SNAP':[
@@ -3744,7 +3772,8 @@ const MAPLINES={
     {sel:'.lapse .videobox', fld:'frame_sequence', color:'#9cc3f5'},
     {sel:'.vname',      fld:'device_name',    color:'#7eecc4'},
     {sel:'.vtime',      fld:'frame_day',      color:'#f3cd86'},
-    {sel:'.ld2',        fld:'frame_count',    color:'#93a3bd'}
+    {sel:'.ld2',        fld:'lapse_frames',   color:'#93a3bd'},
+    {sel:'.lapsetrack b',fld:'playhead',      color:'#f3cd86'}
   ],
   'C-GALLERY':[
     {sel:'.gallery .gcell',      fld:'thumbnail_url', color:'#9cc3f5'},
@@ -3764,6 +3793,7 @@ const MAPLINES={
     {sel:'.logrow .ld', fld:'delta',       color:'#f3cd86'}
   ],
   'C-VISIT':[
+    {sel:'.tsrow .tn',      fld:'timestamp_ms',     color:'#9cc3f5'},
     {sel:'.tsrow .tm',      fld:'timestamp_ms',     color:'#9cc3f5'},
     {sel:'.tsrow .cliptip', fld:'thumbnail_url',    color:'#c4b3f0'},
     {sel:'.tsrow .ctg',     fld:'clip_url',         color:'#7eecc4'},
@@ -3800,8 +3830,8 @@ const FIELD_STATUS={
     // GET /api/agents (agent_id, identity.name, provenance.template_id, triggers) +
     // GET /api/household/visual-memories (runs[].status_line/relevance_score/created_at).
     // No agents/{id}/state or /thumb endpoint, no icon/priority field today.
-    have:    ['agent_id','name','template_id','triggers','last_run_ts','status_line','relevance_score'],
-    missing: ['icon','priority','state.w','state.c','fresh','thumb_grad','signal_type']
+    have:    ['agent_id','name','template_id','triggers','status_line','relevance_score'],
+    missing: ['icon','agent_priority','state.w','state.c','fresh','thumb_grad','signal_type','last_run_ts']
   },
   'C-STATE':{
     // Present-tense state is the VLM status_line from visual-memories (freetext);
@@ -3812,7 +3842,7 @@ const FIELD_STATUS={
   'C-FEED':{
     // events/filter (event_ts, tag_list, event_resources) + events/insights (vlm_insight)
     // + events/tags (categories). No per-tag confidence or root event_count on filter.
-    have:    ['event_ts','tag_list','event_resources','vlm_insight','categories[]'],
+    have:    ['event_ts','tag_list','event_resources','vlm_insight','event_tags[]'],
     missing: ['tag_conf','event_count']
   },
   'C-RECAP':{
@@ -3823,7 +3853,7 @@ const FIELD_STATUS={
   'C-ACT':{
     // power_on / power_off / power_status (is_on) exist. No two-way-talk endpoint,
     // and power_status has no last_change_ts.
-    have:    ['power_on','power_off','power_state'],
+    have:    ['power_on','power_off','is_on'],
     missing: ['talk_session_id','last_change_ts']
   },
   'C-READOUT':{
@@ -3852,8 +3882,8 @@ const FIELD_STATUS={
     missing: ['peak','now_marker']
   },
   'C-MONTHTREND':{
-    // eventgroups/digest gives date + total_events; per-day cells derive from event_ts.
-    have:    ['date','total_events','daily_count'],
+    // eventgroups/digest gives date + total_events; per-day cells are binned in the UI from event_ts.
+    have:    ['date','total_events'],
     missing: []
   },
   'C-INSIGHT':{
@@ -3864,14 +3894,14 @@ const FIELD_STATUS={
   'C-TILES':{
     // devices/home (device_name, is_online) + eventgroups.event_count.
     // Camera vitals (pulse/temp) are not available.
-    have:    ['device_name','is_online','event_count','online_count','alerts_count'],
-    missing: ['vitals','uptime']
+    have:    ['device_name','is_online','event_count'],
+    missing: ['vitals','uptime','online_count','alerts_count']
   },
   'C-ASSIST':{
     // skills/suggest (name, rationale, instructions) is real; /api/chat is an SSE
     // stream (answer not a JSON field) and there is no suggested-questions endpoint.
-    have:    ['name','instructions','rationale','messages[]'],
-    missing: ['answer','suggestion']
+    have:    ['name','instructions','rationale','messages[]','suggestion'],
+    missing: ['answer']
   },
   'C-LEARN':{
     // GET /api/household/learnings → fact, category, confidence — all real.
@@ -3882,11 +3912,11 @@ const FIELD_STATUS={
   'C-LIVE':{      // stream_params + power_status are real; resolution/recording not returned
     have:['signaling_url','auth_token','ice_servers','is_on'], missing:['resolution','recording_time'] },
   'C-RECVIDEO':{  // activity scrub from events/filter event_ts; no 24/7 record index
-    have:['event_ts'], missing:['continuous_record','playhead'] },
+    have:['event_ts','device_name'], missing:['continuous_record','playhead'] },
   'C-SNAP':{      // capture_snapshot + thumbnails + eventgroup artifact overlays; VLM verdict conf derived
     have:['url','content_type','captured_at','bbox_xywh','video_description'], missing:['confidence'] },
   'C-TIMELAPSE':{ // device_name is real; no frame-sequence store at all
-    have:['device_name'], missing:['frame_sequence','frame_day','frame_count'] },
+    have:['device_name'], missing:['frame_sequence','frame_day','lapse_frames','playhead'] },
   'C-GALLERY':{   // eventgroups + reid identities
     have:['ai_tags','thumbnail_url','entity_type','image_url','identity_name','count'], missing:[] },
   'C-MULTIVIEW':{ // devices/home (device_name, is_online) + stream_params
@@ -3923,13 +3953,13 @@ const V25=[
   src:[
     {ep:'GET /api/agents',fields:['agent_id','name (identity.name)','template_id (provenance.template_id)','triggers']},
     {ep:'GET /api/household/visual-memories',fields:['status_line','relevance_score','last_run_ts (runs[].created_at)']},
-    {ep:'— not in API yet (no state/thumb endpoint, no icon/priority field)',fields:['state.w','state.c','fresh','thumb_grad','signal_type','icon','priority']}
+    {ep:'— not in API yet (no state/thumb endpoint, no icon/priority field)',fields:['state.w','state.c','fresh','thumb_grad','signal_type','icon','agent_priority']}
   ],
   use:'The agent\'s home-wall entry. A tappable widget showing the latest signal (rounded thumb), the current state (color pill), how recent it is, and the template name. Tap to open the agent panel. Renders identically in 7 card states: action required / needs attention / all clear / quiet / running / no runs / paused.'},
  // ——— Camera surfaces (4) ———
  {id:'C-LIVE',grp:'Camera surfaces',name:'Live view',primary:'M-LIVE',folds:['M-LIVE','M-PTZ'],modes:['live','pan / tilt / zoom'],use:'Real-time stream; PTZ controls when supported. Action controls render directly under this in a generated UI.'},
  {id:'C-RECVIDEO',grp:'Camera surfaces',name:'Continuous record',primary:'M-FOOTAGE',folds:['M-FOOTAGE'],modes:['24/7 scrub'],use:'The full continuous 24/7 record, scrubbable. (Standalone event-clip module dropped — clips live in Grouped clips.)'},
- {id:'C-SNAP',grp:'Camera surfaces',name:'Snapshot',primary:'M-SNAP',folds:['M-SNAP'],modes:['single still'],src:[{ep:'POST /api/devices/{mac}/capture_snapshot',fields:['url','content_type']},{ep:'POST /api/devices/thumbnails',fields:['captured_at']},{ep:'GET /api/eventgroups/{id}/artifact',fields:['bbox_xywh','video_description']}],use:'A single still frame on demand or on event. Annotated/fused overlays come from the eventgroup artifact.'},
+ {id:'C-SNAP',grp:'Camera surfaces',name:'Snapshot',primary:'M-SNAP',folds:['M-SNAP'],modes:['single still'],src:[{ep:'POST /api/devices/{mac}/capture_snapshot',fields:['url','content_type']},{ep:'POST /api/devices/thumbnails',fields:['captured_at']},{ep:'GET /api/eventgroups/{id}/artifact',fields:['bbox_xywh']},{ep:'POST /api/events/insights',fields:['video_description']}],use:'A single still frame on demand or on event. Annotated/fused overlays come from the eventgroup artifact.'},
  {id:'C-TIMELAPSE',grp:'Camera surfaces',name:'Time-lapse',primary:'M-TIMELAPSE',folds:['M-TIMELAPSE'],modes:['accelerated sequence'],use:'A long span compressed into an accelerated sequence.'},
  // ——— Collections (3) ———
  {id:'C-GALLERY',grp:'Collections',name:'Gallery',primary:'M-GALLERY',folds:['M-GALLERY'],modes:['browsable collection'],use:'A browsable image collection grouped by entity.'},
@@ -3937,7 +3967,7 @@ const V25=[
  {id:'C-GROUPED',grp:'Collections',name:'Grouped clips',primary:'M-REEL',folds:['M-REEL','M-GROUPS'],modes:['groups by event','score-ranked','clip thumbs'],src:[{ep:'GET /api/eventgroups',fields:['group_id','title','score','event_count','clip_urls']},{ep:'GET /api/eventgroups/{id}/artifact',fields:['gif_url','chips']}],use:'Clips bucketed into event groups like the home wall — title, clip count, score-ranked, with thumbnails. Replaces the highlight reel and clips-by-trigger.'},
  {id:'C-STRIP',grp:'Collections',name:'Event strip',primary:'M-CLIP',folds:['M-CLIP','M-GALLERY'],tag:'new',modes:['horizontal scroll','tag + time'],src:[{ep:'POST /api/events/filter',fields:['event_ts','tag_list','event_resources']},{ep:'POST /api/events/video_url',fields:['url']}],use:'A horizontally scrollable strip of recent event thumbnails — swipe along the timeline, tap a thumb to open its clip. Shows ~3 at a time with the next peeking in to signal there are more.'},
  // ——— Records & lists (4) ———
- {id:'C-FEED',grp:'Records & lists',name:'Event feed',primary:'M-FEED',folds:['M-FEED'],modes:['tagged cards','filter chips','load more'],src:[{ep:'POST /api/events/filter',fields:['event_ts','tag_list','event_resources']},{ep:'POST /api/events/insights',fields:['vlm_insight (video_description)']},{ep:'GET /api/events/tags',fields:['categories[] (event_tags)']},{ep:'— not on events/filter (UI-aggregated)',fields:['tag_conf','event_count']}],use:'AI-tagged event cards with filter chips — shows several rows with a More button to page further back.'},
+ {id:'C-FEED',grp:'Records & lists',name:'Event feed',primary:'M-FEED',folds:['M-FEED'],modes:['tagged cards','filter chips','load more'],src:[{ep:'POST /api/events/filter',fields:['event_ts','tag_list','event_resources']},{ep:'POST /api/events/insights',fields:['vlm_insight (video_description)']},{ep:'GET /api/events/tags',fields:['event_tags[]']},{ep:'— not on events/filter (UI-aggregated)',fields:['tag_conf','event_count']}],use:'AI-tagged event cards with filter chips — shows several rows with a More button to page further back.'},
  {id:'C-LOG',grp:'Records & lists',name:'Log / journal',primary:'M-LOG',folds:['M-LOG','M-JOURNAL'],modes:['running log','narrative journal'],src:[{ep:'GET /api/household/visual-memories',fields:['status_line','summary']},{ep:'GET /api/stories'}],use:'A timestamped record — a terse running log, or a narrative journal.'},
  {id:'C-VISIT',grp:'Records & lists',name:'Visit sheet',primary:'M-TIMESHEET',folds:['M-TIMESHEET'],modes:['arrival / departure rows'],src:[{ep:'POST /api/events/filter',fields:['event_ts','tag_list']},{ep:'GET /api/reid/identities/{id}/appearances',fields:['device_mac','timestamp_ms','thumbnail_url']}],use:'Attendance / visit verification — arrival, departure and dwell per subject.'},
  {id:'C-IDCARD',grp:'Records & lists',name:'Identity card',primary:'M-IDCARD',folds:['M-IDCARD'],modes:['recognized subject'],use:'A recognized-subject detail card (face / plate, last seen, appearances).'},
@@ -3952,10 +3982,10 @@ const V25=[
  // ——— AI (4) ———
  {id:'C-RECAP',grp:'AI',name:'AI recap (large)',primary:'M-RECAP',folds:['M-RECAP'],modes:['large narrative + tone'],src:[{ep:'GET /api/stories',fields:['title','narrative','tone']}],use:'An AI plain-language summary of a period, shown as a large readable block.'},
  {id:'C-INSIGHT',grp:'AI',name:'Insight',primary:'',folds:[],tag:'new',modes:['text only (large)','text + chart','text + stats / list','adjustable period'],src:[{ep:'GET /api/household/visual/digests/latest'},{ep:'POST /api/events/insights',fields:['vlm_insight']},{ep:'GET /api/stories',fields:['narrative','why_it_matters','tone']},{ep:'POST /api/events/filter',fields:['event_ts (chart series)']}],use:'The agent’s periodic finding — a large plain-text takeaway on its own, or text plus whatever fits — a chart, stat tiles, or a short list — synthesized from its goal, context and memory. (No single insights endpoint yet — composed from the visual digest, per-event VLM insights, stories, and event counts.) Delivery cadence (daily / weekly / monthly) is set per agent.'},
- {id:'C-ASSIST',grp:'AI',name:'Assistant + suggestions',primary:'',folds:[],tag:'new',modes:['ask · answer','suggestion chips','create-agent'],src:[{ep:'POST /api/chat (SSE stream)',fields:['answer (streamed tokens)']},{ep:'GET /api/chat/history',fields:['messages[]']},{ep:'POST /api/skills/suggest',fields:['name','instructions','rationale']},{ep:'— no suggested-questions endpoint',fields:['suggestion']}],use:'Ask-Home assistant — ask in plain language and get an answer with event / clip cards; offers categorized suggestion chips (insight / memory / config) and can propose a new agent to create.'},
+ {id:'C-ASSIST',grp:'AI',name:'Assistant + suggestions',primary:'',folds:[],tag:'new',modes:['ask · answer','suggestion chips','create-agent'],src:[{ep:'POST /api/chat (SSE stream)',fields:['answer (streamed tokens)']},{ep:'GET /api/chat/history',fields:['messages[]']},{ep:'POST /api/skills/suggest',fields:['name','instructions','rationale']},{ep:'GET /api/suggestions',fields:['suggestion (suggestions[].text)']}],use:'Ask-Home assistant — ask in plain language and get an answer with event / clip cards; offers categorized suggestion chips (insight / memory / config) and can propose a new agent to create.'},
  {id:'C-LEARN',grp:'AI',name:'Learnings card',primary:'',folds:[],tag:'new',modes:['2–3 recent learnings','confidence'],src:[{ep:'GET /api/household/learnings',fields:['fact','category','confidence']},{ep:'GET /api/household/visual/entities/{id}',fields:['page','recent_observations']}],use:'Surfaces 2–3 things the agent has recently learned or remembered (from the compiled household learnings + per-entity knowledge pages).'},
  // ——— Actions & alerts (3) ———
- {id:'C-ACT',grp:'Actions & alerts',name:'Quick actions',primary:'M-ACT',folds:['M-ACT','M-TALK'],modes:['power on / off','two-way talk'],src:[{ep:'POST /api/devices/{mac}/power_on',fields:['power_on (success)']},{ep:'POST /api/devices/{mac}/power_off',fields:['power_off (success)']},{ep:'GET /api/devices/{mac}/power_status',fields:['power_state (is_on)']},{ep:'— no two-way-talk endpoint yet',fields:['talk_session_id','last_change_ts']}],use:'A device action bar — power (on/off toggle icons) and two-way talk. In a generated UI this sits directly under the live view.'},
+ {id:'C-ACT',grp:'Actions & alerts',name:'Quick actions',primary:'M-ACT',folds:['M-ACT','M-TALK'],modes:['power on / off','two-way talk'],src:[{ep:'POST /api/devices/{mac}/power_on',fields:['power_on (success)']},{ep:'POST /api/devices/{mac}/power_off',fields:['power_off (success)']},{ep:'GET /api/devices/{mac}/power_status',fields:['is_on']},{ep:'— no two-way-talk endpoint yet',fields:['talk_session_id','last_change_ts']}],use:'A device action bar — power (on/off toggle icons) and two-way talk. In a generated UI this sits directly under the live view.'},
  {id:'C-DETER',grp:'Actions & alerts',name:'Deterrent',primary:'M-DETER',folds:['M-DETER'],modes:['siren / lights'],use:'A siren / lights deterrent action.'},
  {id:'C-REMINDER',grp:'Actions & alerts',name:'Reminder & schedule',primary:'M-REMINDER',folds:['M-REMINDER'],modes:['schedule','elapsed reminder'],src:[{ep:'GET /api/agents',fields:['triggers (schedule config)']},{ep:'GET /api/household/visual-memories',fields:['status_line']}],use:'A schedule or elapsed-time reminder (e.g. “trash day in 2h”, “not seen since 9am”).'},
  // ——— Escalation (grouped under Actions & alerts) ———
@@ -3968,7 +3998,7 @@ const MOD25={
  'C-STATE':`<div class="panel" style="text-align:center;padding:20px 12px 16px"><div class="ml-subj" style="font-size:9px;letter-spacing:1px;color:var(--dim);text-transform:uppercase;margin-bottom:7px">Garage door</div><div class="ml-state" style="font-size:36px;font-weight:800;letter-spacing:-1.5px;color:#7eecc4;line-height:1">CLOSED</div><div style="font-size:11px;color:var(--mut);margin-top:8px"><span class="ml-label">secure</span> &middot; <span class="ml-dur" style="font-family:var(--mono);color:#7eecc4;font-weight:700">3h 42m</span></div></div>`+cf15('confidence 0.96','tap to correct'),
  'C-FEED':`<div class="panel"><div class="ph"><b>Entry history</b></div><div class="chips2" style="margin-bottom:8px"><span class="fc on">All &middot; 24</span><span class="fc">Person &middot; 11</span><span class="fc">Vehicle &middot; 6</span><span class="fc">Pet &middot; 7</span></div>`+[['#f25c5c','Vehicle departed','8:02 AM &middot; &ldquo;a car backs out&rdquo;','VEHICLE&middot;92','#4f8ff022','#9cc3f5'],['#34d399','Person entered','7:55 AM &middot; &ldquo;someone walks up&rdquo;','PERSON&middot;88','#34d39922','#7eecc4'],['#f6b73c','Pet in the yard','7:31 AM &middot; &ldquo;a dog crosses&rdquo;','PET&middot;81','#f6b73c22','#f3cd86'],['#9cc3f5','Package dropped','7:12 AM &middot; &ldquo;a box by the door&rdquo;','PKG&middot;76','#a78bfa22','#c4b3f0']].map(([d,t,m,tag,bg,c])=>`<div class="feedrow"><div class="thumb"></div><div style="flex:1"><div class="ft">${t}</div><div class="fm">${m}</div></div><span class="etag" style="background:${bg};color:${c}">${tag}</span></div>`).join('')+`<button class="dc-more">More &middot; 20 earlier &rsaquo;</button></div>`,
  'C-GROUPED':`<div class="gcard"><div class="gcard-thumb" style="background:linear-gradient(150deg,#b1402f,#5a1c14)"><span class="gcard-gif">&#9654; GIF &middot; 0:06</span><div class="gcard-grad"></div><div class="gcard-info"><div class="gcard-title">Package delivery</div><div class="gcard-meta">3 clips &middot; Front door &middot; 2:14&ndash;2:17 PM</div></div></div></div>`+cf15('score 4/5','event-group ranking'),
- 'C-STRIP':`<div class="panel"><div class="ph"><b>Recent events</b><span style="font-size:9px;color:var(--dim)">24 today</span></div><div class="estrip">${[['#4f8ff0','#9cc3f5','PERSON','8:02'],['#34d399','#7eecc4','VEHICLE','7:55'],['#f6b73c','#f3cd86','PET','7:31'],['#a78bfa','#c4b3f0','PKG','7:12'],['#f25c5c','#ff9a9a','PERSON','6:40']].map(([g1,c,tag,t])=>`<div class="ethumb" style="background:linear-gradient(150deg,${g1}40,#0c1119)"><span class="ethumb-tag" style="color:${c};background:${c}26">${tag}</span><span class="ethumb-t">${t}</span></div>`).join('')}</div></div>`,
+ 'C-STRIP':`<div class="panel"><div class="ph"><b>Recent events</b><span class="ml-count" style="font-size:9px;color:var(--dim)">24 today</span></div><div class="estrip">${[['#4f8ff0','#9cc3f5','PERSON','8:02'],['#34d399','#7eecc4','VEHICLE','7:55'],['#f6b73c','#f3cd86','PET','7:31'],['#a78bfa','#c4b3f0','PKG','7:12'],['#f25c5c','#ff9a9a','PERSON','6:40']].map(([g1,c,tag,t])=>`<div class="ethumb" style="background:linear-gradient(150deg,${g1}40,#0c1119)"><span class="ethumb-tag" style="color:${c};background:${c}26">${tag}</span><span class="ethumb-t">${t}</span></div>`).join('')}</div></div>`,
  'C-DAYTREND':`<div class="panel"><div class="ph"><b>Today by hour</b><span class="delta up">&#9650; busier PM</span></div><div class="scrub" style="height:48px">${Array.from({length:24},(_,i)=>{const a=i>=16&&i<=18;const h=a?60+((i*17)%38):8+((i*13)%22);return `<div class="seg" style="height:${h}%;background:${a?'#f6b73c':'#3a5fa0'}"></div>`;}).join('')}<div class="pin" style="left:75%"></div><div class="axis"><span>12a</span><span>6a</span><span>12p</span><span>6p</span><span>now</span></div></div><div class="ngkey" style="margin-top:7px"><span><i style="background:#3a5fa0"></i>events / hr</span><span><i style="background:#f6b73c"></i>peak</span></div></div>`,
  'C-MONTHTREND':`<div class="panel"><div class="ph"><b class="ml-month">June</b><span class="ml-mtotal" style="font-size:9px;color:var(--dim);font-family:var(--mono)">142 events &middot; busiest Tue</span></div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;font-size:7px;color:var(--dim);text-align:center;margin-bottom:3px">${['S','M','T','W','T','F','S'].map(d=>`<span>${d}</span>`).join('')}</div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px">${Array.from({length:35},(_,i)=>{const day=i-1;const has=day>=1&&day<=30;const cnt=has?((i*7+3)%9):0;const op=has?Math.min(0.16+cnt/10,1).toFixed(2):0;return `<div class="${has?'ml-daycell':''}" style="aspect-ratio:1;border-radius:3px;display:grid;place-items:center;font-size:13px;font-weight:800;color:${cnt>5?'#04231a':'#cfe3ff'};background:${has?`rgba(56,198,219,${op})`:'transparent'}${day===18?';box-shadow:0 0 0 1.5px #fff inset':''}">${has?cnt:''}</div>`;}).join('')}</div><div style="display:flex;justify-content:flex-end;align-items:center;gap:4px;font-size:7.5px;color:var(--dim);margin-top:6px">less<i style="width:9px;height:9px;border-radius:2px;background:rgba(56,198,219,.3)"></i><i style="width:9px;height:9px;border-radius:2px;background:rgba(56,198,219,.6)"></i><i style="width:9px;height:9px;border-radius:2px;background:#38c6db"></i>more</div></div>`,
  'C-INSIGHT':`<div class="panel"><div class="ph"><b>Weekly insight</b><span class="recap"><span class="ai">AI</span></span></div><div class="insfind big">Front-door traffic is up <b style="color:#7eecc4">22%</b> this week — visits cluster <b style="color:#e9eef6">1&ndash;3 PM</b>, with Saturday the busiest day.</div><div class="trendbars" style="margin:11px 0 3px">${[40,62,55,78,48,90,70].map((h,i)=>`<div class="tb" style="height:${h}%;${i===5?'background:linear-gradient(#34d399,#1f7a5a)':''}"></div>`).join('')}</div><div class="trendx">${['M','T','W','T','F','S','S'].map(d=>`<span>${d}</span>`).join('')}</div></div>`,
@@ -4020,9 +4050,11 @@ const elScrubB=cls=>elMark(MOD25['C-DAYTREND'],cls);
 const elTrendB=cls=>elMark(MODFULL15['M-TREND'],cls);
 const elReadB=cls=>elMark(MOD25['C-READOUT'],cls);
 /* --- archetype groups (render order) --- */
-const EL_ARCHS=[['media','Media & thumbnails'],['time','Timestamps & durations'],['text','Text & titles'],
- ['tag','Tags & badges'],['chart','Charts & meters'],['num','Numbers & readouts'],
- ['conf','Confidence & scores'],['ident','Identity'],['status','Status & state'],['action','Actions & controls']];
+const EL_GROUPS=[['media-attr','Media attribute'],['media-corr','Media correspondence'],
+ ['state-agg','State aggregation'],['instance-agg','Instance aggregation'],['typecount-agg','Type-count aggregation'],
+ ['time-agg','Time aggregation'],['timestamps','Timestamps'],['priority-conf','Priority & confidence'],
+ ['compare','Compare'],['nametags','Name tags'],['chat','Chat'],['description','Description'],
+ ['devices','Devices'],['escalation','Escalation'],['schedule','Schedule']];
 /* --- the 74 elements: fld → {arch, label, desc, prev, ctx?} --- */
 const ELEMS={
  /* text */
@@ -4047,11 +4079,11 @@ const ELEMS={
  /* tag */
  'tag_list':{arch:'tag',label:'Event tag',desc:'Classifier tag on an event',prev:()=>elThumb('tag')},
  'tag_conf':{arch:'tag',label:'Tag + confidence',desc:'Tag chip with its classifier score',prev:()=>elFeedRow('etag')},
- 'categories[]':{arch:'tag',label:'Category chips',desc:'Available event categories for filtering',prev:()=>`<div class="chips2"><span class="fc on">All &middot; 24</span><span class="fc el-src">Person &middot; 11</span><span class="fc">Vehicle &middot; 6</span></div>`},
+ 'event_tags[]':{arch:'tag',label:'Event tag chips',desc:'Available event tags for filtering (events/tags)',prev:()=>`<div class="chips2"><span class="fc on">All &middot; 24</span><span class="fc el-src">Person &middot; 11</span><span class="fc">Vehicle &middot; 6</span></div>`},
  'ai_tags':{arch:'tag',label:'AI tag filter',desc:'AI-generated tags over a collection',prev:()=>`<div class="chips2"><span class="fc on el-src">All 6</span><span class="fc">New 2</span><span class="fc">Songbirds 4</span></div>`},
  'entity_type':{arch:'tag',label:'Entity type',desc:'Kind of recognized entity (species, person, vehicle)',prev:()=>`<div class="chips2"><span class="fc on">All 6</span><span class="fc">New 2</span><span class="fc el-src">Songbirds 4</span></div>`},
  'tone':{arch:'tag',label:'Tone badge',desc:'Overall tone of the recap period',prev:()=>`<div class="panel"><span class="pvbadge ml-tone el-src" style="background:#34d39922;color:#7eecc4;font-size:8px;display:inline-block">ALL CLEAR</span></div>`},
- 'priority':{arch:'tag',label:'Priority dot',desc:'Urgency marker on the widget timestamp',prev:()=>elAgentB('agalert')},
+ 'agent_priority':{arch:'tag',label:'Priority dot',desc:'Urgency marker on the widget timestamp',prev:()=>elAgentB('agalert')},
  'is_known_identity':{arch:'tag',label:'Known badge',desc:'Whether the subject matches a saved identity',prev:()=>elIdB('pvbadge')},
  'verify_status':{arch:'tag',label:'Verify status',desc:'Visit verification verdict',prev:()=>elTsRow('ds')},
  'category':{arch:'tag',label:'Learning category',desc:'What kind of learning was remembered',prev:()=>elLearnRow('fm')},
@@ -4064,7 +4096,7 @@ const ELEMS={
  'signaling_url':{arch:'media',label:'Live stream',desc:'WebRTC signaling for the live view',prev:()=>elLiveB('videobox'),ctx:{'C-LIVE':'hero stream','C-MULTIVIEW':'grid streams'}},
  'continuous_record':{arch:'media',label:'24/7 record',desc:'The continuous recording being scrubbed',prev:()=>elFootB('videobox')},
  'frame_sequence':{arch:'media',label:'Frame sequence',desc:'Stored daily frames compiled into the lapse',prev:()=>elLapseB('videobox')},
- 'clip_url':{arch:'media',label:'Event clip',desc:'Playable clip behind the row',prev:()=>elTsRow('ctg')},
+ 'clip_url':{arch:'media',label:'Event clip',desc:'Playable clip behind the row (backend field: url)',prev:()=>elTsRow('ctg')},
  'event_resources':{arch:'media',label:'Event media',desc:'Thumb / clip resources attached to an event',prev:()=>elThumb('ethumb')},
  'bbox_xywh':{arch:'media',label:'Detection box',desc:'Detector bounding box drawn on the frame',prev:()=>elSnapB('annbadge')},
  /* chart */
@@ -4084,13 +4116,13 @@ const ELEMS={
  'alerts_count':{arch:'num',label:'Alerts count',desc:'Items needing attention',prev:()=>elKpi('2','need attention')},
  'uptime':{arch:'num',label:'Uptime',desc:'Fleet availability over the window',prev:()=>elKpi('97%','uptime 7d')},
  'online_count':{arch:'num',label:'Online count',desc:'Devices online vs total',prev:()=>`<div class="panel"><div class="ph"><b>Fleet</b><span class="ml-fleet el-src" style="font-size:9px;color:#7eecc4">3 / 4 online</span></div></div>`},
- 'frame_count':{arch:'num',label:'Frame count',desc:'Frames captured so far in the lapse',prev:()=>`<div class="lapsebar"><div class="lp">${aIcon('<path d="M6 4l14 8-14 8z"/>')}</div><div class="lapsetrack"><i style="width:72%"></i><b style="left:72%"></b></div><div class="ld2 el-src">d47 / 47</div></div>`},
+ 'lapse_frames':{arch:'num',label:'Lapse frame count',desc:'Frames captured so far in the lapse',prev:()=>`<div class="lapsebar"><div class="lp">${aIcon('<path d="M6 4l14 8-14 8z"/>')}</div><div class="lapsetrack"><i style="width:72%"></i><b style="left:72%"></b></div><div class="ld2 el-src">d47 / 47</div></div>`},
  /* status */
  'state.w':{arch:'status',label:'State word',desc:'Current state as a single word',prev:()=>elState('state'),ctx:{'C-AGENT':'state pill','C-STATE':'36px state word'}},
  'is_online':{arch:'status',label:'Online status',desc:'Device connectivity pill',prev:()=>elDevTile('pill'),ctx:{'C-TILES':'fleet tile','C-MULTIVIEW':'cell dot'}},
  'is_on':{arch:'status',label:'Camera on/off',desc:'Whether the camera is powered and streaming',prev:()=>elLiveB('vname')},
- 'power_state':{arch:'status',label:'Device power state',desc:'Confirmed plug / device power readback',prev:()=>`<div class="ml-devstate el-src" style="font-size:9px;color:#7eecc4">&#9679; Plug is ON &middot; confirmed 1s ago</div>`},
  /* conf */
+ 'method':{arch:'action',label:'Contact method',desc:'How the escalation contact is reached (call / text) — no escalation-tree store yet',prev:()=>''},
  'confidence':{arch:'conf',label:'Confidence value',desc:'Model confidence for the shown verdict',prev:()=>elMark(cf15('confidence 0.96','tap to correct'),'cv'),ctx:{'C-STATE':'state read','C-READOUT':'VLM read','C-LEARN':'learning','C-SNAP':'verdict'}},
  'match_confidence':{arch:'conf',label:'Match confidence',desc:'Identity-match certainty',prev:()=>elMark(cf15('confidence 0.93','match &middot; tap to relabel'),'cv')},
  'score':{arch:'conf',label:'Group score',desc:'Event-group ranking score',prev:()=>elMark(cf15('score 4/5','event-group ranking'),'cv')},
@@ -4131,160 +4163,267 @@ function deriveElements(){
   });
   return map;
 }
-/* ---- UI-element registry: 35 chip-level visual primitives (display order) ---- */
-const UIELS=[
- /* media */
- {id:'round-thumb',arch:'media',label:'Round signal thumb',desc:'Rounded latest-signal image in the agent widget',prev:()=>`<div class="agthumb-wrap"><div class="agthumb" style="background:linear-gradient(150deg,#10182b,#070b14)"><span class="agt-tag" style="background:#f25c5c22;color:#ff9a9a">PERSON</span></div></div>`},
- {id:'video-box',arch:'media',label:'Video surface',desc:'Large playable media surface — live, record, still or lapse',prev:()=>`<div class="hero" style="width:180px"><div class="videobox" style="background:linear-gradient(165deg,#1d2d49,#0f1828)"></div></div>`},
- {id:'full-card-cover',arch:'media',label:'Full-card cover',desc:'Full-bleed cover image with info overlaid',prev:()=>`<div class="gcard-thumb" style="width:180px;background:linear-gradient(150deg,#2a3b58,#0d1626)"><div class="gcard-grad"></div></div>`},
- {id:'media-cell',arch:'media',label:'Small media cell',desc:'Small media cell in a strip, grid or row',prev:()=>`<div class="estrip" style="padding-bottom:0"><div class="ethumb" style="background:linear-gradient(150deg,#4f8ff040,#0c1119)"></div></div>`},
- {id:'identity-portrait',arch:'media',label:'Identity portrait',desc:'Square best-crop photo on the identity card',prev:()=>`<div class="idcard"><div class="pic"></div></div>`},
- {id:'detection-box',arch:'media',label:'Detection overlay',desc:'Bounding-box annotation drawn on the frame',prev:()=>`<div class="hero" style="width:180px"><div class="videobox" style="background:linear-gradient(165deg,#2c3d5b,#0d1626)"><div class="annbox" style="left:16%;top:24%;width:64%;height:50%"></div><div class="annbadge" style="left:16%;top:24%">garage door</div></div></div>`},
- /* time */
- {id:'time-caption',arch:'time',label:'Time caption',desc:'Small absolute or relative time label',prev:()=>`<div class="logrow" style="border-top:0;padding:0;justify-content:flex-start"><span class="lt" style="font-size:11px">2:00 PM &middot; 2m ago</span></div>`},
- {id:'duration-readout',arch:'time',label:'Duration readout',desc:'Bold mono elapsed-time value',prev:()=>`<span class="ml-dur" style="font-family:var(--mono);color:#7eecc4;font-weight:700;font-size:15px">3h 42m</span>`},
- {id:'media-time-overlay',arch:'time',label:'Media time overlay',desc:'Tiny clock / day chip on media chrome',prev:()=>`<span class="vtime" style="position:static;display:inline-block">14:09</span>`},
- /* text */
- {id:'card-title',arch:'text',label:'Card title',desc:'Bold heading of a panel or card',prev:()=>`<b style="font-size:13px;color:var(--ink)">Morning recap</b>`},
- {id:'narrative-block',arch:'text',label:'Narrative block',desc:'Large AI plain-language text block',prev:()=>`<div style="font-size:15px;line-height:1.5;font-weight:600;color:#e9eef6">Slept <b style="color:#9cc3f5">10h 4m</b> with 2 brief wakings.</div>`},
- {id:'row-headline',arch:'text',label:'Row headline',desc:'Bold first line of a list row',prev:()=>`<div class="feedrow" style="border-top:0;padding:0"><div style="flex:1"><div class="ft">Vehicle departed</div></div></div>`},
- {id:'caption-line',arch:'text',label:'Caption / meta line',desc:'Dim secondary line under a headline',prev:()=>`<div class="feedrow" style="border-top:0;padding:0"><div style="flex:1"><div class="fm">8:02 AM &middot; &ldquo;a car backs out&rdquo;</div></div></div>`},
- {id:'status-line',arch:'text',label:'Status line',desc:'One-line present-tense status sentence',prev:()=>`<div class="logrow" style="border-top:0;padding:0;justify-content:flex-start"><span class="lv">Door closed (3h)</span></div>`},
- {id:'suggestion-chip',arch:'text',label:'Suggestion chip',desc:'Tappable suggested-question chip',prev:()=>`<div class="suglist"><div class="sugq"><span class="sugq-t">What did I miss today?</span><span class="sugq-go">&rarr;</span></div></div>`},
- /* tag */
- {id:'filter-chip',arch:'tag',label:'Filter chip row',desc:'Category filter chips with counts',prev:()=>`<div class="chips2" style="margin:0"><span class="fc on">All &middot; 24</span><span class="fc">Person &middot; 11</span></div>`},
- {id:'tag-badge',arch:'tag',label:'Tag badge',desc:'Classifier tag chip on a row or thumb',prev:()=>`<span class="etag" style="background:#4f8ff022;color:#9cc3f5;margin-left:0;display:inline-block">VEHICLE&middot;92</span>`},
- {id:'verdict-badge',arch:'tag',label:'Verdict badge',desc:'Small uppercase verdict pill',prev:()=>`<span class="pvbadge" style="background:#34d39922;color:#7eecc4;display:inline-block">ALL CLEAR</span>`},
- {id:'priority-dot',arch:'tag',label:'Priority dot',desc:'Urgency marker dot',prev:()=>`<span class="agalert" style="position:static;display:inline-block;width:13px;height:13px;border:none;background:#f25c5c"></span>`},
- /* chart */
- {id:'activity-bars',arch:'chart',label:'Activity bars',desc:'Binned bar series over time',prev:()=>`<div class="scrub" style="height:38px">`+Array.from({length:20},(_,i)=>{const a=i>=12&&i<=14;return `<div class="seg" style="height:${a?62+(i%3)*12:10+((i*13)%22)}%;background:${a?'#f6b73c':'#3a5fa0'}"></div>`;}).join('')+`</div>`},
- {id:'scrub-pin',arch:'chart',label:'Scrub pin',desc:'Position marker on a time axis',prev:()=>`<div class="scrub" style="height:30px"><div class="pin" style="left:55%"></div></div>`},
- {id:'delta-callout',arch:'chart',label:'Delta callout',desc:'Change indicator vs the prior period',prev:()=>`<span class="delta up" style="margin-left:0">&#9650; 22%</span>`},
- {id:'calendar-day-cell',arch:'chart',label:'Calendar day cell',desc:'Per-day count cell in a month grid',prev:()=>`<div class="ml-daycell" style="width:36px;aspect-ratio:1;border-radius:4px;display:grid;place-items:center;font-size:14px;font-weight:800;color:#04231a;background:rgba(56,198,219,.85)">8</div>`},
- /* num */
- {id:'number-readout',arch:'num',label:'Number readout',desc:'Giant value + unit + meter label',prev:()=>`<div class="readout" style="padding:0;text-align:left"><div class="rn" style="font-size:30px">04857<span style="font-size:15px;color:var(--mut);letter-spacing:0"> kWh</span></div></div>`},
- {id:'kpi-tile',arch:'num',label:'KPI tile',desc:'Big-number stat tile',prev:()=>elKpi('38','events today')},
- {id:'stat-chip',arch:'num',label:'Stat chip',desc:'Small mono summary stat',prev:()=>`<span style="font-size:10.5px;color:#7eecc4;font-family:var(--mono)">3 / 4 online</span>`},
- /* conf */
- {id:'confidence-readout',arch:'conf',label:'Confidence readout',desc:'Confidence / score block',prev:()=>elMark(cf15('confidence 0.96','tap to correct'),'cv')},
- /* ident */
- {id:'name-label',arch:'ident',label:'Name label',desc:'Standalone person / agent / subject name',prev:()=>`<div class="agname" style="margin:0;justify-content:flex-start">Night Watcher</div>`},
- {id:'cell-label',arch:'ident',label:'Tile / cell label',desc:'Name label inside a tile or media cell',prev:()=>`<div class="gt-top">Garage cam</div>`},
- /* status */
- {id:'state-pill',arch:'status',label:'State pill',desc:'Compact colored state pill',prev:()=>agPill('PERSON &middot; 2m','#f25c5c')},
- {id:'state-word',arch:'status',label:'Large state word',desc:'Large state word',prev:()=>`<div class="ml-state" style="font-size:32px;font-weight:800;letter-spacing:-1.5px;color:#7eecc4;line-height:1">CLOSED</div>`},
- {id:'online-pill',arch:'status',label:'Online indicator',desc:'Connectivity dot pill',prev:()=>`<span class="gt-pill" style="color:#34d399;background:#34d3991f"><span class="gt-dot" style="background:#34d399"></span>online</span>`},
- {id:'video-title-overlay',arch:'status',label:'Video title overlay',desc:'Camera-name overlay on media chrome',prev:()=>`<span class="vname" style="position:static;display:inline-block">Front cam &middot; online</span>`},
- /* action */
- {id:'action-button',arch:'action',label:'Action button',desc:'Tappable command button',prev:()=>`<div class="actions" style="max-width:150px"><div class="act primary"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>Power on</div></div>`},
+/* ---- field typing: makes element<->field compatibility computable ---- */
+const FIELD_META={
+ signaling_url:'media',url:'media',clip_url:'media',thumbnail_url:'media',gif_url:'media',event_resources:'media',
+ continuous_record:'media',frame_sequence:'media',thumb_grad:'media',image_url:'media',
+ event_ts:'time',captured_at:'time',created_at:'time',timestamp_ms:'time',last_recognized_ts:'time',last_run_ts:'time',
+ recording_time:'time',frame_day:'time',date:'time','state.since_ts':'time',now_marker:'time',playhead:'time',triggers:'time',
+ event_count:'count',count:'count',total_events:'count',daily_count:'count',alerts_count:'count',online_count:'count',lapse_frames:'count',
+ value:'number',uptime:'number',trend_delta:'number',delta:'number',peak:'number',
+ 'state.w':'state',status_line:'state',tone:'state',verify_status:'state',
+ is_on:'bool',is_online:'bool',is_known_identity:'bool',
+ confidence:'score',match_confidence:'score',score:'score',agent_priority:'score',tag_conf:'score',
+ tag_list:'id',ai_tags:'id','event_tags[]':'id',entity_type:'id',category:'id',
+ vlm_insight:'text',video_description:'text',title:'text',narrative:'text',fact:'text',suggestion:'text',
+ name:'text',identity_name:'text',device_name:'text',attributes:'text',unit:'text',meter_label:'text',
+ bbox_xywh:'geometry',
+ power_on:'command',power_off:'command',talk_session_id:'command',siren:'command',lights:'command',method:'command',
+};
+/* ---- the 13 formats + per-format micro (strip) and stage (full) renderers ---- */
+const FORMATS=['text-large','text-medium','text-small','text-tagline','badge','dot','block','filter','thumb','surface','chart','bound-box','button'];
+function inMedia(html,anchor){
+  const pos={tl:'left:8px;top:8px',tr:'right:8px;top:8px',bl:'left:8px;bottom:8px',br:'right:8px;bottom:8px',center:'inset:0;display:grid;place-items:center'}[anchor||'bl'];
+  return `<div class="hero" style="width:200px"><div class="videobox" style="background:linear-gradient(165deg,#1d2d49,#0f1828)"><div style="position:absolute;${pos}">${html}</div></div></div>`;
+}
+const FMT_STAGE={
+ 'text-large':s=>`<div style="font-size:30px;font-weight:800;letter-spacing:-1.5px;color:${s.c||'#e9eef6'};line-height:1${s.mono?';font-family:var(--mono)':''}">${s.txt}</div>`,
+ 'text-medium':s=>`<div style="font-size:15px;line-height:1.5;font-weight:600;color:#e9eef6">${s.txt}</div>`,
+ 'text-small':s=>`<div style="font-size:12px;font-weight:600;color:var(--ink)">${s.txt}</div>`,
+ 'text-tagline':s=>`<div style="font-size:9.5px;letter-spacing:.4px;text-transform:uppercase;color:var(--mut)">${s.txt}</div>`,
+ 'badge':s=>agPill(s.tag||s.txt,s.c||'#9cc3f5'),
+ 'dot':s=>`<span style="display:inline-block;width:13px;height:13px;border-radius:50%;background:${s.c||'#34d399'}"></span>`,
+ 'block':s=>`<div class="tilegrid"><div class="gtile num"><b>${s.txt}</b><span>${s.sub||''}</span></div></div>`,
+ 'filter':s=>`<div class="chips2" style="margin:0"><span class="fc on">${s.tag||s.txt}</span><span class="fc">${s.sub||'&hellip;'}</span></div>`,
+ 'thumb':s=>`<div class="estrip" style="padding-bottom:0"><div class="ethumb" style="background:${s.grad||'linear-gradient(150deg,#4f8ff040,#0c1119)'}"></div></div>`,
+ 'surface':s=>`<div class="hero" style="width:180px"><div class="videobox" style="background:${s.grad||'linear-gradient(165deg,#1d2d49,#0f1828)'}"></div></div>`,
+ 'chart':s=>`<div class="scrub" style="height:34px">`+Array.from({length:16},(_,i)=>{const a=i>=9&&i<=11;return `<div class="seg" style="height:${a?60+(i%3)*12:12+((i*13)%20)}%;background:${a?'#f6b73c':'#3a5fa0'}"></div>`;}).join('')+`</div>`,
+ 'bound-box':s=>`<div class="hero" style="width:200px"><div class="videobox" style="background:linear-gradient(165deg,#2c3d5b,#0d1626)"><div class="annbox" style="left:18%;top:26%;width:60%;height:48%"></div><div class="annbadge" style="left:18%;top:26%">${s.tag||s.txt||''}</div></div></div>`,
+ 'button':s=>`<div class="actions" style="max-width:150px"><div class="act primary"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>${s.txt}</div></div>`,
+};
+const FMT_MICRO={
+ 'text-large':s=>`<b style="font-size:12px;font-weight:800;color:${s.c||'#e9eef6'}">${String(s.txt||'Aa').replace(/<[^>]*>/g,'').slice(0,6)}</b>`,
+ 'text-medium':s=>`<span style="font-size:10px;font-weight:600;color:#e9eef6">Aa</span>`,
+ 'text-small':s=>`<span style="font-size:9px;font-weight:600;color:var(--ink)">Aa</span>`,
+ 'text-tagline':s=>`<span style="font-size:7.5px;letter-spacing:.4px;text-transform:uppercase;color:var(--mut)">TAG</span>`,
+ 'badge':s=>`<span style="font-size:7.5px;font-weight:800;padding:1px 6px;border-radius:999px;color:${s.c||'#9cc3f5'};background:${(s.c||'#9cc3f5')}22">${String(s.tag||s.txt||'PILL').replace(/<[^>]*>/g,'').slice(0,9)}</span>`,
+ 'dot':s=>`<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${s.c||'#34d399'}"></span>`,
+ 'block':s=>`<span style="display:inline-grid;place-items:center;width:24px;height:15px;border:1px solid var(--line);border-radius:3px;background:var(--card);font-size:7.5px;font-weight:800;color:var(--ink)">12</span>`,
+ 'filter':s=>`<span style="font-size:7.5px;padding:1px 6px;border-radius:999px;border:1px solid #4f8ff066;color:#9cc3f5;background:#4f8ff014">All &middot; 4</span>`,
+ 'thumb':s=>`<span style="display:inline-block;width:21px;height:14px;border-radius:3px;background:${s.grad||'linear-gradient(150deg,#4f8ff040,#0c1119)'}"></span>`,
+ 'surface':s=>`<span style="display:inline-block;width:25px;height:15px;border-radius:3px;background:${s.grad||'linear-gradient(165deg,#1d2d49,#0f1828)'};border:1px solid #2a3a55"></span>`,
+ 'chart':s=>`<span style="display:inline-flex;gap:1px;align-items:flex-end;height:13px">`+[5,9,6,11,7,10].map(h=>`<i style="width:3px;height:${h}px;background:#3a5fa0;border-radius:1px"></i>`).join('')+`</span>`,
+ 'bound-box':s=>`<span style="display:inline-block;width:21px;height:14px;border-radius:3px;background:#0d1626;position:relative"><i style="position:absolute;left:4px;top:3px;width:11px;height:7px;border:1px dashed ${s.c||'#f6b73c'};border-radius:1px"></i></span>`,
+ 'button':s=>`<span style="font-size:7.5px;font-weight:700;padding:1.5px 7px;border-radius:5px;background:var(--blue);color:#fff">${String(s.txt||'Go').slice(0,6)}</span>`,
+};
+/* ---- the element registry: 24 semantic data units in 15 groups.
+   Element = a unit of meaning derived from the raw video > frame > instance
+   pipeline (aggregated along time / camera / identity / category dims);
+   Format + Layout are presentation axes; bindings derive from MAPLINES x SEL2UI. ---- */
+const EL_REGISTRY=[
+ /* media attribute */
+ {id:'media',grp:'media-attr',label:'Media',desc:'Raw visual data — stream, still, clip, lapse or animated preview',sig:'video/frame · none',formats:['surface','thumb','badge'],layouts:['standalone'],action:'open-clip',accepts:['media'],
+  sample:{txt:'&#9654; GIF',tag:'&#9654; GIF &middot; 0:06',c:'#e9eef6',grad:'linear-gradient(165deg,#1d2d49,#0f1828)'}},
+ {id:'portrait',grp:'media-attr',label:'Portrait',desc:'Best crop / avatar for an identity, entity or device',sig:'identity · none',formats:['thumb'],layouts:['standalone'],action:'navigate',accepts:['media'],
+  sample:{grad:'linear-gradient(150deg,#b1402f,#5a1c14)'},stage:{thumb:s=>`<div class="idcard"><div class="pic"></div></div>`}},
+ /* media correspondence (anchored ON media) */
+ {id:'detection-marker',grp:'media-corr',label:'Detection marker',desc:'Bounding box + label anchored to the frame by detector geometry',sig:'instance · none',formats:['bound-box'],layouts:['overlay'],action:'correct',accepts:['geometry'],
+  modifier:{provenance:'detector',correctable:true},sample:{tag:'garage door',c:'#f6b73c'}},
+ {id:'time-cursor',grp:'media-corr',label:'Time cursor',desc:'Position marker on a time axis — now, playhead, scrub-to-moment',sig:'frame · none · time',formats:['chart'],layouts:['overlay'],action:'navigate',accepts:['time'],
+  sample:{},stage:{chart:s=>`<div class="scrub" style="height:30px"><div class="pin" style="left:55%"></div></div>`}},
+ /* state aggregation */
+ {id:'state',grp:'state-agg',label:'State',desc:'Current condition of a subject — word, pill, dot or sentence',sig:'identity/device/agent · state',formats:['text-large','badge','dot','text-small'],layouts:['standalone','overlay'],action:'open-chat',accepts:['state','bool'],
+  modifier:{provenance:'vlm',confidenceField:'confidence',correctable:true},sample:{txt:'CLOSED',tag:'PERSON &middot; 2m',c:'#7eecc4'}},
+ {id:'verdict',grp:'state-agg',label:'Verdict',desc:'AI judgment pill — tone, verification, known-identity',sig:'video/identity · state',formats:['badge'],layouts:['standalone','overlay'],action:'correct',accepts:['state','bool'],
+  modifier:{provenance:'vlm',correctable:true},sample:{tag:'ALL CLEAR',c:'#7eecc4'}},
+ {id:'measurement',grp:'state-agg',label:'Measurement',desc:'Value + unit read from the scene (VLM, no OCR endpoint)',sig:'device · state',formats:['block','text-large'],layouts:['standalone'],action:'correct',accepts:['number','text'],
+  modifier:{provenance:'vlm',confidenceField:'confidence',correctable:true},sample:{txt:'04857',sub:'kWh &middot; gas meter',c:'#5fd0e0',mono:true},
+  stage:{block:s=>`<div class="readout" style="padding:0;text-align:left"><div class="rn" style="font-size:30px">${s.txt}<span style="font-size:15px;color:var(--mut);letter-spacing:0"> kWh</span></div><div class="ru" style="font-size:10px;color:var(--mut)">${s.sub||''}</div></div>`}},
+ {id:'duration',grp:'state-agg',label:'Duration',desc:'Elapsed time in state — derived from state-change timestamps',sig:'identity/device · duration · time',formats:['text-large','text-small','badge'],layouts:['standalone'],action:'none',accepts:['time','number'],
+  sample:{txt:'3h 42m',c:'#7eecc4',mono:true},stage:{'text-large':s=>`<span style="font-family:var(--mono);color:${s.c};font-weight:700;font-size:24px">${s.txt}</span>`}},
+ /* instance aggregation */
+ {id:'category-tag',grp:'instance-agg',label:'Category tag',desc:'Classifier tag on one instance (person / vehicle / pet)',sig:'instance · none · category',formats:['badge','text-tagline'],layouts:['standalone','overlay'],action:'filter',accepts:['id','score'],
+  modifier:{provenance:'detector',confidenceField:'tag_conf'},sample:{tag:'VEHICLE&middot;92',c:'#9cc3f5'}},
+ {id:'category-count',grp:'instance-agg',label:'Category count',desc:'Instances grouped + counted per category — the filter row',sig:'category · count · category',formats:['filter','badge','chart'],layouts:['standalone'],action:'filter',accepts:['id','count'],
+  sample:{tag:'All &middot; 24',sub:'Person &middot; 11'}},
+ /* type-count aggregation */
+ {id:'instance-count',grp:'typecount-agg',label:'Instance count',desc:'How many — events, devices online, frames, sightings',sig:'instance/device · count',formats:['block','text-small','badge','text-tagline'],layouts:['standalone','overlay'],action:'navigate',accepts:['count'],
+  sample:{txt:'38',sub:'events today'}},
+ /* time aggregation */
+ {id:'activity-series',grp:'time-agg',label:'Activity series',desc:'Counts binned over time — hour bars, week bars, month calendar',sig:'instance · count/distribution · time',formats:['chart'],layouts:['standalone'],action:'navigate',accepts:['time','count'],
+  sample:{}},
+ /* timestamps */
+ {id:'timestamp',grp:'timestamps',label:'Timestamp',desc:'A moment — absolute (2:00 PM), relative (2m ago), span or clock',sig:'any · none · time',formats:['text-small','text-tagline'],layouts:['standalone','overlay'],action:'navigate',accepts:['time'],
+  sample:{txt:'2:00 PM &middot; 2m ago'}},
+ /* priority & confidence */
+ {id:'priority-marker',grp:'priority-conf',label:'Priority marker',desc:'Urgency / ranking — agent alert level, group score',sig:'agent/instance · none · score',formats:['dot','badge'],layouts:['standalone','overlay'],action:'navigate',accepts:['score'],
+  sample:{c:'#f25c5c',tag:'P1'}},
+ {id:'provenance',grp:'priority-conf',label:'Provenance &amp; confidence',desc:'Attachable modifier — model confidence + tap-to-correct on any AI-derived element',sig:'modifier · score',formats:['block','text-tagline','badge'],layouts:['standalone'],action:'correct',accepts:['score'],
+  sample:{txt:'confidence 0.96',sub:'tap to correct'},stage:{block:s=>cf15('confidence 0.96','tap to correct')}},
+ /* compare */
+ {id:'trend-delta',grp:'compare',label:'Trend delta',desc:'Change vs the prior period — or the peak callout',sig:'instance · trend · time',formats:['badge','text-small'],layouts:['standalone'],action:'open-chat',accepts:['number'],
+  sample:{tag:'&#9650; 22%',c:'#7eecc4'},stage:{badge:s=>`<span class="delta up" style="margin-left:0">${s.tag}</span>`}},
+ /* name tags */
+ {id:'name-tag',grp:'nametags',label:'Name tag',desc:'Agent / instance / object / device name',sig:'agent/identity/device · none',formats:['text-tagline','text-small'],layouts:['standalone','overlay'],action:'navigate',accepts:['text'],
+  sample:{txt:'Night Watcher'},stage:{'text-tagline':s=>`<div class="agname" style="margin:0;justify-content:flex-start">${s.txt}</div>`}},
+ {id:'attribute-tag',grp:'nametags',label:'Attribute tag',desc:'Identity / device attributes (species, descriptors, battery)',sig:'identity/device · none',formats:['text-tagline','badge'],layouts:['standalone'],action:'none',accepts:['text','bool'],
+  sample:{txt:'Cardinalis cardinalis'},stage:{'text-tagline':s=>`<div class="sci" style="font-style:italic;font-size:10px;color:var(--mut)">${s.txt}</div>`}},
+ /* chat */
+ {id:'narrative',grp:'chat',label:'Narrative',desc:'AI-synthesized prose over a period — tap opens the chat sheet',sig:'household/agent · narrative · time',formats:['text-medium','text-large','text-small'],layouts:['standalone'],action:'open-chat',accepts:['text'],
+  modifier:{provenance:'llm'},sample:{txt:'Slept <b style="color:#9cc3f5">10h 4m</b> with 2 brief wakings.'}},
+ {id:'suggestion',grp:'chat',label:'Suggestion',desc:'Proactive question / nudge — tap opens the chat sheet',sig:'agent · none',formats:['filter','text-small'],layouts:['standalone'],action:'open-chat',accepts:['text'],
+  sample:{tag:'What did I miss today?'},stage:{filter:s=>`<div class="suglist"><div class="sugq"><span class="sugq-t">${s.tag}</span><span class="sugq-go">&rarr;</span></div></div>`}},
+ /* description */
+ {id:'description',grp:'description',label:'Description',desc:'Factual VLM text about ONE media item — event or group',sig:'instance/video · narrative',formats:['text-small','text-medium','text-tagline'],layouts:['standalone','overlay'],action:'open-clip',accepts:['text'],
+  modifier:{provenance:'vlm'},sample:{txt:'Vehicle departed &mdash; &ldquo;a car backs out&rdquo;'}},
+ /* devices */
+ {id:'device-control',grp:'devices',label:'Device control',desc:'Command button — power, talk, siren, lights',sig:'device · none',formats:['button'],layouts:['standalone','overlay'],action:'control',accepts:['command'],
+  sample:{txt:'Power on'}},
+ /* escalation */
+ {id:'contact-action',grp:'escalation',label:'Contact action',desc:'Reach an escalation contact — call / text',sig:'household · none',formats:['button'],layouts:['standalone'],action:'control',accepts:['command'],
+  sample:{txt:'Call'},stage:{button:s=>`<div class="actions" style="max-width:120px"><div class="act"><span class="ai"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco.call}</svg></span>Call</div></div>`}},
+ /* schedule */
+ {id:'schedule-trigger',grp:'schedule',label:'Schedule trigger',desc:'Agent schedule / learned routine that fires checks and reminders',sig:'agent/identity · none · time',formats:['text-small','badge'],layouts:['standalone'],action:'navigate',accepts:['time'],
+  sample:{txt:'Every Tue &middot; 9&ndash;11 AM',tag:'TUE 9&ndash;11',c:'#f3cd86'}},
 ];
-/* ---- selector → UI element: translates every MAPLINES binding (verbatim sels).
+/* ---- selector -> (element, format, layout): translates every MAPLINES binding.
    MAPLINES stays the single source of truth for which solid pairs exist. ---- */
+const T=(el,fmt,lay)=>({el,fmt,lay:lay||'standalone'});
 const SEL2UI={
- 'C-AGENT':{'.aghome .agcard .agthumb':'round-thumb','.aghome .agcard .agalert':'priority-dot','.aghome .agcard .agpill':'state-pill','.aghome .agcard .agsub':'time-caption','.aghome .agname':'name-label'},
- 'C-STATE':{'.ml-state':'state-word','.ml-dur':'duration-readout','.cv':'confidence-readout'},
- 'C-FEED':{'.chips2 .fc.on':'filter-chip','.chips2 .fc:not(.on)':'filter-chip','.feedrow .ft':'row-headline','.feedrow .fm':'caption-line','.feedrow .etag':'tag-badge'},
- 'C-RECAP':{'.ml-title':'card-title','.ml-tone':'verdict-badge','.ml-narrative':'narrative-block'},
- 'C-ACT':{'.ml-pon':'action-button','.ml-poff':'action-button','.ml-talk':'action-button','.ml-devstate':'status-line'},
- 'C-READOUT':{'.ml-value':'number-readout','.ml-unit':'number-readout','.ml-meter':'number-readout','.cv':'confidence-readout'},
- 'C-SOS':{'.sosc .sosc-name':'name-label'},
- 'C-GROUPED':{'.gcard-thumb':'full-card-cover','.gcard-title':'card-title','.gcard-gif':'full-card-cover','.cv':'confidence-readout','.gcard-meta':'caption-line'},
- 'C-STRIP':{'.estrip .ethumb':'media-cell','.estrip .ethumb-tag':'tag-badge','.estrip .ethumb-t':'media-time-overlay'},
- 'C-DAYTREND':{'.scrub .seg':'activity-bars','.scrub .pin':'scrub-pin','.delta':'delta-callout'},
- 'C-MONTHTREND':{'.ml-month':'card-title','.ml-mtotal':'stat-chip','.ml-daycell':'calendar-day-cell'},
- 'C-INSIGHT':{'.insfind':'narrative-block','.trendbars .tb':'activity-bars'},
- 'C-TILES':{'.ml-fleet':'stat-chip','.tilegrid .gt-top':'cell-label','.tilegrid .gt-sub':'online-pill','.kpi0 b':'kpi-tile','.kpi1 b':'kpi-tile','.kpi2 b':'kpi-tile'},
- 'C-ASSIST':{'.sugq-t':'suggestion-chip'},
- 'C-LEARN':{'.learnrow .ft':'row-headline','.learnrow .fm':'caption-line','.learnrow .lconf':'confidence-readout'},
- 'C-LIVE':{'.videobox':'video-box','.vname':'video-title-overlay','.vtime':'media-time-overlay'},
- 'C-RECVIDEO':{'.scrub .seg':'activity-bars','.scrub .pin':'scrub-pin','.videobox':'video-box'},
- 'C-SNAP':{'.videobox':'video-box','.annbadge':'detection-box','.fsub':'time-caption','.fs':'caption-line','.cv':'confidence-readout'},
- 'C-TIMELAPSE':{'.lapse .videobox':'video-box','.vname':'video-title-overlay','.vtime':'media-time-overlay','.ld2':'stat-chip'},
- 'C-GALLERY':{'.gallery .gcell':'media-cell','.gallery .gcell span':'cell-label','.sig-coll':'stat-chip','.chips2 .fc.on':'filter-chip','.chips2 .fc:not(.on)':'filter-chip'},
- 'C-MULTIVIEW':{'.gallery .gcell':'cell-label','.gallery .gcell i':'online-pill','.sig-multi':'media-cell'},
- 'C-LOG':{'.logrow .lt':'time-caption','.logrow .lv':'status-line','.logrow .ld':'delta-callout'},
- 'C-VISIT':{'.tsrow .tm':'time-caption','.tsrow .cliptip':'media-cell','.tsrow .ctg':'media-cell','.tsrow .dd':'duration-readout','.tsrow .ds':'verdict-badge','.cv':'confidence-readout'},
- 'C-IDCARD':{'.idcard .nm':'name-label','.idcard .sci':'caption-line','.idcard .pic':'identity-portrait','.idcard .meta':'time-caption','.pvbadge':'verdict-badge','.cv':'confidence-readout'},
- 'C-TREND':{'.trendbars .tb':'activity-bars','.delta':'delta-callout'},
- 'C-DETER':{'.act.danger':'action-button','.act:not(.danger)':'action-button'},
- 'C-REMINDER':{'.reminder b':'row-headline','.reminder span':'status-line'},
+ 'C-AGENT':{'.aghome .agcard .agthumb':T('media','thumb'),'.aghome .agcard .agalert':T('priority-marker','dot'),'.aghome .agcard .agpill':T('state','badge'),'.aghome .agcard .agsub':T('timestamp','text-tagline'),'.aghome .agname':T('name-tag','text-tagline')},
+ 'C-STATE':{'.ml-state':T('state','text-large'),'.ml-dur':T('duration','text-large'),'.cv':T('provenance','block')},
+ 'C-FEED':{'.chips2 .fc.on':T('category-count','filter'),'.chips2 .fc:not(.on)':T('category-count','filter'),'.feedrow .thumb':T('media','thumb'),'.feedrow .ft':T('description','text-small'),'.feedrow .fm':T('timestamp','text-tagline'),'.feedrow .etag':T('category-tag','badge')},
+ 'C-RECAP':{'.ml-title':T('description','text-small'),'.ml-tone':T('verdict','badge'),'.ml-narrative':T('narrative','text-medium')},
+ 'C-ACT':{'.ml-pon':T('device-control','button'),'.ml-poff':T('device-control','button'),'.ml-talk':T('device-control','button'),'.ml-devstate':T('state','text-small')},
+ 'C-READOUT':{'.ml-value':T('measurement','block'),'.ml-unit':T('measurement','block'),'.ml-meter':T('measurement','text-tagline'),'.cv':T('provenance','block')},
+ 'C-SOS':{'.sosc .sosc-name':T('name-tag','text-small'),'.sosc-acts .sosc-act':T('contact-action','button')},
+ 'C-GROUPED':{'.gcard-thumb':T('media','surface'),'.gcard-title':T('description','text-small','overlay'),'.gcard-gif':T('media','badge','overlay'),'.cv':T('priority-marker','badge'),'.gcard-meta':T('instance-count','text-tagline','overlay')},
+ 'C-STRIP':{'.estrip .ethumb':T('media','thumb'),'.estrip .ethumb-tag':T('category-tag','badge','overlay'),'.estrip .ethumb-t':T('timestamp','text-tagline','overlay'),'.ml-count':T('instance-count','text-small')},
+ 'C-DAYTREND':{'.scrub .seg':T('activity-series','chart'),'.scrub .pin':T('time-cursor','chart','overlay'),'.delta':T('trend-delta','badge')},
+ 'C-MONTHTREND':{'.ml-month':T('timestamp','text-small'),'.ml-mtotal':T('instance-count','text-small'),'.ml-daycell':T('activity-series','chart')},
+ 'C-INSIGHT':{'.insfind':T('narrative','text-medium'),'.trendbars .tb':T('activity-series','chart')},
+ 'C-TILES':{'.ml-fleet':T('instance-count','text-small'),'.tilegrid .gt-top':T('name-tag','text-tagline'),'.tilegrid .gt-sub':T('state','dot'),'.kpi0 b':T('instance-count','block'),'.kpi1 b':T('instance-count','block'),'.kpi2 b':T('measurement','block')},
+ 'C-ASSIST':{'.sugq-t':T('suggestion','filter')},
+ 'C-LEARN':{'.learnrow .ft':T('narrative','text-small'),'.learnrow .fm':T('category-tag','text-tagline'),'.learnrow .lconf':T('provenance','text-tagline')},
+ 'C-LIVE':{'.videobox':T('media','surface'),'.vname':T('state','text-small','overlay'),'.vtime':T('timestamp','text-tagline','overlay')},
+ 'C-RECVIDEO':{'.scrub .seg':T('activity-series','chart'),'.scrub .pin':T('time-cursor','chart','overlay'),'.vname':T('name-tag','text-tagline','overlay'),'.videobox':T('media','surface')},
+ 'C-SNAP':{'.videobox':T('media','surface'),'.annbadge':T('detection-marker','bound-box','overlay'),'.fsub':T('timestamp','text-tagline','overlay'),'.fs':T('description','text-small','overlay'),'.cv':T('provenance','block')},
+ 'C-TIMELAPSE':{'.lapse .videobox':T('media','surface'),'.vname':T('name-tag','text-tagline','overlay'),'.vtime':T('timestamp','text-tagline','overlay'),'.ld2':T('instance-count','text-small'),'.lapsetrack b':T('time-cursor','chart','overlay')},
+ 'C-GALLERY':{'.gallery .gcell':T('media','thumb'),'.gallery .gcell span':T('name-tag','text-tagline','overlay'),'.sig-coll':T('instance-count','badge'),'.chips2 .fc.on':T('category-count','filter'),'.chips2 .fc:not(.on)':T('category-count','filter')},
+ 'C-MULTIVIEW':{'.gallery .gcell':T('name-tag','text-tagline','overlay'),'.gallery .gcell i':T('state','dot','overlay'),'.sig-multi':T('media','badge')},
+ 'C-LOG':{'.logrow .lt':T('timestamp','text-small'),'.logrow .lv':T('state','text-small'),'.logrow .ld':T('trend-delta','text-small')},
+ 'C-VISIT':{'.tsrow .tn':T('timestamp','text-small'),'.tsrow .tm':T('timestamp','text-tagline'),'.tsrow .cliptip':T('media','thumb'),'.tsrow .ctg':T('media','badge','overlay'),'.tsrow .dd':T('duration','text-small'),'.tsrow .ds':T('verdict','badge'),'.cv':T('provenance','block')},
+ 'C-IDCARD':{'.idcard .nm':T('name-tag','text-small'),'.idcard .sci':T('attribute-tag','text-tagline'),'.idcard .pic':T('portrait','thumb'),'.idcard .meta':T('timestamp','text-tagline'),'.pvbadge':T('verdict','badge'),'.cv':T('provenance','block')},
+ 'C-TREND':{'.trendbars .tb':T('activity-series','chart'),'.delta':T('trend-delta','badge')},
+ 'C-DETER':{'.act.danger':T('device-control','button'),'.act:not(.danger)':T('device-control','button')},
+ 'C-REMINDER':{'.reminder b':T('schedule-trigger','text-small'),'.reminder span':T('state','text-small')},
 };
 /* ---- curated possible fills (dashed lines): same UI element, other plausible fields ---- */
 const POSSIBLE_PAIRS=[
- {ui:'round-thumb',fld:'thumbnail_url',why:'latest event-group still as the signal thumb'},
- {ui:'round-thumb',fld:'signaling_url',why:'grab a live frame for the signal thumb'},
- {ui:'round-thumb',fld:'gif_url',why:'animated signal thumb'},
- {ui:'video-box',fld:'thumbnail_url',why:'poster frame while the stream connects'},
- {ui:'video-box',fld:'clip_url',why:'event-clip playback in the same surface'},
- {ui:'media-cell',fld:'gif_url',why:'micro animated preview in a cell'},
- {ui:'identity-portrait',fld:'thumbnail_url',why:'best ReID-appearance crop as the photo'},
- {ui:'narrative-block',fld:'vlm_insight',why:'a single VLM insight as the large finding'},
- {ui:'state-word',fld:'power_state',why:'binary device power as the state word'},
+ {el:'portrait',fld:'thumbnail_url',why:'best ReID-appearance crop as the identity photo'},
+ {el:'narrative',fld:'vlm_insight',why:'a single VLM insight rendered as the large finding'},
 ];
 /* ---- consolidated right panel: every field exactly once, grouped by endpoint ---- */
 const FIELD_GROUPS=[
  {ep:'POST /api/devices/{mac}/stream_params',fields:['signaling_url']},
  {ep:'POST /api/devices/{mac}/capture_snapshot',fields:['url']},
  {ep:'POST /api/devices/thumbnails',fields:['captured_at']},
- {ep:'GET /api/eventgroups',fields:['thumbnail_url','ai_tags','score','event_count','alerts_count']},
- {ep:'GET /api/eventgroups/{id}/artifact',fields:['gif_url','bbox_xywh','video_description']},
- {ep:'POST /api/events/filter',fields:['event_ts','tag_list','event_resources','daily_count']},
+ {ep:'GET /api/eventgroups',fields:['thumbnail_url','ai_tags','score','event_count'],unused:[['clip_urls','up to 5 clip thumbs per group — could fill a filmstrip element'],['time_range','group start/end — span stamp on the group card']]},
+ {ep:'GET /api/eventgroups/{id}/artifact',fields:['gif_url','bbox_xywh'],unused:[['chips[].display_name','label for each detection crop — tag chip'],['chips[].relative_offset_ms','detection offset within the clip — scrub-to-moment pin']]},
+ {ep:'POST /api/events/filter',fields:['event_ts','tag_list','event_resources']},
  {ep:'POST /api/events/video_url',fields:['clip_url']},
- {ep:'POST /api/events/insights',fields:['vlm_insight']},
- {ep:'GET /api/events/tags',fields:['categories[]']},
- {ep:'GET /api/stories',fields:['title','narrative','tone']},
- {ep:'POST /api/eventgroups/digest',fields:['date','total_events']},
- {ep:'GET /api/household/visual-memories',fields:['status_line','last_run_ts','created_at']},
- {ep:'GET /api/household/learnings',fields:['fact','category','confidence']},
- {ep:'GET /api/agents',fields:['name','triggers']},
- {ep:'GET /api/reid/identities',fields:['identity_name','entity_type','image_url','attributes','is_known_identity','last_recognized_ts']},
+ {ep:'POST /api/events/insights',fields:['vlm_insight','video_description'],unused:[['description_title','short AI headline — card title above the insight body']]},
+ {ep:'GET /api/events/tags',fields:['event_tags[]']},
+ {ep:'GET /api/stories',fields:['title','narrative','tone'],unused:[['why_it_matters','one-line emphasis — highlighted callout under the narrative']]},
+ {ep:'POST /api/eventgroups/digest',fields:['date','total_events'],unused:[['highlights[]','top moments of the day — ranked digest rows'],['score_distribution','score-to-count map — busy-day mini chart']]},
+ {ep:'GET /api/household/visual-memories',fields:['status_line','created_at'],unused:[['summary','run summary prose — memory card body text'],['relevance_score','importance — score badge / dot'],['media_refs','snapshots captured during the run — evidence thumbs']]},
+ {ep:'GET /api/household/learnings',fields:['fact','category','confidence'],unused:[['reinforcement_count','times re-confirmed — seen-Nx counter chip']]},
+ {ep:'GET /api/agents',fields:['name','triggers'],unused:[['lifecycle_state','draft / active / paused — status pill on the agent card']]},
+ {ep:'GET /api/suggestions',fields:['suggestion'],unused:[['bubble_text','AI-narrator framing — proactive speech bubble']]},
+ {ep:'GET /api/reid/identities',fields:['identity_name','entity_type','image_url','attributes','is_known_identity','last_recognized_ts'],unused:[['device_coverage','per-camera sighting counts — mini bar meter on the ID card']]},
  {ep:'GET /api/reid/identities/{id}/appearances',fields:['timestamp_ms']},
- {ep:'GET /api/devices/home',fields:['device_name','is_online','online_count']},
- {ep:'GET /api/devices/{mac}/power_status',fields:['is_on','power_state']},
+ {ep:'GET /api/devices/home',fields:['device_name','is_online'],unused:[['thumbnail_ts','tile image age — recency stamp'],['is_battery','battery flag — badge, wake-vs-toggle control'],['icon_url','product icon — device glyph slot']]},
+ {ep:'GET /api/devices/{mac}/power_status',fields:['is_on'],unused:[['power_control','switchable vs wake_only — picks toggle or wake button']]},
  {ep:'POST /api/devices/{mac}/power_on &middot; power_off',fields:['power_on','power_off']},
- {ep:'&mdash; not in API yet',pseudo:true,fields:['thumb_grad','continuous_record','frame_sequence','recording_time','frame_day','suggestion','tag_conf','priority','value','unit','meter_label','frame_count','uptime','match_confidence','state.w','state.since_ts','talk_session_id','siren','lights']},
- {ep:'&mdash; derived in UI',pseudo:true,fields:['verify_status','now_marker','playhead','peak','trend_delta','delta','count']},
+ {ep:'GET /api/household/visual/entities',fields:[],unused:[['seen_count','sighting counter — seen-Nx chip on entity cards'],['representative_thumbnail_url','entity avatar — identity portrait']]},
+ {ep:'GET /api/household/visual/entities/{id}',fields:[],unused:[['schedule[]','learned routines (what / when / typical) — schedule rows']]},
+ {ep:'GET /api/household/house-profile',fields:[],unused:[['camera_facts[].description','VLM scene description — caption under the camera tile']]},
+ {ep:'GET /api/household/scene-profiles',fields:[],unused:[['primary_location','inferred location label — tag on camera tiles']]},
+ {ep:'GET /api/household/visual/digests/latest',fields:[],unused:[['headline','weekly what-I-learned line — digest banner']]},
+ {ep:'&mdash; not in API yet',pseudo:true,fields:['thumb_grad','continuous_record','frame_sequence','recording_time','frame_day','tag_conf','agent_priority','value','unit','meter_label','lapse_frames','uptime','match_confidence','state.w','state.since_ts','talk_session_id','siren','lights','method']},
+ {ep:'&mdash; derived in UI',pseudo:true,fields:['verify_status','now_marker','playhead','peak','trend_delta','delta','count','alerts_count','daily_count','online_count','last_run_ts']},
 ];
-var EL_PAIRS=[];   /* [{ui,fld,kind:'real'|'poss',color}] — array index = line id */
-var EL_UIINFO={};  /* ui → {compId:{flds:[…],sels:[…]}} — feeds the "Used in components" panel */
+var EL_PAIRS=[];   /* [{ui,fld,kind,color}] — ui = element id; array index = line id */
+var EL_UIINFO={};  /* el -> {compId:{flds:[],sels:[],triples:[]}} — feeds the side panel */
+function elStage(el,fmt,lay){
+  const f=(el.stage&&el.stage[fmt])?el.stage[fmt]:(FMT_STAGE[fmt]||FMT_STAGE['text-small']);
+  let html=f(el.sample||{});
+  if(lay==='overlay'&&fmt!=='surface'&&fmt!=='bound-box') html=inMedia(html,el.anchor);
+  return html;
+}
+const LAY_GLYPH={
+ standalone:'<svg width="14" height="11" viewBox="0 0 14 11" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="1" width="12" height="9" rx="2"/><path d="M4 5.5h6"/></svg>',
+ overlay:'<svg width="14" height="11" viewBox="0 0 14 11" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="1" width="12" height="9" rx="2"/><rect x="3" y="3" width="5" height="3.4" rx="1" fill="currentColor" stroke="none"/></svg>'
+};
+/* component recipe = dedup of its (element·format·layout) triples */
+function recipeOf(cid){
+  const seen={},out=[];
+  (MAPLINES[cid]||[]).forEach(m=>{const t=(SEL2UI[cid]||{})[m.sel]; if(!t)return;
+    const k=t.el+'&middot;'+t.fmt+'&middot;'+t.lay; if(!seen[k]){seen[k]=1;out.push({key:k,el:t.el});}});
+  return out;
+}
 function renderElCanvas(){
   const uiCol=document.getElementById('elUiCol'); if(!uiCol) return;
   const map=deriveElements();
-  /* flatten pairs: solid from MAPLINES × SEL2UI (deduped per ui→fld), then possible */
   EL_PAIRS=[]; const pairIdx={}, uiPairs={}, fldPairs={}, uiInfo={};
   Object.entries(MAPLINES).forEach(([cid,arr])=>arr.forEach(m=>{
-    const ui=(SEL2UI[cid]||{})[m.sel];
-    if(!ui){ console.warn('Elements: unmapped selector',cid,m.sel); return; }
-    const inf=(uiInfo[ui]||(uiInfo[ui]={}));
-    const ci=(inf[cid]||(inf[cid]={flds:[],sels:[]}));
+    const t=(SEL2UI[cid]||{})[m.sel];
+    if(!t){ console.warn('Elements: unmapped selector',cid,m.sel); return; }
+    const inf=(uiInfo[t.el]||(uiInfo[t.el]={}));
+    const ci=(inf[cid]||(inf[cid]={flds:[],sels:[],triples:[]}));
     ci.flds.push(m.fld); ci.sels.push(m.sel);
-    const k=ui+'>'+m.fld;
+    const trip=t.el+'&middot;'+t.fmt+'&middot;'+t.lay;
+    if(!ci.triples.includes(trip)) ci.triples.push(trip);
+    /* semantic validation: does the element accept the field's type? */
+    const reg=EL_REGISTRY.find(x=>x.id===t.el), ftype=FIELD_META[m.fld];
+    if(!reg) console.warn('Elements: SEL2UI names unknown element',t.el);
+    else if(ftype&&reg.accepts&&!reg.accepts.includes(ftype)) console.warn('Elements: type mismatch',t.el,'(accepts',reg.accepts.join('/'),') <-',m.fld,'('+ftype+')');
+    if(!ftype) console.warn('Elements: field missing from FIELD_META',m.fld);
+    const k=t.el+'>'+m.fld;
     if(pairIdx[k]==null){
-      pairIdx[k]=EL_PAIRS.push({ui,fld:m.fld,kind:'real',color:(map[m.fld]||{}).color||m.color})-1;
-      (uiPairs[ui]||(uiPairs[ui]=[])).push(pairIdx[k]);
+      pairIdx[k]=EL_PAIRS.push({ui:t.el,fld:m.fld,kind:'real',color:(map[m.fld]||{}).color||m.color})-1;
+      (uiPairs[t.el]||(uiPairs[t.el]=[])).push(pairIdx[k]);
       (fldPairs[m.fld]||(fldPairs[m.fld]=[])).push(pairIdx[k]);
     }
   }));
   const realCount=EL_PAIRS.length;
   POSSIBLE_PAIRS.forEach(p=>{
     if(!map[p.fld]){ console.warn('Elements: possible pair with unknown field',p.fld); return; }
-    if(pairIdx[p.ui+'>'+p.fld]!=null){ console.warn('Elements: possible pair duplicates a real one',p.ui,p.fld); return; }
-    const i=EL_PAIRS.push({ui:p.ui,fld:p.fld,kind:'poss',color:map[p.fld].color})-1;
-    (uiPairs[p.ui]||(uiPairs[p.ui]=[])).push(i);
+    if(pairIdx[p.el+'>'+p.fld]!=null){ console.warn('Elements: possible pair duplicates a real one',p.el,p.fld); return; }
+    const i=EL_PAIRS.push({ui:p.el,fld:p.fld,kind:'poss',color:map[p.fld].color})-1;
+    (uiPairs[p.el]||(uiPairs[p.el]=[])).push(i);
     (fldPairs[p.fld]||(fldPairs[p.fld]=[])).push(i);
   });
-  Object.keys(map).filter(f=>!fldPairs[f]).forEach(f=>console.warn('Elements: field unclaimed by any UI element',f));
+  Object.keys(map).filter(f=>!fldPairs[f]).forEach(f=>console.warn('Elements: field unclaimed by any element',f));
   EL_UIINFO=uiInfo;
-  /* UI column: archetype groups of chips (components shown in the side panel on hover) */
-  uiCol.innerHTML=EL_ARCHS.map(([k,label])=>{
-    const chips=UIELS.filter(u=>u.arch===k);
-    if(!chips.length) return '';
+  /* element column: semantic groups; each row = name + layout glyphs / live stage / format strip */
+  uiCol.innerHTML=EL_GROUPS.map(([k,label])=>{
+    const els=EL_REGISTRY.filter(u=>u.grp===k);
+    if(!els.length) return '';
     return `<div class="famblock dc-fam el-fam" data-grp="${k}"><h3>${label}</h3>`
-      +chips.map(u=>
-        `<div class="el-chip" data-ui="${u.id}" data-pairs="${(uiPairs[u.id]||[]).join(' ')}" title="${u.desc}">`
-        +`<div class="el-chip-prev">${u.prev()}</div>`
-        +`<span class="el-chip-name">${u.label}</span></div>`
-      ).join('')+`</div>`;
+      +els.map(u=>{
+        const fmt=u.formats[0], lay=u.layouts[0];
+        const lays=['standalone','overlay'].map(L=>{
+          const ok=u.layouts.includes(L);
+          return `<i class="el-lay-g${ok?' ok':''}${ok&&L===lay?' on':''}" data-lay="${L}" title="${L}${L==='overlay'?' — attached on a media surface':' — own card / row'}">${LAY_GLYPH[L]}</i>`;
+        }).join('');
+        const fmts=u.formats.map(F=>`<span class="el-fmt${F===fmt?' on':''}" data-fmt="${F}" title="${F}"><i class="mi">${(FMT_MICRO[F]||(()=>F))(u.sample||{})}</i></span>`).join('');
+        const mod=u.modifier?`<div class="el-modline">&oplus; ${u.modifier.provenance}${u.modifier.confidenceField?' &middot; '+u.modifier.confidenceField:''}${u.modifier.correctable?' &middot; tap-to-correct':''}</div>`:'';
+        return `<div class="el-chip" data-ui="${u.id}" data-fmt="${fmt}" data-lay="${lay}" data-pairs="${(uiPairs[u.id]||[]).join(' ')}" title="${u.desc} [${u.sig}] &middot; tap: ${u.action}">`
+          +`<div class="el-chip-head"><span class="el-chip-name">${u.label}</span><span class="el-lay">${lays}</span></div>`
+          +`<div class="el-chip-stage">${elStage(u,fmt,lay)}</div>`
+          +`<div class="el-fmts">${fmts}</div>${mod}</div>`;
+      }).join('')+`</div>`;
   }).join('');
   /* right column: ONE consolidated field panel, every field once */
   const placed={};
@@ -4297,22 +4436,26 @@ function renderElCanvas(){
       const mark=e.status==='mixed'?' <i class="fmark fmark-mixed">&plusmn;</i>':fieldStatMark(e.status);
       return `<span class="dc-f dc-bound-f el-fld" data-fld="${f}" data-pairs="${(fldPairs[f]||[]).join(' ')}" style="--c:${e.color}" title="${(d.label||f)+(d.desc?' &mdash; '+d.desc:'')}">${f}${mark}</span>`;
     }).join('');
-    return `<div class="el-epgrp">`+(g.pseudo?`<div class="el-ep-note">${g.ep}</div>`:`<code class="dc-ep">${g.ep}</code>`)+`<div class="el-fldlist">${chips}</div></div>`;
+    const un=(g.unused||[]).map(u=>`<span class="dc-f el-fld-un" title="${u[1]}">${u[0]}</span>`).join('');
+    return `<div class="el-epgrp">`+(g.pseudo?`<div class="el-ep-note">${g.ep}</div>`:`<code class="dc-ep">${g.ep}</code>`)+`<div class="el-fldlist">${chips}${un}</div></div>`;
   }).join('');
   Object.keys(map).filter(f=>!placed[f]).forEach(f=>console.warn('Elements: field missing from FIELD_GROUPS',f));
   document.getElementById('elFieldPanel').innerHTML=
     `<div class="dc-head"><b>Wyze AI One data fields</b><span style="font-size:9px;color:var(--dim);font-family:var(--mono)">every field once</span></div>`+grpHtml;
   /* header: anchors + summary + legend */
-  document.getElementById('elAnchors').innerHTML=EL_ARCHS.map(([k,label])=>{
-    const n=UIELS.filter(u=>u.arch===k).length;
+  document.getElementById('elAnchors').innerHTML=EL_GROUPS.map(([k,label])=>{
+    const n=EL_REGISTRY.filter(u=>u.grp===k).length;
     return n?`<span class="dc-anchor" data-grp="${k}">${label} <b>${n}</b></span>`:'';
   }).join('');
   document.getElementById('elSummary').innerHTML=
-    `<span class="dc-stat dc-total dc-on"><b>${UIELS.length}</b> UI elements</span>`
+    `<span class="dc-stat dc-total dc-on"><b>${EL_REGISTRY.length}</b> elements</span>`
+    +`<span class="dc-stat"><b>${FORMATS.length}</b> formats</span>`
+    +`<span class="dc-stat"><b>2</b> layouts</span>`
     +`<span class="dc-stat"><b>${Object.keys(map).length}</b> data fields</span>`
     +`<span class="dc-stat dc-have"><b>${realCount}</b> bindings</span>`
     +`<span class="dc-stat"><b>${EL_PAIRS.length-realCount}</b> possible fills</span>`
-    +`<span class="el-legend"><span><i class="el-lk"></i> bound today</span><span><i class="el-lk el-lk-dash"></i> possible fill</span></span>`;
+    +`<span class="dc-stat"><b>${FIELD_GROUPS.reduce((n,g)=>n+((g.unused||[]).length),0)}</b> unused fields</span>`
+    +`<span class="el-legend"><span><i class="el-lk"></i> bound today</span><span><i class="el-lk el-lk-dash"></i> possible fill</span><span>${LAY_GLYPH.standalone} standalone</span><span>${LAY_GLYPH.overlay} overlay</span></span>`;
 }
 /* one pane-level SVG: a bezier per (UI element, field) pair */
 function drawElNet(){
@@ -4372,16 +4515,16 @@ function gotoComponent(id){
    mouse-leave so the component cards stay clickable) */
 function showElComps(ui){
   const list=document.getElementById('elCompList'); if(!list) return;
-  const u=UIELS.find(x=>x.id===ui)||{label:ui};
+  const u=EL_REGISTRY.find(x=>x.id===ui)||{label:ui};
   document.getElementById('elCompFor').innerHTML=u.label;
   const info=EL_UIINFO[ui]||{};
   const comps=Object.keys(info);
   list.innerHTML=comps.length?comps.map(cid=>{
     const v=V25.find(x=>x.id===cid)||{};
-    /* the REAL component preview — same markup resolution as the Components tab */
     const prev=MOD25[cid]||MODFULL15[v.primary]||MODFULL[v.primary]||'';
+    const rcp=recipeOf(cid).map(r=>`<span class="dc-rcp${r.el===ui?' on':''}">${r.key}</span>`).join('');
     return `<div class="el-comp" data-comp="${cid}"><b>${cid}</b><span class="cn">${v.name||''}</span>`
-      +`<span class="cf">${info[cid].flds.join(' &middot; ')}</span>`
+      +`<div class="el-comp-rcp">${rcp}</div>`
       +`<div class="modlive el-comp-prev">${prev}</div></div>`;
   }).join(''):`<div class="el-comp-hint">No component binds this element yet &mdash; possible fills only.</div>`;
   /* outline where this element lives inside each component preview */
@@ -4414,6 +4557,18 @@ function showElComps(ui){
     if(lock){ setHi(lock,true); showElComps(lock.dataset.ui); }  /* re-assert the locked state */
   });
   cv.addEventListener('click',e=>{
+    /* format / layout selection inside a row — swap the stage, never toggles the lock */
+    const fbtn=e.target.closest('.el-fmt'), lbtn=e.target.closest('.el-lay-g');
+    if(fbtn||lbtn){
+      const chip0=e.target.closest('.el-chip'); if(!chip0) return;
+      const u0=EL_REGISTRY.find(x=>x.id===chip0.dataset.ui); if(!u0) return;
+      if(fbtn){ chip0.dataset.fmt=fbtn.dataset.fmt; chip0.querySelectorAll('.el-fmt').forEach(n=>n.classList.toggle('on',n===fbtn)); }
+      if(lbtn){ if(!lbtn.classList.contains('ok')) return;
+        chip0.dataset.lay=lbtn.dataset.lay; chip0.querySelectorAll('.el-lay-g').forEach(n=>n.classList.toggle('on',n===lbtn)); }
+      chip0.querySelector('.el-chip-stage').innerHTML=elStage(u0,chip0.dataset.fmt,chip0.dataset.lay);
+      scheduleDrawElemLines();
+      return;
+    }
     const u=e.target.closest('.el-use,.el-comp'); if(u){ gotoComponent(u.dataset.comp); return; }
     const chip=e.target.closest('.el-chip[data-ui]'); if(!chip) return;
     if(lock===chip){
