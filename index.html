@@ -442,8 +442,8 @@
   .el-chip.hi{background:#4f8ff00d}
   /* click-locked element: hover state pinned until clicked again */
   .el-chip.el-locked{background:#4f8ff012;box-shadow:inset -2px 0 0 var(--blue)}
-  /* format chips LEFT, name RIGHT (matching the right-aligned group titles) */
-  .el-chip-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  /* name on top, format caption + chips stacked beneath — all right-aligned */
+  .el-chip-head{display:flex;flex-direction:column;align-items:flex-end;gap:7px}
   .el-chip-name{flex:none;font-size:13.5px;font-weight:600;color:var(--ink)}
   /* layout glyphs: standalone / overlay — valid ones lit, active one on */
   .el-lay{display:inline-flex;gap:4px}
@@ -454,7 +454,8 @@
   /* labeled Format / Layout axes at the bottom of each element row */
   .el-axis{display:flex;align-items:center;gap:8px}
   /* "Format" caption: regular weight, sits in front of the switch tags */
-  .el-fmtcol{display:flex;align-items:center;gap:8px;min-width:0}
+  .el-fmtcol{display:flex;align-items:center;justify-content:flex-end;gap:8px;min-width:0}
+  .el-fmts{justify-content:flex-end}
   .el-axis-t{flex:none;font-size:8px;font-weight:400;letter-spacing:.7px;
     text-transform:uppercase;color:var(--dim)}
   /* format strip: live micro-previews, click swaps the stage */
@@ -4840,7 +4841,7 @@ function renderElCanvas(){
         const fmts=u.formats.map(F=>`<span class="el-fmt${F===fmt?' on':''}" data-fmt="${F}">${F}</span>`).join('');
         const mod=u.modifier?`<div class="el-modline">&oplus; ${u.modifier.provenance}${u.modifier.confidenceField?' &middot; '+u.modifier.confidenceField:''}${u.modifier.correctable?' &middot; tap-to-correct':''}</div>`:'';
         return `<div class="el-chip" data-ui="${u.id}" data-fmt="${fmt}" data-lay="${lay}" data-pairs="${(uiPairs[u.id]||[]).join(' ')}" title="${u.desc} [${u.sig}] &middot; tap: ${u.action}">`
-          +`<div class="el-chip-head"><div class="el-fmtcol"><span class="el-axis-t">Format</span><span class="el-fmts">${fmts}</span></div><span class="el-chip-name">${u.label}</span></div>`
+          +`<div class="el-chip-head"><span class="el-chip-name">${u.label}</span><div class="el-fmtcol"><span class="el-axis-t">Format</span><span class="el-fmts">${fmts}</span></div></div>`
           +`<div class="el-chip-stage">${elStageAll(u,fmt)}</div>`
           +`${mod}</div>`;
       }).join('')+`</div>`;
