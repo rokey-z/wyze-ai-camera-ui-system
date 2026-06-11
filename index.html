@@ -468,10 +468,10 @@
   .el-comp-rcp{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
   .el-comp-rcp .dc-rcp{padding:2px 6px;border:1px solid;border-radius:5px}
   .el-chip-stage{pointer-events:none}
-  .el-chip-stage:has(.el-stage-part){display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-  .el-stage-part{display:flex;align-items:center;gap:7px;min-width:0}
+  .el-chip-stage:has(.el-stage-part){display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
+  .el-stage-part{display:flex;flex-direction:column;align-items:flex-start;gap:5px;min-width:0}
   .el-stage-part .hero{width:150px!important}
-  .el-lay-tag{flex:none;width:18px;color:var(--dim);display:grid;place-items:center}
+  .el-lay-tag{font-size:8.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--dim)}
   .el-stage-r{min-width:0}
   .el-chip-stage .panel,.el-chip-stage .actions,.el-chip-stage .reminder,
   .el-chip-stage .chips2,.el-chip-stage .tilegrid,.el-chip-stage .lapsebar,
@@ -4652,7 +4652,7 @@ const EL_REGISTRY=[
  /* priority & confidence */
  {id:'priority-marker',grp:'priority-conf',label:'Priority marker',desc:'Urgency / ranking — agent alert level, group score',sig:'agent/instance · none · score',formats:['dot','badge'],layouts:['standalone','overlay'],action:'navigate',accepts:['score'],
   sample:{c:'#f25c5c',tag:'P1'}},
- {id:'provenance',grp:'priority-conf',label:'Provenance &amp; confidence',desc:'Attachable modifier — model confidence + tap-to-correct on any AI-derived element',sig:'modifier · score',formats:['block','text-tagline','badge'],layouts:['standalone'],action:'correct',accepts:['score'],
+ {id:'provenance',grp:'priority-conf',label:'Confidence',desc:'Attachable modifier — model confidence + tap-to-correct on any AI-derived element',sig:'modifier · score',formats:['block'],layouts:['standalone'],action:'correct',accepts:['score'],
   sample:{txt:'confidence 0.96',sub:'tap to correct'},stage:{block:s=>cf15('confidence 0.96','tap to correct')}},
  /* compare */
  {id:'trend-delta',grp:'compare',label:'Trend delta',desc:'Change vs the prior period — or the peak callout',sig:'instance · trend · time',formats:['badge','text-small'],layouts:['standalone'],action:'open-chat',accepts:['number'],
@@ -4758,8 +4758,8 @@ function elStage(el,fmt,lay){
 }
 function elStageAll(el,fmt){
   if(el.layouts.length<2) return elStage(el,fmt,el.layouts[0]);
-  return `<div class="el-stage-part"><span class="el-lay-tag" title="standalone">${LAY_GLYPH.standalone}</span><div class="el-stage-r">${elStage(el,fmt,'standalone')}</div></div>`
-       +`<div class="el-stage-part"><span class="el-lay-tag" title="overlay — attached on a media surface">${LAY_GLYPH.overlay}</span><div class="el-stage-r">${elStage(el,fmt,'overlay')}</div></div>`;
+  return `<div class="el-stage-part"><span class="el-lay-tag">standalone</span><div class="el-stage-r">${elStage(el,fmt,'standalone')}</div></div>`
+       +`<div class="el-stage-part"><span class="el-lay-tag" title="overlay — attached on a media surface">overlay</span><div class="el-stage-r">${elStage(el,fmt,'overlay')}</div></div>`;
 }
 const LAY_GLYPH={
  standalone:'<svg width="14" height="11" viewBox="0 0 14 11" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="1" width="12" height="9" rx="2"/><path d="M4 5.5h6"/></svg>',
