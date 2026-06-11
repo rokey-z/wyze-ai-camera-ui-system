@@ -4321,7 +4321,7 @@ const RECIPES={
   render:()=>RB.stack(
    `<div class="actions" style="margin-bottom:8px">`+RB.leaf('device-control','button-pill',`<div class="act primary ml-pon"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>Power on</div>`)+RB.leaf('device-control','button-pill',`<div class="act ml-poff"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="8" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>Power off</div>`)+`</div>`,
    `<div class="actions" style="margin-bottom:8px">`+RB.leaf('device-control','button-pill',`<div class="act ml-talk"><span class="ai">${aIcon('<path d="M3 11l16-5v12L3 13z"/><path d="M9 19a2.5 2.5 0 0 0 4 0"/>')}</span>Two-way talk</div>`)+`</div>`,
-   RB.leaf('state','text-small',`<div class="ml-devstate" style="font-size:9px;color:#7eecc4">&#9679; Plug is ON &middot; confirmed 1s ago &middot; <span style="color:var(--dim)">sits under the live view</span></div>`))},
+   RB.leaf('device-state','text-small',`<div class="ml-devstate" style="font-size:9px;color:#7eecc4">&#9679; Plug is ON &middot; confirmed 1s ago &middot; <span style="color:var(--dim)">sits under the live view</span></div>`))},
  'C-READOUT':{q:'snapshot + VLM read',mods:['confidence','correctable'],
   render:()=>RB.panel(
    RB.ph('Number readout'),
@@ -4329,7 +4329,7 @@ const RECIPES={
    RB.leaf('provenance','block',cf15('confidence 0.91','tap to correct')))},
  'C-TILES':{q:'devices · all + metrics · derived counts',
   render:()=>RB.panel(
-   RB.ph('Tiles &mdash; metrics + fleet',RB.leaf('instance-count','text-small',`<span class="ml-fleet" style="font-size:9px;color:#7eecc4">3 / 4 online</span>`)),
+   RB.ph('Tiles &mdash; metrics + fleet',RB.leaf('device-count','text-small',`<span class="ml-fleet" style="font-size:9px;color:#7eecc4">3 / 4 online</span>`)),
    `<div class="tilegrid">`+RB.repeat([['Garage cam','online','#34d399'],['Front cam','online','#34d399'],['Yard cam','online','#34d399'],['Porch cam','offline &middot; 2h','#f25c5c']],
      r=>`<div class="gtile"><div class="gt-top">${r[0]}</div><div class="gt-sub"><span class="gt-pill" style="color:${r[2]};background:${r[2]}1f"><span class="gt-dot" style="background:${r[2]}"></span>${r[1]}</span></div></div>`)+`</div>`,
    `<div class="tilegrid" style="margin-top:7px">`+RB.repeat([['38','events today'],['2','need attention'],['97%','uptime 7d']],
@@ -4683,6 +4683,14 @@ const EL_REGISTRY=[
  {id:'description',grp:'description',label:'Description',desc:'Factual VLM text about ONE media item — event or group',sig:'instance/video · narrative',formats:['text-small','text-medium','text-tagline'],layouts:['standalone','overlay'],action:'open-clip',accepts:['text'],
   modifier:{provenance:'vlm'},sample:{txt:'Vehicle departed &mdash; &ldquo;a car backs out&rdquo;'}},
  /* devices */
+ {id:'device-name',grp:'devices',label:'Device name',desc:'Which camera / device — the tile and overlay label',sig:'device · none',formats:['text-tagline','text-small'],layouts:['standalone','overlay'],action:'navigate',accepts:['text','id'],
+  sample:{txt:'Front door cam'}},
+ {id:'device-state',grp:'devices',label:'Device state',desc:'Connectivity & power — online / offline, on / off',sig:'device · state',formats:['badge','text-small'],layouts:['standalone','overlay'],action:'navigate',accepts:['state','bool'],
+  sample:{txt:'Online',tag:'ONLINE',c:'#34d399'}},
+ {id:'device-count',grp:'devices',label:'Device count',desc:'Fleet roll-up — devices online vs total',sig:'device · count',formats:['text-small','block'],layouts:['standalone'],action:'navigate',accepts:['count'],
+  sample:{txt:'3 / 4',sub:'devices online'},
+  stage:{'text-small':s=>`<span style="font-size:12px;font-weight:700;color:#7eecc4">3 / 4 <span style="color:var(--mut);font-weight:600">online</span></span>`,
+         'block':s=>`<div class="tilegrid"><div class="gtile num"><b>3 / 4</b><span>devices online</span></div></div>`}},
  {id:'device-control',grp:'devices',label:'Device control',desc:'Command button — power, talk, siren, lights',sig:'device · none',formats:['button-pill','button-block'],layouts:['standalone'],action:'control',accepts:['command'],
   sample:{txt:'Power on'},stage:{
    'button-pill':s=>`<div class="actions" style="max-width:200px"><div class="act primary" style="border-radius:999px"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>${s.txt}</div></div>`,
@@ -4702,7 +4710,7 @@ const SEL2UI={
  'C-STATE':{'.ml-state':T('state','text-large'),'.ml-dur':T('duration','text-large'),'.cv':T('provenance','block')},
  'C-FEED':{'.chips2 .fc.on':T('category-count','filter'),'.chips2 .fc:not(.on)':T('category-count','filter'),'.feedrow .thumb':T('media','small-thumb'),'.feedrow .ft':T('description','text-small'),'.feedrow .fm':T('absolute-time','text-tagline'),'.feedrow .etag':T('category-tag','badge')},
  'C-RECAP':{'.ml-title':T('description','text-small'),'.ml-tone':T('state','badge'),'.ml-narrative':T('narrative','text-medium')},
- 'C-ACT':{'.ml-pon':T('device-control','button-pill'),'.ml-poff':T('device-control','button-pill'),'.ml-talk':T('device-control','button-pill'),'.ml-devstate':T('state','text-small')},
+ 'C-ACT':{'.ml-pon':T('device-control','button-pill'),'.ml-poff':T('device-control','button-pill'),'.ml-talk':T('device-control','button-pill'),'.ml-devstate':T('device-state','text-small')},
  'C-READOUT':{'.ml-value':T('measurement','block'),'.ml-unit':T('measurement','block'),'.ml-meter':T('measurement','text-tagline'),'.cv':T('provenance','block')},
  'C-SOS':{'.sosc .sosc-name':T('name-tag','text-small'),'.sosc .sosc-num':T('contact-action','list'),'.sosc-acts .sosc-act':T('contact-action','button-block')},
  'C-GROUPED':{'.gcard-thumb':T('media','full-card'),'.gcard-title':T('description','text-small','overlay'),'.gcard-gif':T('media','small-thumb','overlay'),'.cv':T('priority-marker','badge'),'.gcard-meta':T('instance-count','text-tagline','overlay')},
@@ -4710,7 +4718,7 @@ const SEL2UI={
  'C-DAYTREND':{'.scrub .seg':T('day-activity','chart'),'.scrub .pin':T('absolute-time','chart','overlay'),'.delta':T('trend-delta','badge')},
  'C-MONTHTREND':{'.ml-month':T('absolute-time','text-small'),'.ml-mtotal':T('instance-count','text-small'),'.ml-daycell':T('month-calendar','chart')},
  'C-INSIGHT':{'.insfind':T('narrative','text-medium'),'.trendbars .tb':T('week-activity','chart')},
- 'C-TILES':{'.ml-fleet':T('instance-count','text-small'),'.tilegrid .gt-top':T('name-tag','text-tagline'),'.tilegrid .gt-sub':T('state','badge'),'.kpi0 b':T('instance-count','block'),'.kpi1 b':T('instance-count','block'),'.kpi2 b':T('measurement','block')},
+ 'C-TILES':{'.ml-fleet':T('device-count','text-small'),'.tilegrid .gt-top':T('device-name','text-tagline'),'.tilegrid .gt-sub':T('device-state','badge'),'.kpi0 b':T('instance-count','block'),'.kpi1 b':T('instance-count','block'),'.kpi2 b':T('measurement','block')},
  'C-ASSIST':{'.sugq-t':T('suggestion','button')},
  'C-LEARN':{'.learnrow .ft':T('narrative','text-small'),'.learnrow .fm':T('category-tag','text-tagline'),'.learnrow .lconf':T('provenance','text-tagline')},
  'C-LIVE':{'.videobox':T('media','full-card'),'.vname':T('state','text-small','overlay'),'.vtime':T('absolute-time','text-tagline','overlay')},
