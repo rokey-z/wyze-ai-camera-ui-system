@@ -1467,6 +1467,7 @@
 
   <div class="tabs">
     <div class="tab on" data-tab="elem">Elements</div>
+    <div class="tab" data-tab="layout">Layout</div>
     <div class="tab" data-tab="data">Components</div>
     <div class="tab" data-tab="gen">Templates</div>
     <div class="tab" data-tab="comp">Spec</div>
@@ -2332,14 +2333,26 @@ EMIT  -&gt; see §13
     <div id="dcOpps"></div>
   </div>
 
+  <!-- ============ TAB: LAYOUT — the arrangement vocabulary ============ -->
+  <div class="tabpane" id="pane-layout">
+    <div class="dc-stickyhdr">
+      <div class="dc-cap" style="padding-top:8px"><b>Layout reference</b> — the arrangement vocabulary. An agent composes
+        <b>elements</b> (each rendered through a format) into these patterns; the compose flow is
+        <b>elements + layout &rarr; template</b>. Patterns were learned from the 27 components; each card shows the
+        wireframe and what currently uses it.</div>
+      <div class="dc-summary" id="layoutSummary"></div>
+    </div>
+    <div id="layoutGrid" class="v4wrap"></div>
+  </div>
+
   <!-- ============ TAB: ELEMENTS — each element = one data source ============ -->
   <div class="tabpane on" id="pane-elem">
     <div class="dc-stickyhdr">
       <div class="dc-cap" style="padding-top:8px"><b>Semantic elements</b> (center) — units of meaning aggregated from the
         <b>video &rarr; frame &rarr; instance</b> pipeline along time / camera / identity — connect many-to-many with the
         <b>data fields</b> that fill them (right). Each element renders through a <b>Format</b> (click a chip in its strip);
-        the consuming agent picks the right format and composes it standalone or as an overlay on media; the <b>Layout reference</b>
-        (list / card / grid / strip / hero, plus header and empty / loading / more states — learned from the 27 components) shows the agent how elements can be structured. <b>Hover</b> to see connections + the components using it;
+        the consuming agent picks the right format, composes it standalone or as an overlay on media, and arranges
+        elements with the patterns on the <b>Layout</b> tab — the compose flow is <b>elements + layout &rarr; template</b>. <b>Hover</b> to see connections + the components using it;
         <b>click</b> to lock. Solid = bound today &middot; dashed = possible fill.</div>
       <div class="dc-anchors" id="elAnchors"></div>
       <div class="dc-summary" id="elSummary"></div>
@@ -4888,7 +4901,8 @@ function renderElCanvas(){
   Object.keys(map).filter(f=>!fldPairs[f]).forEach(f=>console.warn('Elements: field unclaimed by any element',f));
   EL_UIINFO=uiInfo;
   /* element column: semantic groups; each row = name + layout glyphs / live stage / format strip */
-  uiCol.innerHTML=EL_GROUPS.map(([k,label])=>{
+  /* the structure group lives in its own Layout tab now */
+  uiCol.innerHTML=EL_GROUPS.filter(([k])=>k!=='structure').map(([k,label])=>{
     const els=EL_REGISTRY.filter(u=>u.grp===k);
     if(!els.length) return '';
     return `<div class="famblock dc-fam el-fam" data-grp="${k}"><h3>${label} <span class="el-h3n">(${els.length})</span></h3>`
@@ -4922,12 +4936,12 @@ function renderElCanvas(){
   document.getElementById('elFieldPanel').innerHTML=
     `<div class="dc-head"><b>Wyze AI One data fields</b><span style="font-size:9px;color:var(--dim);font-family:var(--mono)">every field once</span></div>`+grpHtml;
   /* header: anchors + summary + legend */
-  document.getElementById('elAnchors').innerHTML=EL_GROUPS.map(([k,label])=>{
+  document.getElementById('elAnchors').innerHTML=EL_GROUPS.filter(([k])=>k!=='structure').map(([k,label])=>{
     const n=EL_REGISTRY.filter(u=>u.grp===k).length;
     return n?`<span class="dc-anchor" data-grp="${k}">${label} <b>${n}</b></span>`:'';
   }).join('');
   document.getElementById('elSummary').innerHTML=
-    `<span class="dc-stat dc-total dc-on"><b>${EL_REGISTRY.length}</b> elements</span>`
+    `<span class="dc-stat dc-total dc-on"><b>${EL_REGISTRY.filter(u=>u.grp!=='structure').length}</b> elements</span>`
     +`<span class="dc-stat"><b>${FORMATS.length}</b> formats</span>`
     +`<span class="dc-stat"><b>${Object.keys(map).length}</b> data fields</span>`
     +`<span class="dc-stat dc-have"><b>${realCount}</b> bindings</span>`
@@ -5310,6 +5324,35 @@ function renderDcV4(){
     +`<span class="dc-stat"><b>${structUsed}/9</b> layout patterns used</span>`;
 }
 lintV4();   /* startup verification — the v4 view itself renders on demand */
+/* ---- Layout tab: the 9 arrangement patterns as a reference page ---- */
+function renderLayoutPane(){
+  const grid=document.getElementById('layoutGrid'); if(!grid) return;
+  const lint=window.__v4lint||lintV4();
+  const names={}; V25.forEach(v=>names[v.id]=v.name);
+  /* usage: which components claim each pattern (+ templates merged in later by lintT4) */
+  const usedBy={};
+  Object.keys(V4).forEach(cid=>v4Claims(cid).forEach(k=>{
+    const el=k.split('·')[0];
+    if(V4_STRUCT_IDS.includes(el)) (usedBy[el]=usedBy[el]||[]).push(names[cid]||cid);
+  }));
+  if(window.__t4lint) Object.entries(window.__t4lint.usedBy||{}).forEach(([el,list])=>{
+    (usedBy[el]=usedBy[el]||[]).push(...list);
+  });
+  const pats=EL_REGISTRY.filter(u=>u.grp==='structure');
+  grid.innerHTML=pats.map(u=>{
+    const users=usedBy[u.id]||[];
+    return `<div class="v4card"><div class="v4head"><span><b>${u.label}</b> <span class="v4cid">${u.id}&middot;${u.formats[0]}</span></span>`
+      +`<span class="v4ver ${users.length?'ok':'bad'}">${users.length?users.length+' use'+(users.length>1?'s':''):'reference only'}</span></div>`
+      +`<div class="v4prev">${elRender(u.id,u.formats[0])}</div>`
+      +`<div style="font-size:10px;line-height:1.5;color:var(--mut)">${u.desc}</div>`
+      +(users.length?`<div class="v4rcps">${users.map(n=>`<span class="dc-rcp v4struct">${n}</span>`).join('')}</div>`:'');
+  }).join('');
+  document.getElementById('layoutSummary').innerHTML=
+    `<span class="dc-stat dc-total dc-on"><b>${pats.length}</b> patterns</span>`
+    +`<span class="dc-stat dc-have"><b>${pats.filter(u=>(usedBy[u.id]||[]).length).length}/${pats.length}</b> in use</span>`
+    +`<span class="dc-stat"><b>elements + layout &rarr; template</b></span>`;
+}
+renderLayoutPane();
 renderElCanvas();
 scheduleDrawElemLines();
 /* hero rule: a generated screen should lead with a media surface within its
