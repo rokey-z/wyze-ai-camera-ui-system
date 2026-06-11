@@ -4266,10 +4266,10 @@ const RECIPES={
   render:()=>RB.panel(
    RB.ph('Entry history'),
    RB.leaf('category-count','filter',RB.chips(['All &middot; 24','Person &middot; 11','Vehicle &middot; 6','Pet &middot; 7'])),
-   RB.repeat([['Vehicle departed','8:02 AM &middot; &ldquo;a car backs out&rdquo;','VEHICLE&middot;92','#4f8ff022','#9cc3f5'],
-              ['Person entered','7:55 AM &middot; &ldquo;someone walks up&rdquo;','PERSON&middot;88','#34d39922','#7eecc4'],
-              ['Pet in the yard','7:31 AM &middot; &ldquo;a dog crosses&rdquo;','PET&middot;81','#f6b73c22','#f3cd86'],
-              ['Package dropped','7:12 AM &middot; &ldquo;a box by the door&rdquo;','PKG&middot;76','#a78bfa22','#c4b3f0']],
+   RB.repeat([['Vehicle departed','8:02 AM &middot; &ldquo;a car backs out&rdquo;','VEHICLE','#4f8ff022','#9cc3f5'],
+              ['Person entered','7:55 AM &middot; &ldquo;someone walks up&rdquo;','PERSON','#34d39922','#7eecc4'],
+              ['Pet in the yard','7:31 AM &middot; &ldquo;a dog crosses&rdquo;','PET','#f6b73c22','#f3cd86'],
+              ['Package dropped','7:12 AM &middot; &ldquo;a box by the door&rdquo;','PKG','#a78bfa22','#c4b3f0']],
              r=>RB.feedrow(r[0],r[1],r[2],r[3],r[4])),
    RB.more('More &middot; 20 earlier &rsaquo;'))},
  'C-GROUPED':{q:'eventgroups · score-ranked · top group',mods:['score'],
@@ -4618,7 +4618,7 @@ const EL_REGISTRY=[
   sample:{txt:'3h 42m',c:'#7eecc4',mono:true},stage:{'text-large':s=>`<span style="font-family:var(--mono);color:${s.c};font-weight:700;font-size:24px">${s.txt}</span>`}},
  /* instance aggregation */
  {id:'category-tag',grp:'instance-agg',label:'Category tag',desc:'Classifier tag on one instance (person / vehicle / pet)',sig:'instance · none · category',formats:['badge','text-tagline'],layouts:['standalone','overlay'],action:'filter',accepts:['id','score'],
-  modifier:{provenance:'detector',confidenceField:'tag_conf'},sample:{tag:'VEHICLE&middot;92',c:'#9cc3f5'}},
+  modifier:{provenance:'detector',confidenceField:'tag_conf'},sample:{tag:'VEHICLE',c:'#9cc3f5'}},
  {id:'category-count',grp:'instance-agg',label:'Category count',desc:'Instances grouped + counted per category — the filter row',sig:'category · count · category',formats:['filter','badge','chart'],layouts:['standalone'],action:'filter',accepts:['id','count'],
   sample:{tag:'All &middot; 24',sub:'Person &middot; 11'}},
  /* type-count aggregation */
