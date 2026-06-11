@@ -472,6 +472,34 @@
   .dc-rcp.on{color:#cfe3ff;background:#4f8ff028;border-color:var(--blue) !important}
   .el-comp-rcp{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
   .el-comp-rcp .dc-rcp{padding:2px 6px;border:1px solid;border-radius:5px}
+  /* ---- v4.0 tab: components regenerated from the element vocabulary ---- */
+  .v4wrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px;margin-top:14px}
+  .v4card{border:1px solid var(--line);border-radius:14px;background:var(--card);padding:13px;display:flex;flex-direction:column;gap:10px}
+  .v4head{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+  .v4head b{font-size:12.5px;color:var(--ink)}
+  .v4head .v4cid{font-family:var(--mono);font-size:8.5px;color:var(--dim)}
+  .v4ver{font-family:var(--mono);font-size:8.5px;padding:2px 7px;border-radius:999px;flex:none}
+  .v4ver.ok{color:#7eecc4;background:#34d39914;border:1px solid #34d39933}
+  .v4ver.bad{color:#f8a5a5;background:#f25c5c14;border:1px solid #f25c5c44}
+  .v4prev{pointer-events:none;display:flex;flex-direction:column;gap:8px}
+  .v4prev .panel,.v4prev .hero,.v4prev .chips2,.v4prev .tilegrid,.v4prev .actions,
+  .v4prev .reminder,.v4prev .estrip,.v4prev .aghome{margin:0}
+  .v4prev .hero{width:100%!important}
+  .v4ph{display:flex;align-items:center;justify-content:space-between;gap:8px;
+    font-size:11px;font-weight:700;color:var(--ink);padding-bottom:7px;border-bottom:1px solid var(--line)}
+  .v4row{display:flex;align-items:center;gap:9px;min-width:0}
+  .v4list .v4row{padding:7px 0}
+  .v4list .v4row + .v4row{border-top:1px solid var(--line)}
+  .v4col{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
+  .v4slot{min-width:0}
+  .v4grid{display:grid;gap:7px}
+  .v4cell{border:1px solid var(--line);border-radius:9px;background:var(--bg2,#0e1726);padding:8px;display:flex;flex-direction:column;gap:5px;min-width:0}
+  .v4strip{display:flex;gap:7px;align-items:flex-start;overflow:hidden}
+  .v4hero .videobox{border-radius:10px}
+  .v4ovl{position:absolute;display:flex;flex-direction:column;gap:3px;align-items:flex-start;max-width:60%}
+  .v4rcps{display:flex;flex-wrap:wrap;gap:4px;border-top:1px solid var(--line);padding-top:8px}
+  .v4rcps .dc-rcp{padding:2px 6px;border:1px solid;border-radius:5px}
+  .v4rcps .v4struct{color:#c4b3f0;background:#a78bfa10;border-color:#a78bfa33}
   .el-chip-stage{pointer-events:none}
   /* single render per format at the full stage width (the fixed-width
      format column on the right keeps stages uniform across elements) */
@@ -1439,6 +1467,7 @@
   <div class="tabs">
     <div class="tab on" data-tab="elem">Elements</div>
     <div class="tab" data-tab="data">Components</div>
+    <div class="tab" data-tab="v4">v4.0</div>
     <div class="tab" data-tab="gen">Templates</div>
     <div class="tab" data-tab="comp">Spec</div>
     <div class="tab" data-tab="builder">.MD</div>
@@ -2300,6 +2329,19 @@ EMIT  -&gt; see §13
     </div>
     <div id="dcGrids"></div>
     <div id="dcOpps"></div>
+  </div>
+
+  <!-- ============ TAB: v4.0 — components REGENERATED from the element vocabulary ============ -->
+  <div class="tabpane" id="pane-v4">
+    <div class="dc-stickyhdr">
+      <div class="dc-cap" style="padding-top:8px"><b>v4.0 components</b> — all 27 regenerated purely from the current
+        element vocabulary: every slot is an element rendered through one of its <b>formats</b>, arranged by a
+        <b>Layout reference</b> pattern (header / list / card / grid / strip / hero / more). The badge on each card
+        verifies the composition covers every data binding the v3 component carries; the pills below report how much
+        of the element &times; format vocabulary the full set exercises.</div>
+      <div class="dc-summary" id="v4Summary"></div>
+    </div>
+    <div id="v4Grid" class="v4wrap"></div>
   </div>
 
   <!-- ============ TAB: ELEMENTS — each element = one data source ============ -->
@@ -4640,7 +4682,7 @@ const EL_REGISTRY=[
   modifier:{provenance:'vlm',confidenceField:'confidence',correctable:true},sample:{txt:'CLOSED',c:'#7eecc4'}},
  {id:'measurement',grp:'state-agg',label:'Measurement',desc:'Value + unit read from the scene (VLM, no OCR endpoint)',sig:'device · state',formats:['tile','text-large','text-tagline'],layouts:['standalone','overlay'],action:'correct',accepts:['number','text'],
   modifier:{provenance:'vlm',confidenceField:'confidence',correctable:true},sample:{txt:'04857',sub:'kWh &middot; gas meter',c:'#5fd0e0',mono:true},
-  stage:{tile:s=>`<div class="readout" style="padding:0;text-align:left"><div class="rn" style="font-size:30px">${s.txt}<span style="font-size:15px;color:var(--mut);letter-spacing:0"> kWh</span></div><div class="ru" style="font-size:10px;color:var(--mut)">${s.sub||''}</div></div>`}},
+  stage:{tile:s=>`<div class="readout" style="padding:0;text-align:left"><div class="rn" style="font-size:30px">${s.txt}<span style="font-size:15px;color:var(--mut);letter-spacing:0">${s.unit!==undefined?s.unit:' kWh'}</span></div><div class="ru" style="font-size:10px;color:var(--mut)">${s.sub||''}</div></div>`}},
  {id:'duration',grp:'state-agg',label:'Duration',desc:'Elapsed time in state — derived from state-change timestamps',sig:'identity/device · duration · time',formats:['text-large','text-small','badge'],layouts:['standalone','overlay'],action:'none',accepts:['time','number'],
   sample:{txt:'for 3h 42m',val:'3h 42m',c:'#7eecc4',mono:true},stage:{'text-large':s=>`<span style="font-family:var(--mono);font-weight:700;font-size:24px;color:${s.c}"><span style="color:var(--mut);font-size:15px;font-weight:600">for </span>${s.val}</span>`}},
  /* instance aggregation */
@@ -5035,6 +5077,245 @@ document.getElementById('elAnchors').addEventListener('click',e=>{
   const fam=document.querySelector('.el-fam[data-grp="'+a.dataset.grp+'"]');
   if(fam) fam.scrollIntoView({behavior:'smooth',block:'start'});
 });
+/* ====================================================================
+   v4.0 — COMPONENTS REGENERATED FROM THE ELEMENT VOCABULARY.
+   Every slot is an element rendered through one of its formats
+   (elRender → el.stage[fmt] || FMT_STAGE[fmt]); every arrangement is a
+   Layout-reference claim (section-header / layout-list / card / grid /
+   strip / hero / more-paging). lintV4() verifies BOTH directions:
+   (A) each component's composition covers every SEL2UI binding it
+   carries, (B) how much of the element × format vocabulary the set
+   exercises — leftovers are reported, not hidden.
+   ==================================================================== */
+function elRender(id,fmt,sample){
+  const el=EL_REGISTRY.find(x=>x.id===id);
+  if(!el){ console.warn('V4: unknown element',id); return ''; }
+  if(!el.formats.includes(fmt)) console.warn('V4: element',id,'disallows format',fmt);
+  const f=(el.stage&&el.stage[fmt])?el.stage[fmt]:(FMT_STAGE[fmt]||FMT_STAGE['text-small']);
+  return f(Object.assign({},el.sample||{},sample||{}));
+}
+const S=(el,fmt,s)=>({el,fmt,s});           /* slot: element · format · sample override */
+const C=(...k)=>({col:k});                   /* vertical sub-column inside a row/cell */
+const G1='linear-gradient(150deg,#4f8ff040,#0c1119)',G2='linear-gradient(150deg,#b1402f40,#0c1119)',
+      G3='linear-gradient(150deg,#34d39930,#0c1119)',GH='linear-gradient(165deg,#1d2d49,#0f1828)';
+const V4={
+ 'C-LIVE':{parts:[
+   {hero:{ov:[{el:'state',fmt:'text-small',s:{txt:'&#9679; Front door &middot; LIVE'},at:'tl'},
+              {el:'absolute-time',fmt:'text-tagline',s:{txt:'14:09:22'},at:'br'}]}}]},
+ 'C-FEED':{parts:[
+   {hdr:{t:'Entry history',right:S('instance-count','text-small',{name:'Events',txt:'38'})}},
+   {row:[S('category-count','filter')]},
+   {list:[
+     [S('media','small-thumb',{grad:G1}),C(S('description','text-small',{txt:'Vehicle departed'}),S('absolute-time','text-tagline',{txt:'2:14 PM'})),S('category-tag','badge',{tag:'VEHICLE',c:'#9cc3f5'})],
+     [S('media','small-thumb',{grad:G2}),C(S('description','text-small',{txt:'Person at side gate'}),S('absolute-time','text-tagline',{txt:'11:31 PM'})),S('category-tag','badge',{tag:'PERSON',c:'#f25c5c'})],
+     [S('media','small-thumb',{grad:G3}),C(S('description','text-small',{txt:'Cooper in the yard'}),S('absolute-time','text-tagline',{txt:'9:02 AM'})),S('category-tag','badge',{tag:'PET',c:'#7eecc4'})]]},
+   {more:true}]},
+ 'C-STATE':{parts:[
+   {hdr:{t:'Garage door'}},
+   {row:[S('state','text-large',{txt:'CLOSED',c:'#7eecc4'})]},
+   {row:[S('duration','text-large')]},
+   {row:[S('confidence','button-pill')]}]},
+ 'C-RECAP':{parts:[
+   {hdr:{t:'Overnight recap',right:S('state','badge',{tag:'ALL CLEAR',c:'#7eecc4'})}},
+   {row:[S('description','text-small',{txt:'Quiet night &mdash; one delivery, no unknown visitors'})]},
+   {row:[S('insight','text-medium')]}]},
+ 'C-ACT':{parts:[
+   {hdr:{t:'Controls'}},
+   {row:[S('device-control','button-pill',{txt:'Power on'}),S('device-control','button-pill',{txt:'Two-way talk'})]},
+   {row:[S('device-state','text-small',{txt:'&#9679; Plug is ON &middot; confirmed 1s ago'})]}]},
+ 'C-READOUT':{parts:[
+   {hdr:{t:'Utility meter'}},
+   {row:[S('measurement','tile')]},
+   {row:[S('measurement','text-tagline',{txt:'kWh &middot; gas meter'})]},
+   {row:[S('confidence','button-pill')]}]},
+ 'C-SOS':{parts:[
+   {hdr:{t:'Escalation contacts'}},
+   {list:[[S('contact-action','list')],
+          [S('name-tag','text-small',{txt:'Mark &middot; neighbor'}),S('contact-action','button-block')]]}]},
+ 'C-GROUPED':{parts:[
+   {card:[
+     {hero:{grad:G2,ov:[{col:[S('description','text-small',{txt:'Package delivery'}),S('instance-count','text-tagline',{name:'Clips',txt:'3'})],at:'bl'},
+                        {el:'media',fmt:'small-thumb',s:{grad:G1},at:'tr'}]}},
+     {row:[S('priority-marker','badge')]}]}]},
+ 'C-STRIP':{parts:[
+   {hdr:{t:'Today',right:S('instance-count','text-small',{name:'Events',txt:'38'})}},
+   {strip:[C(S('media','small-thumb',{grad:G1}),S('category-tag','badge',{tag:'VEHICLE',c:'#9cc3f5'})),
+           C(S('media','small-thumb',{grad:G2}),S('absolute-time','text-tagline',{txt:'2:14 PM'})),
+           S('media','small-thumb',{grad:G3})]}]},
+ 'C-DAYTREND':{parts:[
+   {hdr:{t:'Today by hour',right:S('trend-delta','badge')}},
+   {row:[S('time-trend','daily-chart')]}]},
+ 'C-MONTHTREND':{parts:[
+   {hdr:{t:'This month',right:S('instance-count','text-small',{name:'Events',txt:'214'})}},
+   {row:[S('absolute-time','text-small',{txt:'June 2026'})]},
+   {row:[S('time-trend','month-chart')]}]},
+ 'C-INSIGHT':{parts:[
+   {hdr:{t:'Weekly insight'}},
+   {row:[S('insight','text-medium',{txt:'Front-door traffic is up <b style="color:#7eecc4">22%</b> &mdash; visits cluster 1&ndash;3 PM.'})]},
+   {row:[S('time-trend','weekly-chart')]}]},
+ 'C-TILES':{parts:[
+   {hdr:{t:'Devices',right:S('device-count','text-small')}},
+   {grid:{cols:2,cells:[
+     [S('device-name','text-tagline',{txt:'Garage cam'}),S('device-state','badge',{tag:'ONLINE',c:'#34d399'})],
+     [S('device-name','text-tagline',{txt:'Porch cam'}),S('device-state','badge',{tag:'OFFLINE &middot; 2h',c:'#f25c5c'})]]}},
+   {grid:{cols:2,cells:[
+     [S('instance-count','tile',{txt:'38',sub:'events today'})],
+     [S('measurement','tile',{txt:'97%',unit:'',sub:'uptime 7d'})]]}}]},
+ 'C-ASSIST':{parts:[
+   {hdr:{t:'Ask the agent'}},
+   {row:[S('suggestion','button')]},
+   {row:[S('suggestion','button',{tag:'Who came by while I was out?'})]}]},
+ 'C-LEARN':{parts:[
+   {hdr:{t:'Learned this week'}},
+   {list:[[C(S('insight','text-medium',{txt:'Mail usually arrives around <b style="color:#9cc3f5">2 PM</b>'})),S('category-tag','text-tagline',{tag:'routine'})],
+          [C(S('insight','text-medium',{txt:'The white SUV belongs to a <b style="color:#9cc3f5">neighbor</b>'})),S('category-tag','text-tagline',{tag:'vehicle'})]]},
+   {row:[S('confidence','button-pill')]}]},
+ 'C-RECVIDEO':{parts:[
+   {hero:{ov:[{el:'device-name',fmt:'text-tagline',s:{txt:'Front cam'},at:'tl'}]}},
+   {row:[S('time-trend','daily-chart')]}]},
+ 'C-SNAP':{parts:[
+   {hero:{grad:'linear-gradient(165deg,#2c3d5b,#0d1626)',
+     ov:[{el:'detection-marker',fmt:'bound-box',s:{tag:'garage door'}},
+         {col:[S('description-detail','text-small',{txt:'A car backs out of the garage.'}),S('absolute-time','text-tagline',{txt:'2:14:07 PM'})],at:'bl'}]}},
+   {row:[S('confidence','button-pill')]}]},
+ 'C-TIMELAPSE':{parts:[
+   {hero:{grad:G3,ov:[{el:'device-name',fmt:'text-tagline',s:{txt:'Plant cam'},at:'tl'},
+                      {el:'absolute-time',fmt:'text-tagline',s:{txt:'day 47'},at:'br'}]}},
+   {row:[S('time-trend','daily-chart')]},
+   {row:[S('instance-count','text-small',{name:'Frames',txt:'47'})]}]},
+ 'C-GALLERY':{parts:[
+   {hdr:{t:'Cooper &mdash; collection',right:S('instance-count','badge',{name:'Sightings',txt:'128'})}},
+   {row:[S('category-count','filter',{tag:'All &middot; 128',sub:'Yard &middot; 64'})]},
+   {grid:{cols:3,cells:[
+     [S('media','small-thumb',{grad:G3}),S('name-tag','text-tagline',{txt:'Cooper'})],
+     [S('media','small-thumb',{grad:G1}),S('name-tag','text-tagline',{txt:'Cooper'})],
+     [S('media','small-thumb',{grad:G2}),S('name-tag','text-tagline',{txt:'Cooper'})]]}}]},
+ 'C-MULTIVIEW':{parts:[
+   {grid:{cols:2,cells:[
+     [S('media','small-thumb',{grad:G1}),S('device-name','text-tagline',{txt:'Front cam'}),S('state','badge',{tag:'LIVE',c:'#34d399'})],
+     [S('media','small-thumb',{grad:G2}),S('device-name','text-tagline',{txt:'Garage cam'}),S('state','badge',{tag:'LIVE',c:'#34d399'})]]}}]},
+ 'C-LOG':{parts:[
+   {hdr:{t:'Sensor log'}},
+   {list:[[S('absolute-time','text-small',{txt:'2:14 PM'}),S('state','text-small',{txt:'CLOSED'}),S('trend-delta','text-small',{txt:'&#9650; 2'})],
+          [S('absolute-time','text-small',{txt:'1:02 PM'}),S('state','text-small',{txt:'OPEN'}),S('trend-delta','text-small',{txt:'&#9660; 1'})],
+          [S('absolute-time','text-small',{txt:'11:48 AM'}),S('state','text-small',{txt:'CLOSED'}),S('trend-delta','text-small',{txt:'&mdash;'})]]}]},
+ 'C-VISIT':{parts:[
+   {hdr:{t:'Visits today'}},
+   {list:[[C(S('absolute-time','text-small',{txt:'2:14 PM'}),S('absolute-time','text-tagline',{txt:'2:14&ndash;2:17 PM'})),S('media','small-thumb',{grad:G2}),C(S('duration','text-small',{txt:'for 3m'}),S('state','badge',{tag:'KNOWN',c:'#7eecc4'}))],
+          [C(S('absolute-time','text-small',{txt:'11:31 AM'}),S('absolute-time','text-tagline',{txt:'11:31&ndash;11:32 AM'})),S('media','small-thumb',{grad:G1}),C(S('duration','text-small',{txt:'for 40s'}),S('state','badge',{tag:'COURIER',c:'#9cc3f5'}))]]},
+   {row:[S('confidence','button-pill')]}]},
+ 'C-IDCARD':{parts:[
+   {card:[
+     {row:[S('media','square'),C(S('name-tag','text-small',{txt:'Sarah'}),S('attribute-tag','text-tagline',{txt:'tall &middot; red jacket'}),S('absolute-time','text-tagline',{txt:'last seen 2:14 PM'})),S('state','badge',{tag:'TRUSTED',c:'#7eecc4'})]},
+     {row:[S('confidence','button-pill')]}]}]},
+ 'C-TREND':{parts:[
+   {hdr:{t:'This week',right:S('trend-delta','badge')}},
+   {row:[S('time-trend','weekly-chart')]}]},
+ 'C-DETER':{parts:[
+   {hdr:{t:'Deterrents'}},
+   {row:[S('device-control','button-pill',{txt:'Siren'}),S('device-control','button-pill',{txt:'Lights'})]}]},
+ 'C-REMINDER':{parts:[
+   {hdr:{t:'Medicine reminder'}},
+   {row:[S('absolute-time','text-small',{txt:'8:00 AM &middot; daily'}),S('state','text-small',{txt:'Taken &#10003; 8:02 AM'})]}]},
+ 'C-AGENT':{parts:[
+   {card:[
+     {row:[S('media','small-thumb',{grad:G2}),C(S('name-tag','text-tagline',{txt:'Night Watcher'}),S('relative-time','text-tagline',{txt:'2m ago'})),S('state','badge',{tag:'PERSON &middot; 2m',c:'#f25c5c'})]},
+     {row:[S('priority-marker','dot')]}]}]},
+};
+/* render one composition node → html (claims are collected separately) */
+function renderV4(cid){
+  const rSlot=n=>n.col?`<span class="v4col">${n.col.map(rSlot).join('')}</span>`
+                      :`<span class="v4slot">${elRender(n.el,n.fmt,n.s)}</span>`;
+  const pos={tl:'left:9px;top:9px',tr:'right:9px;top:9px',bl:'left:9px;bottom:9px',br:'right:9px;bottom:9px'};
+  const node=n=>{
+    if(n.el&&n.fmt) return rSlot(n);
+    if(n.hdr) return `<div class="v4ph"><b>${n.hdr.t}</b>${n.hdr.right?rSlot(n.hdr.right):''}</div>`;
+    if(n.list) return `<div class="v4list">${n.list.map(r=>`<div class="v4row">${r.map(rSlot).join('')}</div>`).join('')}</div>`;
+    if(n.grid) return `<div class="v4grid" style="grid-template-columns:repeat(${n.grid.cols},1fr)">${n.grid.cells.map(c=>`<div class="v4cell">${c.map(rSlot).join('')}</div>`).join('')}</div>`;
+    if(n.strip) return `<div class="v4strip">${n.strip.map(rSlot).join('')}</div>`;
+    if(n.hero){
+      const ov=(n.hero.ov||[]).map(o=>o.el==='detection-marker'
+        ?`<div class="annbox" style="left:20%;top:26%;width:56%;height:46%"></div><div class="annbadge" style="left:20%;top:26%">${(o.s&&o.s.tag)||'garage door'}</div>`
+        :`<div class="v4ovl" style="${pos[o.at||'bl']}">${o.col?o.col.map(rSlot).join(''):elRender(o.el,o.fmt,o.s)}</div>`).join('');
+      return `<div class="hero v4hero"><div class="videobox" style="background:${n.hero.grad||GH}">${ov}</div></div>`;
+    }
+    if(n.card) return `<div style="border:1px solid var(--line);border-radius:11px;padding:10px;display:flex;flex-direction:column;gap:8px;background:#0e1726">${n.card.map(node).join('')}</div>`;
+    if(n.row) return `<div class="v4row">${n.row.map(rSlot).join('')}</div>`;
+    if(n.more) return `<button class="dc-more" style="margin:0">More &middot; 20 earlier &rsaquo;</button>`;
+    return '';
+  };
+  return V4[cid].parts.map(node).join('');
+}
+/* walk a composition collecting (element·format) claims, incl. structural */
+function v4Claims(cid){
+  const set=new Set();
+  const slot=n=>{ if(!n) return; if(n.col){ n.col.forEach(slot); return; } if(n.el&&n.fmt) set.add(n.el+'·'+n.fmt); };
+  const walk=n=>{
+    if(n.el&&n.fmt){ slot(n); return; }
+    if(n.hdr){ set.add('section-header·header'); if(n.hdr.right) slot(n.hdr.right); return; }
+    if(n.list){ set.add('layout-list·list'); n.list.forEach(r=>r.forEach(slot)); return; }
+    if(n.grid){ set.add('layout-grid·grid'); n.grid.cells.forEach(c=>c.forEach(slot)); return; }
+    if(n.strip){ set.add('layout-strip·strip'); n.strip.forEach(slot); return; }
+    if(n.hero){ set.add('layout-hero·hero'); set.add('media·full-card'); (n.hero.ov||[]).forEach(o=>o.col?o.col.forEach(slot):slot(o)); return; }
+    if(n.card){ set.add('layout-card·card'); n.card.forEach(walk); return; }
+    if(n.row){ n.row.forEach(slot); return; }
+    if(n.more){ set.add('more-paging·button-pill'); return; }
+  };
+  V4[cid].parts.forEach(walk);
+  return set;
+}
+/* two-direction composition verification */
+function lintV4(){
+  const res={__matrix:{},__unused:[]};
+  const cids=Object.keys(SEL2UI);
+  cids.forEach(cid=>{ if(!V4[cid]) console.warn('V4: no composition for',cid); });
+  Object.keys(V4).forEach(cid=>{ if(!SEL2UI[cid]) console.warn('V4: composition for unknown component',cid); });
+  Object.keys(V4).forEach(cid=>{
+    const claims=v4Claims(cid);
+    /* every claim must be a real element + allowed format */
+    claims.forEach(k=>{
+      const [el,fmt]=k.split('·'); const reg=EL_REGISTRY.find(x=>x.id===el);
+      if(!reg) console.warn('V4:',cid,'claims unknown element',el);
+      else if(!reg.formats.includes(fmt)) console.warn('V4:',cid,'claims disallowed format',k);
+      (res.__matrix[el]=res.__matrix[el]||{})[fmt]=(res.__matrix[el][fmt]||0)+1;
+    });
+    /* direction A: composition covers every binding the component carries */
+    const expected=new Set(Object.values(SEL2UI[cid]||{}).map(t=>t.el+'·'+t.fmt));
+    const missing=[...expected].filter(k=>!claims.has(k));
+    if(missing.length) console.warn('V4:',cid,'missing claim(s):',missing.join(', '));
+    res[cid]={claims:[...claims],missing};
+  });
+  /* direction B: vocabulary coverage */
+  EL_REGISTRY.forEach(el=>el.formats.forEach(f=>{
+    if(!(res.__matrix[el.id]&&res.__matrix[el.id][f])) res.__unused.push(el.id+'·'+f);
+  }));
+  window.__v4lint=res;
+  return res;
+}
+const V4_STRUCT_IDS=['section-header','layout-list','layout-card','layout-grid','layout-strip','layout-hero','more-paging','empty-state','loading-state'];
+function renderV4Pane(){
+  const grid=document.getElementById('v4Grid'); if(!grid) return;
+  const lint=lintV4();
+  const names={}; V25.forEach(v=>names[v.id]=v.name);
+  grid.innerHTML=Object.keys(V4).map(cid=>{
+    const r=lint[cid], ok=!r.missing.length;
+    const dataClaims=r.claims.filter(k=>!V4_STRUCT_IDS.includes(k.split('·')[0]));
+    const structClaims=r.claims.filter(k=>V4_STRUCT_IDS.includes(k.split('·')[0]));
+    return `<div class="v4card"><div class="v4head"><span><b>${names[cid]||cid}</b> <span class="v4cid">${cid}</span></span>`
+      +`<span class="v4ver ${ok?'ok':'bad'}" title="${ok?'composition covers every data binding this component carries':'bindings not yet composed'}">${ok?'&#10003; '+dataClaims.length+' bindings':'missing: '+r.missing.join(', ')}</span></div>`
+      +`<div class="v4prev">${renderV4(cid)}</div>`
+      +`<div class="v4rcps">${structClaims.map(k=>`<span class="dc-rcp v4struct">${k}</span>`).join('')}${dataClaims.map(k=>`<span class="dc-rcp">${k}</span>`).join('')}</div></div>`;
+  }).join('');
+  const total=EL_REGISTRY.reduce((n,el)=>n+el.formats.length,0);
+  const used=total-lint.__unused.length;
+  const structUsed=V4_STRUCT_IDS.filter(id=>lint.__matrix[id]).length;
+  document.getElementById('v4Summary').innerHTML=
+    `<span class="dc-stat dc-total dc-on"><b>${Object.keys(V4).length}</b> components regenerated</span>`
+    +`<span class="dc-stat dc-have"><b>${used}/${total}</b> element&middot;format pairs exercised</span>`
+    +`<span class="dc-stat"><b>${lint.__unused.length}</b> formats unused</span>`
+    +`<span class="dc-stat"><b>${structUsed}/9</b> layout patterns used</span>`;
+}
+renderV4Pane();
 renderElCanvas();
 scheduleDrawElemLines();
 /* hero rule: a generated screen should lead with a media surface within its
