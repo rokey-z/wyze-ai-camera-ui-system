@@ -396,7 +396,7 @@
   .dc-more:hover{background:#4f8ff022;border-color:#4f8ff066}
   /* ===== Elements tab — bipartite canvas: chip-level UI elements ⇆ data fields ===== */
   #elCanvas{position:relative;display:grid;
-    grid-template-columns:minmax(300px,340px) minmax(280px,330px) minmax(0,1fr);gap:0 26px;
+    grid-template-columns:minmax(300px,340px) minmax(360px,430px) minmax(0,1fr);gap:0 26px;
     align-items:start;margin-top:6px}
   /* the bezier gutter lives between the UI column and the data panel */
   .el-col-data{margin-left:110px}
@@ -440,7 +440,7 @@
   #elUiCol .el-fam .el-chip:first-of-type{border-top:0}
   .el-chip.hi{background:#4f8ff00d}
   /* click-locked element: hover state pinned until clicked again */
-  .el-chip.el-locked{background:#4f8ff012;box-shadow:inset 2px 0 0 var(--blue)}
+  .el-chip.el-locked{background:#4f8ff012;box-shadow:inset -2px 0 0 var(--blue)}
   /* format chips LEFT, name RIGHT (matching the right-aligned group titles) */
   .el-chip-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
   .el-chip-name{flex:none;font-size:13.5px;font-weight:600;color:var(--ink)}
