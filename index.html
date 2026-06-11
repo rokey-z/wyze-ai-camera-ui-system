@@ -503,6 +503,9 @@
   .v4rcps{display:flex;flex-wrap:wrap;gap:4px;border-top:1px solid var(--line);padding-top:8px}
   .v4rcps .dc-rcp{padding:2px 6px;border:1px solid;border-radius:5px}
   .v4rcps .v4struct{color:#c4b3f0;background:#a78bfa10;border-color:#a78bfa33}
+  /* v4 template picker chips: clamp the goal line */
+  #intents .chip[data-t4]{height:auto;min-height:0}
+  #intents .chip[data-t4] span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.35}
   /* v4 template sections inside the phone screen */
   .v4tpl{display:flex;flex-direction:column;gap:8px}
   .v4tpl .hero{width:100%!important}
@@ -5357,12 +5360,13 @@ function renderLayoutPane(){
   });
   const pats=EL_REGISTRY.filter(u=>u.grp==='structure');
   grid.innerHTML=pats.map(u=>{
-    const users=usedBy[u.id]||[];
+    const users=[...new Set(usedBy[u.id]||[])];
     return `<div class="v4card"><div class="v4head"><span><b>${u.label}</b> <span class="v4cid">${u.id}&middot;${u.formats[0]}</span></span>`
       +`<span class="v4ver ${users.length?'ok':'bad'}">${users.length?users.length+' use'+(users.length>1?'s':''):'reference only'}</span></div>`
       +`<div class="v4prev">${elRender(u.id,u.formats[0])}</div>`
       +`<div style="font-size:10px;line-height:1.5;color:var(--mut)">${u.desc}</div>`
-      +(users.length?`<div class="v4rcps">${users.map(n=>`<span class="dc-rcp v4struct">${n}</span>`).join('')}</div>`:'');
+      +(users.length?`<div class="v4rcps">${users.map(n=>`<span class="dc-rcp v4struct">${n}</span>`).join('')}</div>`:'')
+      +`</div>`;
   }).join('');
   document.getElementById('layoutSummary').innerHTML=
     `<span class="dc-stat dc-total dc-on"><b>${pats.length}</b> patterns</span>`
@@ -5496,7 +5500,16 @@ function renderT4(id){
   document.getElementById('traceBody').innerHTML=
     `<div style="font-size:10px;color:var(--mut);margin:6px 0 10px"><b style="color:var(--ink)">elements + layout &rarr; template</b> — no component layer; every slot below is an element render arranged by a layout pattern.`
     +(lint?` <span class="v4ver ${lint.bad.length?'bad':'ok'}" style="margin-left:6px">${lint.bad.length?'invalid: '+lint.bad.join(', '):'&#10003; all claims valid'}</span>`:'')+`</div>`+secHtml;
-  document.getElementById('tplCard').innerHTML='';
+  const tl=window.__t4lint;
+  if(tl){
+    const total=EL_REGISTRY.reduce((n,el)=>n+el.formats.length,0);
+    document.getElementById('tplCard').innerHTML=
+      `<div class="dc-summary" style="margin-top:8px">`
+      +`<span class="dc-stat dc-total dc-on"><b>${T4.length}</b> v4 templates</span>`
+      +`<span class="dc-stat dc-have"><b>${total-tl.__unused.length}/${total}</b> pairs exercised (with components)</span>`
+      +`<span class="dc-stat"><b>${tl.__unused.length}</b> still unused</span>`
+      +`<span class="dc-stat"><b>${V4_STRUCT_IDS.filter(id=>tl.__combined[id]).length}/9</b> layout patterns</span></div>`;
+  }else document.getElementById('tplCard').innerHTML='';
 }
 function renderTplVer(ver){
   tplVer=ver;
@@ -5520,6 +5533,40 @@ document.getElementById('intents').addEventListener('click',e=>{
   const ch=e.target.closest('.chip[data-t4]'); if(!ch) return;
   renderT4(ch.dataset.t4);
 });
+/* cross-verification of the new flow: every template claim must be valid
+   vocabulary; combined with the v4 components it yields the full
+   element×format coverage of the system */
+function lintT4(){
+  const res={usedBy:{},__matrix:{}};
+  T4.forEach(t=>{
+    const bad=[], claims=new Set();
+    t.sections.forEach(sec=>claimsOfParts(sec.parts).forEach(k=>claims.add(k)));
+    claims.forEach(k=>{
+      const [el,fmt]=k.split('·'); const reg=EL_REGISTRY.find(x=>x.id===el);
+      if(!reg){ console.warn('T4:',t.id,'claims unknown element',el); bad.push(k); }
+      else if(!reg.formats.includes(fmt)){ console.warn('T4:',t.id,'claims disallowed format',k); bad.push(k); }
+      (res.__matrix[el]=res.__matrix[el]||{})[fmt]=(res.__matrix[el][fmt]||0)+1;
+      if(V4_STRUCT_IDS.includes(el)&&!(res.usedBy[el]||[]).includes(t.title)) (res.usedBy[el]=res.usedBy[el]||[]).push(t.title);
+    });
+    const heroEarly=t.sections.slice(0,2).some(sec=>sec.parts.some(function chk(n){
+      return !!n.hero||(n.card&&n.card.some(chk))||(n.grid&&n.grid.cells.some(c=>c.some(x=>x.el==='media')));}));
+    if(!heroEarly) console.warn('T4:',t.id,'no media hero in the first two sections');
+    res[t.id]={claims:[...claims],bad};
+  });
+  const v4lint=window.__v4lint||lintV4();
+  const combined={};
+  const addM=m=>Object.entries(m).forEach(([el,fs])=>Object.entries(fs).forEach(([f,n])=>{(combined[el]=combined[el]||{})[f]=(combined[el][f]||0)+n;}));
+  addM(v4lint.__matrix); addM(res.__matrix);
+  const unused=[];
+  EL_REGISTRY.forEach(el=>el.formats.forEach(f=>{ if(!(combined[el.id]&&combined[el.id][f])) unused.push(el.id+'·'+f); }));
+  res.__combined=combined; res.__unused=unused;
+  window.__t4lint=res;
+  console.log('T4 coverage: '+(EL_REGISTRY.reduce((n,el)=>n+el.formats.length,0)-unused.length)
+    +'/'+EL_REGISTRY.reduce((n,el)=>n+el.formats.length,0)+' element·format pairs exercised; unused:',unused.join(', ')||'none');
+  return res;
+}
+lintT4();
+renderLayoutPane();   /* refresh "used by" chips now that template usage is known */
 renderElCanvas();
 scheduleDrawElemLines();
 /* hero rule: a generated screen should lead with a media surface within its
