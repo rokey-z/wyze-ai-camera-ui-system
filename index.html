@@ -4448,7 +4448,7 @@ const elTrendB=cls=>elMark(MODFULL15['M-TREND'],cls);
 const elReadB=cls=>elMark(MOD25['C-READOUT'],cls);
 /* --- archetype groups (render order) --- */
 const EL_GROUPS=[['media-attr','Media attribute'],['media-corr','Media correspondence'],
- ['state-agg','State aggregation'],['instance-agg','Instance aggregation'],['typecount-agg','Type-count aggregation'],
+ ['state-agg','State aggregation'],['count-agg','Count aggregation'],
  ['time-agg','Time aggregation'],['timestamps','Timestamps'],['priority-conf','Priority'],
  ['compare','Compare'],['nametags','Name tags'],['chat','Chat trigger'],['description','Description'],
  ['devices','Devices'],['escalation','Escalation'],['structure','Structure']];
@@ -4644,12 +4644,12 @@ const EL_REGISTRY=[
  {id:'duration',grp:'state-agg',label:'Duration',desc:'Elapsed time in state — derived from state-change timestamps',sig:'identity/device · duration · time',formats:['text-large','text-small','badge'],layouts:['standalone','overlay'],action:'none',accepts:['time','number'],
   sample:{txt:'for 3h 42m',val:'3h 42m',c:'#7eecc4',mono:true},stage:{'text-large':s=>`<span style="font-family:var(--mono);font-weight:700;font-size:24px;color:${s.c}"><span style="color:var(--mut);font-size:15px;font-weight:600">for </span>${s.val}</span>`}},
  /* instance aggregation */
- {id:'category-tag',grp:'instance-agg',label:'Category tag',desc:'Classifier tag on one instance (person / vehicle / pet)',sig:'instance · none · category',formats:['badge','text-tagline'],layouts:['standalone','overlay'],action:'filter',accepts:['id','score'],
+ {id:'category-tag',grp:'count-agg',label:'Category tag',desc:'Classifier tag on one instance (person / vehicle / pet)',sig:'instance · none · category',formats:['badge','text-tagline'],layouts:['standalone','overlay'],action:'filter',accepts:['id','score'],
   modifier:{provenance:'detector',confidenceField:'tag_conf'},sample:{tag:'VEHICLE',c:'#9cc3f5'}},
- {id:'category-count',grp:'instance-agg',label:'Category count',desc:'Instances grouped + counted per category — the filter row',sig:'category · count · category',formats:['filter','badge'],layouts:['standalone'],action:'filter',accepts:['id','count'],
+ {id:'category-count',grp:'count-agg',label:'Category count',desc:'Instances grouped + counted per category — the filter row',sig:'category · count · category',formats:['filter','badge'],layouts:['standalone'],action:'filter',accepts:['id','count'],
   sample:{tag:'All &middot; 24',sub:'Person &middot; 11'}},
  /* type-count aggregation */
- {id:'instance-count',grp:'typecount-agg',label:'Instance count',desc:'How many — events, devices online, frames, sightings',sig:'instance/device · count',formats:['tile','text-small','badge','text-tagline','filter'],layouts:['standalone','overlay'],action:'navigate',accepts:['count'],
+ {id:'instance-count',grp:'count-agg',label:'Instance count',desc:'How many — events, devices online, frames, sightings',sig:'instance/device · count',formats:['tile','text-small','badge','text-tagline','filter'],layouts:['standalone','overlay'],action:'navigate',accepts:['count'],
   sample:{txt:'38',name:'Events',sub:'events today'},
   stage:{'tile':s=>FMT_STAGE['block'](s),
          'filter':s=>`<div class="chips2" style="margin:0"><span class="fc on">${s.name} &middot; ${s.txt}</span><span class="fc">${s.sub}</span></div>`,
