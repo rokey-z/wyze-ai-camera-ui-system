@@ -456,10 +456,11 @@
     text-transform:uppercase;color:var(--dim)}
   /* format strip: live micro-previews, click swaps the stage */
   .el-fmts{display:inline-flex;flex-wrap:wrap;gap:4px}
-  .el-fmt{display:inline-flex;align-items:center;height:22px;padding:0 6px;border:1px solid var(--line);
-    border-radius:6px;cursor:pointer;background:var(--card)}
-  .el-fmt .mi{display:flex;align-items:center;max-width:52px;max-height:16px;overflow:hidden}
-  .el-fmt.on{border-color:#4f8ff088;background:#4f8ff012;box-shadow:0 0 0 1px #4f8ff044 inset}
+  .el-fmt{display:inline-flex;align-items:center;height:20px;padding:0 8px;border:1px solid var(--line);
+    border-radius:6px;cursor:pointer;background:var(--card);
+    font-family:var(--mono);font-size:8.5px;color:var(--mut);transition:color .12s,border-color .12s}
+  .el-fmt:hover{color:var(--ink)}
+  .el-fmt.on{border-color:#4f8ff088;background:#4f8ff012;color:#9cc3f5;box-shadow:0 0 0 1px #4f8ff044 inset}
   .el-modline{font-size:8.5px;font-family:var(--mono);color:#c4b3f0;opacity:.85}
   /* component recipe chips (element·format·layout) */
   .dc-rcp{font-family:var(--mono);font-size:8.5px;color:#9cc3f5;background:#4f8ff010;border-color:#4f8ff033 !important}
@@ -4803,7 +4804,7 @@ function renderElCanvas(){
           const ok=u.layouts.includes(L);
           return `<i class="el-lay-g${ok?' ok':''}${ok&&L===lay?' on':''}" data-lay="${L}" title="${L}${L==='overlay'?' — attached on a media surface':' — own card / row'}">${LAY_GLYPH[L]}</i>`;
         }).join('');
-        const fmts=u.formats.map(F=>`<span class="el-fmt${F===fmt?' on':''}" data-fmt="${F}" title="${F}"><i class="mi">${(FMT_MICRO[F]||(()=>F))(u.sample||{})}</i></span>`).join('');
+        const fmts=u.formats.map(F=>`<span class="el-fmt${F===fmt?' on':''}" data-fmt="${F}">${F}</span>`).join('');
         const mod=u.modifier?`<div class="el-modline">&oplus; ${u.modifier.provenance}${u.modifier.confidenceField?' &middot; '+u.modifier.confidenceField:''}${u.modifier.correctable?' &middot; tap-to-correct':''}</div>`:'';
         return `<div class="el-chip" data-ui="${u.id}" data-fmt="${fmt}" data-lay="${lay}" data-pairs="${(uiPairs[u.id]||[]).join(' ')}" title="${u.desc} [${u.sig}] &middot; tap: ${u.action}">`
           +`<div class="el-chip-head"><span class="el-chip-name">${u.label}</span></div>`
