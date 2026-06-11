@@ -2308,8 +2308,8 @@ EMIT  -&gt; see §13
       <div class="dc-cap" style="padding-top:8px"><b>Semantic elements</b> (center) — units of meaning aggregated from the
         <b>video &rarr; frame &rarr; instance</b> pipeline along time / camera / identity — connect many-to-many with the
         <b>data fields</b> that fill them (right). Each element renders through a <b>Format</b> (click a chip in its strip);
-        the consuming agent picks the right format and composes it standalone or as an overlay on media; <b>Structure</b> elements
-        (headers, collections, empty / loading states) describe the arrangement layer that the recipe grammar executes. <b>Hover</b> to see connections + the components using it;
+        the consuming agent picks the right format and composes it standalone or as an overlay on media; the <b>Layout reference</b>
+        (list / card / grid / strip / hero, plus header and empty / loading / more states — learned from the 27 components) shows the agent how elements can be structured. <b>Hover</b> to see connections + the components using it;
         <b>click</b> to lock. Solid = bound today &middot; dashed = possible fill.</div>
       <div class="dc-anchors" id="elAnchors"></div>
       <div class="dc-summary" id="elSummary"></div>
@@ -4451,7 +4451,7 @@ const EL_GROUPS=[['media-attr','Media attribute'],['media-corr','Media correspon
  ['state-agg','State aggregation'],['count-agg','Count aggregation'],
  ['time-agg','Time aggregation'],['timestamps','Timestamps'],['priority-conf','Priority'],
  ['compare','Compare'],['nametags','Name tags'],['chat','Chat trigger'],['description','Description'],
- ['devices','Devices'],['escalation','Escalation'],['structure','Structure']];
+ ['devices','Devices'],['escalation','Escalation'],['structure','Layout reference']];
 /* --- the 74 elements: fld → {arch, label, desc, prev, ctx?} --- */
 const ELEMS={
  /* text */
@@ -4717,8 +4717,16 @@ const EL_REGISTRY=[
  /* structure — the arrangement layer; recipes execute these, agents compose them */
  {id:'section-header',grp:'structure',label:'Section header',desc:'Panel title row with optional count / status / AI chip — the header pattern in 16 components',sig:'structure · none',formats:['header'],layouts:['standalone'],action:'none',accepts:['text','count'],
   sample:{txt:'Entry history',sub:'12 today'}},
- {id:'collection',grp:'structure',label:'Collection',desc:'A child element repeated per item of a query — feed rows, tiles, gallery cells (the repeat pattern in 12 components)',sig:'structure · count',formats:['grid','strip','list'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
-  sample:{txt:'Person at side gate',sub:'11:31 PM'}},
+ {id:'layout-list',grp:'structure',label:'List',desc:'Rows repeated per item — thumb · text · meta (C-FEED, C-LOG, C-VISIT, C-SOS, C-LEARN)',sig:'layout · repeat',formats:['list'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
+  sample:{},stage:{list:s=>Array.from({length:3},(_,i)=>`<div style="display:flex;align-items:center;gap:9px;padding:7px 0;${i?'border-top:1px solid var(--line)':''}"><span style="flex:none;width:34px;height:24px;border-radius:5px;background:#1d2a40"></span><span style="flex:1;display:flex;flex-direction:column;gap:4px"><i style="display:block;height:7px;width:${[62,48,70][i]}%;border-radius:3px;background:#2c3b56"></i><i style="display:block;height:6px;width:${[30,38,24][i]}%;border-radius:3px;background:#1f2c44"></i></span><i style="flex:none;display:block;height:6px;width:22px;border-radius:3px;background:#1f2c44"></i></div>`).join('')}},
+ {id:'layout-card',grp:'structure',label:'Card',desc:'Self-contained block — header, media / content, meta footer (C-GROUPED, C-IDCARD, the agent cards)',sig:'layout · single',formats:['card'],layouts:['standalone'],action:'navigate',accepts:['id'],
+  sample:{},stage:{card:s=>`<div style="border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;background:var(--card)"><div style="display:flex;align-items:center;justify-content:space-between"><i style="display:block;height:7px;width:42%;border-radius:3px;background:#2c3b56"></i><span style="width:30px;height:11px;border-radius:999px;background:#1f2c44"></span></div><div style="height:64px;border-radius:8px;background:linear-gradient(165deg,#1d2a40,#131d30)"></div><i style="display:block;height:6px;width:70%;border-radius:3px;background:#1f2c44"></i></div>`}},
+ {id:'layout-grid',grp:'structure',label:'Grid',desc:'Equal cells in columns — tiles &amp; galleries (C-TILES, C-GALLERY, C-MULTIVIEW)',sig:'layout · repeat',formats:['grid'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
+  sample:{},stage:{grid:s=>`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">${Array.from({length:6},()=>`<div style="aspect-ratio:16/11;border-radius:7px;background:#1d2a40;border:1px solid var(--line)"></div>`).join('')}</div>`}},
+ {id:'layout-strip',grp:'structure',label:'Strip',desc:'Horizontal thumb rail — compact media row (C-STRIP)',sig:'layout · repeat',formats:['strip'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
+  sample:{},stage:{strip:s=>`<div style="display:flex;gap:6px">${Array.from({length:4},()=>`<span style="flex:none;width:46px;height:32px;border-radius:6px;background:#1d2a40;border:1px solid var(--line)"></span>`).join('')}<span style="flex:none;width:46px;height:32px;border-radius:6px;border:1px dashed var(--line);display:grid;place-items:center;font-size:9px;color:var(--dim)">+8</span></div>`}},
+ {id:'layout-hero',grp:'structure',label:'Hero',desc:'Full-width media surface carrying overlay elements (C-LIVE, C-RECVIDEO, C-SNAP, C-TIMELAPSE)',sig:'layout · single',formats:['hero'],layouts:['standalone'],action:'open-clip',accepts:['id'],
+  sample:{},stage:{hero:s=>`<div style="position:relative;aspect-ratio:16/9;border-radius:10px;background:linear-gradient(165deg,#1d2a40,#101a2c);border:1px solid var(--line)"><span style="position:absolute;left:7px;top:7px;width:34px;height:10px;border-radius:999px;background:#2c3b56"></span><span style="position:absolute;left:7px;bottom:7px;width:46px;height:9px;border-radius:3px;background:#1f2c44"></span><span style="position:absolute;right:7px;bottom:7px;width:26px;height:9px;border-radius:3px;background:#1f2c44"></span></div>`}},
  {id:'empty-state',grp:'structure',label:'Empty state',desc:'No-results fallback when a query returns nothing',sig:'structure · none',formats:['tile'],layouts:['standalone'],action:'none',accepts:['text'],
   sample:{},stage:{tile:s=>`<div style="border:1px dashed var(--line);border-radius:12px;padding:18px 12px;text-align:center"><div style="font-size:11px;font-weight:600;color:var(--mut)">No events today</div><div style="font-size:9px;color:var(--dim);margin-top:3px">quiet so far — check back later</div></div>`}},
  {id:'loading-state',grp:'structure',label:'Loading state',desc:'Skeleton placeholder while data is fetching',sig:'structure · none',formats:['tile'],layouts:['standalone'],action:'none',accepts:['text'],
