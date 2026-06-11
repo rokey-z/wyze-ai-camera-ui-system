@@ -4650,7 +4650,7 @@ const EL_REGISTRY=[
   sample:{tag:'All &middot; 24',sub:'Person &middot; 11'}},
  /* type-count aggregation */
  {id:'instance-count',grp:'count-agg',label:'Instance count',desc:'How many — events, devices online, frames, sightings',sig:'instance/device · count',formats:['tile','text-small','badge','text-tagline','filter'],layouts:['standalone','overlay'],action:'navigate',accepts:['count'],
-  sample:{txt:'4',name:'Vehicles',sub:'vehicles today'},
+  sample:{txt:'4',name:'Cats',sub:'cats today'},
   stage:{'tile':s=>FMT_STAGE['block'](s),
          'filter':s=>`<div class="chips2" style="margin:0"><span class="fc on">${s.name} &middot; ${s.txt}</span><span class="fc">${s.sub}</span></div>`,
          'text-small':s=>`<div style="font-size:12px;font-weight:600;color:var(--ink)"><span style="color:var(--mut)">${s.name}</span> ${s.txt}</div>`,
