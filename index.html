@@ -453,9 +453,11 @@
   .el-lay-g.on{border-color:#4f8ff088;background:#4f8ff014;color:#9cc3f5}
   /* labeled Format / Layout axes at the bottom of each element row */
   .el-axis{display:flex;align-items:center;gap:8px}
-  /* "Format" caption: regular weight, sits in front of the switch tags */
-  .el-fmtcol{display:flex;align-items:center;justify-content:flex-end;gap:8px;min-width:0}
-  .el-fmts{justify-content:flex-end}
+  /* stage left, format switch tags stacked vertically on the right */
+  .el-chip-body{display:flex;align-items:flex-start;gap:14px}
+  .el-chip-body .el-chip-stage{flex:1;min-width:0}
+  .el-fmtcol{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+  .el-fmts{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
   .el-axis-t{flex:none;font-size:8px;font-weight:400;letter-spacing:.7px;
     text-transform:uppercase;color:var(--dim)}
   /* format strip: live micro-previews, click swaps the stage */
@@ -4841,8 +4843,9 @@ function renderElCanvas(){
         const fmts=u.formats.map(F=>`<span class="el-fmt${F===fmt?' on':''}" data-fmt="${F}">${F}</span>`).join('');
         const mod=u.modifier?`<div class="el-modline">&oplus; ${u.modifier.provenance}${u.modifier.confidenceField?' &middot; '+u.modifier.confidenceField:''}${u.modifier.correctable?' &middot; tap-to-correct':''}</div>`:'';
         return `<div class="el-chip" data-ui="${u.id}" data-fmt="${fmt}" data-lay="${lay}" data-pairs="${(uiPairs[u.id]||[]).join(' ')}" title="${u.desc} [${u.sig}] &middot; tap: ${u.action}">`
-          +`<div class="el-chip-head"><span class="el-chip-name">${u.label}</span><div class="el-fmtcol"><span class="el-axis-t">Format</span><span class="el-fmts">${fmts}</span></div></div>`
-          +`<div class="el-chip-stage">${elStageAll(u,fmt)}</div>`
+          +`<div class="el-chip-head"><span class="el-chip-name">${u.label}</span></div>`
+          +`<div class="el-chip-body"><div class="el-chip-stage">${elStageAll(u,fmt)}</div>`
+          +`<div class="el-fmtcol"><span class="el-axis-t">Format</span><span class="el-fmts">${fmts}</span></div></div>`
           +`${mod}</div>`;
       }).join('')+`</div>`;
   }).join('');
