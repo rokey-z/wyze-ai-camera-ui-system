@@ -4675,7 +4675,7 @@ const EL_REGISTRY=[
  {id:'attribute-tag',grp:'nametags',label:'Attribute tag',desc:'Identity / device attributes (species, descriptors, battery)',sig:'identity/device · none',formats:['text-tagline','badge'],layouts:['standalone'],action:'none',accepts:['text','bool'],
   sample:{txt:'Cardinalis cardinalis'},stage:{'text-tagline':s=>`<div class="sci" style="font-style:italic;font-size:10px;color:var(--mut)">${s.txt}</div>`}},
  /* chat */
- {id:'narrative',grp:'chat',label:'Narrative',desc:'AI-synthesized prose over a period — tap opens the chat sheet',sig:'household/agent · narrative · time',formats:['text-medium','text-large','text-small'],layouts:['standalone'],action:'open-chat',accepts:['text'],
+ {id:'narrative',grp:'chat',label:'Insight',desc:'AI-synthesized prose over a period — tap opens the chat sheet',sig:'household/agent · narrative · time',formats:['text-medium','text-large'],layouts:['standalone'],action:'open-chat',accepts:['text'],
   modifier:{provenance:'llm'},sample:{txt:'Slept <b style="color:#9cc3f5">10h 4m</b> with 2 brief wakings.'}},
  {id:'suggestion',grp:'chat',label:'Suggestion',desc:'Proactive question / nudge — tap opens the chat sheet',sig:'agent · none',formats:['button'],layouts:['standalone'],action:'open-chat',accepts:['text'],
   sample:{tag:'What did I miss today?'},stage:{button:s=>`<div class="suglist"><div class="sugq"><span class="sugq-t">${s.tag}</span><span class="sugq-go">&rarr;</span></div></div>`}},
