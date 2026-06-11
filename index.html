@@ -4606,7 +4606,7 @@ const FMT_MICRO={
    Format + Layout are presentation axes; bindings derive from MAPLINES x SEL2UI. ---- */
 const EL_REGISTRY=[
  /* media attribute */
- {id:'media',grp:'media-attr',label:'Media',desc:'Raw visual data — stream, still, clip, lapse, animated preview or identity portrait crop (square)',sig:'video/frame · none',formats:['surface','thumb','portrait','badge'],layouts:['standalone'],action:'open-clip',accepts:['media'],
+ {id:'media',grp:'media-attr',label:'Media',desc:'Raw visual data — stream, still, clip, lapse, animated preview or identity portrait crop (square)',sig:'video/frame · none',formats:['surface','thumb','portrait'],layouts:['standalone'],action:'open-clip',accepts:['media'],
   sample:{txt:'&#9654; GIF',tag:'&#9654; GIF &middot; 0:06',c:'#e9eef6',grad:'linear-gradient(165deg,#1d2d49,#0f1828)'}},
  /* media correspondence (anchored ON media) */
  {id:'detection-marker',grp:'media-corr',label:'Detection marker',desc:'Bounding box + label anchored to the frame by detector geometry',sig:'instance · none',formats:['bound-box'],layouts:['overlay'],action:'correct',accepts:['geometry'],
@@ -4683,7 +4683,7 @@ const SEL2UI={
  'C-ACT':{'.ml-pon':T('device-control','button'),'.ml-poff':T('device-control','button'),'.ml-talk':T('device-control','button'),'.ml-devstate':T('state','text-small')},
  'C-READOUT':{'.ml-value':T('measurement','block'),'.ml-unit':T('measurement','block'),'.ml-meter':T('measurement','text-tagline'),'.cv':T('provenance','block')},
  'C-SOS':{'.sosc .sosc-name':T('name-tag','text-small'),'.sosc .sosc-num':T('contact-action','list'),'.sosc-acts .sosc-act':T('contact-action','button')},
- 'C-GROUPED':{'.gcard-thumb':T('media','surface'),'.gcard-title':T('description','text-small','overlay'),'.gcard-gif':T('media','badge','overlay'),'.cv':T('priority-marker','badge'),'.gcard-meta':T('instance-count','text-tagline','overlay')},
+ 'C-GROUPED':{'.gcard-thumb':T('media','surface'),'.gcard-title':T('description','text-small','overlay'),'.gcard-gif':T('media','thumb','overlay'),'.cv':T('priority-marker','badge'),'.gcard-meta':T('instance-count','text-tagline','overlay')},
  'C-STRIP':{'.estrip .ethumb':T('media','thumb'),'.estrip .ethumb-tag':T('category-tag','badge','overlay'),'.estrip .ethumb-t':T('absolute-time','text-tagline','overlay'),'.ml-count':T('instance-count','text-small')},
  'C-DAYTREND':{'.scrub .seg':T('day-activity','chart'),'.scrub .pin':T('absolute-time','chart','overlay'),'.delta':T('trend-delta','badge')},
  'C-MONTHTREND':{'.ml-month':T('absolute-time','text-small'),'.ml-mtotal':T('instance-count','text-small'),'.ml-daycell':T('month-calendar','chart')},
@@ -4696,9 +4696,9 @@ const SEL2UI={
  'C-SNAP':{'.videobox':T('media','surface'),'.annbadge':T('detection-marker','bound-box','overlay'),'.fsub':T('absolute-time','text-tagline','overlay'),'.fs':T('description','text-small','overlay'),'.cv':T('provenance','block')},
  'C-TIMELAPSE':{'.lapse .videobox':T('media','surface'),'.vname':T('name-tag','text-tagline','overlay'),'.vtime':T('absolute-time','text-tagline','overlay'),'.ld2':T('instance-count','text-small'),'.lapsetrack b':T('absolute-time','chart','overlay')},
  'C-GALLERY':{'.gallery .gcell':T('media','thumb'),'.gallery .gcell span':T('name-tag','text-tagline','overlay'),'.sig-coll':T('instance-count','badge'),'.chips2 .fc.on':T('category-count','filter'),'.chips2 .fc:not(.on)':T('category-count','filter')},
- 'C-MULTIVIEW':{'.gallery .gcell':T('name-tag','text-tagline','overlay'),'.gallery .gcell i':T('state','dot','overlay'),'.sig-multi':T('media','badge')},
+ 'C-MULTIVIEW':{'.gallery .gcell':T('name-tag','text-tagline','overlay'),'.gallery .gcell i':T('state','dot','overlay'),'.sig-multi':T('media','thumb')},
  'C-LOG':{'.logrow .lt':T('absolute-time','text-small'),'.logrow .lv':T('state','text-small'),'.logrow .ld':T('trend-delta','text-small')},
- 'C-VISIT':{'.tsrow .tn':T('absolute-time','text-small'),'.tsrow .tm':T('absolute-time','text-tagline'),'.tsrow .cliptip':T('media','thumb'),'.tsrow .ctg':T('media','badge','overlay'),'.tsrow .dd':T('duration','text-small'),'.tsrow .ds':T('state','badge'),'.cv':T('provenance','block')},
+ 'C-VISIT':{'.tsrow .tn':T('absolute-time','text-small'),'.tsrow .tm':T('absolute-time','text-tagline'),'.tsrow .cliptip':T('media','thumb'),'.tsrow .ctg':T('media','thumb','overlay'),'.tsrow .dd':T('duration','text-small'),'.tsrow .ds':T('state','badge'),'.cv':T('provenance','block')},
  'C-IDCARD':{'.idcard .nm':T('name-tag','text-small'),'.idcard .sci':T('attribute-tag','text-tagline'),'.idcard .pic':T('media','portrait'),'.idcard .meta':T('absolute-time','text-tagline'),'.pvbadge':T('state','badge'),'.cv':T('provenance','block')},
  'C-TREND':{'.trendbars .tb':T('week-activity','chart'),'.delta':T('trend-delta','badge')},
  'C-DETER':{'.act.danger':T('device-control','button'),'.act:not(.danger)':T('device-control','button')},
