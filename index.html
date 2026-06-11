@@ -456,12 +456,11 @@
   /* stage left, format switch tags stacked vertically on the right */
   .el-chip-body{display:flex;align-items:flex-start;gap:14px}
   .el-chip-body .el-chip-stage{flex:1;min-width:0}
-  .el-fmtcol{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
-  .el-fmts{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+  .el-fmtcol{flex:none;width:106px;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
   .el-axis-t{flex:none;font-size:8px;font-weight:400;letter-spacing:.7px;
     text-transform:uppercase;color:var(--dim)}
-  /* format strip: live micro-previews, click swaps the stage */
-  .el-fmts{display:inline-flex;flex-wrap:wrap;gap:4px}
+  /* format strip: vertical stack of switch tags, click swaps the stage */
+  .el-fmts{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
   .el-fmt{display:inline-flex;align-items:center;height:20px;padding:0 8px;border:1px solid var(--line);
     border-radius:6px;cursor:pointer;background:var(--card);
     font-family:var(--mono);font-size:8.5px;color:var(--mut);transition:color .12s,border-color .12s}
@@ -474,9 +473,9 @@
   .el-comp-rcp{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
   .el-comp-rcp .dc-rcp{padding:2px 6px;border:1px solid;border-radius:5px}
   .el-chip-stage{pointer-events:none}
-  /* every layout render gets the SAME fixed component width: the stage is
-     a two-column grid and a part occupies one column, lone or paired */
-  .el-chip-stage:has(.el-stage-part){display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+  /* single render per format at the full stage width (the fixed-width
+     format column on the right keeps stages uniform across elements) */
+  .el-chip-stage:has(.el-stage-part){display:grid;grid-template-columns:1fr;gap:18px;align-items:start}
   .el-stage-part{display:flex;flex-direction:column;gap:5px;min-width:0}
   .el-stage-part .el-stage-r{width:100%}
   .el-stage-part .hero{width:100%!important}
@@ -4328,7 +4327,7 @@ const RECIPES={
  'C-READOUT':{q:'snapshot + VLM read',mods:['confidence','correctable'],
   render:()=>RB.panel(
    RB.ph('Number readout'),
-   RB.leaf('measurement','block',`<div class="readout"><div class="rn"><span class="ml-value">04857</span><span class="ml-unit" style="font-size:18px;color:var(--mut)"> kWh</span></div><div class="ru ml-meter">utility meter</div></div>`),
+   RB.leaf('measurement','tile',`<div class="readout"><div class="rn"><span class="ml-value">04857</span><span class="ml-unit" style="font-size:18px;color:var(--mut)"> kWh</span></div><div class="ru ml-meter">utility meter</div></div>`),
    RB.leaf('provenance','button-pill',cf15('confidence 0.91','tap to correct')))},
  'C-TILES':{q:'devices · all + metrics · derived counts',
   render:()=>RB.panel(
@@ -4579,7 +4578,7 @@ const FIELD_META={
  power_on:'command',power_off:'command',talk_session_id:'command',siren:'command',lights:'command',method:'command',phone:'text',
 };
 /* ---- the 13 formats + per-format micro (strip) and stage (full) renderers ---- */
-const FORMATS=['text-large','text-medium','text-small','text-tagline','badge','dot','block','filter','list','small-thumb','square','full-card','chart','bound-box','button'];
+const FORMATS=['text-large','text-medium','text-small','text-tagline','badge','dot','tile','filter','list','small-thumb','square','full-card','chart','bound-box','button'];
 function inMedia(html,anchor){
   const pos={tl:'left:8px;top:8px',tr:'right:8px;top:8px',bl:'left:8px;bottom:8px',br:'right:8px;bottom:8px',center:'inset:0;display:grid;place-items:center'}[anchor||'bl'];
   return `<div class="hero" style="width:200px"><div class="videobox" style="background:linear-gradient(165deg,#1d2d49,#0f1828)"><div style="position:absolute;${pos}">${html}</div></div></div>`;
@@ -4633,9 +4632,9 @@ const EL_REGISTRY=[
  /* state aggregation */
  {id:'state',grp:'state-agg',label:'State',desc:'Current condition or AI judgment of a subject — word, pill, dot, sentence or verdict badge (tone, verification, known-identity)',sig:'identity/device/agent · state',formats:['text-large','badge','text-small'],layouts:['standalone','overlay'],action:'open-chat',accepts:['state','bool'],
   modifier:{provenance:'vlm',confidenceField:'confidence',correctable:true},sample:{txt:'CLOSED',tag:'PERSON',c:'#7eecc4'}},
- {id:'measurement',grp:'state-agg',label:'Measurement',desc:'Value + unit read from the scene (VLM, no OCR endpoint)',sig:'device · state',formats:['block','text-large'],layouts:['standalone','overlay'],action:'correct',accepts:['number','text'],
+ {id:'measurement',grp:'state-agg',label:'Measurement',desc:'Value + unit read from the scene (VLM, no OCR endpoint)',sig:'device · state',formats:['tile','text-large'],layouts:['standalone','overlay'],action:'correct',accepts:['number','text'],
   modifier:{provenance:'vlm',confidenceField:'confidence',correctable:true},sample:{txt:'04857',sub:'kWh &middot; gas meter',c:'#5fd0e0',mono:true},
-  stage:{block:s=>`<div class="readout" style="padding:0;text-align:left"><div class="rn" style="font-size:30px">${s.txt}<span style="font-size:15px;color:var(--mut);letter-spacing:0"> kWh</span></div><div class="ru" style="font-size:10px;color:var(--mut)">${s.sub||''}</div></div>`}},
+  stage:{tile:s=>`<div class="readout" style="padding:0;text-align:left"><div class="rn" style="font-size:30px">${s.txt}<span style="font-size:15px;color:var(--mut);letter-spacing:0"> kWh</span></div><div class="ru" style="font-size:10px;color:var(--mut)">${s.sub||''}</div></div>`}},
  {id:'duration',grp:'state-agg',label:'Duration',desc:'Elapsed time in state — derived from state-change timestamps',sig:'identity/device · duration · time',formats:['text-large','text-small','badge'],layouts:['standalone','overlay'],action:'none',accepts:['time','number'],
   sample:{txt:'for 3h 42m',val:'3h 42m',c:'#7eecc4',mono:true},stage:{'text-large':s=>`<span style="font-family:var(--mono);font-weight:700;font-size:24px;color:${s.c}"><span style="color:var(--mut);font-size:15px;font-weight:600">for </span>${s.val}</span>`}},
  /* instance aggregation */
@@ -4695,10 +4694,10 @@ const EL_REGISTRY=[
   sample:{txt:'Front door cam'}},
  {id:'device-state',grp:'devices',label:'Device state',desc:'Connectivity & power — online / offline, on / off',sig:'device · state',formats:['badge','text-small'],layouts:['standalone','overlay'],action:'navigate',accepts:['state','bool'],
   sample:{txt:'Online',tag:'ONLINE',c:'#34d399'}},
- {id:'device-count',grp:'devices',label:'Device count',desc:'Fleet roll-up — devices online vs total',sig:'device · count',formats:['text-small','block'],layouts:['standalone'],action:'navigate',accepts:['count'],
+ {id:'device-count',grp:'devices',label:'Device count',desc:'Fleet roll-up — devices online vs total',sig:'device · count',formats:['text-small','tile'],layouts:['standalone'],action:'navigate',accepts:['count'],
   sample:{txt:'3 / 4',sub:'devices online'},
   stage:{'text-small':s=>`<span style="font-size:12px;font-weight:700;color:#7eecc4">3 / 4 <span style="color:var(--mut);font-weight:600">online</span></span>`,
-         'block':s=>`<div class="tilegrid"><div class="gtile num"><b>3 / 4</b><span>devices online</span></div></div>`}},
+         'tile':s=>`<div class="tilegrid"><div class="gtile num"><b>3 / 4</b><span>devices online</span></div></div>`}},
  {id:'device-control',grp:'devices',label:'Device control',desc:'Command button — power, talk, siren, lights',sig:'device · none',formats:['button-pill','button-block'],layouts:['standalone'],action:'control',accepts:['command'],
   sample:{txt:'Power on'},stage:{
    'button-pill':s=>`<div class="actions" style="max-width:200px"><div class="act primary" style="border-radius:999px"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>${s.txt}</div></div>`,
@@ -4719,14 +4718,14 @@ const SEL2UI={
  'C-FEED':{'.chips2 .fc.on':T('category-count','filter'),'.chips2 .fc:not(.on)':T('category-count','filter'),'.feedrow .thumb':T('media','small-thumb'),'.feedrow .ft':T('description','text-small'),'.feedrow .fm':T('absolute-time','text-tagline'),'.feedrow .etag':T('category-tag','badge')},
  'C-RECAP':{'.ml-title':T('description','text-small'),'.ml-tone':T('state','badge'),'.ml-narrative':T('narrative','text-medium')},
  'C-ACT':{'.ml-pon':T('device-control','button-pill'),'.ml-poff':T('device-control','button-pill'),'.ml-talk':T('device-control','button-pill'),'.ml-devstate':T('device-state','text-small')},
- 'C-READOUT':{'.ml-value':T('measurement','block'),'.ml-unit':T('measurement','block'),'.ml-meter':T('measurement','text-tagline'),'.cv':T('provenance','button-pill')},
+ 'C-READOUT':{'.ml-value':T('measurement','tile'),'.ml-unit':T('measurement','tile'),'.ml-meter':T('measurement','text-tagline'),'.cv':T('provenance','button-pill')},
  'C-SOS':{'.sosc .sosc-name':T('name-tag','text-small'),'.sosc .sosc-num':T('contact-action','list'),'.sosc-acts .sosc-act':T('contact-action','button-block')},
  'C-GROUPED':{'.gcard-thumb':T('media','full-card'),'.gcard-title':T('description','text-small','overlay'),'.gcard-gif':T('media','small-thumb','overlay'),'.cv':T('priority-marker','badge'),'.gcard-meta':T('instance-count','text-tagline','overlay')},
  'C-STRIP':{'.estrip .ethumb':T('media','small-thumb'),'.estrip .ethumb-tag':T('category-tag','badge','overlay'),'.estrip .ethumb-t':T('absolute-time','text-tagline','overlay'),'.ml-count':T('instance-count','text-small')},
  'C-DAYTREND':{'.scrub .seg':T('time-trend','daily-chart'),'.scrub .pin':T('absolute-time','chart','overlay'),'.delta':T('trend-delta','badge')},
  'C-MONTHTREND':{'.ml-month':T('absolute-time','text-small'),'.ml-mtotal':T('instance-count','text-small'),'.ml-daycell':T('time-trend','month-chart')},
  'C-INSIGHT':{'.insfind':T('narrative','text-medium'),'.trendbars .tb':T('time-trend','weekly-chart')},
- 'C-TILES':{'.ml-fleet':T('device-count','text-small'),'.tilegrid .gt-top':T('device-name','text-tagline'),'.tilegrid .gt-sub':T('device-state','badge'),'.kpi0 b':T('instance-count','tile'),'.kpi1 b':T('instance-count','tile'),'.kpi2 b':T('measurement','block')},
+ 'C-TILES':{'.ml-fleet':T('device-count','text-small'),'.tilegrid .gt-top':T('device-name','text-tagline'),'.tilegrid .gt-sub':T('device-state','badge'),'.kpi0 b':T('instance-count','tile'),'.kpi1 b':T('instance-count','tile'),'.kpi2 b':T('measurement','tile')},
  'C-ASSIST':{'.sugq-t':T('suggestion','button')},
  'C-LEARN':{'.learnrow .ft':T('narrative','text-small'),'.learnrow .fm':T('category-tag','text-tagline'),'.learnrow .lconf':T('provenance','button-pill')},
  'C-LIVE':{'.videobox':T('media','full-card'),'.vname':T('state','text-small','overlay'),'.vtime':T('absolute-time','text-tagline','overlay')},
