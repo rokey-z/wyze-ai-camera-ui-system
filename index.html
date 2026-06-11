@@ -387,6 +387,7 @@
   .dc-cv.dc-missing{color:#ff9a9a;border-color:#f25c5c55;background:#f25c5c12}
   /* v2.5 accent (teal) + its custom-render classes */
   .dc-vertab[data-ver="v25"].on{color:#7eecc4;background:#34d3991e;border-color:#34d39966;box-shadow:0 0 0 1px #34d39955 inset}
+  .dc-vertab[data-ver="v4"].on{color:#7fdce8;background:#38c6db1e;border-color:#38c6db66;box-shadow:0 0 0 1px #38c6db55 inset}
   .dc-vlab.v25{color:#7eecc4;background:#34d39918;border:1px solid #34d39944}
   .dc-badge.dc-v25{color:#7eecc4;border-color:#34d39966;background:#34d39914}
   .dc-v25chip{border-color:#34d39955 !important}
@@ -1467,7 +1468,6 @@
   <div class="tabs">
     <div class="tab on" data-tab="elem">Elements</div>
     <div class="tab" data-tab="data">Components</div>
-    <div class="tab" data-tab="v4">v4.0</div>
     <div class="tab" data-tab="gen">Templates</div>
     <div class="tab" data-tab="comp">Spec</div>
     <div class="tab" data-tab="builder">.MD</div>
@@ -2318,7 +2318,8 @@ EMIT  -&gt; see §13
         <button class="dc-vertab" data-ver="v1">v1 <span class="dc-vn">42</span></button>
         <button class="dc-vertab" data-ver="v15">v1.5 <span class="dc-vn">42</span></button>
         <button class="dc-vertab" data-ver="v2">v2 <span class="dc-vn">30</span></button>
-        <button class="dc-vertab on" data-ver="v25">v3.0 <span class="dc-vn">27</span> · latest</button>
+        <button class="dc-vertab on" data-ver="v25">v3.0 <span class="dc-vn">27</span></button>
+        <button class="dc-vertab" data-ver="v4">v4.0 <span class="dc-vn">27</span> · latest</button>
         <span class="dc-laytoggle" id="dcLayToggle">
           <button class="dc-lay on" data-lay="list" title="List — component + data card + connecting lines">&#9776; List</button>
           <button class="dc-lay" data-lay="grid" title="Grid — components only, hover for data">&#9638; Grid</button>
@@ -2329,19 +2330,6 @@ EMIT  -&gt; see §13
     </div>
     <div id="dcGrids"></div>
     <div id="dcOpps"></div>
-  </div>
-
-  <!-- ============ TAB: v4.0 — components REGENERATED from the element vocabulary ============ -->
-  <div class="tabpane" id="pane-v4">
-    <div class="dc-stickyhdr">
-      <div class="dc-cap" style="padding-top:8px"><b>v4.0 components</b> — all 27 regenerated purely from the current
-        element vocabulary: every slot is an element rendered through one of its <b>formats</b>, arranged by a
-        <b>Layout reference</b> pattern (header / list / card / grid / strip / hero / more). The badge on each card
-        verifies the composition covers every data binding the v3 component carries; the pills below report how much
-        of the element &times; format vocabulary the full set exercises.</div>
-      <div class="dc-summary" id="v4Summary"></div>
-    </div>
-    <div id="v4Grid" class="v4wrap"></div>
   </div>
 
   <!-- ============ TAB: ELEMENTS — each element = one data source ============ -->
@@ -5293,11 +5281,11 @@ function lintV4(){
   return res;
 }
 const V4_STRUCT_IDS=['section-header','layout-list','layout-card','layout-grid','layout-strip','layout-hero','more-paging','empty-state','loading-state'];
-function renderV4Pane(){
-  const grid=document.getElementById('v4Grid'); if(!grid) return;
+/* renders the v4.0 version view INSIDE the Components tab (dcGrids/dcSummary) */
+function renderDcV4(){
   const lint=lintV4();
   const names={}; V25.forEach(v=>names[v.id]=v.name);
-  grid.innerHTML=Object.keys(V4).map(cid=>{
+  const cards=Object.keys(V4).map(cid=>{
     const r=lint[cid], ok=!r.missing.length;
     const dataClaims=r.claims.filter(k=>!V4_STRUCT_IDS.includes(k.split('·')[0]));
     const structClaims=r.claims.filter(k=>V4_STRUCT_IDS.includes(k.split('·')[0]));
@@ -5306,16 +5294,22 @@ function renderV4Pane(){
       +`<div class="v4prev">${renderV4(cid)}</div>`
       +`<div class="v4rcps">${structClaims.map(k=>`<span class="dc-rcp v4struct">${k}</span>`).join('')}${dataClaims.map(k=>`<span class="dc-rcp">${k}</span>`).join('')}</div></div>`;
   }).join('');
+  document.getElementById('dcGrids').innerHTML=
+    `<div class="dc-cap" style="margin-top:10px"><b>v4.0</b> — all 27 components regenerated purely from the current element
+      vocabulary: every slot is an element rendered through one of its <b>formats</b>, arranged by a <b>Layout reference</b>
+      pattern (header / list / card / grid / strip / hero / more). The badge on each card verifies the composition covers
+      every data binding the v3.0 component carries.</div>`
+    +`<div class="v4wrap">${cards}</div>`;
   const total=EL_REGISTRY.reduce((n,el)=>n+el.formats.length,0);
   const used=total-lint.__unused.length;
   const structUsed=V4_STRUCT_IDS.filter(id=>lint.__matrix[id]).length;
-  document.getElementById('v4Summary').innerHTML=
+  document.getElementById('dcSummary').innerHTML=
     `<span class="dc-stat dc-total dc-on"><b>${Object.keys(V4).length}</b> components regenerated</span>`
     +`<span class="dc-stat dc-have"><b>${used}/${total}</b> element&middot;format pairs exercised</span>`
     +`<span class="dc-stat"><b>${lint.__unused.length}</b> formats unused</span>`
     +`<span class="dc-stat"><b>${structUsed}/9</b> layout patterns used</span>`;
 }
-renderV4Pane();
+lintV4();   /* startup verification — the v4 view itself renders on demand */
 renderElCanvas();
 scheduleDrawElemLines();
 /* hero rule: a generated screen should lead with a media surface within its
@@ -5364,6 +5358,12 @@ function renderDcVer(ver){
   dcVer=ver; dcCur='';
   document.querySelectorAll('#dcVerTabs .dc-vertab').forEach(b=>b.classList.toggle('on',b.dataset.ver===ver));
   $('dcOpps').style.display='';
+  if(ver==='v4'){
+    renderDcV4();
+    $('dcAnchors').innerHTML='';
+    $('dcOpps').style.display='none';
+    return;
+  }
   if(ver==='v2'||ver==='v25'){
     const SET=ver==='v25'?V25:V2, opt=ver==='v25'?{rmap:MOD25,vlab:'v3.0',vcls:'v25'}:undefined;
     const groups=[]; SET.forEach(v=>{let g=groups.find(x=>x.name===v.grp); if(!g){g={name:v.grp,items:[]};groups.push(g);} g.items.push(v);});
