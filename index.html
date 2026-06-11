@@ -468,6 +468,10 @@
   .el-comp-rcp{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
   .el-comp-rcp .dc-rcp{padding:2px 6px;border:1px solid;border-radius:5px}
   .el-chip-stage{pointer-events:none}
+  .el-stage-part{display:flex;align-items:center;gap:8px;margin-top:8px}
+  .el-stage-part:first-child{margin-top:0}
+  .el-lay-tag{flex:none;width:18px;color:var(--dim);display:grid;place-items:center}
+  .el-stage-r{min-width:0}
   .el-chip-stage .panel,.el-chip-stage .actions,.el-chip-stage .reminder,
   .el-chip-stage .chips2,.el-chip-stage .tilegrid,.el-chip-stage .lapsebar,
   .el-chip-stage .hero,.el-chip-stage .lapse,.el-chip-stage .aghome{margin:0}
@@ -4567,10 +4571,10 @@ function inMedia(html,anchor){
   return `<div class="hero" style="width:200px"><div class="videobox" style="background:linear-gradient(165deg,#1d2d49,#0f1828)"><div style="position:absolute;${pos}">${html}</div></div></div>`;
 }
 const FMT_STAGE={
- 'text-large':s=>`<div style="font-size:30px;font-weight:800;letter-spacing:-1.5px;color:${s.c||'#e9eef6'};line-height:1${s.mono?';font-family:var(--mono)':''}">${s.txt}</div>`,
- 'text-medium':s=>`<div style="font-size:15px;line-height:1.5;font-weight:600;color:#e9eef6">${s.txt}</div>`,
- 'text-small':s=>`<div style="font-size:12px;font-weight:600;color:var(--ink)">${s.txt}</div>`,
- 'text-tagline':s=>`<div style="font-size:9.5px;letter-spacing:.4px;text-transform:uppercase;color:var(--mut)">${s.txt}</div>`,
+ 'text-large':s=>`<div style="font-size:30px;font-weight:800;letter-spacing:-1.5px;color:${s.c||'#e9eef6'};line-height:1${s.mono?';font-family:var(--mono)':''}">${s.txt||s.tag||''}</div>`,
+ 'text-medium':s=>`<div style="font-size:15px;line-height:1.5;font-weight:600;color:#e9eef6">${s.txt||s.tag||''}</div>`,
+ 'text-small':s=>`<div style="font-size:12px;font-weight:600;color:var(--ink)">${s.txt||s.tag||''}</div>`,
+ 'text-tagline':s=>`<div style="font-size:9.5px;letter-spacing:.4px;text-transform:uppercase;color:var(--mut)">${s.txt||s.tag||''}</div>`,
  'badge':s=>agPill(s.tag||s.txt,s.c||'#9cc3f5'),
  'dot':s=>`<span style="display:inline-block;width:13px;height:13px;border-radius:50%;background:${s.c||'#34d399'}"></span>`,
  'block':s=>`<div class="tilegrid"><div class="gtile num"><b>${s.txt}</b><span>${s.sub||''}</span></div></div>`,
@@ -4748,6 +4752,11 @@ function elStage(el,fmt,lay){
   if(lay==='overlay'&&fmt!=='surface'&&fmt!=='bound-box') html=inMedia(html,el.anchor);
   return html;
 }
+function elStageAll(el,fmt){
+  if(el.layouts.length<2) return elStage(el,fmt,el.layouts[0]);
+  return `<div class="el-stage-part"><span class="el-lay-tag" title="standalone">${LAY_GLYPH.standalone}</span><div class="el-stage-r">${elStage(el,fmt,'standalone')}</div></div>`
+       +`<div class="el-stage-part"><span class="el-lay-tag" title="overlay — attached on a media surface">${LAY_GLYPH.overlay}</span><div class="el-stage-r">${elStage(el,fmt,'overlay')}</div></div>`;
+}
 const LAY_GLYPH={
  standalone:'<svg width="14" height="11" viewBox="0 0 14 11" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="1" width="12" height="9" rx="2"/><path d="M4 5.5h6"/></svg>',
  overlay:'<svg width="14" height="11" viewBox="0 0 14 11" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="1" width="12" height="9" rx="2"/><rect x="3" y="3" width="5" height="3.4" rx="1" fill="currentColor" stroke="none"/></svg>'
@@ -4800,17 +4809,12 @@ function renderElCanvas(){
     return `<div class="famblock dc-fam el-fam" data-grp="${k}"><h3>${label}</h3>`
       +els.map(u=>{
         const fmt=u.formats[0], lay=u.layouts[0];
-        const lays=u.layouts.length<2?'':['standalone','overlay'].map(L=>{
-          const ok=u.layouts.includes(L);
-          return `<i class="el-lay-g${ok?' ok':''}${ok&&L===lay?' on':''}" data-lay="${L}" title="${L}${L==='overlay'?' — attached on a media surface':' — own card / row'}">${LAY_GLYPH[L]}</i>`;
-        }).join('');
         const fmts=u.formats.map(F=>`<span class="el-fmt${F===fmt?' on':''}" data-fmt="${F}">${F}</span>`).join('');
         const mod=u.modifier?`<div class="el-modline">&oplus; ${u.modifier.provenance}${u.modifier.confidenceField?' &middot; '+u.modifier.confidenceField:''}${u.modifier.correctable?' &middot; tap-to-correct':''}</div>`:'';
         return `<div class="el-chip" data-ui="${u.id}" data-fmt="${fmt}" data-lay="${lay}" data-pairs="${(uiPairs[u.id]||[]).join(' ')}" title="${u.desc} [${u.sig}] &middot; tap: ${u.action}">`
           +`<div class="el-chip-head"><span class="el-chip-name">${u.label}</span></div>`
-          +`<div class="el-chip-stage">${elStage(u,fmt,lay)}</div>`
+          +`<div class="el-chip-stage">${elStageAll(u,fmt)}</div>`
           +`<div class="el-axis"><span class="el-axis-t">Format</span><span class="el-fmts">${fmts}</span></div>`
-          +(lays?`<div class="el-axis"><span class="el-axis-t">Layout</span><span class="el-lay">${lays}</span></div>`:'')
           +`${mod}</div>`;
       }).join('')+`</div>`;
   }).join('');
@@ -4862,10 +4866,10 @@ function fixElStageHeights(){
     const stage=chip.querySelector('.el-chip-stage'); if(!stage) return;
     meas.style.width=(stage.clientWidth||300)+'px';
     let max=0;
-    u.formats.forEach(f=>u.layouts.forEach(l=>{
-      meas.innerHTML=elStage(u,f,l);
+    u.formats.forEach(f=>{
+      meas.innerHTML=elStageAll(u,f);
       max=Math.max(max,meas.offsetHeight);
-    }));
+    });
     meas.innerHTML='';
     if(max) stage.style.minHeight=max+'px';
   });
@@ -4971,15 +4975,13 @@ function showElComps(ui){
     if(lock){ setHi(lock,true); showElComps(lock.dataset.ui); }  /* re-assert the locked state */
   });
   cv.addEventListener('click',e=>{
-    /* format / layout selection inside a row — swap the stage, never toggles the lock */
-    const fbtn=e.target.closest('.el-fmt'), lbtn=e.target.closest('.el-lay-g');
-    if(fbtn||lbtn){
+    /* format selection inside a row — swap the stage, never toggles the lock */
+    const fbtn=e.target.closest('.el-fmt');
+    if(fbtn){
       const chip0=e.target.closest('.el-chip'); if(!chip0) return;
       const u0=EL_REGISTRY.find(x=>x.id===chip0.dataset.ui); if(!u0) return;
-      if(fbtn){ chip0.dataset.fmt=fbtn.dataset.fmt; chip0.querySelectorAll('.el-fmt').forEach(n=>n.classList.toggle('on',n===fbtn)); }
-      if(lbtn){ if(!lbtn.classList.contains('ok')) return;
-        chip0.dataset.lay=lbtn.dataset.lay; chip0.querySelectorAll('.el-lay-g').forEach(n=>n.classList.toggle('on',n===lbtn)); }
-      chip0.querySelector('.el-chip-stage').innerHTML=elStage(u0,chip0.dataset.fmt,chip0.dataset.lay);
+      chip0.dataset.fmt=fbtn.dataset.fmt; chip0.querySelectorAll('.el-fmt').forEach(n=>n.classList.toggle('on',n===fbtn));
+      chip0.querySelector('.el-chip-stage').innerHTML=elStageAll(u0,chip0.dataset.fmt);
       scheduleDrawElemLines();
       return;
     }
