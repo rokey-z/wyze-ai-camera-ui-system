@@ -432,7 +432,7 @@
   #elUiCol .el-fam{display:flex;flex-direction:column;gap:0;margin-top:18px}
   #elUiCol .el-fam:first-child{margin-top:0}
   /* group titles align right over the element column */
-  #elUiCol .el-fam h3{text-align:right}
+  #elUiCol .el-fam h3{text-align:right;font-size:15px}
 
   .el-chip{position:relative;display:flex;flex-direction:column;align-items:stretch;gap:8px;
     padding:12px 2px;border-top:1px solid var(--line);
@@ -441,9 +441,9 @@
   .el-chip.hi{background:#4f8ff00d}
   /* click-locked element: hover state pinned until clicked again */
   .el-chip.el-locked{background:#4f8ff012;box-shadow:inset 2px 0 0 var(--blue)}
-  /* name on the RIGHT (matching the right-aligned group titles), layout glyphs left */
-  .el-chip-head{display:flex;flex-direction:row-reverse;align-items:center;justify-content:space-between;gap:10px}
-  .el-chip-name{font-size:11.5px;font-weight:600;color:var(--ink)}
+  /* format chips LEFT, name RIGHT (matching the right-aligned group titles) */
+  .el-chip-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  .el-chip-name{flex:none;font-size:13.5px;font-weight:600;color:var(--ink)}
   /* layout glyphs: standalone / overlay — valid ones lit, active one on */
   .el-lay{display:inline-flex;gap:4px}
   .el-lay-g{width:22px;height:16px;border:1px solid var(--line);border-radius:4px;
@@ -4816,9 +4816,8 @@ function renderElCanvas(){
         const fmts=u.formats.map(F=>`<span class="el-fmt${F===fmt?' on':''}" data-fmt="${F}">${F}</span>`).join('');
         const mod=u.modifier?`<div class="el-modline">&oplus; ${u.modifier.provenance}${u.modifier.confidenceField?' &middot; '+u.modifier.confidenceField:''}${u.modifier.correctable?' &middot; tap-to-correct':''}</div>`:'';
         return `<div class="el-chip" data-ui="${u.id}" data-fmt="${fmt}" data-lay="${lay}" data-pairs="${(uiPairs[u.id]||[]).join(' ')}" title="${u.desc} [${u.sig}] &middot; tap: ${u.action}">`
-          +`<div class="el-chip-head"><span class="el-chip-name">${u.label}</span></div>`
+          +`<div class="el-chip-head"><span class="el-fmts">${fmts}</span><span class="el-chip-name">${u.label}</span></div>`
           +`<div class="el-chip-stage">${elStageAll(u,fmt)}</div>`
-          +`<div class="el-axis"><span class="el-axis-t">Format</span><span class="el-fmts">${fmts}</span></div>`
           +`${mod}</div>`;
       }).join('')+`</div>`;
   }).join('');
