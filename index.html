@@ -4342,7 +4342,7 @@ const RECIPES={
    RB.ph('Ask Home',RB.ai()),
    `<div class="dc-lab" style="margin:0 0 8px">Suggested questions</div>`,
    `<div class="suglist">`+RB.repeat(['What did I miss today?','When does the mail usually come?','Is the garage closed right now?','Did anyone come to the door?','Who was the person at 2 PM?'],
-     q=>RB.leaf('suggestion','filter',`<div class="sugq"><span class="sugq-t">${q}</span><span class="sugq-go">&rarr;</span></div>`))+`</div>`)},
+     q=>RB.leaf('suggestion','button',`<div class="sugq"><span class="sugq-t">${q}</span><span class="sugq-go">&rarr;</span></div>`))+`</div>`)},
  'C-LEARN':{q:'learnings · sort recency · limit 3',
   render:()=>RB.panel(
    RB.ph('What this agent learned',RB.ai()),
@@ -4673,8 +4673,8 @@ const EL_REGISTRY=[
  /* chat */
  {id:'narrative',grp:'chat',label:'Narrative',desc:'AI-synthesized prose over a period — tap opens the chat sheet',sig:'household/agent · narrative · time',formats:['text-medium','text-large','text-small'],layouts:['standalone'],action:'open-chat',accepts:['text'],
   modifier:{provenance:'llm'},sample:{txt:'Slept <b style="color:#9cc3f5">10h 4m</b> with 2 brief wakings.'}},
- {id:'suggestion',grp:'chat',label:'Suggestion',desc:'Proactive question / nudge — tap opens the chat sheet',sig:'agent · none',formats:['filter','text-small'],layouts:['standalone'],action:'open-chat',accepts:['text'],
-  sample:{tag:'What did I miss today?'},stage:{filter:s=>`<div class="suglist"><div class="sugq"><span class="sugq-t">${s.tag}</span><span class="sugq-go">&rarr;</span></div></div>`}},
+ {id:'suggestion',grp:'chat',label:'Suggestion',desc:'Proactive question / nudge — tap opens the chat sheet',sig:'agent · none',formats:['button'],layouts:['standalone'],action:'open-chat',accepts:['text'],
+  sample:{tag:'What did I miss today?'},stage:{button:s=>`<div class="suglist"><div class="sugq"><span class="sugq-t">${s.tag}</span><span class="sugq-go">&rarr;</span></div></div>`}},
  /* description */
  {id:'description',grp:'description',label:'Description',desc:'Factual VLM text about ONE media item — event or group',sig:'instance/video · narrative',formats:['text-small','text-medium','text-tagline'],layouts:['standalone','overlay'],action:'open-clip',accepts:['text'],
   modifier:{provenance:'vlm'},sample:{txt:'Vehicle departed &mdash; &ldquo;a car backs out&rdquo;'}},
@@ -4705,7 +4705,7 @@ const SEL2UI={
  'C-MONTHTREND':{'.ml-month':T('absolute-time','text-small'),'.ml-mtotal':T('instance-count','text-small'),'.ml-daycell':T('month-calendar','chart')},
  'C-INSIGHT':{'.insfind':T('narrative','text-medium'),'.trendbars .tb':T('week-activity','chart')},
  'C-TILES':{'.ml-fleet':T('instance-count','text-small'),'.tilegrid .gt-top':T('name-tag','text-tagline'),'.tilegrid .gt-sub':T('state','badge'),'.kpi0 b':T('instance-count','block'),'.kpi1 b':T('instance-count','block'),'.kpi2 b':T('measurement','block')},
- 'C-ASSIST':{'.sugq-t':T('suggestion','filter')},
+ 'C-ASSIST':{'.sugq-t':T('suggestion','button')},
  'C-LEARN':{'.learnrow .ft':T('narrative','text-small'),'.learnrow .fm':T('category-tag','text-tagline'),'.learnrow .lconf':T('provenance','text-tagline')},
  'C-LIVE':{'.videobox':T('media','surface'),'.vname':T('state','text-small','overlay'),'.vtime':T('absolute-time','text-tagline','overlay')},
  'C-RECVIDEO':{'.scrub .seg':T('day-activity','chart'),'.scrub .pin':T('absolute-time','chart','overlay'),'.vname':T('name-tag','text-tagline','overlay'),'.videobox':T('media','surface')},
@@ -4764,8 +4764,11 @@ function elStage(el,fmt,lay){
   if(lay==='overlay'&&fmt!=='surface'&&fmt!=='bound-box') html=inMedia(html,el.anchor);
   return html;
 }
+/* these formats never need a standalone demo — overlay only */
+const FMT_NO_STANDALONE=new Set(['text-small','text-tagline','dot','badge']);
 function elStageAll(el,fmt){
   if(el.layouts.length<2) return elStage(el,fmt,el.layouts[0]);
+  if(FMT_NO_STANDALONE.has(fmt)) return elStage(el,fmt,'overlay');
   return `<div class="el-stage-part"><span class="el-lay-tag">standalone</span><div class="el-stage-r"><div class="el-stage-host">${elStage(el,fmt,'standalone')}</div></div></div>`
        +`<div class="el-stage-part"><span class="el-lay-tag" title="overlay — attached on a media surface">overlay</span><div class="el-stage-r">${elStage(el,fmt,'overlay')}</div></div>`;
 }
