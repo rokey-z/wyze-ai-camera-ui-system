@@ -468,8 +468,9 @@
   .el-comp-rcp{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
   .el-comp-rcp .dc-rcp{padding:2px 6px;border:1px solid;border-radius:5px}
   .el-chip-stage{pointer-events:none}
-  .el-stage-part{display:flex;align-items:center;gap:8px;margin-top:8px}
-  .el-stage-part:first-child{margin-top:0}
+  .el-chip-stage:has(.el-stage-part){display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .el-stage-part{display:flex;align-items:center;gap:7px;min-width:0}
+  .el-stage-part .hero{width:150px!important}
   .el-lay-tag{flex:none;width:18px;color:var(--dim);display:grid;place-items:center}
   .el-stage-r{min-width:0}
   .el-chip-stage .panel,.el-chip-stage .actions,.el-chip-stage .reminder,
@@ -4630,7 +4631,10 @@ const EL_REGISTRY=[
   sample:{tag:'All &middot; 24',sub:'Person &middot; 11'}},
  /* type-count aggregation */
  {id:'instance-count',grp:'typecount-agg',label:'Instance count',desc:'How many — events, devices online, frames, sightings',sig:'instance/device · count',formats:['block','text-small','badge','text-tagline'],layouts:['standalone','overlay'],action:'navigate',accepts:['count'],
-  sample:{txt:'38',sub:'events today'}},
+  sample:{txt:'38',name:'Events',sub:'events today'},
+  stage:{'text-small':s=>`<div style="font-size:12px;font-weight:600;color:var(--ink)"><span style="color:var(--mut)">${s.name}</span> ${s.txt}</div>`,
+         'badge':s=>agPill(`${s.name} &middot; ${s.txt}`,'#9cc3f5'),
+         'text-tagline':s=>`<div style="font-size:9.5px;letter-spacing:.4px;text-transform:uppercase;color:var(--mut)">${s.name} <b style="color:var(--ink)">${s.txt}</b></div>`}},
  /* time aggregation */
  {id:'hour-activity',grp:'time-agg',label:'Hour activity',desc:'Activity within an hour, minute bins — no component renders it yet',sig:'instance · count · span:hour · bin:minute',formats:['chart'],layouts:['standalone'],action:'navigate',accepts:['time','count'],
   sample:{},stage:{chart:s=>`<div class="scrub" style="height:42px">${[34,52,40,66,28,58,45,38,60,30,48,36].map(h=>`<div class="seg" style="height:${h}%;background:#3a5fa0"></div>`).join('')}<div class="axis"><span>:00</span><span>:15</span><span>:30</span><span>:45</span><span>now</span></div></div>`}},
