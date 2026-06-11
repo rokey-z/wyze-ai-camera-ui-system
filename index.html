@@ -4275,7 +4275,7 @@ const RB={
 };
 const RECIPES={
  'C-AGENT':{q:'agents + visual-memories · latest run',hero:false,
-  render:()=>RB.leaf('media','thumb',`<div class="aghome" style="padding:6px 0 4px">`+agCardHTML(AGCARD.night_watcher||{th:{grad:'linear-gradient(150deg,#10182b,#070b14)',tag:'PERSON',tc:'#f25c5c'},state:{w:'PERSON · 2m',c:'#f25c5c'},title:'Unfamiliar at side gate',pri:'P1',time:'2m ago',fresh:true},{name:'Night Watcher'})+`</div>`)},
+  render:()=>RB.leaf('media','small-thumb',`<div class="aghome" style="padding:6px 0 4px">`+agCardHTML(AGCARD.night_watcher||{th:{grad:'linear-gradient(150deg,#10182b,#070b14)',tag:'PERSON',tc:'#f25c5c'},state:{w:'PERSON · 2m',c:'#f25c5c'},title:'Unfamiliar at side gate',pri:'P1',time:'2m ago',fresh:true},{name:'Night Watcher'})+`</div>`)},
  'C-STATE':{q:'visual-memories · latest status_line · parsed',mods:['confidence','correctable'],
   render:()=>RB.stack(
    RB.leaf('state','text-large',`<div class="panel" style="text-align:center;padding:20px 12px 16px"><div class="ml-subj" style="font-size:9px;letter-spacing:1px;color:var(--dim);text-transform:uppercase;margin-bottom:7px">Garage door</div><div class="ml-state" style="font-size:36px;font-weight:800;letter-spacing:-1.5px;color:#7eecc4;line-height:1">CLOSED</div><div style="font-size:11px;color:var(--mut);margin-top:8px"><span class="ml-label">secure</span> &middot; <span class="ml-dur" style="font-family:var(--mono);color:#7eecc4;font-weight:700">3h 42m</span></div></div>`),
@@ -4292,7 +4292,7 @@ const RECIPES={
    RB.more('More &middot; 20 earlier &rsaquo;'))},
  'C-GROUPED':{q:'eventgroups · score-ranked · top group',mods:['score'],
   render:()=>RB.stack(
-   RB.leaf('media','surface',`<div class="gcard"><div class="gcard-thumb" style="background:linear-gradient(150deg,#b1402f,#5a1c14)"><span class="gcard-gif">&#9654; GIF &middot; 0:06</span><div class="gcard-grad"></div><div class="gcard-info"><div class="gcard-title">Package delivery</div><div class="gcard-meta">3 clips &middot; Front door &middot; 2:14&ndash;2:17 PM</div></div></div></div>`),
+   RB.leaf('media','full-card',`<div class="gcard"><div class="gcard-thumb" style="background:linear-gradient(150deg,#b1402f,#5a1c14)"><span class="gcard-gif">&#9654; GIF &middot; 0:06</span><div class="gcard-grad"></div><div class="gcard-info"><div class="gcard-title">Package delivery</div><div class="gcard-meta">3 clips &middot; Front door &middot; 2:14&ndash;2:17 PM</div></div></div></div>`),
    RB.leaf('priority-marker','badge',cf15('score 4/5','event-group ranking')))},
  'C-STRIP':{q:'events · sort ts desc · limit 5 · strip',
   render:()=>RB.panel(
@@ -4577,7 +4577,7 @@ const FIELD_META={
  power_on:'command',power_off:'command',talk_session_id:'command',siren:'command',lights:'command',method:'command',phone:'text',
 };
 /* ---- the 13 formats + per-format micro (strip) and stage (full) renderers ---- */
-const FORMATS=['text-large','text-medium','text-small','text-tagline','badge','dot','block','filter','list','thumb','portrait','surface','chart','bound-box','button'];
+const FORMATS=['text-large','text-medium','text-small','text-tagline','badge','dot','block','filter','list','small-thumb','square','full-card','chart','bound-box','button'];
 function inMedia(html,anchor){
   const pos={tl:'left:8px;top:8px',tr:'right:8px;top:8px',bl:'left:8px;bottom:8px',br:'right:8px;bottom:8px',center:'inset:0;display:grid;place-items:center'}[anchor||'bl'];
   return `<div class="hero" style="width:200px"><div class="videobox" style="background:linear-gradient(165deg,#1d2d49,#0f1828)"><div style="position:absolute;${pos}">${html}</div></div></div>`;
@@ -4622,8 +4622,9 @@ const FMT_MICRO={
    Format + Layout are presentation axes; bindings derive from MAPLINES x SEL2UI. ---- */
 const EL_REGISTRY=[
  /* media attribute */
- {id:'media',grp:'media-attr',label:'Media',desc:'Raw visual data — stream, still, clip, lapse, animated preview or identity portrait crop (square)',sig:'video/frame · none',formats:['surface','thumb','portrait'],layouts:['standalone'],action:'open-clip',accepts:['media'],
-  sample:{txt:'&#9654; GIF',tag:'&#9654; GIF &middot; 0:06',c:'#e9eef6',grad:'linear-gradient(165deg,#1d2d49,#0f1828)'}},
+ {id:'media',grp:'media-attr',label:'Media',desc:'Raw visual data — stream, still, clip, lapse, animated preview or identity portrait crop (square)',sig:'video/frame · none',formats:['full-card','small-thumb','square'],layouts:['standalone'],action:'open-clip',accepts:['media'],
+  sample:{txt:'&#9654; GIF',tag:'&#9654; GIF &middot; 0:06',c:'#e9eef6',grad:'linear-gradient(165deg,#1d2d49,#0f1828)'},
+  stage:{'full-card':s=>FMT_STAGE['surface'](s),'small-thumb':s=>FMT_STAGE['thumb'](s),'square':s=>FMT_STAGE['portrait'](s)}},
  /* media correspondence (anchored ON media) */
  {id:'detection-marker',grp:'media-corr',label:'Detection marker',desc:'Bounding box + label anchored to the frame by detector geometry',sig:'instance · none',formats:['bound-box'],layouts:['overlay'],action:'correct',accepts:['geometry'],
   modifier:{provenance:'detector',correctable:true},sample:{tag:'garage door',c:'#f6b73c'}},
@@ -4698,30 +4699,30 @@ const EL_REGISTRY=[
    MAPLINES stays the single source of truth for which solid pairs exist. ---- */
 const T=(el,fmt,lay)=>({el,fmt,lay:lay||'standalone'});
 const SEL2UI={
- 'C-AGENT':{'.aghome .agcard .agthumb':T('media','thumb'),'.aghome .agcard .agalert':T('priority-marker','dot'),'.aghome .agcard .agpill':T('state','badge'),'.aghome .agcard .agsub':T('relative-time','text-tagline'),'.aghome .agname':T('name-tag','text-tagline')},
+ 'C-AGENT':{'.aghome .agcard .agthumb':T('media','small-thumb'),'.aghome .agcard .agalert':T('priority-marker','dot'),'.aghome .agcard .agpill':T('state','badge'),'.aghome .agcard .agsub':T('relative-time','text-tagline'),'.aghome .agname':T('name-tag','text-tagline')},
  'C-STATE':{'.ml-state':T('state','text-large'),'.ml-dur':T('duration','text-large'),'.cv':T('provenance','block')},
- 'C-FEED':{'.chips2 .fc.on':T('category-count','filter'),'.chips2 .fc:not(.on)':T('category-count','filter'),'.feedrow .thumb':T('media','thumb'),'.feedrow .ft':T('description','text-small'),'.feedrow .fm':T('absolute-time','text-tagline'),'.feedrow .etag':T('category-tag','badge')},
+ 'C-FEED':{'.chips2 .fc.on':T('category-count','filter'),'.chips2 .fc:not(.on)':T('category-count','filter'),'.feedrow .thumb':T('media','small-thumb'),'.feedrow .ft':T('description','text-small'),'.feedrow .fm':T('absolute-time','text-tagline'),'.feedrow .etag':T('category-tag','badge')},
  'C-RECAP':{'.ml-title':T('description','text-small'),'.ml-tone':T('state','badge'),'.ml-narrative':T('narrative','text-medium')},
  'C-ACT':{'.ml-pon':T('device-control','button-pill'),'.ml-poff':T('device-control','button-pill'),'.ml-talk':T('device-control','button-pill'),'.ml-devstate':T('state','text-small')},
  'C-READOUT':{'.ml-value':T('measurement','block'),'.ml-unit':T('measurement','block'),'.ml-meter':T('measurement','text-tagline'),'.cv':T('provenance','block')},
  'C-SOS':{'.sosc .sosc-name':T('name-tag','text-small'),'.sosc .sosc-num':T('contact-action','list'),'.sosc-acts .sosc-act':T('contact-action','button-block')},
- 'C-GROUPED':{'.gcard-thumb':T('media','surface'),'.gcard-title':T('description','text-small','overlay'),'.gcard-gif':T('media','thumb','overlay'),'.cv':T('priority-marker','badge'),'.gcard-meta':T('instance-count','text-tagline','overlay')},
- 'C-STRIP':{'.estrip .ethumb':T('media','thumb'),'.estrip .ethumb-tag':T('category-tag','badge','overlay'),'.estrip .ethumb-t':T('absolute-time','text-tagline','overlay'),'.ml-count':T('instance-count','text-small')},
+ 'C-GROUPED':{'.gcard-thumb':T('media','full-card'),'.gcard-title':T('description','text-small','overlay'),'.gcard-gif':T('media','small-thumb','overlay'),'.cv':T('priority-marker','badge'),'.gcard-meta':T('instance-count','text-tagline','overlay')},
+ 'C-STRIP':{'.estrip .ethumb':T('media','small-thumb'),'.estrip .ethumb-tag':T('category-tag','badge','overlay'),'.estrip .ethumb-t':T('absolute-time','text-tagline','overlay'),'.ml-count':T('instance-count','text-small')},
  'C-DAYTREND':{'.scrub .seg':T('day-activity','chart'),'.scrub .pin':T('absolute-time','chart','overlay'),'.delta':T('trend-delta','badge')},
  'C-MONTHTREND':{'.ml-month':T('absolute-time','text-small'),'.ml-mtotal':T('instance-count','text-small'),'.ml-daycell':T('month-calendar','chart')},
  'C-INSIGHT':{'.insfind':T('narrative','text-medium'),'.trendbars .tb':T('week-activity','chart')},
  'C-TILES':{'.ml-fleet':T('instance-count','text-small'),'.tilegrid .gt-top':T('name-tag','text-tagline'),'.tilegrid .gt-sub':T('state','badge'),'.kpi0 b':T('instance-count','block'),'.kpi1 b':T('instance-count','block'),'.kpi2 b':T('measurement','block')},
  'C-ASSIST':{'.sugq-t':T('suggestion','button')},
  'C-LEARN':{'.learnrow .ft':T('narrative','text-small'),'.learnrow .fm':T('category-tag','text-tagline'),'.learnrow .lconf':T('provenance','text-tagline')},
- 'C-LIVE':{'.videobox':T('media','surface'),'.vname':T('state','text-small','overlay'),'.vtime':T('absolute-time','text-tagline','overlay')},
- 'C-RECVIDEO':{'.scrub .seg':T('day-activity','chart'),'.scrub .pin':T('absolute-time','chart','overlay'),'.vname':T('name-tag','text-tagline','overlay'),'.videobox':T('media','surface')},
- 'C-SNAP':{'.videobox':T('media','surface'),'.annbadge':T('detection-marker','bound-box','overlay'),'.fsub':T('absolute-time','text-tagline','overlay'),'.fs':T('description','text-small','overlay'),'.cv':T('provenance','block')},
- 'C-TIMELAPSE':{'.lapse .videobox':T('media','surface'),'.vname':T('name-tag','text-tagline','overlay'),'.vtime':T('absolute-time','text-tagline','overlay'),'.ld2':T('instance-count','text-small'),'.lapsetrack b':T('absolute-time','chart','overlay')},
- 'C-GALLERY':{'.gallery .gcell':T('media','thumb'),'.gallery .gcell span':T('name-tag','text-tagline','overlay'),'.sig-coll':T('instance-count','badge'),'.chips2 .fc.on':T('category-count','filter'),'.chips2 .fc:not(.on)':T('category-count','filter')},
- 'C-MULTIVIEW':{'.gallery .gcell':T('name-tag','text-tagline','overlay'),'.gallery .gcell i':T('state','badge','overlay'),'.sig-multi':T('media','thumb')},
+ 'C-LIVE':{'.videobox':T('media','full-card'),'.vname':T('state','text-small','overlay'),'.vtime':T('absolute-time','text-tagline','overlay')},
+ 'C-RECVIDEO':{'.scrub .seg':T('day-activity','chart'),'.scrub .pin':T('absolute-time','chart','overlay'),'.vname':T('name-tag','text-tagline','overlay'),'.videobox':T('media','full-card')},
+ 'C-SNAP':{'.videobox':T('media','full-card'),'.annbadge':T('detection-marker','bound-box','overlay'),'.fsub':T('absolute-time','text-tagline','overlay'),'.fs':T('description','text-small','overlay'),'.cv':T('provenance','block')},
+ 'C-TIMELAPSE':{'.lapse .videobox':T('media','full-card'),'.vname':T('name-tag','text-tagline','overlay'),'.vtime':T('absolute-time','text-tagline','overlay'),'.ld2':T('instance-count','text-small'),'.lapsetrack b':T('absolute-time','chart','overlay')},
+ 'C-GALLERY':{'.gallery .gcell':T('media','small-thumb'),'.gallery .gcell span':T('name-tag','text-tagline','overlay'),'.sig-coll':T('instance-count','badge'),'.chips2 .fc.on':T('category-count','filter'),'.chips2 .fc:not(.on)':T('category-count','filter')},
+ 'C-MULTIVIEW':{'.gallery .gcell':T('name-tag','text-tagline','overlay'),'.gallery .gcell i':T('state','badge','overlay'),'.sig-multi':T('media','small-thumb')},
  'C-LOG':{'.logrow .lt':T('absolute-time','text-small'),'.logrow .lv':T('state','text-small'),'.logrow .ld':T('trend-delta','text-small')},
- 'C-VISIT':{'.tsrow .tn':T('absolute-time','text-small'),'.tsrow .tm':T('absolute-time','text-tagline'),'.tsrow .cliptip':T('media','thumb'),'.tsrow .ctg':T('media','thumb','overlay'),'.tsrow .dd':T('duration','text-small'),'.tsrow .ds':T('state','badge'),'.cv':T('provenance','block')},
- 'C-IDCARD':{'.idcard .nm':T('name-tag','text-small'),'.idcard .sci':T('attribute-tag','text-tagline'),'.idcard .pic':T('media','portrait'),'.idcard .meta':T('absolute-time','text-tagline'),'.pvbadge':T('state','badge'),'.cv':T('provenance','block')},
+ 'C-VISIT':{'.tsrow .tn':T('absolute-time','text-small'),'.tsrow .tm':T('absolute-time','text-tagline'),'.tsrow .cliptip':T('media','small-thumb'),'.tsrow .ctg':T('media','small-thumb','overlay'),'.tsrow .dd':T('duration','text-small'),'.tsrow .ds':T('state','badge'),'.cv':T('provenance','block')},
+ 'C-IDCARD':{'.idcard .nm':T('name-tag','text-small'),'.idcard .sci':T('attribute-tag','text-tagline'),'.idcard .pic':T('media','square'),'.idcard .meta':T('absolute-time','text-tagline'),'.pvbadge':T('state','badge'),'.cv':T('provenance','block')},
  'C-TREND':{'.trendbars .tb':T('week-activity','chart'),'.delta':T('trend-delta','badge')},
  'C-DETER':{'.act.danger':T('device-control','button-pill'),'.act:not(.danger)':T('device-control','button-pill')},
  'C-REMINDER':{'.reminder b':T('absolute-time','text-small'),'.reminder span':T('state','text-small')},
