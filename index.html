@@ -3601,7 +3601,7 @@ const V2=[
 ];
 function v2Card(v,opt){
   opt=opt||{};
-  const comp=(opt.rmap&&opt.rmap[v.id])||MODFULL15[v.primary]||MODFULL[v.primary]||'';
+  const comp=(opt.vcls==='v25'&&typeof RECIPES!=='undefined'&&RECIPES[v.id])?RECIPES[v.id].render():((opt.rmap&&opt.rmap[v.id])||MODFULL15[v.primary]||MODFULL[v.primary]||'');
   const vlab=opt.vlab||'v2', vcls=opt.vcls||'v2';
   let srcs=effectiveSrcs(v);
   const cov={have:0,partial:0,missing:0};
@@ -3648,7 +3648,7 @@ function v2Card(v,opt){
     +(hasMap?'<svg class="dc-maplines" aria-hidden="true"></svg>':'')
     +`<div class="dc-left"><div class="modlive">${comp}</div>`
       +`<div class="dc-modes">${v.modes.map(m=>`<span class="dc-mode">${m}</span>`).join('')}</div>`
-      +((typeof SEL2UI!=='undefined'&&SEL2UI[v.id])?`<div class="dc-modes dc-recipe">${recipeOf(v.id).map(r=>`<span class="dc-mode dc-rcp">${r.key}</span>`).join('')}</div>`:'')
+      +((typeof SEL2UI!=='undefined'&&SEL2UI[v.id])?`<div class="dc-modes dc-recipe">${recipeOf(v.id).map(r=>`<span class="dc-mode dc-rcp">${r.key}</span>`).join('')}${(typeof RECIPES!=='undefined'&&RECIPES[v.id]&&RECIPES[v.id].q)?`<span class="dc-mode dc-rcp" style="opacity:.65">&#8635; ${RECIPES[v.id].q}</span>`:''}</div>`:'')
       +`<div class="dc-meta"><span class="dc-id">${v.id}</span></div>`
       +noteHtml
     +`</div>`
@@ -4010,6 +4010,167 @@ const MOD25={
  'C-ASSIST':`<div class="panel"><div class="ph"><b>Ask Home</b><span class="recap"><span class="ai">AI</span></span></div><div class="dc-lab" style="margin:0 0 8px">Suggested questions</div><div class="suglist">${[['#9cc3f5','What did I miss today?'],['#c4b3f0','When does the mail usually come?'],['#7eecc4','Is the garage closed right now?'],['#9cc3f5','Did anyone come to the door?'],['#c4b3f0','Who was the person at 2 PM?']].map(([c,q])=>`<div class="sugq"><span class="sugq-t">${q}</span><span class="sugq-go">&rarr;</span></div>`).join('')}</div></div>`,
  'C-LEARN':`<div class="panel"><div class="ph"><b>What this agent learned</b><span class="recap"><span class="ai">AI</span></span></div>`+[['Mail usually arrives 1&ndash;3pm','routine','0.86'],['The garage is normally closed overnight','baseline','0.93'],['Recognizes the silver SUV as &ldquo;family car&rdquo;','identity','0.78']].map(([f,cat,c])=>`<div class="learnrow"><span class="lbulb"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f6b73c" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12c.5.5 1 1.2 1 2h6c0-.8.5-1.5 1-2a7 7 0 0 0-4-12z"/></svg></span><div style="flex:1;min-width:0"><div class="ft">${f}</div><div class="fm">${cat} &middot; remembered</div></div><span class="lconf">${c}</span></div>`).join('')+`</div>`,
 };
+
+/* ====================================================================
+   STAGE 2 — COMPONENT RECIPES. Every v3 component is a composition of
+   (element · format · layout) leaves arranged by the grammar:
+   stack / row / grid / strip / media{overlays} / repeat(query).
+   renderRecipe-style builders (RB) emit the SAME css classes as the
+   previous literal markup, so MAPLINES selectors and the Elements
+   decomposition keep working unchanged. q = the binding query.
+   ==================================================================== */
+const RB={
+  leaf(el,fmt,html){
+    const reg=EL_REGISTRY.find(x=>x.id===el);
+    if(!reg) console.warn('Recipe: unknown element',el);
+    else if(fmt&&!reg.formats.includes(fmt)) console.warn('Recipe: element',el,'disallows format',fmt);
+    return html;
+  },
+  stack(...k){ return k.join(''); },
+  repeat(items,cell){ return items.map(cell).join(''); },
+  panel(...k){ return `<div class="panel">${k.join('')}</div>`; },
+  ph(t,right){ return `<div class="ph"><b>${t}</b>${right||''}</div>`; },
+  ai(){ return `<span class="recap"><span class="ai">AI</span></span>`; },
+  media(grad,sig,...ov){ return `<div class="hero"><div class="videobox" style="background:${grad}">${sig?sigTag(sig):''}${ov.join('')}</div></div>`; },
+  vname(t){ return `<div class="vname">${t}</div>`; },
+  vtime(t){ return `<div class="vtime">${t}</div>`; },
+  more(t){ return `<button class="dc-more">${t}</button>`; },
+  chips(arr){ return `<div class="chips2" style="margin-bottom:8px">${arr.map((c,i)=>`<span class="fc${i===0?' on':''}">${c}</span>`).join('')}</div>`; },
+  feedrow(t,m,tag,bg,c){ return `<div class="feedrow"><div class="thumb"></div><div style="flex:1"><div class="ft">${t}</div><div class="fm">${m}</div></div><span class="etag" style="background:${bg};color:${c}">${tag}</span></div>`; },
+  html(h){ return h; },
+};
+const RECIPES={
+ 'C-AGENT':{q:'agents + visual-memories · latest run',hero:false,
+  render:()=>RB.leaf('media','thumb',`<div class="aghome" style="padding:6px 0 4px">`+agCardHTML(AGCARD.night_watcher||{th:{grad:'linear-gradient(150deg,#10182b,#070b14)',tag:'PERSON',tc:'#f25c5c'},state:{w:'PERSON · 2m',c:'#f25c5c'},title:'Unfamiliar at side gate',pri:'P1',time:'2m ago',fresh:true},{name:'Night Watcher'})+`</div>`)},
+ 'C-STATE':{q:'visual-memories · latest status_line · parsed',mods:['confidence','correctable'],
+  render:()=>RB.stack(
+   RB.leaf('state','text-large',`<div class="panel" style="text-align:center;padding:20px 12px 16px"><div class="ml-subj" style="font-size:9px;letter-spacing:1px;color:var(--dim);text-transform:uppercase;margin-bottom:7px">Garage door</div><div class="ml-state" style="font-size:36px;font-weight:800;letter-spacing:-1.5px;color:#7eecc4;line-height:1">CLOSED</div><div style="font-size:11px;color:var(--mut);margin-top:8px"><span class="ml-label">secure</span> &middot; <span class="ml-dur" style="font-family:var(--mono);color:#7eecc4;font-weight:700">3h 42m</span></div></div>`),
+   RB.leaf('provenance','block',cf15('confidence 0.96','tap to correct')))},
+ 'C-FEED':{q:'events · sort ts desc · limit 4 (+ group-by-tag counts)',
+  render:()=>RB.panel(
+   RB.ph('Entry history'),
+   RB.leaf('category-count','filter',RB.chips(['All &middot; 24','Person &middot; 11','Vehicle &middot; 6','Pet &middot; 7'])),
+   RB.repeat([['Vehicle departed','8:02 AM &middot; &ldquo;a car backs out&rdquo;','VEHICLE&middot;92','#4f8ff022','#9cc3f5'],
+              ['Person entered','7:55 AM &middot; &ldquo;someone walks up&rdquo;','PERSON&middot;88','#34d39922','#7eecc4'],
+              ['Pet in the yard','7:31 AM &middot; &ldquo;a dog crosses&rdquo;','PET&middot;81','#f6b73c22','#f3cd86'],
+              ['Package dropped','7:12 AM &middot; &ldquo;a box by the door&rdquo;','PKG&middot;76','#a78bfa22','#c4b3f0']],
+             r=>RB.feedrow(r[0],r[1],r[2],r[3],r[4])),
+   RB.more('More &middot; 20 earlier &rsaquo;'))},
+ 'C-GROUPED':{q:'eventgroups · score-ranked · top group',mods:['score'],
+  render:()=>RB.stack(
+   RB.leaf('media','surface',`<div class="gcard"><div class="gcard-thumb" style="background:linear-gradient(150deg,#b1402f,#5a1c14)"><span class="gcard-gif">&#9654; GIF &middot; 0:06</span><div class="gcard-grad"></div><div class="gcard-info"><div class="gcard-title">Package delivery</div><div class="gcard-meta">3 clips &middot; Front door &middot; 2:14&ndash;2:17 PM</div></div></div></div>`),
+   RB.leaf('priority-marker','badge',cf15('score 4/5','event-group ranking')))},
+ 'C-STRIP':{q:'events · sort ts desc · limit 5 · strip',
+  render:()=>RB.panel(
+   RB.ph('Recent events',`<span class="ml-count" style="font-size:9px;color:var(--dim)">24 today</span>`),
+   `<div class="estrip">`+RB.repeat([['#4f8ff0','#9cc3f5','PERSON','8:02'],['#34d399','#7eecc4','VEHICLE','7:55'],['#f6b73c','#f3cd86','PET','7:31'],['#a78bfa','#c4b3f0','PKG','7:12'],['#f25c5c','#ff9a9a','PERSON','6:40']],
+     r=>`<div class="ethumb" style="background:linear-gradient(150deg,${r[0]}40,#0c1119)"><span class="ethumb-tag" style="color:${r[1]};background:${r[1]}26">${r[2]}</span><span class="ethumb-t">${r[3]}</span></div>`)+`</div>`)},
+ 'C-DAYTREND':{q:'events · bin hour · span today',
+  render:()=>RB.panel(
+   RB.ph('Today by hour',RB.leaf('trend-delta','badge',`<span class="delta up">&#9650; busier PM</span>`)),
+   RB.leaf('activity-series','chart',`<div class="scrub" style="height:48px">${Array.from({length:24},(_,i)=>{const a=i>=16&&i<=18;const h=a?60+((i*17)%38):8+((i*13)%22);return `<div class="seg" style="height:${h}%;background:${a?'#f6b73c':'#3a5fa0'}"></div>`;}).join('')}<div class="pin" style="left:75%"></div><div class="axis"><span>12a</span><span>6a</span><span>12p</span><span>6p</span><span>now</span></div></div>`),
+   `<div class="ngkey" style="margin-top:7px"><span><i style="background:#3a5fa0"></i>events / hr</span><span><i style="background:#f6b73c"></i>peak</span></div>`)},
+ 'C-MONTHTREND':{q:'events · bin day · span month · derive busiest',
+  render:()=>RB.panel(
+   RB.html(`<div class="ph"><b class="ml-month">June</b><span class="ml-mtotal" style="font-size:9px;color:var(--dim);font-family:var(--mono)">142 events &middot; busiest Tue</span></div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;font-size:7px;color:var(--dim);text-align:center;margin-bottom:3px">${['S','M','T','W','T','F','S'].map(d=>`<span>${d}</span>`).join('')}</div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px">${Array.from({length:35},(_,i)=>{const day=i-1;const has=day>=1&&day<=30;const cnt=has?((i*7+3)%9):0;const op=has?Math.min(0.16+cnt/10,1).toFixed(2):0;return `<div class="${has?'ml-daycell':''}" style="aspect-ratio:1;border-radius:3px;display:grid;place-items:center;font-size:13px;font-weight:800;color:${cnt>5?'#04231a':'#cfe3ff'};background:${has?`rgba(56,198,219,${op})`:'transparent'}${day===18?';box-shadow:0 0 0 1.5px #fff inset':''}">${has?cnt:''}</div>`;}).join('')}</div><div style="display:flex;justify-content:flex-end;align-items:center;gap:4px;font-size:7.5px;color:var(--dim);margin-top:6px">less<i style="width:9px;height:9px;border-radius:2px;background:rgba(56,198,219,.3)"></i><i style="width:9px;height:9px;border-radius:2px;background:rgba(56,198,219,.6)"></i><i style="width:9px;height:9px;border-radius:2px;background:#38c6db"></i>more</div>`))},
+ 'C-INSIGHT':{q:'digest + stories + events · period-adjustable',
+  render:()=>RB.panel(
+   RB.ph('Weekly insight',RB.ai()),
+   RB.leaf('narrative','text-medium',`<div class="insfind big">Front-door traffic is up <b style="color:#7eecc4">22%</b> this week &mdash; visits cluster <b style="color:#e9eef6">1&ndash;3 PM</b>, with Saturday the busiest day.</div>`),
+   RB.leaf('activity-series','chart',`<div class="trendbars" style="margin:11px 0 3px">${[40,62,55,78,48,90,70].map((h,i)=>`<div class="tb" style="height:${h}%;${i===5?'background:linear-gradient(#34d399,#1f7a5a)':''}"></div>`).join('')}</div><div class="trendx">${['M','T','W','T','F','S','S'].map(d=>`<span>${d}</span>`).join('')}</div>`))},
+ 'C-RECAP':{q:'stories · latest',mods:['color-from:tone'],
+  render:()=>RB.panel(
+   RB.html(`<div class="ph"><b class="ml-title">Morning recap</b><span class="recap"><span class="ai">AI</span></span></div>`),
+   RB.leaf('verdict','badge',`<span class="pvbadge ml-tone" style="background:#34d39922;color:#7eecc4;font-size:8px;display:inline-block;margin-bottom:10px">ALL CLEAR</span>`),
+   RB.leaf('narrative','text-medium',`<div class="ml-narrative" style="font-size:16px;line-height:1.5;font-weight:600;color:#e9eef6">Slept <b style="color:#9cc3f5">10h 4m</b> with 2 brief wakings. One true-cry at <b style="color:#f3cd86">2:14</b>, self-settled in 3 min.</div>`),
+   `<div class="ml-hi" style="display:flex;gap:5px;margin-top:11px"><span class="fc" style="font-size:8px">2:14 cry &middot; clip</span><span class="fc" style="font-size:8px">night graph</span></div>`)},
+ 'C-ACT':{q:'device commands · power + talk',
+  render:()=>RB.stack(
+   `<div class="actions" style="margin-bottom:8px">`+RB.leaf('device-control','button',`<div class="act primary ml-pon"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>Power on</div>`)+RB.leaf('device-control','button',`<div class="act ml-poff"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="8" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>Power off</div>`)+`</div>`,
+   `<div class="actions" style="margin-bottom:8px">`+RB.leaf('device-control','button',`<div class="act ml-talk"><span class="ai">${aIcon('<path d="M3 11l16-5v12L3 13z"/><path d="M9 19a2.5 2.5 0 0 0 4 0"/>')}</span>Two-way talk</div>`)+`</div>`,
+   RB.leaf('state','text-small',`<div class="ml-devstate" style="font-size:9px;color:#7eecc4">&#9679; Plug is ON &middot; confirmed 1s ago &middot; <span style="color:var(--dim)">sits under the live view</span></div>`))},
+ 'C-READOUT':{q:'snapshot + VLM read',mods:['confidence','correctable'],
+  render:()=>RB.panel(
+   RB.ph('Number readout'),
+   RB.leaf('measurement','block',`<div class="readout"><div class="rn"><span class="ml-value">04857</span><span class="ml-unit" style="font-size:18px;color:var(--mut)"> kWh</span></div><div class="ru ml-meter">utility meter</div></div>`),
+   RB.leaf('provenance','block',cf15('confidence 0.91','tap to correct')))},
+ 'C-TILES':{q:'devices · all + metrics · derived counts',
+  render:()=>RB.panel(
+   RB.ph('Tiles &mdash; metrics + fleet',RB.leaf('instance-count','text-small',`<span class="ml-fleet" style="font-size:9px;color:#7eecc4">3 / 4 online</span>`)),
+   `<div class="tilegrid">`+RB.repeat([['Garage cam','online','#34d399'],['Front cam','online','#34d399'],['Yard cam','online','#34d399'],['Porch cam','offline &middot; 2h','#f25c5c']],
+     r=>`<div class="gtile"><div class="gt-top">${r[0]}</div><div class="gt-sub"><span class="gt-pill" style="color:${r[2]};background:${r[2]}1f"><span class="gt-dot" style="background:${r[2]}"></span>${r[1]}</span></div></div>`)+`</div>`,
+   `<div class="tilegrid" style="margin-top:7px">`+RB.repeat([['38','events today'],['2','need attention'],['97%','uptime 7d']],
+     (r,i)=>`<div class="gtile num kpi${i}"><b>${r[0]}</b><span>${r[1]}</span></div>`)+`</div>`)},
+ 'C-SOS':{q:'household profile members · call order',
+  render:()=>RB.panel(
+   RB.ph('Escalation contacts',`<span style="font-size:9px;color:var(--dim)">call order</span>`),
+   `<div class="sosbook">`+RB.repeat([['Y','You','#4f8ff0'],['S','Sarah &middot; sister','#f6b73c'],['M','Mike &middot; neighbor','#34d399'],['D','Dr. Lee','#a78bfa']],
+     r=>`<div class="sosc"><span class="sosc-av" style="background:${r[2]}22;color:${r[2]}">${r[0]}</span><div class="sosc-main"><div class="sosc-name">${r[1]}</div></div><div class="sosc-acts"><span class="sosc-act" title="Call"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco.call}</svg></span><span class="sosc-act" title="Message"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco.text}</svg></span></div></div>`)+`</div>`)},
+ 'C-ASSIST':{q:'suggestions · limit 5 · tap opens chat',
+  render:()=>RB.panel(
+   RB.ph('Ask Home',RB.ai()),
+   `<div class="dc-lab" style="margin:0 0 8px">Suggested questions</div>`,
+   `<div class="suglist">`+RB.repeat(['What did I miss today?','When does the mail usually come?','Is the garage closed right now?','Did anyone come to the door?','Who was the person at 2 PM?'],
+     q=>RB.leaf('suggestion','filter',`<div class="sugq"><span class="sugq-t">${q}</span><span class="sugq-go">&rarr;</span></div>`))+`</div>`)},
+ 'C-LEARN':{q:'learnings · sort recency · limit 3',
+  render:()=>RB.panel(
+   RB.ph('What this agent learned',RB.ai()),
+   RB.repeat([['Mail usually arrives 1&ndash;3pm','routine','0.86'],['The garage is normally closed overnight','baseline','0.93'],['Recognizes the silver SUV as &ldquo;family car&rdquo;','identity','0.78']],
+     r=>`<div class="learnrow"><span class="lbulb"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f6b73c" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12c.5.5 1 1.2 1 2h6c0-.8.5-1.5 1-2a7 7 0 0 0-4-12z"/></svg></span><div style="flex:1;min-width:0"><div class="ft">${r[0]}</div><div class="fm">${r[1]} &middot; remembered</div></div><span class="lconf">${r[2]}</span></div>`))},
+ 'C-LIVE':{q:'stream_params · live',hero:true,
+  render:()=>RB.media('linear-gradient(165deg,#1d2d49,#0f1828)','live',
+   RB.leaf('name-tag','text-tagline',RB.vname('Front cam &middot; online')),
+   RB.leaf('timestamp','text-tagline',RB.vtime('14:09')))},
+ 'C-RECVIDEO':{q:'events · bin 30min · span 24h + record scrub',hero:true,
+  render:()=>RB.stack(
+   `<div class="hero" style="margin-bottom:8px"><div class="videobox" style="background:linear-gradient(165deg,#1c2740,#0c1119)"><div class="sigtag" style="background:#5a6b82dd;color:#fff">EVENTS</div>${RB.vname('Activity scrubber')}${RB.vtime('last 24h')}</div></div>`,
+   RB.leaf('activity-series','chart',scrub()))},
+ 'C-SNAP':{q:'capture_snapshot + eventgroup artifact overlays',hero:true,mods:['confidence','correctable'],
+  render:()=>RB.stack(
+   RB.media('linear-gradient(165deg,#2c3d5b,#0d1626)','snap',
+    RB.leaf('detection-marker','bound-box',`<div class="annbox" style="left:21%;top:34%;width:58%;height:46%"></div><div class="annbadge" style="left:21%;top:34%">garage door</div>`),
+    RB.html(`<div class="fused"><div><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7eecc4" stroke-width="2.4"><path d="M5 12l5 5L20 7"/></svg></div><div><div class="fs" style="color:#7eecc4;font-size:16px">Closed &middot; secure</div><div class="fsub">annotated snapshot &middot; 8:02 AM</div></div></div>`)),
+   RB.leaf('provenance','block',cf15('0.94','AI verdict: Closed &middot; 0.94 &middot; tap to correct')))},
+ 'C-TIMELAPSE':{q:'frame store · 1/day (pseudo)',hero:true,
+  render:()=>RB.html(MODFULL['M-TIMELAPSE'])},
+ 'C-GALLERY':{q:'entities · group identity · limit 3 (+ tag counts)',
+  render:()=>RB.panel(
+   RB.ph('Today&rsquo;s visitors',`<span class="sigtag sig-coll" style="position:static">6</span>`),
+   RB.leaf('category-count','filter',`<div class="chips2" style="margin-bottom:8px"><span class="fc on">All 6</span><span class="fc">New 2</span><span class="fc">Songbirds 4</span></div>`),
+   `<div class="gallery">`+RB.repeat([['linear-gradient(150deg,#b1402f,#5a1c14)','Cardinal',1],['linear-gradient(150deg,#3a67c4,#16304f)','Blue Jay',0],['linear-gradient(150deg,#caa23f,#5c4715)','Robin',1]],
+     r=>`<div class="gcell${r[2]?' new':''}" style="background:${r[0]}"><span>${r[1]}</span></div>`)+`</div>`)},
+ 'C-MULTIVIEW':{q:'devices · all · grid of live streams',
+  render:()=>RB.panel(
+   RB.ph('All sites',`<span class="sigtag sig-multi" style="position:static">4 LIVE</span>`),
+   `<div class="gallery" style="grid-template-columns:1fr 1fr">`+RB.repeat([['Lakeside','#2a3b58,#0d1626','#34d399'],['Downtown','#3a2f28,#160f0b','#f25c5c'],['Cabin','#2c5a3e,#13261a','#34d399'],['Midtown','#2f4452,#141d24','#34d399']],
+     r=>`<div class="gcell" style="aspect-ratio:16/10;background:linear-gradient(150deg,${r[1]})"><span style="display:flex;align-items:center;gap:3px"><i style="width:5px;height:5px;border-radius:50%;background:${r[2]}"></i>${r[0]}</span></div>`)+`</div>`)},
+ 'C-LOG':{q:'visual-memories runs · sort ts desc',
+  render:()=>RB.panel(
+   RB.ph('Reading log'),
+   RB.repeat([['2:00 PM','04857.2','+1.4'],['1:00 PM','04855.8','+1.1']],
+     r=>`<div class="logrow"><span class="lt">${r[0]}</span><span class="lv">${r[1]}</span><span class="ld">${r[2]}</span></div>`))},
+ 'C-VISIT':{q:'reid appearances · derive dwell · limit 2',mods:['confidence'],
+  render:()=>RB.panel(
+   RB.ph('Visit verification'),
+   RB.repeat([['linear-gradient(150deg,#2c5a3e,#13261a)','#34d399','#04231a','Today, Tue','9:12 &rarr; 10:05 AM','53m','VERIFIED','#7eecc4'],
+              ['linear-gradient(150deg,#5a4a2c,#26200f)','#f6b73c','#3a2a05','Tue, May 13','9:05 &rarr; 9:34 AM','29m','SHORT','#f3cd86']],
+     r=>`<div class="tsrow"><div class="cliptip" style="background:${r[0]}"><span class="ctg" style="background:${r[1]};color:${r[2]}">CLIP</span></div><div style="flex:1"><div class="tn">${r[3]}</div><div class="tm">${r[4]}</div></div><div class="tsdur"><div class="dd" style="color:${r[7]}">${r[5]}</div><div class="ds" style="color:${r[7]}">${r[6]}</div></div></div>`),
+   RB.leaf('provenance','block',cf15('0.90','Identity match &middot; tap to correct')))},
+ 'C-IDCARD':{q:'reid identities · one record',mods:['confidence','correctable'],
+  render:()=>RB.panel(
+   RB.ph('ID Card',`<span class="pvbadge" style="background:#34d39922;color:#7eecc4;font-size:8px">KNOWN</span>`),
+   `<div class="idcard"><div class="pic"></div><div><div class="nm">Northern Cardinal</div><div class="sci">Cardinalis cardinalis</div><div class="meta">Last seen 1:52 PM &middot; 9 visits &middot; 2 cams</div></div></div>`,
+   RB.leaf('provenance','block',cf15('0.93','Match confidence &middot; tap to relabel')))},
+ 'C-TREND':{q:'events · bin day · span 7d',
+  render:()=>RB.panel(
+   RB.ph('Visits this week',RB.leaf('trend-delta','badge',`<span class="delta up">&#9650; 22%</span>`)),
+   RB.leaf('activity-series','chart',`<div class="trendbars">${[40,62,55,78,48,90,70].map((h,i)=>`<div class="tb" style="height:${h}%;${i===5?'background:linear-gradient(#f472b6,#a23a6f)':''}"></div>`).join('')}</div><div class="trendx">${['M','T','W','T','F','S','S'].map(d=>`<span>${d}</span>`).join('')}</div>`))},
+ 'C-DETER':{q:'deterrent commands (pseudo)',
+  render:()=>RB.html(MODFULL15['M-DETER'])},
+ 'C-REMINDER':{q:'agents triggers + visual-memories status',
+  render:()=>RB.html(MODFULL15['M-REMINDER'])},
+};
+
 /* ====================================================================
    ELEMENTS TAB — each element = ONE data source (field). Components are
    combinations of elements. Decomposition is derived at runtime from
@@ -4521,7 +4682,7 @@ function showElComps(ui){
   const comps=Object.keys(info);
   list.innerHTML=comps.length?comps.map(cid=>{
     const v=V25.find(x=>x.id===cid)||{};
-    const prev=MOD25[cid]||MODFULL15[v.primary]||MODFULL[v.primary]||'';
+    const prev=(typeof RECIPES!=='undefined'&&RECIPES[cid])?RECIPES[cid].render():(MOD25[cid]||MODFULL15[v.primary]||MODFULL[v.primary]||'');
     const rcp=recipeOf(cid).map(r=>`<span class="dc-rcp${r.el===ui?' on':''}">${r.key}</span>`).join('');
     return `<div class="el-comp" data-comp="${cid}"><b>${cid}</b><span class="cn">${v.name||''}</span>`
       +`<div class="el-comp-rcp">${rcp}</div>`
