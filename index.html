@@ -4579,6 +4579,9 @@ const FIELD_META={
 };
 /* ---- the 13 formats + per-format micro (strip) and stage (full) renderers ---- */
 const FORMATS=['text-large','text-medium','text-small','text-tagline','badge','dot','tile','filter','list','small-thumb','square','full-card','chart','bound-box','button'];
+/* format switch tags are listed big -> small; first (biggest) is the default */
+const FMT_SIZE_ORDER=['full-card','bound-box','square','month-chart','weekly-chart','daily-chart','hourly-chart','chart','small-thumb','tile','list','button-block','button-pill','button','filter','text-large','text-medium','badge','text-small','text-tagline','dot'];
+const elFmtOrder=f=>[...f].sort((a,b)=>FMT_SIZE_ORDER.indexOf(a)-FMT_SIZE_ORDER.indexOf(b));
 function inMedia(html,anchor){
   const pos={tl:'left:8px;top:8px',tr:'right:8px;top:8px',bl:'left:8px;bottom:8px',br:'right:8px;bottom:8px',center:'inset:0;display:grid;place-items:center'}[anchor||'bl'];
   return `<div class="hero" style="width:200px"><div class="videobox" style="background:linear-gradient(165deg,#1d2d49,#0f1828)"><div style="position:absolute;${pos}">${html}</div></div></div>`;
@@ -4631,7 +4634,7 @@ const EL_REGISTRY=[
   modifier:{provenance:'detector',correctable:true},sample:{tag:'garage door',c:'#f6b73c'}},
  /* state aggregation */
  {id:'state',grp:'state-agg',label:'State',desc:'Current condition or AI judgment of a subject — word, pill, dot, sentence or verdict badge (tone, verification, known-identity)',sig:'identity/device/agent · state',formats:['text-large','badge','text-small'],layouts:['standalone','overlay'],action:'open-chat',accepts:['state','bool'],
-  modifier:{provenance:'vlm',confidenceField:'confidence',correctable:true},sample:{txt:'CLOSED',tag:'PERSON',c:'#7eecc4'}},
+  modifier:{provenance:'vlm',confidenceField:'confidence',correctable:true},sample:{txt:'CLOSED',c:'#7eecc4'}},
  {id:'measurement',grp:'state-agg',label:'Measurement',desc:'Value + unit read from the scene (VLM, no OCR endpoint)',sig:'device · state',formats:['tile','text-large'],layouts:['standalone','overlay'],action:'correct',accepts:['number','text'],
   modifier:{provenance:'vlm',confidenceField:'confidence',correctable:true},sample:{txt:'04857',sub:'kWh &middot; gas meter',c:'#5fd0e0',mono:true},
   stage:{tile:s=>`<div class="readout" style="padding:0;text-align:left"><div class="rn" style="font-size:30px">${s.txt}<span style="font-size:15px;color:var(--mut);letter-spacing:0"> kWh</span></div><div class="ru" style="font-size:10px;color:var(--mut)">${s.sub||''}</div></div>`}},
@@ -4838,8 +4841,9 @@ function renderElCanvas(){
     if(!els.length) return '';
     return `<div class="famblock dc-fam el-fam" data-grp="${k}"><h3>${label} <span class="el-h3n">(${els.length})</span></h3>`
       +els.map(u=>{
-        const fmt=u.formats[0], lay=u.layouts[0];
-        const fmts=u.formats.map(F=>`<span class="el-fmt${F===fmt?' on':''}" data-fmt="${F}">${F}</span>`).join('');
+        const ordered=elFmtOrder(u.formats);
+        const fmt=ordered[0], lay=u.layouts[0];
+        const fmts=ordered.map(F=>`<span class="el-fmt${F===fmt?' on':''}" data-fmt="${F}">${F}</span>`).join('');
         const mod=u.modifier?`<div class="el-modline">&oplus; ${u.modifier.provenance}${u.modifier.confidenceField?' &middot; '+u.modifier.confidenceField:''}${u.modifier.correctable?' &middot; tap-to-correct':''}</div>`:'';
         return `<div class="el-chip" data-ui="${u.id}" data-fmt="${fmt}" data-lay="${lay}" data-pairs="${(uiPairs[u.id]||[]).join(' ')}" title="${u.desc} [${u.sig}] &middot; tap: ${u.action}">`
           +`<div class="el-chip-head"><span class="el-chip-name">${u.label}</span></div>`
