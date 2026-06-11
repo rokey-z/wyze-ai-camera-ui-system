@@ -4278,7 +4278,7 @@ const RECIPES={
  'C-STATE':{q:'visual-memories · latest status_line · parsed',mods:['confidence','correctable'],
   render:()=>RB.stack(
    RB.leaf('state','text-large',`<div class="panel" style="text-align:center;padding:20px 12px 16px"><div class="ml-subj" style="font-size:9px;letter-spacing:1px;color:var(--dim);text-transform:uppercase;margin-bottom:7px">Garage door</div><div class="ml-state" style="font-size:36px;font-weight:800;letter-spacing:-1.5px;color:#7eecc4;line-height:1">CLOSED</div><div style="font-size:11px;color:var(--mut);margin-top:8px"><span class="ml-label">secure</span> &middot; <span class="ml-dur" style="font-family:var(--mono);color:#7eecc4;font-weight:700">3h 42m</span></div></div>`),
-   RB.leaf('provenance','block',cf15('confidence 0.96','tap to correct')))},
+   RB.leaf('provenance','button-pill',cf15('confidence 0.96','tap to correct')))},
  'C-FEED':{q:'events · sort ts desc · limit 4 (+ group-by-tag counts)',
   render:()=>RB.panel(
    RB.ph('Entry history'),
@@ -4326,7 +4326,7 @@ const RECIPES={
   render:()=>RB.panel(
    RB.ph('Number readout'),
    RB.leaf('measurement','block',`<div class="readout"><div class="rn"><span class="ml-value">04857</span><span class="ml-unit" style="font-size:18px;color:var(--mut)"> kWh</span></div><div class="ru ml-meter">utility meter</div></div>`),
-   RB.leaf('provenance','block',cf15('confidence 0.91','tap to correct')))},
+   RB.leaf('provenance','button-pill',cf15('confidence 0.91','tap to correct')))},
  'C-TILES':{q:'devices · all + metrics · derived counts',
   render:()=>RB.panel(
    RB.ph('Tiles &mdash; metrics + fleet',RB.leaf('device-count','text-small',`<span class="ml-fleet" style="font-size:9px;color:#7eecc4">3 / 4 online</span>`)),
@@ -4363,7 +4363,7 @@ const RECIPES={
    RB.media('linear-gradient(165deg,#2c3d5b,#0d1626)','snap',
     RB.leaf('detection-marker','bound-box',`<div class="annbox" style="left:21%;top:34%;width:58%;height:46%"></div><div class="annbadge" style="left:21%;top:34%">garage door</div>`),
     RB.html(`<div class="fused"><div><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#7eecc4" stroke-width="2.4"><path d="M5 12l5 5L20 7"/></svg></div><div><div class="fs" style="color:#7eecc4;font-size:16px">Closed &middot; secure</div><div class="fsub">annotated snapshot &middot; 8:02 AM</div></div></div>`)),
-   RB.leaf('provenance','block',cf15('0.94','AI verdict: Closed &middot; 0.94 &middot; tap to correct')))},
+   RB.leaf('provenance','button-pill',cf15('0.94','AI verdict: Closed &middot; 0.94 &middot; tap to correct')))},
  'C-TIMELAPSE':{q:'frame store · 1/day (pseudo)',hero:true,
   render:()=>RB.html(MODFULL['M-TIMELAPSE'])},
  'C-GALLERY':{q:'entities · group identity · limit 3 (+ tag counts)',
@@ -4388,12 +4388,12 @@ const RECIPES={
    RB.repeat([['linear-gradient(150deg,#2c5a3e,#13261a)','#34d399','#04231a','Today, Tue','9:12 &rarr; 10:05 AM','53m','VERIFIED','#7eecc4'],
               ['linear-gradient(150deg,#5a4a2c,#26200f)','#f6b73c','#3a2a05','Tue, May 13','9:05 &rarr; 9:34 AM','29m','SHORT','#f3cd86']],
      r=>`<div class="tsrow"><div class="cliptip" style="background:${r[0]}"><span class="ctg" style="background:${r[1]};color:${r[2]}">CLIP</span></div><div style="flex:1"><div class="tn">${r[3]}</div><div class="tm">${r[4]}</div></div><div class="tsdur"><div class="dd" style="color:${r[7]}">${r[5]}</div><div class="ds" style="color:${r[7]}">${r[6]}</div></div></div>`),
-   RB.leaf('provenance','block',cf15('0.90','Identity match &middot; tap to correct')))},
+   RB.leaf('provenance','button-pill',cf15('0.90','Identity match &middot; tap to correct')))},
  'C-IDCARD':{q:'reid identities · one record',mods:['confidence','correctable'],
   render:()=>RB.panel(
    RB.ph('ID Card',`<span class="pvbadge" style="background:#34d39922;color:#7eecc4;font-size:8px">KNOWN</span>`),
    `<div class="idcard"><div class="pic"></div><div><div class="nm">Northern Cardinal</div><div class="sci">Cardinalis cardinalis</div><div class="meta">Last seen 1:52 PM &middot; 9 visits &middot; 2 cams</div></div></div>`,
-   RB.leaf('provenance','block',cf15('0.93','Match confidence &middot; tap to relabel')))},
+   RB.leaf('provenance','button-pill',cf15('0.93','Match confidence &middot; tap to relabel')))},
  'C-TREND':{q:'events · bin day · span 7d',
   render:()=>RB.panel(
    RB.ph('Visits this week',RB.leaf('trend-delta','badge',`<span class="delta up">&#9650; 22%</span>`)),
@@ -4664,8 +4664,8 @@ const EL_REGISTRY=[
  /* priority & confidence */
  {id:'priority-marker',grp:'priority-conf',label:'Priority marker',desc:'Urgency / ranking — agent alert level, group score',sig:'agent/instance · none · score',formats:['dot','badge'],layouts:['standalone','overlay'],action:'navigate',accepts:['score'],
   sample:{c:'#f25c5c',tag:'P1'}},
- {id:'provenance',grp:'priority-conf',label:'Confidence',desc:'Attachable modifier — model confidence + tap-to-correct on any AI-derived element',sig:'modifier · score',formats:['block'],layouts:['standalone'],action:'correct',accepts:['score'],
-  sample:{txt:'confidence 0.96',sub:'tap to correct'},stage:{block:s=>cf15('confidence 0.96','tap to correct')}},
+ {id:'provenance',grp:'chat',label:'Confidence',desc:'Attachable modifier — model confidence + tap-to-correct on any AI-derived element',sig:'modifier · score',formats:['button-pill'],layouts:['standalone'],action:'correct',accepts:['score'],
+  sample:{txt:'confidence 0.96',sub:'tap to correct'},stage:{'button-pill':s=>cf15('confidence 0.96','tap to correct')}},
  /* compare */
  {id:'trend-delta',grp:'compare',label:'Trend delta',desc:'Change vs the prior period — or the peak callout',sig:'instance · trend · time',formats:['badge','text-small'],layouts:['standalone'],action:'open-chat',accepts:['number'],
   sample:{tag:'&#9650; 22%',c:'#7eecc4'},stage:{badge:s=>`<span class="delta up" style="margin-left:0">${s.tag}</span>`}},
@@ -4707,11 +4707,11 @@ const EL_REGISTRY=[
 const T=(el,fmt,lay)=>({el,fmt,lay:lay||'standalone'});
 const SEL2UI={
  'C-AGENT':{'.aghome .agcard .agthumb':T('media','small-thumb'),'.aghome .agcard .agalert':T('priority-marker','dot'),'.aghome .agcard .agpill':T('state','badge'),'.aghome .agcard .agsub':T('relative-time','text-tagline'),'.aghome .agname':T('name-tag','text-tagline')},
- 'C-STATE':{'.ml-state':T('state','text-large'),'.ml-dur':T('duration','text-large'),'.cv':T('provenance','block')},
+ 'C-STATE':{'.ml-state':T('state','text-large'),'.ml-dur':T('duration','text-large'),'.cv':T('provenance','button-pill')},
  'C-FEED':{'.chips2 .fc.on':T('category-count','filter'),'.chips2 .fc:not(.on)':T('category-count','filter'),'.feedrow .thumb':T('media','small-thumb'),'.feedrow .ft':T('description','text-small'),'.feedrow .fm':T('absolute-time','text-tagline'),'.feedrow .etag':T('category-tag','badge')},
  'C-RECAP':{'.ml-title':T('description','text-small'),'.ml-tone':T('state','badge'),'.ml-narrative':T('narrative','text-medium')},
  'C-ACT':{'.ml-pon':T('device-control','button-pill'),'.ml-poff':T('device-control','button-pill'),'.ml-talk':T('device-control','button-pill'),'.ml-devstate':T('device-state','text-small')},
- 'C-READOUT':{'.ml-value':T('measurement','block'),'.ml-unit':T('measurement','block'),'.ml-meter':T('measurement','text-tagline'),'.cv':T('provenance','block')},
+ 'C-READOUT':{'.ml-value':T('measurement','block'),'.ml-unit':T('measurement','block'),'.ml-meter':T('measurement','text-tagline'),'.cv':T('provenance','button-pill')},
  'C-SOS':{'.sosc .sosc-name':T('name-tag','text-small'),'.sosc .sosc-num':T('contact-action','list'),'.sosc-acts .sosc-act':T('contact-action','button-block')},
  'C-GROUPED':{'.gcard-thumb':T('media','full-card'),'.gcard-title':T('description','text-small','overlay'),'.gcard-gif':T('media','small-thumb','overlay'),'.cv':T('priority-marker','badge'),'.gcard-meta':T('instance-count','text-tagline','overlay')},
  'C-STRIP':{'.estrip .ethumb':T('media','small-thumb'),'.estrip .ethumb-tag':T('category-tag','badge','overlay'),'.estrip .ethumb-t':T('absolute-time','text-tagline','overlay'),'.ml-count':T('instance-count','text-small')},
@@ -4720,16 +4720,16 @@ const SEL2UI={
  'C-INSIGHT':{'.insfind':T('narrative','text-medium'),'.trendbars .tb':T('week-activity','chart')},
  'C-TILES':{'.ml-fleet':T('device-count','text-small'),'.tilegrid .gt-top':T('device-name','text-tagline'),'.tilegrid .gt-sub':T('device-state','badge'),'.kpi0 b':T('instance-count','block'),'.kpi1 b':T('instance-count','block'),'.kpi2 b':T('measurement','block')},
  'C-ASSIST':{'.sugq-t':T('suggestion','button')},
- 'C-LEARN':{'.learnrow .ft':T('narrative','text-small'),'.learnrow .fm':T('category-tag','text-tagline'),'.learnrow .lconf':T('provenance','text-tagline')},
+ 'C-LEARN':{'.learnrow .ft':T('narrative','text-small'),'.learnrow .fm':T('category-tag','text-tagline'),'.learnrow .lconf':T('provenance','button-pill')},
  'C-LIVE':{'.videobox':T('media','full-card'),'.vname':T('state','text-small','overlay'),'.vtime':T('absolute-time','text-tagline','overlay')},
  'C-RECVIDEO':{'.scrub .seg':T('day-activity','chart'),'.scrub .pin':T('absolute-time','chart','overlay'),'.vname':T('name-tag','text-tagline','overlay'),'.videobox':T('media','full-card')},
- 'C-SNAP':{'.videobox':T('media','full-card'),'.annbadge':T('detection-marker','bound-box','overlay'),'.fsub':T('absolute-time','text-tagline','overlay'),'.fs':T('description','text-small','overlay'),'.cv':T('provenance','block')},
+ 'C-SNAP':{'.videobox':T('media','full-card'),'.annbadge':T('detection-marker','bound-box','overlay'),'.fsub':T('absolute-time','text-tagline','overlay'),'.fs':T('description','text-small','overlay'),'.cv':T('provenance','button-pill')},
  'C-TIMELAPSE':{'.lapse .videobox':T('media','full-card'),'.vname':T('name-tag','text-tagline','overlay'),'.vtime':T('absolute-time','text-tagline','overlay'),'.ld2':T('instance-count','text-small'),'.lapsetrack b':T('absolute-time','chart','overlay')},
  'C-GALLERY':{'.gallery .gcell':T('media','small-thumb'),'.gallery .gcell span':T('name-tag','text-tagline','overlay'),'.sig-coll':T('instance-count','badge'),'.chips2 .fc.on':T('category-count','filter'),'.chips2 .fc:not(.on)':T('category-count','filter')},
  'C-MULTIVIEW':{'.gallery .gcell':T('name-tag','text-tagline','overlay'),'.gallery .gcell i':T('state','badge','overlay'),'.sig-multi':T('media','small-thumb')},
  'C-LOG':{'.logrow .lt':T('absolute-time','text-small'),'.logrow .lv':T('state','text-small'),'.logrow .ld':T('trend-delta','text-small')},
- 'C-VISIT':{'.tsrow .tn':T('absolute-time','text-small'),'.tsrow .tm':T('absolute-time','text-tagline'),'.tsrow .cliptip':T('media','small-thumb'),'.tsrow .ctg':T('media','small-thumb','overlay'),'.tsrow .dd':T('duration','text-small'),'.tsrow .ds':T('state','badge'),'.cv':T('provenance','block')},
- 'C-IDCARD':{'.idcard .nm':T('name-tag','text-small'),'.idcard .sci':T('attribute-tag','text-tagline'),'.idcard .pic':T('media','square'),'.idcard .meta':T('absolute-time','text-tagline'),'.pvbadge':T('state','badge'),'.cv':T('provenance','block')},
+ 'C-VISIT':{'.tsrow .tn':T('absolute-time','text-small'),'.tsrow .tm':T('absolute-time','text-tagline'),'.tsrow .cliptip':T('media','small-thumb'),'.tsrow .ctg':T('media','small-thumb','overlay'),'.tsrow .dd':T('duration','text-small'),'.tsrow .ds':T('state','badge'),'.cv':T('provenance','button-pill')},
+ 'C-IDCARD':{'.idcard .nm':T('name-tag','text-small'),'.idcard .sci':T('attribute-tag','text-tagline'),'.idcard .pic':T('media','square'),'.idcard .meta':T('absolute-time','text-tagline'),'.pvbadge':T('state','badge'),'.cv':T('provenance','button-pill')},
  'C-TREND':{'.trendbars .tb':T('week-activity','chart'),'.delta':T('trend-delta','badge')},
  'C-DETER':{'.act.danger':T('device-control','button-pill'),'.act:not(.danger)':T('device-control','button-pill')},
  'C-REMINDER':{'.reminder b':T('absolute-time','text-small'),'.reminder span':T('state','text-small')},
