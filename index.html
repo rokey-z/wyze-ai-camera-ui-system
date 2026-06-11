@@ -435,7 +435,7 @@
   #elUiCol .el-fam h3{text-align:right;font-size:15px}
 
   .el-chip{position:relative;display:flex;flex-direction:column;align-items:stretch;gap:8px;
-    padding:12px 2px;border-top:1px solid var(--line);
+    padding:20px 2px;border-top:1px solid var(--line);
     cursor:pointer;transition:background .15s}
   #elUiCol .el-fam .el-chip:first-of-type{border-top:0}
   .el-chip.hi{background:#4f8ff00d}
@@ -452,7 +452,9 @@
   .el-lay-g.on{border-color:#4f8ff088;background:#4f8ff014;color:#9cc3f5}
   /* labeled Format / Layout axes at the bottom of each element row */
   .el-axis{display:flex;align-items:center;gap:8px}
-  .el-axis-t{flex:none;width:42px;font-size:8px;font-weight:700;letter-spacing:.7px;
+  /* "Format" caption: regular weight, sits on top of the switch tags */
+  .el-fmtcol{display:flex;flex-direction:column;align-items:flex-start;gap:5px;min-width:0}
+  .el-axis-t{flex:none;font-size:8px;font-weight:400;letter-spacing:.7px;
     text-transform:uppercase;color:var(--dim)}
   /* format strip: live micro-previews, click swaps the stage */
   .el-fmts{display:inline-flex;flex-wrap:wrap;gap:4px}
@@ -471,6 +473,10 @@
   .el-chip-stage:has(.el-stage-part){display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap}
   .el-stage-part{display:flex;flex-direction:column;align-items:flex-start;gap:5px;min-width:0}
   .el-stage-part .hero{width:150px!important}
+  /* standalone render sits in a host block matching the overlay box width */
+  .el-stage-host{width:150px;min-height:94px;box-sizing:border-box;padding:9px;
+    border:1px solid var(--line);border-radius:12px;background:var(--card);
+    display:flex;align-items:center;justify-content:center}
   .el-lay-tag{font-size:8.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--dim)}
   .el-stage-r{min-width:0}
   .el-chip-stage .panel,.el-chip-stage .actions,.el-chip-stage .reminder,
@@ -4758,7 +4764,7 @@ function elStage(el,fmt,lay){
 }
 function elStageAll(el,fmt){
   if(el.layouts.length<2) return elStage(el,fmt,el.layouts[0]);
-  return `<div class="el-stage-part"><span class="el-lay-tag">standalone</span><div class="el-stage-r">${elStage(el,fmt,'standalone')}</div></div>`
+  return `<div class="el-stage-part"><span class="el-lay-tag">standalone</span><div class="el-stage-r"><div class="el-stage-host">${elStage(el,fmt,'standalone')}</div></div></div>`
        +`<div class="el-stage-part"><span class="el-lay-tag" title="overlay — attached on a media surface">overlay</span><div class="el-stage-r">${elStage(el,fmt,'overlay')}</div></div>`;
 }
 const LAY_GLYPH={
@@ -4816,7 +4822,7 @@ function renderElCanvas(){
         const fmts=u.formats.map(F=>`<span class="el-fmt${F===fmt?' on':''}" data-fmt="${F}">${F}</span>`).join('');
         const mod=u.modifier?`<div class="el-modline">&oplus; ${u.modifier.provenance}${u.modifier.confidenceField?' &middot; '+u.modifier.confidenceField:''}${u.modifier.correctable?' &middot; tap-to-correct':''}</div>`:'';
         return `<div class="el-chip" data-ui="${u.id}" data-fmt="${fmt}" data-lay="${lay}" data-pairs="${(uiPairs[u.id]||[]).join(' ')}" title="${u.desc} [${u.sig}] &middot; tap: ${u.action}">`
-          +`<div class="el-chip-head"><span class="el-fmts">${fmts}</span><span class="el-chip-name">${u.label}</span></div>`
+          +`<div class="el-chip-head"><div class="el-fmtcol"><span class="el-axis-t">Format</span><span class="el-fmts">${fmts}</span></div><span class="el-chip-name">${u.label}</span></div>`
           +`<div class="el-chip-stage">${elStageAll(u,fmt)}</div>`
           +`${mod}</div>`;
       }).join('')+`</div>`;
