@@ -4432,7 +4432,7 @@ const EL_GROUPS=[['media-attr','Media attribute'],['media-corr','Media correspon
  ['state-agg','State aggregation'],['instance-agg','Instance aggregation'],['typecount-agg','Type-count aggregation'],
  ['time-agg','Time aggregation'],['timestamps','Timestamps'],['priority-conf','Priority & confidence'],
  ['compare','Compare'],['nametags','Name tags'],['chat','Chat'],['description','Description'],
- ['devices','Devices'],['escalation','Escalation'],['schedule','Schedule']];
+ ['devices','Devices'],['escalation','Escalation']];
 /* --- the 74 elements: fld → {arch, label, desc, prev, ctx?} --- */
 const ELEMS={
  /* text */
@@ -4621,7 +4621,7 @@ const EL_REGISTRY=[
  /* instance aggregation */
  {id:'category-tag',grp:'instance-agg',label:'Category tag',desc:'Classifier tag on one instance (person / vehicle / pet)',sig:'instance · none · category',formats:['badge','text-tagline'],layouts:['standalone','overlay'],action:'filter',accepts:['id','score'],
   modifier:{provenance:'detector',confidenceField:'tag_conf'},sample:{tag:'VEHICLE',c:'#9cc3f5'}},
- {id:'category-count',grp:'instance-agg',label:'Category count',desc:'Instances grouped + counted per category — the filter row',sig:'category · count · category',formats:['filter','badge','chart'],layouts:['standalone'],action:'filter',accepts:['id','count'],
+ {id:'category-count',grp:'instance-agg',label:'Category count',desc:'Instances grouped + counted per category — the filter row',sig:'category · count · category',formats:['filter','badge'],layouts:['standalone'],action:'filter',accepts:['id','count'],
   sample:{tag:'All &middot; 24',sub:'Person &middot; 11'}},
  /* type-count aggregation */
  {id:'instance-count',grp:'typecount-agg',label:'Instance count',desc:'How many — events, devices online, frames, sightings',sig:'instance/device · count',formats:['block','text-small','badge','text-tagline'],layouts:['standalone','overlay'],action:'navigate',accepts:['count'],
@@ -4670,8 +4670,6 @@ const EL_REGISTRY=[
    list:s=>`<div class="sosbook"><div class="sosc"><span class="sosc-av" style="background:#f6b73c22;color:#f6b73c">S</span><div class="sosc-main"><div class="sosc-name">Sarah &middot; sister</div><div class="sosc-num" style="font-size:9px;color:var(--dim);font-family:var(--mono)">(415) 555-0142</div></div><div class="sosc-acts"><span class="sosc-act" title="Call"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco.call}</svg></span><span class="sosc-act" title="Message"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco.text}</svg></span></div></div></div>`,
    button:s=>`<div class="actions" style="max-width:120px"><div class="act"><span class="ai"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco.call}</svg></span>Call</div></div>`}},
  /* schedule */
- {id:'schedule-trigger',grp:'schedule',label:'Schedule trigger',desc:'Agent schedule / learned routine that fires checks and reminders',sig:'agent/identity · none · time',formats:['text-small','badge'],layouts:['standalone'],action:'navigate',accepts:['time'],
-  sample:{txt:'Every Tue &middot; 9&ndash;11 AM',tag:'TUE 9&ndash;11',c:'#f3cd86'}},
 ];
 /* ---- selector -> (element, format, layout): translates every MAPLINES binding.
    MAPLINES stays the single source of truth for which solid pairs exist. ---- */
@@ -4703,7 +4701,7 @@ const SEL2UI={
  'C-IDCARD':{'.idcard .nm':T('name-tag','text-small'),'.idcard .sci':T('attribute-tag','text-tagline'),'.idcard .pic':T('media','portrait'),'.idcard .meta':T('absolute-time','text-tagline'),'.pvbadge':T('state','badge'),'.cv':T('provenance','block')},
  'C-TREND':{'.trendbars .tb':T('week-activity','chart'),'.delta':T('trend-delta','badge')},
  'C-DETER':{'.act.danger':T('device-control','button'),'.act:not(.danger)':T('device-control','button')},
- 'C-REMINDER':{'.reminder b':T('schedule-trigger','text-small'),'.reminder span':T('state','text-small')},
+ 'C-REMINDER':{'.reminder b':T('absolute-time','text-small'),'.reminder span':T('state','text-small')},
 };
 /* ---- curated possible fills (dashed lines): same UI element, other plausible fields ---- */
 const POSSIBLE_PAIRS=[
@@ -4801,7 +4799,7 @@ function renderElCanvas(){
     return `<div class="famblock dc-fam el-fam" data-grp="${k}"><h3>${label}</h3>`
       +els.map(u=>{
         const fmt=u.formats[0], lay=u.layouts[0];
-        const lays=['standalone','overlay'].map(L=>{
+        const lays=u.layouts.length<2?'':['standalone','overlay'].map(L=>{
           const ok=u.layouts.includes(L);
           return `<i class="el-lay-g${ok?' ok':''}${ok&&L===lay?' on':''}" data-lay="${L}" title="${L}${L==='overlay'?' — attached on a media surface':' — own card / row'}">${LAY_GLYPH[L]}</i>`;
         }).join('');
@@ -4811,7 +4809,7 @@ function renderElCanvas(){
           +`<div class="el-chip-head"><span class="el-chip-name">${u.label}</span></div>`
           +`<div class="el-chip-stage">${elStage(u,fmt,lay)}</div>`
           +`<div class="el-axis"><span class="el-axis-t">Format</span><span class="el-fmts">${fmts}</span></div>`
-          +`<div class="el-axis"><span class="el-axis-t">Layout</span><span class="el-lay">${lays}</span></div>`
+          +(lays?`<div class="el-axis"><span class="el-axis-t">Layout</span><span class="el-lay">${lays}</span></div>`:'')
           +`${mod}</div>`;
       }).join('')+`</div>`;
   }).join('');
