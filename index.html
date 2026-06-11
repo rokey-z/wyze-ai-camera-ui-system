@@ -3921,6 +3921,7 @@ const MAPLINES={
   ],
   'C-SOS':[
     {sel:'.sosc .sosc-name',   fld:'name',     color:'#9cc3f5'},
+    {sel:'.sosc .sosc-num',    fld:'phone',    color:'#f3cd86'},
     {sel:'.sosc-acts .sosc-act',fld:'method',   color:'#c4b3f0'}
   ],
   'C-GROUPED':[
@@ -4297,7 +4298,7 @@ const RECIPES={
  'C-RECAP':{q:'stories · latest',mods:['color-from:tone'],
   render:()=>RB.panel(
    RB.html(`<div class="ph"><b class="ml-title">Morning recap</b><span class="recap"><span class="ai">AI</span></span></div>`),
-   RB.leaf('verdict','badge',`<span class="pvbadge ml-tone" style="background:#34d39922;color:#7eecc4;font-size:8px;display:inline-block;margin-bottom:10px">ALL CLEAR</span>`),
+   RB.leaf('state','badge',`<span class="pvbadge ml-tone" style="background:#34d39922;color:#7eecc4;font-size:8px;display:inline-block;margin-bottom:10px">ALL CLEAR</span>`),
    RB.leaf('narrative','text-medium',`<div class="ml-narrative" style="font-size:16px;line-height:1.5;font-weight:600;color:#e9eef6">Slept <b style="color:#9cc3f5">10h 4m</b> with 2 brief wakings. One true-cry at <b style="color:#f3cd86">2:14</b>, self-settled in 3 min.</div>`),
    `<div class="ml-hi" style="display:flex;gap:5px;margin-top:11px"><span class="fc" style="font-size:8px">2:14 cry &middot; clip</span><span class="fc" style="font-size:8px">night graph</span></div>`)},
  'C-ACT':{q:'device commands · power + talk',
@@ -4320,8 +4321,8 @@ const RECIPES={
  'C-SOS':{q:'household profile members · call order',
   render:()=>RB.panel(
    RB.ph('Escalation contacts',`<span style="font-size:9px;color:var(--dim)">call order</span>`),
-   `<div class="sosbook">`+RB.repeat([['Y','You','#4f8ff0'],['S','Sarah &middot; sister','#f6b73c'],['M','Mike &middot; neighbor','#34d399'],['D','Dr. Lee','#a78bfa']],
-     r=>`<div class="sosc"><span class="sosc-av" style="background:${r[2]}22;color:${r[2]}">${r[0]}</span><div class="sosc-main"><div class="sosc-name">${r[1]}</div></div><div class="sosc-acts"><span class="sosc-act" title="Call"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco.call}</svg></span><span class="sosc-act" title="Message"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco.text}</svg></span></div></div>`)+`</div>`)},
+   `<div class="sosbook">`+RB.repeat([['Y','You','#4f8ff0','(415) 555-0108'],['S','Sarah &middot; sister','#f6b73c','(415) 555-0142'],['M','Mike &middot; neighbor','#34d399','(415) 555-0177'],['D','Dr. Lee','#a78bfa','clinic line']],
+     r=>`<div class="sosc"><span class="sosc-av" style="background:${r[2]}22;color:${r[2]}">${r[0]}</span><div class="sosc-main"><div class="sosc-name">${r[1]}</div><div class="sosc-num" style="font-size:9px;color:var(--dim);font-family:var(--mono)">${r[3]}</div></div><div class="sosc-acts"><span class="sosc-act" title="Call"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco.call}</svg></span><span class="sosc-act" title="Message"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco.text}</svg></span></div></div>`)+`</div>`)},
  'C-ASSIST':{q:'suggestions · limit 5 · tap opens chat',
   render:()=>RB.panel(
    RB.ph('Ask Home',RB.ai()),
@@ -4500,6 +4501,7 @@ const ELEMS={
  'is_on':{arch:'status',label:'Camera on/off',desc:'Whether the camera is powered and streaming',prev:()=>elLiveB('vname')},
  /* conf */
  'method':{arch:'action',label:'Contact method',desc:'How the escalation contact is reached (call / text) — no escalation-tree store yet',prev:()=>''},
+ 'phone':{arch:'action',label:'Contact number',desc:'Phone number of the escalation contact — no escalation-tree store yet',prev:()=>''},
  'confidence':{arch:'conf',label:'Confidence value',desc:'Model confidence for the shown verdict',prev:()=>elMark(cf15('confidence 0.96','tap to correct'),'cv'),ctx:{'C-STATE':'state read','C-READOUT':'VLM read','C-LEARN':'learning','C-SNAP':'verdict'}},
  'match_confidence':{arch:'conf',label:'Match confidence',desc:'Identity-match certainty',prev:()=>elMark(cf15('confidence 0.93','match &middot; tap to relabel'),'cv')},
  'score':{arch:'conf',label:'Group score',desc:'Event-group ranking score',prev:()=>elMark(cf15('score 4/5','event-group ranking'),'cv')},
@@ -4555,10 +4557,10 @@ const FIELD_META={
  vlm_insight:'text',video_description:'text',title:'text',narrative:'text',fact:'text',suggestion:'text',
  name:'text',identity_name:'text',device_name:'text',attributes:'text',unit:'text',meter_label:'text',
  bbox_xywh:'geometry',
- power_on:'command',power_off:'command',talk_session_id:'command',siren:'command',lights:'command',method:'command',
+ power_on:'command',power_off:'command',talk_session_id:'command',siren:'command',lights:'command',method:'command',phone:'text',
 };
 /* ---- the 13 formats + per-format micro (strip) and stage (full) renderers ---- */
-const FORMATS=['text-large','text-medium','text-small','text-tagline','badge','dot','block','filter','thumb','portrait','surface','chart','bound-box','button'];
+const FORMATS=['text-large','text-medium','text-small','text-tagline','badge','dot','block','filter','list','thumb','portrait','surface','chart','bound-box','button'];
 function inMedia(html,anchor){
   const pos={tl:'left:8px;top:8px',tr:'right:8px;top:8px',bl:'left:8px;bottom:8px',br:'right:8px;bottom:8px',center:'inset:0;display:grid;place-items:center'}[anchor||'bl'];
   return `<div class="hero" style="width:200px"><div class="videobox" style="background:linear-gradient(165deg,#1d2d49,#0f1828)"><div style="position:absolute;${pos}">${html}</div></div></div>`;
@@ -4572,6 +4574,7 @@ const FMT_STAGE={
  'dot':s=>`<span style="display:inline-block;width:13px;height:13px;border-radius:50%;background:${s.c||'#34d399'}"></span>`,
  'block':s=>`<div class="tilegrid"><div class="gtile num"><b>${s.txt}</b><span>${s.sub||''}</span></div></div>`,
  'filter':s=>`<div class="chips2" style="margin:0"><span class="fc on">${s.tag||s.txt}</span><span class="fc">${s.sub||'&hellip;'}</span></div>`,
+ 'list':s=>`<div style="display:flex;align-items:center;gap:9px;padding:7px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)"><div style="flex:1"><div style="font-size:12px;font-weight:600;color:var(--ink)">${s.txt}</div><div style="font-size:9px;color:var(--dim);font-family:var(--mono)">${s.sub||''}</div></div></div>`,
  'thumb':s=>`<div class="estrip" style="padding-bottom:0"><div class="ethumb" style="background:${s.grad||'linear-gradient(150deg,#4f8ff040,#0c1119)'}"></div></div>`,
  'portrait':s=>`<div class="idcard"><div class="pic"></div></div>`,
  'surface':s=>`<div class="hero" style="width:180px"><div class="videobox" style="background:${s.grad||'linear-gradient(165deg,#1d2d49,#0f1828)'}"></div></div>`,
@@ -4588,6 +4591,7 @@ const FMT_MICRO={
  'dot':s=>`<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${s.c||'#34d399'}"></span>`,
  'block':s=>`<span style="display:inline-grid;place-items:center;width:24px;height:15px;border:1px solid var(--line);border-radius:3px;background:var(--card);font-size:7.5px;font-weight:800;color:var(--ink)">12</span>`,
  'filter':s=>`<span style="font-size:7.5px;padding:1px 6px;border-radius:999px;border:1px solid #4f8ff066;color:#9cc3f5;background:#4f8ff014">All &middot; 4</span>`,
+ 'list':s=>`<span style="display:inline-flex;flex-direction:column;gap:2px"><i style="width:26px;height:2.5px;border-radius:1px;background:#4f8ff0aa"></i><i style="width:26px;height:2.5px;border-radius:1px;background:#2a3a55"></i><i style="width:26px;height:2.5px;border-radius:1px;background:#2a3a55"></i></span>`,
  'thumb':s=>`<span style="display:inline-block;width:21px;height:14px;border-radius:3px;background:${s.grad||'linear-gradient(150deg,#4f8ff040,#0c1119)'}"></span>`,
  'portrait':s=>`<span style="display:inline-block;width:15px;height:15px;border-radius:3px;background:linear-gradient(150deg,#b1402f,#5a1c14)"></span>`,
  'surface':s=>`<span style="display:inline-block;width:25px;height:15px;border-radius:3px;background:${s.grad||'linear-gradient(165deg,#1d2d49,#0f1828)'};border:1px solid #2a3a55"></span>`,
@@ -4607,10 +4611,8 @@ const EL_REGISTRY=[
  {id:'detection-marker',grp:'media-corr',label:'Detection marker',desc:'Bounding box + label anchored to the frame by detector geometry',sig:'instance · none',formats:['bound-box'],layouts:['overlay'],action:'correct',accepts:['geometry'],
   modifier:{provenance:'detector',correctable:true},sample:{tag:'garage door',c:'#f6b73c'}},
  /* state aggregation */
- {id:'state',grp:'state-agg',label:'State',desc:'Current condition of a subject — word, pill, dot or sentence',sig:'identity/device/agent · state',formats:['text-large','badge','dot','text-small'],layouts:['standalone','overlay'],action:'open-chat',accepts:['state','bool'],
+ {id:'state',grp:'state-agg',label:'State',desc:'Current condition or AI judgment of a subject — word, pill, dot, sentence or verdict badge (tone, verification, known-identity)',sig:'identity/device/agent · state',formats:['text-large','badge','dot','text-small'],layouts:['standalone','overlay'],action:'open-chat',accepts:['state','bool'],
   modifier:{provenance:'vlm',confidenceField:'confidence',correctable:true},sample:{txt:'CLOSED',tag:'PERSON &middot; 2m',c:'#7eecc4'}},
- {id:'verdict',grp:'state-agg',label:'Verdict',desc:'AI judgment pill — tone, verification, known-identity',sig:'video/identity · state',formats:['badge'],layouts:['standalone','overlay'],action:'correct',accepts:['state','bool'],
-  modifier:{provenance:'vlm',correctable:true},sample:{tag:'ALL CLEAR',c:'#7eecc4'}},
  {id:'measurement',grp:'state-agg',label:'Measurement',desc:'Value + unit read from the scene (VLM, no OCR endpoint)',sig:'device · state',formats:['block','text-large'],layouts:['standalone'],action:'correct',accepts:['number','text'],
   modifier:{provenance:'vlm',confidenceField:'confidence',correctable:true},sample:{txt:'04857',sub:'kWh &middot; gas meter',c:'#5fd0e0',mono:true},
   stage:{block:s=>`<div class="readout" style="padding:0;text-align:left"><div class="rn" style="font-size:30px">${s.txt}<span style="font-size:15px;color:var(--mut);letter-spacing:0"> kWh</span></div><div class="ru" style="font-size:10px;color:var(--mut)">${s.sub||''}</div></div>`}},
@@ -4661,8 +4663,10 @@ const EL_REGISTRY=[
  {id:'device-control',grp:'devices',label:'Device control',desc:'Command button — power, talk, siren, lights',sig:'device · none',formats:['button'],layouts:['standalone','overlay'],action:'control',accepts:['command'],
   sample:{txt:'Power on'}},
  /* escalation */
- {id:'contact-action',grp:'escalation',label:'Contact action',desc:'Reach an escalation contact — call / text',sig:'household · none',formats:['button'],layouts:['standalone'],action:'control',accepts:['command'],
-  sample:{txt:'Call'},stage:{button:s=>`<div class="actions" style="max-width:120px"><div class="act"><span class="ai"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco.call}</svg></span>Call</div></div>`}},
+ {id:'contact-action',grp:'escalation',label:'Contact action',desc:'Escalation contact — name, number and the call / text actions',sig:'household · none',formats:['list','button'],layouts:['standalone'],action:'control',accepts:['command','text'],
+  sample:{txt:'Sarah &middot; sister',sub:'(415) 555-0142'},stage:{
+   list:s=>`<div class="sosbook"><div class="sosc"><span class="sosc-av" style="background:#f6b73c22;color:#f6b73c">S</span><div class="sosc-main"><div class="sosc-name">Sarah &middot; sister</div><div class="sosc-num" style="font-size:9px;color:var(--dim);font-family:var(--mono)">(415) 555-0142</div></div><div class="sosc-acts"><span class="sosc-act" title="Call"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco.call}</svg></span><span class="sosc-act" title="Message"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco.text}</svg></span></div></div></div>`,
+   button:s=>`<div class="actions" style="max-width:120px"><div class="act"><span class="ai"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco.call}</svg></span>Call</div></div>`}},
  /* schedule */
  {id:'schedule-trigger',grp:'schedule',label:'Schedule trigger',desc:'Agent schedule / learned routine that fires checks and reminders',sig:'agent/identity · none · time',formats:['text-small','badge'],layouts:['standalone'],action:'navigate',accepts:['time'],
   sample:{txt:'Every Tue &middot; 9&ndash;11 AM',tag:'TUE 9&ndash;11',c:'#f3cd86'}},
@@ -4674,10 +4678,10 @@ const SEL2UI={
  'C-AGENT':{'.aghome .agcard .agthumb':T('media','thumb'),'.aghome .agcard .agalert':T('priority-marker','dot'),'.aghome .agcard .agpill':T('state','badge'),'.aghome .agcard .agsub':T('timestamp','text-tagline'),'.aghome .agname':T('name-tag','text-tagline')},
  'C-STATE':{'.ml-state':T('state','text-large'),'.ml-dur':T('duration','text-large'),'.cv':T('provenance','block')},
  'C-FEED':{'.chips2 .fc.on':T('category-count','filter'),'.chips2 .fc:not(.on)':T('category-count','filter'),'.feedrow .thumb':T('media','thumb'),'.feedrow .ft':T('description','text-small'),'.feedrow .fm':T('timestamp','text-tagline'),'.feedrow .etag':T('category-tag','badge')},
- 'C-RECAP':{'.ml-title':T('description','text-small'),'.ml-tone':T('verdict','badge'),'.ml-narrative':T('narrative','text-medium')},
+ 'C-RECAP':{'.ml-title':T('description','text-small'),'.ml-tone':T('state','badge'),'.ml-narrative':T('narrative','text-medium')},
  'C-ACT':{'.ml-pon':T('device-control','button'),'.ml-poff':T('device-control','button'),'.ml-talk':T('device-control','button'),'.ml-devstate':T('state','text-small')},
  'C-READOUT':{'.ml-value':T('measurement','block'),'.ml-unit':T('measurement','block'),'.ml-meter':T('measurement','text-tagline'),'.cv':T('provenance','block')},
- 'C-SOS':{'.sosc .sosc-name':T('name-tag','text-small'),'.sosc-acts .sosc-act':T('contact-action','button')},
+ 'C-SOS':{'.sosc .sosc-name':T('name-tag','text-small'),'.sosc .sosc-num':T('contact-action','list'),'.sosc-acts .sosc-act':T('contact-action','button')},
  'C-GROUPED':{'.gcard-thumb':T('media','surface'),'.gcard-title':T('description','text-small','overlay'),'.gcard-gif':T('media','badge','overlay'),'.cv':T('priority-marker','badge'),'.gcard-meta':T('instance-count','text-tagline','overlay')},
  'C-STRIP':{'.estrip .ethumb':T('media','thumb'),'.estrip .ethumb-tag':T('category-tag','badge','overlay'),'.estrip .ethumb-t':T('timestamp','text-tagline','overlay'),'.ml-count':T('instance-count','text-small')},
  'C-DAYTREND':{'.scrub .seg':T('day-activity','chart'),'.scrub .pin':T('timestamp','chart','overlay'),'.delta':T('trend-delta','badge')},
@@ -4693,8 +4697,8 @@ const SEL2UI={
  'C-GALLERY':{'.gallery .gcell':T('media','thumb'),'.gallery .gcell span':T('name-tag','text-tagline','overlay'),'.sig-coll':T('instance-count','badge'),'.chips2 .fc.on':T('category-count','filter'),'.chips2 .fc:not(.on)':T('category-count','filter')},
  'C-MULTIVIEW':{'.gallery .gcell':T('name-tag','text-tagline','overlay'),'.gallery .gcell i':T('state','dot','overlay'),'.sig-multi':T('media','badge')},
  'C-LOG':{'.logrow .lt':T('timestamp','text-small'),'.logrow .lv':T('state','text-small'),'.logrow .ld':T('trend-delta','text-small')},
- 'C-VISIT':{'.tsrow .tn':T('timestamp','text-small'),'.tsrow .tm':T('timestamp','text-tagline'),'.tsrow .cliptip':T('media','thumb'),'.tsrow .ctg':T('media','badge','overlay'),'.tsrow .dd':T('duration','text-small'),'.tsrow .ds':T('verdict','badge'),'.cv':T('provenance','block')},
- 'C-IDCARD':{'.idcard .nm':T('name-tag','text-small'),'.idcard .sci':T('attribute-tag','text-tagline'),'.idcard .pic':T('media','portrait'),'.idcard .meta':T('timestamp','text-tagline'),'.pvbadge':T('verdict','badge'),'.cv':T('provenance','block')},
+ 'C-VISIT':{'.tsrow .tn':T('timestamp','text-small'),'.tsrow .tm':T('timestamp','text-tagline'),'.tsrow .cliptip':T('media','thumb'),'.tsrow .ctg':T('media','badge','overlay'),'.tsrow .dd':T('duration','text-small'),'.tsrow .ds':T('state','badge'),'.cv':T('provenance','block')},
+ 'C-IDCARD':{'.idcard .nm':T('name-tag','text-small'),'.idcard .sci':T('attribute-tag','text-tagline'),'.idcard .pic':T('media','portrait'),'.idcard .meta':T('timestamp','text-tagline'),'.pvbadge':T('state','badge'),'.cv':T('provenance','block')},
  'C-TREND':{'.trendbars .tb':T('week-activity','chart'),'.delta':T('trend-delta','badge')},
  'C-DETER':{'.act.danger':T('device-control','button'),'.act:not(.danger)':T('device-control','button')},
  'C-REMINDER':{'.reminder b':T('schedule-trigger','text-small'),'.reminder span':T('state','text-small')},
@@ -4731,7 +4735,7 @@ const FIELD_GROUPS=[
  {ep:'GET /api/household/house-profile',fields:[],unused:[['camera_facts[].description','VLM scene description — caption under the camera tile']]},
  {ep:'GET /api/household/scene-profiles',fields:[],unused:[['primary_location','inferred location label — tag on camera tiles']]},
  {ep:'GET /api/household/visual/digests/latest',fields:[],unused:[['headline','weekly what-I-learned line — digest banner']]},
- {ep:'&mdash; not in API yet',pseudo:true,fields:['thumb_grad','continuous_record','frame_sequence','recording_time','frame_day','tag_conf','agent_priority','value','unit','meter_label','lapse_frames','uptime','match_confidence','state.w','state.since_ts','talk_session_id','siren','lights','method']},
+ {ep:'&mdash; not in API yet',pseudo:true,fields:['thumb_grad','continuous_record','frame_sequence','recording_time','frame_day','tag_conf','agent_priority','value','unit','meter_label','lapse_frames','uptime','match_confidence','state.w','state.since_ts','talk_session_id','siren','lights','method','phone']},
  {ep:'&mdash; derived in UI',pseudo:true,fields:['verify_status','now_marker','playhead','peak','trend_delta','delta','count','alerts_count','daily_count','online_count','last_run_ts']},
 ];
 var EL_PAIRS=[];   /* [{ui,fld,kind,color}] — ui = element id; array index = line id */
