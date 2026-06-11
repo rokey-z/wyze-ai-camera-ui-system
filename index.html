@@ -473,6 +473,8 @@
   .el-chip-stage{pointer-events:none}
   /* two layouts ALWAYS side by side: strict equal halves, never wraps */
   .el-chip-stage:has(.el-stage-part){display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+  /* a lone layout keeps the full stage width (but still shows its name) */
+  .el-chip-stage:has(.el-stage-part:only-child){grid-template-columns:1fr}
   .el-stage-part{display:flex;flex-direction:column;gap:5px;min-width:0}
   .el-stage-part .el-stage-r{width:100%}
   .el-stage-part .hero{width:100%!important}
@@ -4653,7 +4655,7 @@ const EL_REGISTRY=[
  {id:'week-activity',grp:'time-agg',label:'Week activity',desc:'Activity across a week, day bins — the week trend chart (C-TREND, C-INSIGHT)',sig:'instance · count · span:week · bin:day',formats:['chart'],layouts:['standalone'],action:'navigate',accepts:['time','count'],
   sample:{},stage:{chart:s=>`<div class="trendbars">${[40,62,55,78,48,90,70].map((h,i)=>`<div class="tb" style="height:${h}%;${i===5?'background:linear-gradient(#34d399,#1f7a5a)':''}"></div>`).join('')}</div><div class="trendx">${['M','T','W','T','F','S','S'].map(d=>`<span>${d}</span>`).join('')}</div>`}},
  {id:'month-calendar',grp:'time-agg',label:'Month calendar',desc:'Activity across a month — per-day counts on the calendar grid (C-MONTHTREND)',sig:'instance · count · span:month · bin:day',formats:['chart'],layouts:['standalone'],action:'navigate',accepts:['time','count'],
-  sample:{},stage:{chart:s=>`<div style="max-width:240px"><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;font-size:7px;color:var(--dim);text-align:center;margin-bottom:3px">${['S','M','T','W','T','F','S'].map(d=>`<span>${d}</span>`).join('')}</div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px">${[3,6,2,8,4,1,5].map(c=>`<div class="ml-daycell" style="aspect-ratio:1;border-radius:3px;display:grid;place-items:center;font-size:12px;font-weight:800;color:${c>5?'#04231a':'#cfe3ff'};background:rgba(56,198,219,${Math.min(0.16+c/10,1).toFixed(2)})">${c}</div>`).join('')}</div></div>`}},
+  sample:{},stage:{chart:s=>`<div style="max-width:240px"><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;font-size:7px;color:var(--dim);text-align:center;margin-bottom:3px">${['S','M','T','W','T','F','S'].map(d=>`<span>${d}</span>`).join('')}</div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px">${Array.from({length:35},(_,i)=>{const d=i-1;if(d<0||d>=30)return '<div></div>';const c=(d*13+5)%9;return `<div class="ml-daycell" style="aspect-ratio:1;border-radius:3px;display:grid;place-items:center;font-size:9px;font-weight:800;color:${c>5?'#04231a':'#cfe3ff'};background:rgba(56,198,219,${c?Math.min(0.16+c/10,1).toFixed(2):'0.07'})">${c||''}</div>`;}).join('')}</div></div>`}},
  /* timestamps */
  {id:'absolute-time',grp:'timestamps',label:'Absolute time',desc:'A specific moment — clock time (2:00 PM), date, day index, span, or a cursor pinned on a time axis (now / playhead)',sig:'any · none · time',formats:['text-small','text-tagline'],layouts:['standalone','overlay'],action:'navigate',accepts:['time'],
   sample:{txt:'2:00 PM'},stage:{chart:s=>`<div class="scrub" style="height:30px"><div class="pin" style="left:55%"></div></div>`}},
@@ -4771,10 +4773,11 @@ function elStage(el,fmt,lay){
 /* these formats never need a standalone demo — overlay only */
 const FMT_NO_STANDALONE=new Set(['text-small','text-tagline','dot','badge']);
 function elStageAll(el,fmt){
-  if(el.layouts.length<2) return elStage(el,fmt,el.layouts[0]);
-  if(FMT_NO_STANDALONE.has(fmt)) return elStage(el,fmt,'overlay');
-  return `<div class="el-stage-part"><span class="el-lay-tag">standalone</span><div class="el-stage-r"><div class="el-stage-host">${elStage(el,fmt,'standalone')}</div></div></div>`
-       +`<div class="el-stage-part"><span class="el-lay-tag" title="overlay — attached on a media surface">overlay</span><div class="el-stage-r">${elStage(el,fmt,'overlay')}</div></div>`;
+  const part=(lay,html)=>`<div class="el-stage-part"><span class="el-lay-tag"${lay==='overlay'?' title="overlay — attached on a media surface"':''}>${lay}</span><div class="el-stage-r">${html}</div></div>`;
+  if(el.layouts.length<2) return part(el.layouts[0],elStage(el,fmt,el.layouts[0]));
+  if(FMT_NO_STANDALONE.has(fmt)) return part('overlay',elStage(el,fmt,'overlay'));
+  return part('standalone',`<div class="el-stage-host">${elStage(el,fmt,'standalone')}</div>`)
+       +part('overlay',elStage(el,fmt,'overlay'));
 }
 const LAY_GLYPH={
  standalone:'<svg width="14" height="11" viewBox="0 0 14 11" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="1" width="12" height="9" rx="2"/><path d="M4 5.5h6"/></svg>',
