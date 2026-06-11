@@ -433,6 +433,7 @@
   #elUiCol .el-fam:first-child{margin-top:0}
   /* group titles align right over the element column */
   #elUiCol .el-fam h3{text-align:right;font-size:15px}
+  #elUiCol .el-fam h3 .el-h3n{color:var(--dim);font-weight:600}
 
   .el-chip{position:relative;display:flex;flex-direction:column;align-items:stretch;gap:8px;
     padding:20px 2px;border-top:1px solid var(--line);
@@ -4317,8 +4318,8 @@ const RECIPES={
    `<div class="ml-hi" style="display:flex;gap:5px;margin-top:11px"><span class="fc" style="font-size:8px">2:14 cry &middot; clip</span><span class="fc" style="font-size:8px">night graph</span></div>`)},
  'C-ACT':{q:'device commands · power + talk',
   render:()=>RB.stack(
-   `<div class="actions" style="margin-bottom:8px">`+RB.leaf('device-control','button',`<div class="act primary ml-pon"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>Power on</div>`)+RB.leaf('device-control','button',`<div class="act ml-poff"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="8" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>Power off</div>`)+`</div>`,
-   `<div class="actions" style="margin-bottom:8px">`+RB.leaf('device-control','button',`<div class="act ml-talk"><span class="ai">${aIcon('<path d="M3 11l16-5v12L3 13z"/><path d="M9 19a2.5 2.5 0 0 0 4 0"/>')}</span>Two-way talk</div>`)+`</div>`,
+   `<div class="actions" style="margin-bottom:8px">`+RB.leaf('device-control','pill',`<div class="act primary ml-pon"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>Power on</div>`)+RB.leaf('device-control','pill',`<div class="act ml-poff"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="8" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>Power off</div>`)+`</div>`,
+   `<div class="actions" style="margin-bottom:8px">`+RB.leaf('device-control','pill',`<div class="act ml-talk"><span class="ai">${aIcon('<path d="M3 11l16-5v12L3 13z"/><path d="M9 19a2.5 2.5 0 0 0 4 0"/>')}</span>Two-way talk</div>`)+`</div>`,
    RB.leaf('state','text-small',`<div class="ml-devstate" style="font-size:9px;color:#7eecc4">&#9679; Plug is ON &middot; confirmed 1s ago &middot; <span style="color:var(--dim)">sits under the live view</span></div>`))},
  'C-READOUT':{q:'snapshot + VLM read',mods:['confidence','correctable'],
   render:()=>RB.panel(
@@ -4445,7 +4446,7 @@ const elReadB=cls=>elMark(MOD25['C-READOUT'],cls);
 const EL_GROUPS=[['media-attr','Media attribute'],['media-corr','Media correspondence'],
  ['state-agg','State aggregation'],['instance-agg','Instance aggregation'],['typecount-agg','Type-count aggregation'],
  ['time-agg','Time aggregation'],['timestamps','Timestamps'],['priority-conf','Priority & confidence'],
- ['compare','Compare'],['nametags','Name tags'],['chat','Chat'],['description','Description'],
+ ['compare','Compare'],['nametags','Name tags'],['chat','Chat trigger'],['description','Description'],
  ['devices','Devices'],['escalation','Escalation']];
 /* --- the 74 elements: fld → {arch, label, desc, prev, ctx?} --- */
 const ELEMS={
@@ -4679,8 +4680,10 @@ const EL_REGISTRY=[
  {id:'description',grp:'description',label:'Description',desc:'Factual VLM text about ONE media item — event or group',sig:'instance/video · narrative',formats:['text-small','text-medium','text-tagline'],layouts:['standalone','overlay'],action:'open-clip',accepts:['text'],
   modifier:{provenance:'vlm'},sample:{txt:'Vehicle departed &mdash; &ldquo;a car backs out&rdquo;'}},
  /* devices */
- {id:'device-control',grp:'devices',label:'Device control',desc:'Command button — power, talk, siren, lights',sig:'device · none',formats:['button'],layouts:['standalone'],action:'control',accepts:['command'],
-  sample:{txt:'Power on'},stage:{button:s=>`<div class="actions" style="max-width:200px"><div class="act"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3" fill="#fff" stroke="none"/>')}</span></div><div class="act primary"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>${s.txt}</div></div>`}},
+ {id:'device-control',grp:'devices',label:'Device control',desc:'Command button — power, talk, siren, lights',sig:'device · none',formats:['pill','block'],layouts:['standalone'],action:'control',accepts:['command'],
+  sample:{txt:'Power on'},stage:{
+   pill:s=>`<div class="actions" style="max-width:200px"><div class="act primary" style="border-radius:999px"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>${s.txt}</div></div>`,
+   block:s=>`<div style="width:108px;box-sizing:border-box;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:13px 10px;display:flex;flex-direction:column;align-items:center;gap:8px"><span style="width:34px;height:34px;border-radius:50%;background:var(--blue);display:grid;place-items:center">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3" fill="#fff" stroke="none"/>')}</span><b style="font-size:11px;color:var(--ink)">${s.txt}</b></div>`}},
  /* escalation */
  {id:'contact-action',grp:'escalation',label:'Contact action',desc:'Escalation contact — name, number and the call / text actions',sig:'household · none',formats:['list','button'],layouts:['standalone'],action:'control',accepts:['command','text'],
   sample:{txt:'Sarah &middot; sister',sub:'(415) 555-0142'},stage:{
@@ -4696,7 +4699,7 @@ const SEL2UI={
  'C-STATE':{'.ml-state':T('state','text-large'),'.ml-dur':T('duration','text-large'),'.cv':T('provenance','block')},
  'C-FEED':{'.chips2 .fc.on':T('category-count','filter'),'.chips2 .fc:not(.on)':T('category-count','filter'),'.feedrow .thumb':T('media','thumb'),'.feedrow .ft':T('description','text-small'),'.feedrow .fm':T('absolute-time','text-tagline'),'.feedrow .etag':T('category-tag','badge')},
  'C-RECAP':{'.ml-title':T('description','text-small'),'.ml-tone':T('state','badge'),'.ml-narrative':T('narrative','text-medium')},
- 'C-ACT':{'.ml-pon':T('device-control','button'),'.ml-poff':T('device-control','button'),'.ml-talk':T('device-control','button'),'.ml-devstate':T('state','text-small')},
+ 'C-ACT':{'.ml-pon':T('device-control','pill'),'.ml-poff':T('device-control','pill'),'.ml-talk':T('device-control','pill'),'.ml-devstate':T('state','text-small')},
  'C-READOUT':{'.ml-value':T('measurement','block'),'.ml-unit':T('measurement','block'),'.ml-meter':T('measurement','text-tagline'),'.cv':T('provenance','block')},
  'C-SOS':{'.sosc .sosc-name':T('name-tag','text-small'),'.sosc .sosc-num':T('contact-action','list'),'.sosc-acts .sosc-act':T('contact-action','button')},
  'C-GROUPED':{'.gcard-thumb':T('media','surface'),'.gcard-title':T('description','text-small','overlay'),'.gcard-gif':T('media','thumb','overlay'),'.cv':T('priority-marker','badge'),'.gcard-meta':T('instance-count','text-tagline','overlay')},
@@ -4717,7 +4720,7 @@ const SEL2UI={
  'C-VISIT':{'.tsrow .tn':T('absolute-time','text-small'),'.tsrow .tm':T('absolute-time','text-tagline'),'.tsrow .cliptip':T('media','thumb'),'.tsrow .ctg':T('media','thumb','overlay'),'.tsrow .dd':T('duration','text-small'),'.tsrow .ds':T('state','badge'),'.cv':T('provenance','block')},
  'C-IDCARD':{'.idcard .nm':T('name-tag','text-small'),'.idcard .sci':T('attribute-tag','text-tagline'),'.idcard .pic':T('media','portrait'),'.idcard .meta':T('absolute-time','text-tagline'),'.pvbadge':T('state','badge'),'.cv':T('provenance','block')},
  'C-TREND':{'.trendbars .tb':T('week-activity','chart'),'.delta':T('trend-delta','badge')},
- 'C-DETER':{'.act.danger':T('device-control','button'),'.act:not(.danger)':T('device-control','button')},
+ 'C-DETER':{'.act.danger':T('device-control','pill'),'.act:not(.danger)':T('device-control','pill')},
  'C-REMINDER':{'.reminder b':T('absolute-time','text-small'),'.reminder span':T('state','text-small')},
 };
 /* ---- curated possible fills (dashed lines): same UI element, other plausible fields ---- */
@@ -4821,7 +4824,7 @@ function renderElCanvas(){
   uiCol.innerHTML=EL_GROUPS.map(([k,label])=>{
     const els=EL_REGISTRY.filter(u=>u.grp===k);
     if(!els.length) return '';
-    return `<div class="famblock dc-fam el-fam" data-grp="${k}"><h3>${label}</h3>`
+    return `<div class="famblock dc-fam el-fam" data-grp="${k}"><h3>${label} <span class="el-h3n">(${els.length})</span></h3>`
       +els.map(u=>{
         const fmt=u.formats[0], lay=u.layouts[0];
         const fmts=u.formats.map(F=>`<span class="el-fmt${F===fmt?' on':''}" data-fmt="${F}">${F}</span>`).join('');
