@@ -4284,7 +4284,7 @@ const RECIPES={
  'C-DAYTREND':{q:'events · bin hour · span today',
   render:()=>RB.panel(
    RB.ph('Today by hour',RB.leaf('trend-delta','badge',`<span class="delta up">&#9650; busier PM</span>`)),
-   RB.leaf('hour-activity','chart',`<div class="scrub" style="height:48px">${Array.from({length:24},(_,i)=>{const a=i>=16&&i<=18;const h=a?60+((i*17)%38):8+((i*13)%22);return `<div class="seg" style="height:${h}%;background:${a?'#f6b73c':'#3a5fa0'}"></div>`;}).join('')}<div class="pin" style="left:75%"></div><div class="axis"><span>12a</span><span>6a</span><span>12p</span><span>6p</span><span>now</span></div></div>`),
+   RB.leaf('day-activity','chart',`<div class="scrub" style="height:48px">${Array.from({length:24},(_,i)=>{const a=i>=16&&i<=18;const h=a?60+((i*17)%38):8+((i*13)%22);return `<div class="seg" style="height:${h}%;background:${a?'#f6b73c':'#3a5fa0'}"></div>`;}).join('')}<div class="pin" style="left:75%"></div><div class="axis"><span>12a</span><span>6a</span><span>12p</span><span>6p</span><span>now</span></div></div>`),
    `<div class="ngkey" style="margin-top:7px"><span><i style="background:#3a5fa0"></i>events / hr</span><span><i style="background:#f6b73c"></i>peak</span></div>`)},
  'C-MONTHTREND':{q:'events · bin day · span month · derive busiest',
   render:()=>RB.panel(
@@ -4293,7 +4293,7 @@ const RECIPES={
   render:()=>RB.panel(
    RB.ph('Weekly insight',RB.ai()),
    RB.leaf('narrative','text-medium',`<div class="insfind big">Front-door traffic is up <b style="color:#7eecc4">22%</b> this week &mdash; visits cluster <b style="color:#e9eef6">1&ndash;3 PM</b>, with Saturday the busiest day.</div>`),
-   RB.leaf('day-activity','chart',`<div class="trendbars" style="margin:11px 0 3px">${[40,62,55,78,48,90,70].map((h,i)=>`<div class="tb" style="height:${h}%;${i===5?'background:linear-gradient(#34d399,#1f7a5a)':''}"></div>`).join('')}</div><div class="trendx">${['M','T','W','T','F','S','S'].map(d=>`<span>${d}</span>`).join('')}</div>`))},
+   RB.leaf('week-activity','chart',`<div class="trendbars" style="margin:11px 0 3px">${[40,62,55,78,48,90,70].map((h,i)=>`<div class="tb" style="height:${h}%;${i===5?'background:linear-gradient(#34d399,#1f7a5a)':''}"></div>`).join('')}</div><div class="trendx">${['M','T','W','T','F','S','S'].map(d=>`<span>${d}</span>`).join('')}</div>`))},
  'C-RECAP':{q:'stories · latest',mods:['color-from:tone'],
   render:()=>RB.panel(
    RB.html(`<div class="ph"><b class="ml-title">Morning recap</b><span class="recap"><span class="ai">AI</span></span></div>`),
@@ -4340,7 +4340,7 @@ const RECIPES={
  'C-RECVIDEO':{q:'events · bin 30min · span 24h + record scrub',hero:true,
   render:()=>RB.stack(
    `<div class="hero" style="margin-bottom:8px"><div class="videobox" style="background:linear-gradient(165deg,#1c2740,#0c1119)"><div class="sigtag" style="background:#5a6b82dd;color:#fff">EVENTS</div>${RB.vname('Activity scrubber')}${RB.vtime('last 24h')}</div></div>`,
-   RB.leaf('hour-activity','chart',scrub()))},
+   RB.leaf('day-activity','chart',scrub()))},
  'C-SNAP':{q:'capture_snapshot + eventgroup artifact overlays',hero:true,mods:['confidence','correctable'],
   render:()=>RB.stack(
    RB.media('linear-gradient(165deg,#2c3d5b,#0d1626)','snap',
@@ -4380,7 +4380,7 @@ const RECIPES={
  'C-TREND':{q:'events · bin day · span 7d',
   render:()=>RB.panel(
    RB.ph('Visits this week',RB.leaf('trend-delta','badge',`<span class="delta up">&#9650; 22%</span>`)),
-   RB.leaf('day-activity','chart',`<div class="trendbars">${[40,62,55,78,48,90,70].map((h,i)=>`<div class="tb" style="height:${h}%;${i===5?'background:linear-gradient(#f472b6,#a23a6f)':''}"></div>`).join('')}</div><div class="trendx">${['M','T','W','T','F','S','S'].map(d=>`<span>${d}</span>`).join('')}</div>`))},
+   RB.leaf('week-activity','chart',`<div class="trendbars">${[40,62,55,78,48,90,70].map((h,i)=>`<div class="tb" style="height:${h}%;${i===5?'background:linear-gradient(#f472b6,#a23a6f)':''}"></div>`).join('')}</div><div class="trendx">${['M','T','W','T','F','S','S'].map(d=>`<span>${d}</span>`).join('')}</div>`))},
  'C-DETER':{q:'deterrent commands (pseudo)',
   render:()=>RB.html(MODFULL15['M-DETER'])},
  'C-REMINDER':{q:'agents triggers + visual-memories status',
@@ -4625,13 +4625,13 @@ const EL_REGISTRY=[
  {id:'instance-count',grp:'typecount-agg',label:'Instance count',desc:'How many — events, devices online, frames, sightings',sig:'instance/device · count',formats:['block','text-small','badge','text-tagline'],layouts:['standalone','overlay'],action:'navigate',accepts:['count'],
   sample:{txt:'38',sub:'events today'}},
  /* time aggregation */
- {id:'hour-activity',grp:'time-agg',label:'Hour activity',desc:'Counts binned by hour — today / last-24h charts',sig:'instance · count · time(hour)',formats:['chart'],layouts:['standalone'],action:'navigate',accepts:['time','count'],
+ {id:'hour-activity',grp:'time-agg',label:'Hour activity',desc:'Activity within an hour, minute bins — no component renders it yet',sig:'instance · count · span:hour · bin:minute',formats:['chart'],layouts:['standalone'],action:'navigate',accepts:['time','count'],
+  sample:{},stage:{chart:s=>`<div class="scrub" style="height:34px">`+[34,52,40,66,28,58].map(h=>`<div class="seg" style="height:${h}%;background:#3a5fa0"></div>`).join('')+`</div>`}},
+ {id:'day-activity',grp:'time-agg',label:'Day activity',desc:'Activity across a day, hour bins — the today / last-24h charts (C-DAYTREND, C-RECVIDEO)',sig:'instance · count · span:day · bin:hour',formats:['chart'],layouts:['standalone'],action:'navigate',accepts:['time','count'],
   sample:{}},
- {id:'day-activity',grp:'time-agg',label:'Day activity',desc:'Counts binned by day — the week trend chart',sig:'instance · count · time(day)',formats:['chart'],layouts:['standalone'],action:'navigate',accepts:['time','count'],
+ {id:'week-activity',grp:'time-agg',label:'Week activity',desc:'Activity across a week, day bins — the week trend chart (C-TREND, C-INSIGHT)',sig:'instance · count · span:week · bin:day',formats:['chart'],layouts:['standalone'],action:'navigate',accepts:['time','count'],
   sample:{}},
- {id:'week-activity',grp:'time-agg',label:'Week activity',desc:'Counts binned by week — month / quarter trends (no component renders it yet)',sig:'instance · count · time(week)',formats:['chart'],layouts:['standalone'],action:'navigate',accepts:['time','count'],
-  sample:{},stage:{chart:s=>`<div class="scrub" style="height:34px">`+[34,52,40,66].map(h=>`<div class="seg" style="height:${h}%;background:#3a5fa0"></div>`).join('')+`</div>`}},
- {id:'month-calendar',grp:'time-agg',label:'Month calendar',desc:'Per-day counts printed on a month calendar grid',sig:'instance · count · time(month-day)',formats:['chart'],layouts:['standalone'],action:'navigate',accepts:['time','count'],
+ {id:'month-calendar',grp:'time-agg',label:'Month calendar',desc:'Activity across a month — per-day counts on the calendar grid (C-MONTHTREND)',sig:'instance · count · span:month · bin:day',formats:['chart'],layouts:['standalone'],action:'navigate',accepts:['time','count'],
   sample:{},stage:{chart:s=>`<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;max-width:240px">${[3,6,2,8,4,1,5].map(c=>`<div class="ml-daycell" style="aspect-ratio:1;border-radius:3px;display:grid;place-items:center;font-size:12px;font-weight:800;color:${c>5?'#04231a':'#cfe3ff'};background:rgba(56,198,219,${Math.min(0.16+c/10,1).toFixed(2)})">${c}</div>`).join('')}</div>`}},
  /* timestamps */
  {id:'timestamp',grp:'timestamps',label:'Timestamp',desc:'A moment — absolute (2:00 PM), relative (2m ago), span, clock, or a cursor pinned on a time axis (now / playhead)',sig:'any · none · time',formats:['text-small','text-tagline','chart'],layouts:['standalone','overlay'],action:'navigate',accepts:['time'],
@@ -4680,14 +4680,14 @@ const SEL2UI={
  'C-SOS':{'.sosc .sosc-name':T('name-tag','text-small'),'.sosc-acts .sosc-act':T('contact-action','button')},
  'C-GROUPED':{'.gcard-thumb':T('media','surface'),'.gcard-title':T('description','text-small','overlay'),'.gcard-gif':T('media','badge','overlay'),'.cv':T('priority-marker','badge'),'.gcard-meta':T('instance-count','text-tagline','overlay')},
  'C-STRIP':{'.estrip .ethumb':T('media','thumb'),'.estrip .ethumb-tag':T('category-tag','badge','overlay'),'.estrip .ethumb-t':T('timestamp','text-tagline','overlay'),'.ml-count':T('instance-count','text-small')},
- 'C-DAYTREND':{'.scrub .seg':T('hour-activity','chart'),'.scrub .pin':T('timestamp','chart','overlay'),'.delta':T('trend-delta','badge')},
+ 'C-DAYTREND':{'.scrub .seg':T('day-activity','chart'),'.scrub .pin':T('timestamp','chart','overlay'),'.delta':T('trend-delta','badge')},
  'C-MONTHTREND':{'.ml-month':T('timestamp','text-small'),'.ml-mtotal':T('instance-count','text-small'),'.ml-daycell':T('month-calendar','chart')},
- 'C-INSIGHT':{'.insfind':T('narrative','text-medium'),'.trendbars .tb':T('day-activity','chart')},
+ 'C-INSIGHT':{'.insfind':T('narrative','text-medium'),'.trendbars .tb':T('week-activity','chart')},
  'C-TILES':{'.ml-fleet':T('instance-count','text-small'),'.tilegrid .gt-top':T('name-tag','text-tagline'),'.tilegrid .gt-sub':T('state','dot'),'.kpi0 b':T('instance-count','block'),'.kpi1 b':T('instance-count','block'),'.kpi2 b':T('measurement','block')},
  'C-ASSIST':{'.sugq-t':T('suggestion','filter')},
  'C-LEARN':{'.learnrow .ft':T('narrative','text-small'),'.learnrow .fm':T('category-tag','text-tagline'),'.learnrow .lconf':T('provenance','text-tagline')},
  'C-LIVE':{'.videobox':T('media','surface'),'.vname':T('state','text-small','overlay'),'.vtime':T('timestamp','text-tagline','overlay')},
- 'C-RECVIDEO':{'.scrub .seg':T('hour-activity','chart'),'.scrub .pin':T('timestamp','chart','overlay'),'.vname':T('name-tag','text-tagline','overlay'),'.videobox':T('media','surface')},
+ 'C-RECVIDEO':{'.scrub .seg':T('day-activity','chart'),'.scrub .pin':T('timestamp','chart','overlay'),'.vname':T('name-tag','text-tagline','overlay'),'.videobox':T('media','surface')},
  'C-SNAP':{'.videobox':T('media','surface'),'.annbadge':T('detection-marker','bound-box','overlay'),'.fsub':T('timestamp','text-tagline','overlay'),'.fs':T('description','text-small','overlay'),'.cv':T('provenance','block')},
  'C-TIMELAPSE':{'.lapse .videobox':T('media','surface'),'.vname':T('name-tag','text-tagline','overlay'),'.vtime':T('timestamp','text-tagline','overlay'),'.ld2':T('instance-count','text-small'),'.lapsetrack b':T('timestamp','chart','overlay')},
  'C-GALLERY':{'.gallery .gcell':T('media','thumb'),'.gallery .gcell span':T('name-tag','text-tagline','overlay'),'.sig-coll':T('instance-count','badge'),'.chips2 .fc.on':T('category-count','filter'),'.chips2 .fc:not(.on)':T('category-count','filter')},
@@ -4695,14 +4695,14 @@ const SEL2UI={
  'C-LOG':{'.logrow .lt':T('timestamp','text-small'),'.logrow .lv':T('state','text-small'),'.logrow .ld':T('trend-delta','text-small')},
  'C-VISIT':{'.tsrow .tn':T('timestamp','text-small'),'.tsrow .tm':T('timestamp','text-tagline'),'.tsrow .cliptip':T('media','thumb'),'.tsrow .ctg':T('media','badge','overlay'),'.tsrow .dd':T('duration','text-small'),'.tsrow .ds':T('verdict','badge'),'.cv':T('provenance','block')},
  'C-IDCARD':{'.idcard .nm':T('name-tag','text-small'),'.idcard .sci':T('attribute-tag','text-tagline'),'.idcard .pic':T('media','portrait'),'.idcard .meta':T('timestamp','text-tagline'),'.pvbadge':T('verdict','badge'),'.cv':T('provenance','block')},
- 'C-TREND':{'.trendbars .tb':T('day-activity','chart'),'.delta':T('trend-delta','badge')},
+ 'C-TREND':{'.trendbars .tb':T('week-activity','chart'),'.delta':T('trend-delta','badge')},
  'C-DETER':{'.act.danger':T('device-control','button'),'.act:not(.danger)':T('device-control','button')},
  'C-REMINDER':{'.reminder b':T('schedule-trigger','text-small'),'.reminder span':T('state','text-small')},
 };
 /* ---- curated possible fills (dashed lines): same UI element, other plausible fields ---- */
 const POSSIBLE_PAIRS=[
  {el:'narrative',fld:'vlm_insight',why:'a single VLM insight rendered as the large finding'},
- {el:'week-activity',fld:'event_ts',why:'week-binned trend — no component renders it yet'},
+ {el:'hour-activity',fld:'event_ts',why:'minute-binned hour view — no component renders it yet'},
 ];
 /* ---- consolidated right panel: every field exactly once, grouped by endpoint ---- */
 const FIELD_GROUPS=[
