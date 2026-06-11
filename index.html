@@ -4847,11 +4847,36 @@ function renderElCanvas(){
     +`<span class="dc-stat"><b>${FIELD_GROUPS.reduce((n,g)=>n+((g.unused||[]).length),0)}</b> unused fields</span>`
     +`<span class="el-legend"><span><i class="el-lk"></i> bound today</span><span><i class="el-lk el-lk-dash"></i> possible fill</span><span>${LAY_GLYPH.standalone} standalone</span><span>${LAY_GLYPH.overlay} overlay</span></span>`;
 }
+/* pin each element stage to the tallest of its format × layout renders so
+   switching format / layout never changes the row height (no canvas jumps) */
+function fixElStageHeights(){
+  const col=document.getElementById('elUiCol'); if(!col) return;
+  let meas=document.getElementById('elMeasure');
+  if(!meas){
+    meas=document.createElement('div'); meas.id='elMeasure';
+    meas.className='el-chip-stage';
+    meas.style.cssText='position:absolute;visibility:hidden;pointer-events:none;left:-9999px;top:0';
+    col.appendChild(meas);
+  }
+  col.querySelectorAll('.el-chip[data-ui]').forEach(chip=>{
+    const u=EL_REGISTRY.find(x=>x.id===chip.dataset.ui); if(!u) return;
+    const stage=chip.querySelector('.el-chip-stage'); if(!stage) return;
+    meas.style.width=(stage.clientWidth||300)+'px';
+    let max=0;
+    u.formats.forEach(f=>u.layouts.forEach(l=>{
+      meas.innerHTML=elStage(u,f,l);
+      max=Math.max(max,meas.offsetHeight);
+    }));
+    meas.innerHTML='';
+    if(max) stage.style.minHeight=max+'px';
+  });
+}
 /* one pane-level SVG: a bezier per (UI element, field) pair */
 function drawElNet(){
   const pane=document.getElementById('pane-elem');
   if(!pane||!pane.classList.contains('on')) return;
   const cv=document.getElementById('elCanvas'); const svg=cv&&cv.querySelector('.el-net'); if(!svg) return;
+  fixElStageHeights();
   /* pin the components column below the sticky header (its height varies with width) */
   const hdr=pane.querySelector('.dc-stickyhdr'), cc=cv.querySelector('.el-col-comps');
   if(hdr&&cc){ const top=60+hdr.offsetHeight+10;
