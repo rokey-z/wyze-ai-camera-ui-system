@@ -4661,7 +4661,7 @@ const FIELD_META={
 /* ---- the 13 formats + per-format micro (strip) and stage (full) renderers ---- */
 const FORMATS=['text-large','text-medium','text-small','text-tagline','badge','dot','tile','filter','list','small-thumb','square','full-card','chart','bound-box','button','header','grid','strip'];
 /* format switch tags are listed big -> small; first (biggest) is the default */
-const FMT_SIZE_ORDER=['full-card','bound-box','square','month-chart','weekly-chart','daily-chart','hourly-chart','chart','widget','grid','strip','small-thumb','tile','list','header','button-block','button-pill','button','filter','chips','text-large','text-medium','badge','text-small','text-tagline','dot'];
+const FMT_SIZE_ORDER=['full-card','bound-box','square','month-chart','weekly-chart','daily-chart','hourly-chart','chart','widget','grid','strip','small-thumb','tile','list','log','header','button-block','button-pill','button','filter','chips','text-large','text-medium','badge','text-small','text-tagline','dot'];
 const lslot=(label,st)=>`<span style="border:1px dashed #4f8ff066;background:#4f8ff00a;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:7.5px;letter-spacing:.3px;color:#9cc3f5;font-family:var(--mono);box-sizing:border-box;${st||''}">${label}</span>`;
 const elFmtOrder=f=>[...f].sort((a,b)=>FMT_SIZE_ORDER.indexOf(a)-FMT_SIZE_ORDER.indexOf(b));
 function inMedia(html,anchor){
@@ -4805,6 +4805,11 @@ const EL_REGISTRY=[
   rules:['At least 4 rows before the More footer','Row anatomy: media (fixed 56&times;42) &middot; text (flex) &middot; meta (fixed, right)','The time / meta line under the text uses the tagline format'],
   sig:'layout · repeat',formats:['list'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
   sample:{},stage:{list:s=>Array.from({length:4},(_,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;${i?'border-top:1px solid var(--line)':''}">${lslot('media','width:56px;height:42px;flex:none')}<span style="flex:1;display:flex;flex-direction:column;gap:4px;min-width:0">${lslot('text','height:11px;width:72%')}${lslot('time / meta','height:9px;width:42%')}</span>${lslot('badge','width:44px;height:15px;flex:none;border-radius:999px')}</div>`).join('')}},
+ {id:'layout-log',grp:'structure',label:'Log',
+  desc:'Compact text-only rows for readings and state changes — a journal, not a feed.',
+  rules:['At least 4 rows before the More footer','Columns: time (fixed) &middot; value &middot; change / meta — never media (that&rsquo;s List)'],
+  sig:'layout · repeat',formats:['log'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
+  sample:{},stage:{log:s=>Array.from({length:4},(_,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:5px 0;${i?'border-top:1px solid var(--line)':''}">${lslot('time','width:52px;height:10px;flex:none')}${lslot('value','height:10px;flex:1')}${lslot('change','width:40px;height:9px;flex:none')}</div>`).join('')}},
  {id:'layout-card',grp:'structure',label:'Card',
   desc:'A self-contained block for one subject — its state, media and detail boxed together.',
   rules:['Every card opens with a title row','Bare values never float — state &middot; duration &middot; detail share one card','One card = one subject'],
@@ -5273,9 +5278,10 @@ const V4={
      [S('media','small-thumb',{grad:G2}),S('device-name','text-tagline',{txt:'Garage cam'}),S('state','badge',{tag:'&#9679; LIVE',c:'#f25c5c'})]]}}]},
  'C-LOG':{parts:[
    {hdr:{t:'Sensor log'}},
-   {list:[[S('absolute-time','text-small',{txt:'2:14 PM'}),S('state','text-small',{txt:'CLOSED'}),S('trend-delta','text-small',{txt:'&#9650; 2'})],
-          [S('absolute-time','text-small',{txt:'1:02 PM'}),S('state','text-small',{txt:'OPEN'}),S('trend-delta','text-small',{txt:'&#9660; 1'})],
-          [S('absolute-time','text-small',{txt:'11:48 AM'}),S('state','text-small',{txt:'CLOSED'}),S('trend-delta','text-small',{txt:'&mdash;'})]]}]},
+   {log:[[S('absolute-time','text-small',{txt:'2:14 PM'}),S('state','text-small',{txt:'CLOSED'}),S('trend-delta','text-small',{txt:'&#9650; 2'})],
+         [S('absolute-time','text-small',{txt:'1:02 PM'}),S('state','text-small',{txt:'OPEN'}),S('trend-delta','text-small',{txt:'&#9660; 1'})],
+         [S('absolute-time','text-small',{txt:'11:48 AM'}),S('state','text-small',{txt:'CLOSED'}),S('trend-delta','text-small',{txt:'&mdash;'})],
+         [S('absolute-time','text-small',{txt:'9:20 AM'}),S('state','text-small',{txt:'OPEN'}),S('trend-delta','text-small',{txt:'&#9650; 1'})]]}]},
  'C-VISIT':{parts:[
    {hdr:{t:'Visits today'}},
    {list:[[C(S('absolute-time','text-small',{txt:'2:14 PM'}),S('absolute-time','text-tagline',{txt:'2:14&ndash;2:17 PM'})),S('media','small-thumb',{grad:G2}),C(S('duration','text-small',{txt:'for 3m'}),S('state','badge',{tag:'KNOWN',c:'#7eecc4'}))],
@@ -5309,6 +5315,7 @@ function renderV4Nodes(parts){
     if(n.el&&n.fmt) return rSlot(n,ctx);
     if(n.hdr) return `<div class="v4ph"><b>${n.hdr.t}</b>${n.hdr.right?rSlot(n.hdr.right,'section header'):''}</div>`;
     if(n.list) return `<div class="v4list">${n.list.map(r=>`<div class="v4row">${r.map(x=>rSlot(x,'list')).join('')}</div>`).join('')}</div>`;
+    if(n.log) return `<div class="v4list">${n.log.map(r=>`<div class="v4row" style="padding:6px 0">${r.map(x=>rSlot(x,'log')).join('')}</div>`).join('')}</div>`;
     if(n.grid){
       /* rule: more cells than fit -> the grid flows into columns and scrolls horizontally */
       const scroll=n.grid.cells.length>n.grid.cols*2;
@@ -5351,6 +5358,7 @@ function claimsOfParts(parts){
     if(n.el&&n.fmt){ slot(n); return; }
     if(n.hdr){ set.add('section-header·header'); if(n.hdr.right) slot(n.hdr.right); return; }
     if(n.list){ set.add('layout-list·list'); n.list.forEach(r=>r.forEach(slot)); return; }
+    if(n.log){ set.add('layout-log·log'); n.log.forEach(r=>r.forEach(slot)); return; }
     if(n.grid){ set.add('layout-grid·grid'); n.grid.cells.forEach(c=>c.forEach(slot)); return; }
     if(n.strip){ set.add('layout-strip·strip'); n.strip.forEach(slot); return; }
     if(n.hero){ set.add('layout-hero·hero'); set.add('media·full-card'); (n.hero.ov||[]).forEach(o=>o.col?o.col.forEach(slot):slot(o)); return; }
@@ -5396,7 +5404,7 @@ function lintV4(){
   window.__v4lint=res;
   return res;
 }
-const V4_STRUCT_IDS=['section-header','layout-list','layout-card','layout-grid','layout-strip','layout-hero','layout-widget','layout-chips','more-paging','empty-state','loading-state'];
+const V4_STRUCT_IDS=['section-header','layout-list','layout-log','layout-card','layout-grid','layout-strip','layout-hero','layout-widget','layout-chips','more-paging','empty-state','loading-state'];
 /* renders the v4.0 version view INSIDE the Components tab (dcGrids/dcSummary) */
 function renderDcV4(){
   const lint=lintV4();
@@ -5507,7 +5515,7 @@ const T4=[
      {el:'detection-marker',fmt:'bound-box',s:{tag:'garage door'}},
      {el:'absolute-time',fmt:'text-tagline',s:{txt:'checked 4:18 PM'},at:'br'}]}}]},
    {lab:'open events today',parts:[{hdr:{t:'Today by hour'}},{row:[S('time-trend','daily-chart')]}]},
-   {lab:'open / close log',parts:[{list:[
+   {lab:'open / close log',parts:[{log:[
      [S('absolute-time','text-small',{txt:'4:02 PM'}),S('state','text-small',{txt:'CLOSED'}),S('trend-delta','text-small',{txt:'12m open'})],
      [S('absolute-time','text-small',{txt:'3:50 PM'}),S('state','text-small',{txt:'OPEN'}),S('trend-delta','text-small',{txt:'&mdash;'})],
      [S('absolute-time','text-small',{txt:'11:02 AM'}),S('state','text-small',{txt:'CLOSED'}),S('trend-delta','text-small',{txt:'4m open'})],
@@ -5563,7 +5571,7 @@ const T4=[
      {el:'detection-marker',fmt:'bound-box',s:{tag:'burner on'}},
      {col:[S('state','text-small',{txt:'Stove ON &middot; unattended'}),S('measurement','text-tagline',{txt:'412&deg;F &middot; burner 2'})],at:'bl'}]}}]},
    {lab:'escalate',parts:[S('contact-action','button-block')]},
-   {lab:'on / off log',parts:[{list:[
+   {lab:'on / off log',parts:[{log:[
      [S('absolute-time','text-small',{txt:'6:00 PM'}),S('state','text-small',{txt:'ON'})],
      [S('absolute-time','text-small',{txt:'12:14 PM'}),S('state','text-small',{txt:'OFF &middot; 22m'})],
      [S('absolute-time','text-small',{txt:'11:52 AM'}),S('state','text-small',{txt:'ON'})],
@@ -5685,7 +5693,7 @@ document.getElementById('intents').addEventListener('click',e=>{
     const y=Math.min(e.clientY+14,window.innerHeight-pop.offsetHeight-12);
     pop.style.left=x+'px'; pop.style.top=y+'px';
   };
-  const CTX2LAYOUT={'list':'layout-list','grid':'layout-grid','strip':'layout-strip','hero':'layout-hero',
+  const CTX2LAYOUT={'list':'layout-list','log':'layout-log','grid':'layout-grid','strip':'layout-strip','hero':'layout-hero',
     'card':'layout-card','chip bar':'layout-chips','widget':'layout-widget',
     'section header':'section-header'};
   const over=e=>{
@@ -5727,6 +5735,8 @@ function lintT4(){
       const timey=n.list.some(r=>r.some(function f(x){return x.col?x.col.some(f):TIMEY.includes(x.el);}));
       if(timey&&n.list.length<4) console.warn('T4:',t.id,'event list has',n.list.length,'rows — rule: at least 4 before More —',sec.lab);
     }));
+    t.sections.forEach(sec=>sec.parts.forEach(n=>{ if(n.log&&n.log.length<4)
+      console.warn('T4:',t.id,'log has',n.log.length,'rows — rule: at least 4 before More —',sec.lab); }));
     t.sections.forEach(sec=>sec.parts.forEach(n=>{ if(!n.list) return;
       n.list.forEach(r=>r.forEach(x=>{ if(!x.col) return;
         x.col.slice(1).forEach(c=>{ if(TIMEY.includes(c.el)&&c.fmt!=='text-tagline')
