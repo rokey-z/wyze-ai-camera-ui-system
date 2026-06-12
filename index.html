@@ -523,7 +523,8 @@
   .v4prev .v4cell:has(> .v4slot:first-child .ethumb),.v4tpl .v4cell:has(> .v4slot:first-child .ethumb){border:none;background:none;padding:0}
   .v4tpl .actions{width:100%;max-width:none!important}
   /* a block button standing alone in its section spans the full width */
-  .v4tpl .v4slot:only-child > [style*="min-width:108px"]{max-width:none!important}
+  .v4tpl .v4slot:only-child > .btnblock{max-width:none!important}
+  .v4prev .v4slot:has(> .btnblock),.v4tpl .v4slot:has(> .btnblock){flex:1 1 0;min-width:0}
   /* v4 element hover popup: element · format + hosting layout */
   .v4pop{position:fixed;z-index:99;display:none;pointer-events:none;width:270px;
     background:#0e1726f8;border:1px solid #4f8ff055;border-radius:11px;padding:10px 12px;
@@ -572,6 +573,19 @@
   /* potential-but-unused backend fields: dimmed, dashed, no lines */
   .el-fld-un{font-family:var(--mono);font-size:9px;color:var(--dim);background:transparent;
     border:1px dashed #2a3a55;border-radius:6px;padding:3px 8px;width:fit-content}
+  /* stat-pill popover */
+  .dc-stat[data-pop]{cursor:pointer}
+  .dc-stat[data-pop]:hover{border-color:var(--blue)}
+  .statpop{position:fixed;z-index:400;width:298px;max-height:340px;display:flex;flex-direction:column;
+    background:#101b2e;border:1px solid var(--line);border-radius:10px;box-shadow:0 16px 38px #000b;overflow:hidden}
+  .statpop-h{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--mut);
+    padding:9px 12px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px}
+  .statpop-h span{color:var(--blue);font-family:var(--mono)}
+  .statpop-l{overflow:auto;padding:5px 0}
+  .statpop-l > div{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:10.5px;padding:3.5px 12px}
+  .statpop-l > div:nth-child(even){background:#ffffff05}
+  .statpop-l b{font-weight:600;color:var(--ink)}
+  .statpop-l span{color:var(--dim);font-family:var(--mono);font-size:9px;text-align:right}
   /* legend (lives inside #elSummary) */
   .el-legend{display:inline-flex;align-items:center;gap:14px;font-size:10.5px;
     color:var(--mut);padding:6px 4px}
@@ -4792,15 +4806,15 @@ const EL_REGISTRY=[
   sample:{txt:'3 / 4',sub:'devices online'},
   stage:{'text-small':s=>`<span style="font-size:12px;font-weight:700;color:#7eecc4">3 / 4 <span style="color:var(--mut);font-weight:600">online</span></span>`,
          'tile':s=>`<div class="tilegrid"><div class="gtile num"><b>3 / 4</b><span>devices online</span></div></div>`}},
- {id:'device-control',grp:'devices',label:'Device control',desc:'Command button — power, talk, siren, lights',sig:'device · none',formats:['button-pill','button-block'],layouts:['standalone'],action:'control',accepts:['command'],
+ {id:'device-control',grp:'devices',label:'Device control',desc:'Command button — power, talk, siren, lights',rules:['Blocks sit 2&ndash;3 to a row — a single action uses the pill'],sig:'device · none',formats:['button-pill','button-block'],layouts:['standalone'],action:'control',accepts:['command'],
   sample:{txt:'Power on'},stage:{
    'button-pill':s=>`<div class="actions" style="max-width:200px"><div class="act primary" style="border-radius:999px"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>${s.txt}</div></div>`,
-   'button-block':s=>`<div style="width:100%;min-width:108px;max-width:240px;box-sizing:border-box;background:var(--blue);border-radius:12px;padding:13px 10px;display:flex;flex-direction:column;align-items:center;gap:8px"><span style="width:34px;height:34px;border-radius:50%;background:#ffffff22;display:grid;place-items:center">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3" fill="#fff" stroke="none"/>')}</span><b style="font-size:11px;color:#fff">${s.txt}</b></div>`}},
+   'button-block':s=>`<div class="btnblock" style="width:100%;max-width:240px;box-sizing:border-box;background:var(--blue);border-radius:12px;padding:13px 10px;display:flex;flex-direction:column;align-items:center;gap:8px"><span style="width:34px;height:34px;border-radius:50%;background:#ffffff22;display:grid;place-items:center">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3" fill="#fff" stroke="none"/>')}</span><b style="font-size:11px;color:#fff">${s.txt}</b></div>`}},
  /* escalation */
- {id:'contact-action',grp:'escalation',label:'Contact action',desc:'Escalation contact — name, number and the call / text actions',sig:'household · none',formats:['list','button-block'],layouts:['standalone'],action:'control',accepts:['command','text'],
+ {id:'contact-action',grp:'escalation',label:'Contact action',desc:'Escalation contact — name, number and the call / text actions',rules:['Blocks sit 2&ndash;3 to a row — a single action uses the pill'],sig:'household · none',formats:['list','button-block'],layouts:['standalone'],action:'control',accepts:['command','text'],
   sample:{txt:'Sarah &middot; sister',sub:'(415) 555-0142'},stage:{
    list:s=>`<div class="sosbook"><div class="sosc"><span class="sosc-av" style="background:#f6b73c22;color:#f6b73c">S</span><div class="sosc-main"><div class="sosc-name">Sarah &middot; sister</div><div class="sosc-num" style="font-size:9px;color:var(--dim);font-family:var(--mono)">(415) 555-0142</div></div><div class="sosc-acts"><span class="sosc-act" title="Call"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco.call}</svg></span><span class="sosc-act" title="Message"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco.text}</svg></span></div></div></div>`,
-   'button-block':s=>`<div style="width:100%;min-width:108px;max-width:240px;box-sizing:border-box;background:var(--blue);border-radius:12px;padding:13px 10px;display:flex;flex-direction:column;align-items:center;gap:8px"><span style="width:34px;height:34px;border-radius:50%;background:#ffffff22;display:grid;place-items:center">${aIcon(sosIco.call)}</span><span style="display:flex;flex-direction:column;align-items:center;gap:2px;line-height:1.2"><b style="font-size:11px;color:#fff">Call Sarah</b><span style="font-size:8.5px;font-weight:400;color:#ffffffb3;font-family:var(--mono);letter-spacing:0">${s.sub}</span></span></div>`}},
+   'button-block':s=>`<div class="btnblock" style="width:100%;max-width:240px;box-sizing:border-box;background:var(--blue);border-radius:12px;padding:13px 10px;display:flex;flex-direction:column;align-items:center;gap:8px"><span style="width:34px;height:34px;border-radius:50%;background:#ffffff22;display:grid;place-items:center">${aIcon(sosIco[s.ico||'call'])}</span><span style="display:flex;flex-direction:column;align-items:center;gap:2px;line-height:1.2"><b style="font-size:11px;color:#fff">${s.label||'Call Sarah'}</b><span style="font-size:8.5px;font-weight:400;color:#ffffffb3;font-family:var(--mono);letter-spacing:0">${s.sub}</span></span></div>`}},
  /* structure — the arrangement layer; recipes execute these, agents compose them */
  {id:'section-header',grp:'structure',label:'Section header',
   desc:'Opens a section: names what follows and carries one glanceable number or status.',
@@ -5037,13 +5051,43 @@ function renderElCanvas(){
     return n?`<span class="dc-anchor" data-grp="${k}">${label} <b>${n}</b></span>`:'';
   }).join('');
   document.getElementById('elSummary').innerHTML=
-    `<span class="dc-stat dc-total dc-on"><b>${EL_REGISTRY.filter(u=>u.grp!=='structure').length}</b> elements</span>`
-    +`<span class="dc-stat"><b>${FORMATS.length}</b> formats</span>`
-    +`<span class="dc-stat"><b>${Object.keys(map).length}</b> data fields</span>`
-    +`<span class="dc-stat dc-have"><b>${realCount}</b> bindings</span>`
-    +`<span class="dc-stat"><b>${EL_PAIRS.length-realCount}</b> possible fills</span>`
-    +`<span class="dc-stat"><b>${FIELD_GROUPS.reduce((n,g)=>n+((g.unused||[]).length),0)}</b> unused fields</span>`
+    `<span class="dc-stat dc-total dc-on" data-pop="elements"><b>${EL_REGISTRY.filter(u=>u.grp!=='structure').length}</b> elements</span>`
+    +`<span class="dc-stat" data-pop="formats"><b>${FORMATS.length}</b> formats</span>`
+    +`<span class="dc-stat" data-pop="fields"><b>${Object.keys(map).length}</b> data fields</span>`
+    +`<span class="dc-stat dc-have" data-pop="bindings"><b>${realCount}</b> bindings</span>`
+    +`<span class="dc-stat" data-pop="fills"><b>${EL_PAIRS.length-realCount}</b> possible fills</span>`
+    +`<span class="dc-stat" data-pop="unused"><b>${FIELD_GROUPS.reduce((n,g)=>n+((g.unused||[]).length),0)}</b> unused fields</span>`
     +`<span class="el-legend"><span><i class="el-lk"></i> bound today</span><span><i class="el-lk el-lk-dash"></i> possible fill</span></span>`;
+  /* click a stat pill -> floating window listing its contents */
+  window.__elPops={
+    elements:{t:'Elements',items:EL_REGISTRY.filter(u=>u.grp!=='structure').map(u=>`<b>${u.label}</b><span>${u.id}</span>`)},
+    formats:{t:'Formats',items:FORMATS.map(f=>`<b>${f}</b>`)},
+    fields:{t:'Data fields',items:Object.keys(map).map(f=>`<b>${f}</b>`)},
+    bindings:{t:'Bindings &middot; element &larr; field',items:EL_PAIRS.filter(p=>p.kind==='real').map(p=>`<b>${p.ui}</b><span>&larr; ${p.fld}</span>`)},
+    fills:{t:'Possible fills',items:EL_PAIRS.filter(p=>p.kind==='poss').map(p=>`<b>${p.ui}</b><span>&larr; ${p.fld}</span>`)},
+    unused:{t:'Unused fields',items:FIELD_GROUPS.flatMap(g=>(g.unused||[]).map(u=>`<b>${Array.isArray(u)?u[0]:u}</b>${Array.isArray(u)&&u[1]?`<span>${u[1]}</span>`:''}`))},
+  };
+  const sum=document.getElementById('elSummary');
+  sum.onclick=e=>{
+    const pill=e.target.closest('.dc-stat');
+    const old=document.querySelector('.statpop'); const oldFor=old&&old.dataset.for;
+    if(old) old.remove();
+    if(!pill||!pill.dataset.pop||oldFor===pill.dataset.pop) return;
+    const pop=window.__elPops[pill.dataset.pop]; if(!pop) return;
+    const d=document.createElement('div'); d.className='statpop'; d.dataset.for=pill.dataset.pop;
+    d.innerHTML=`<div class="statpop-h">${pop.t}<span>${pop.items.length}</span></div><div class="statpop-l">${pop.items.map(i=>`<div>${i}</div>`).join('')}</div>`;
+    document.body.appendChild(d);
+    const r=pill.getBoundingClientRect();
+    d.style.left=Math.max(8,Math.min(r.left,innerWidth-306))+'px';
+    d.style.top=Math.min(r.bottom+8,innerHeight-360)+'px';
+  };
+  if(!window.__statpopBound){window.__statpopBound=1;
+    document.addEventListener('click',e=>{
+      if(!e.target.closest('#elSummary')&&!e.target.closest('.statpop')){
+        const p=document.querySelector('.statpop'); if(p)p.remove();
+      }
+    });
+  }
 }
 /* stages take the REAL size of the active format — no height pinning;
    format swaps reflow the canvas (scheduleDrawElemLines re-routes lines) */
@@ -5534,10 +5578,10 @@ const T4=[
      {el:'absolute-time',fmt:'text-tagline',s:{txt:'checked 4:18 PM'},at:'br'}]}}]},
    {lab:'open events today',parts:[{hdr:{t:'Door opens today'}},{row:[S('time-trend','state-chart',{on:[11,15],legend:[{c:'#f6b73c',t:'open'},{c:'#22314b',t:'closed'}]})]}]},
    {lab:'open / close log',parts:[{hdr:{t:'Open / close log'}},{log:[
-     [S('absolute-time','text-small',{txt:'4:02 PM'}),S('state','text-small',{txt:'CLOSED'}),S('trend-delta','text-small',{txt:'12m open'})],
-     [S('absolute-time','text-small',{txt:'3:50 PM'}),S('state','text-small',{txt:'OPEN'}),S('trend-delta','text-small',{txt:'&mdash;'})],
-     [S('absolute-time','text-small',{txt:'11:02 AM'}),S('state','text-small',{txt:'CLOSED'}),S('trend-delta','text-small',{txt:'4m open'})],
-     [S('absolute-time','text-small',{txt:'10:58 AM'}),S('state','text-small',{txt:'OPEN'}),S('trend-delta','text-small',{txt:'&mdash;'})]]},
+     [S('absolute-time','text-small',{txt:'4:02 PM'}),S('state','text-small',{txt:'CLOSED'}),S('duration','text-small',{txt:'for 12m'})],
+     [S('absolute-time','text-small',{txt:'3:50 PM'}),S('state','text-small',{txt:'OPEN'}),S('duration','text-small',{txt:'&mdash;'})],
+     [S('absolute-time','text-small',{txt:'11:02 AM'}),S('state','text-small',{txt:'CLOSED'}),S('duration','text-small',{txt:'for 4m'})],
+     [S('absolute-time','text-small',{txt:'10:58 AM'}),S('state','text-small',{txt:'OPEN'}),S('duration','text-small',{txt:'&mdash;'})]]},
      {more:true}]},
    {lab:'insight',parts:[{card:[{hdr:{t:'Insight'}},{row:[S('insight','text-medium',{txt:'Left open <b style="color:#f6b73c">twice</b> this week &mdash; both around 4 PM departures.',tagline:'This week'})]}]}]},
    {lab:'act',parts:[{row:[S('device-control','button-pill',{txt:'Close door'})]}]}]},
@@ -5552,7 +5596,7 @@ const T4=[
      {el:'absolute-time',fmt:'text-tagline',s:{txt:'2:14 AM'},at:'br'}]}},{row:[S('confidence','button-pill')]}]},
    {lab:'insight &middot; tonight in one line',parts:[{card:[{hdr:{t:'Insight'}},{row:[S('insight','text-medium')]}]}]},
    {lab:'last hour',parts:[{hdr:{t:'Stirrings &middot; last hour'}},{row:[S('time-trend','hourly-chart',{legend:[{c:'#3a5fa0',t:'stirrings'}]})]}]},
-   {lab:'soothe',parts:[S('device-control','button-block',{txt:'Two-way talk'})]},
+   {lab:'soothe',parts:[{row:[S('device-control','button-block',{txt:'Two-way talk'}),S('device-control','button-block',{txt:'Lullaby'}),S('device-control','button-block',{txt:'Night light'})]}]},
    {lab:'overnight moments',parts:[{list:[
      [S('media','small-thumb',{grad:'linear-gradient(150deg,#10182b,#070b14)'}),C(S('description','text-small',{txt:'Brief waking &mdash; self-settled in 3 min'}),S('absolute-time','text-tagline',{txt:'2:14 AM'})),S('state','badge',{tag:'SETTLED',c:'#7eecc4'})],
      [S('media','small-thumb',{grad:G2}),C(S('description','text-small',{txt:'True cry &mdash; you went in'}),S('absolute-time','text-tagline',{txt:'11:48 PM'})),S('state','badge',{tag:'CRY',c:'#f25c5c'})],
@@ -5587,7 +5631,7 @@ const T4=[
    {lab:'hero · burner frame',parts:[{hero:{grad:'linear-gradient(165deg,#3b2c2c,#140d0d)',ov:[
      {el:'detection-marker',fmt:'bound-box',s:{tag:'burner on'}},
      {col:[S('state','text-small',{txt:'Stove ON &middot; unattended'}),S('measurement','text-tagline',{txt:'412&deg;F &middot; burner 2'})],at:'bl'}]}}]},
-   {lab:'escalate',parts:[S('contact-action','button-block')]},
+   {lab:'escalate',parts:[{row:[S('contact-action','button-block'),S('contact-action','button-block',{label:'Text Sarah',ico:'text'})]}]},
    {lab:'on / off log',parts:[{hdr:{t:'On / off log'}},{log:[
      [S('absolute-time','text-small',{txt:'6:00 PM'}),S('state','text-small',{txt:'ON'})],
      [S('absolute-time','text-small',{txt:'12:14 PM'}),S('state','text-small',{txt:'OFF &middot; 22m'})],
