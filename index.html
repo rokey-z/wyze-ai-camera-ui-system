@@ -5509,9 +5509,9 @@ const T4=[
    name:S('name-tag','text-tagline',{txt:'GARAGE DOOR'})},
   sections:[
    {lab:'state + duration',parts:[{card:[{hdr:{t:'Garage door'}},{row:[S('state','text-large',{txt:'CLOSED',c:'#7eecc4'}),S('duration','text-large')]}]}]},
-   {lab:'hero · annotated frame + caption',parts:[{hero:{grad:'linear-gradient(165deg,#2c3d5b,#0d1626)',ov:[
-     {el:'detection-marker',fmt:'bound-box',s:{tag:'garage door'}}],
-     cap:{icon:'&#10003;',iconBg:'#34d39922',head:S('state','text-small',{txt:'Closed &middot; secure'}),sub:S('absolute-time','text-tagline',{txt:'checked 4:18 PM'})}}}]},
+   {lab:'hero · annotated frame',parts:[{hero:{grad:'linear-gradient(165deg,#2c3d5b,#0d1626)',ov:[
+     {el:'detection-marker',fmt:'bound-box',s:{tag:'garage door'}},
+     {el:'absolute-time',fmt:'text-tagline',s:{txt:'checked 4:18 PM'},at:'br'}]}}]},
    {lab:'open events today',parts:[{hdr:{t:'Today by hour'}},{row:[S('time-trend','daily-chart')]}]},
    {lab:'open / close log',parts:[{list:[
      [S('absolute-time','text-small',{txt:'4:02 PM'}),S('state','text-small',{txt:'CLOSED'}),S('trend-delta','text-small',{txt:'12m open'})],
