@@ -221,7 +221,7 @@ A self-contained block for one subject — its state, media and detail boxed tog
 ### ID card `idcard`
 A detailed introduction of ONE entity — a media / instance / clip / group: a square portrait beside its name, attributes and stats (e.g. a bird-species intro).
 - square media left; name · attributes · stats stacked right
-- opens with an optional verdict badge; closes with an optional confidence row
+- opens with an optional verdict badge
 - one ID card = one entity (a species, a person, a clip, a group)
 
 ### Grid `grid`
@@ -229,12 +229,14 @@ Equal cells in fixed rows — device fleets, KPI tiles, multi-camera walls.
 - equal-width cells; full-bleed content fills the cell and drops the cell outline — the content IS the cell
 - 2–3 columns at phone width
 - non-scrolling — at most 2 rows; more items move to the Scroll grid
+- each cell may pin ONE small overlay to a corner (tl · tr · bl · br)
 
 ### Scroll grid `sgrid`
 One row of equal cells that scrolls horizontally — growing galleries and sighting reels.
 - single row, scrolls horizontally
 - viewport shows 3.2 cells — the cut-off cell signals there's more
 - use when items outgrow the static grid's 2-row cap
+- each cell may pin ONE small overlay to a corner (tl · tr · bl · br)
 
 ### Strip `strip`
 A horizontal rail of fixed-size items — compact recent-events scanning.
@@ -308,11 +310,11 @@ The runtime lint (lintT4) enforces, per template:
 | `{hdr:{t, right?}}` | section header (+ optional right slot) |
 | `{row:[slots]}` | a flex row of slots |
 | `{card:[parts]}` | bordered card (open with a `hdr`) |
-| `{idcard:{t?, badge?, media, lines:[slots], foot?}}` | entity intro — portrait + name/attributes/stats + optional verdict badge & confidence |
+| `{idcard:{t?, badge?, media, lines:[slots]}}` | entity intro — portrait + name/attributes/stats + optional verdict badge |
 | `{list:[[slots],…]}` | list rows (lead · middle · right) |
 | `{log:[[slots],…]}` | log rows (left · middle · right) |
-| `{grid:{cols, cells:[[slots],…]}}` | static grid, ≤ 2 rows |
-| `{sgrid:{cells:[[slots],…]}}` | scrollable one-row grid |
+| `{grid:{cols, cells:[[slots],…]}}` | static grid, ≤ 2 rows; a cell item `{ov, at}` pins a corner overlay |
+| `{sgrid:{cells:[[slots],…]}}` | scrollable one-row grid; cell overlays as in grid |
 | `{strip:[slots]}` | media rail |
 | `{hero:{grad, ov:[{el,fmt,s,at} \| {col:[slots],at}]}}` | media hero with corner overlays (`tl/tr/bl/br`) |
 | `{chips:[slots]}` | chip bar |

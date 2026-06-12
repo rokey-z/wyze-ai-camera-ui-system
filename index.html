@@ -506,7 +506,10 @@
   .v4sgrid > .v4cell{flex:0 0 calc((100% - 21px)/3.2)}
   .v4idmedia{flex:none}
   .v4idcard .v4idmedia .ethumb.esq{width:64px!important;height:64px!important;flex:0 0 64px}
-  .v4cell{border:1px solid var(--line);border-radius:9px;background:var(--bg2,#0e1726);padding:8px;display:flex;flex-direction:column;gap:5px;min-width:0}
+  .v4cell{position:relative;border:1px solid var(--line);border-radius:9px;background:var(--bg2,#0e1726);padding:8px;display:flex;flex-direction:column;gap:5px;min-width:0}
+  .v4cellov{position:absolute;z-index:2}
+  .v4cellov-tl{left:5px;top:5px}.v4cellov-tr{right:5px;top:5px}.v4cellov-bl{left:5px;bottom:5px}.v4cellov-br{right:5px;bottom:5px}
+  .v4cellov .agpill{font-size:8px;padding:2px 6px}
   .v4strip{display:flex;gap:7px;align-items:flex-start;overflow-x:auto;scrollbar-width:none}
   .v4strip::-webkit-scrollbar{display:none}
   .v4chips .v4slot:first-child .agpill{box-shadow:inset 0 0 0 1.5px currentColor}
@@ -2043,7 +2046,7 @@ A self-contained block for one subject — its state, media and detail boxed tog
 ### ID card `idcard`
 A detailed introduction of ONE entity — a media / instance / clip / group: a square portrait beside its name, attributes and stats (e.g. a bird-species intro).
 - square media left; name · attributes · stats stacked right
-- opens with an optional verdict badge; closes with an optional confidence row
+- opens with an optional verdict badge
 - one ID card = one entity (a species, a person, a clip, a group)
 
 ### Grid `grid`
@@ -2051,12 +2054,14 @@ Equal cells in fixed rows — device fleets, KPI tiles, multi-camera walls.
 - equal-width cells; full-bleed content fills the cell and drops the cell outline — the content IS the cell
 - 2–3 columns at phone width
 - non-scrolling — at most 2 rows; more items move to the Scroll grid
+- each cell may pin ONE small overlay to a corner (tl · tr · bl · br)
 
 ### Scroll grid `sgrid`
 One row of equal cells that scrolls horizontally — growing galleries and sighting reels.
 - single row, scrolls horizontally
 - viewport shows 3.2 cells — the cut-off cell signals there's more
 - use when items outgrow the static grid's 2-row cap
+- each cell may pin ONE small overlay to a corner (tl · tr · bl · br)
 
 ### Strip `strip`
 A horizontal rail of fixed-size items — compact recent-events scanning.
@@ -2130,11 +2135,11 @@ The runtime lint (lintT4) enforces, per template:
 | `{hdr:{t, right?}}` | section header (+ optional right slot) |
 | `{row:[slots]}` | a flex row of slots |
 | `{card:[parts]}` | bordered card (open with a `hdr`) |
-| `{idcard:{t?, badge?, media, lines:[slots], foot?}}` | entity intro — portrait + name/attributes/stats + optional verdict badge & confidence |
+| `{idcard:{t?, badge?, media, lines:[slots]}}` | entity intro — portrait + name/attributes/stats + optional verdict badge |
 | `{list:[[slots],…]}` | list rows (lead · middle · right) |
 | `{log:[[slots],…]}` | log rows (left · middle · right) |
-| `{grid:{cols, cells:[[slots],…]}}` | static grid, ≤ 2 rows |
-| `{sgrid:{cells:[[slots],…]}}` | scrollable one-row grid |
+| `{grid:{cols, cells:[[slots],…]}}` | static grid, ≤ 2 rows; a cell item `{ov, at}` pins a corner overlay |
+| `{sgrid:{cells:[[slots],…]}}` | scrollable one-row grid; cell overlays as in grid |
 | `{strip:[slots]}` | media rail |
 | `{hero:{grad, ov:[{el,fmt,s,at} \| {col:[slots],at}]}}` | media hero with corner overlays (`tl/tr/bl/br`) |
 | `{chips:[slots]}` | chip bar |
@@ -2297,13 +2302,13 @@ Goal: *"Did the bins go out — and come back?"*
 <ul><li>every card opens with a title row</li><li>bare values never float — a subject&#x27;s values sit boxed together in its card</li><li>one card = one subject</li></ul>
 <h3 id="id-card-idcard">ID card <code>idcard</code></h3>
 <p>A detailed introduction of ONE entity — a media / instance / clip / group: a square portrait beside its name, attributes and stats (e.g. a bird-species intro).</p>
-<ul><li>square media left; name · attributes · stats stacked right</li><li>opens with an optional verdict badge; closes with an optional confidence row</li><li>one ID card = one entity (a species, a person, a clip, a group)</li></ul>
+<ul><li>square media left; name · attributes · stats stacked right</li><li>opens with an optional verdict badge</li><li>one ID card = one entity (a species, a person, a clip, a group)</li></ul>
 <h3 id="grid-grid">Grid <code>grid</code></h3>
 <p>Equal cells in fixed rows — device fleets, KPI tiles, multi-camera walls.</p>
-<ul><li>equal-width cells; full-bleed content fills the cell and drops the cell outline — the content IS the cell</li><li>2–3 columns at phone width</li><li>non-scrolling — at most 2 rows; more items move to the Scroll grid</li></ul>
+<ul><li>equal-width cells; full-bleed content fills the cell and drops the cell outline — the content IS the cell</li><li>2–3 columns at phone width</li><li>non-scrolling — at most 2 rows; more items move to the Scroll grid</li><li>each cell may pin ONE small overlay to a corner (tl · tr · bl · br)</li></ul>
 <h3 id="scroll-grid-sgrid">Scroll grid <code>sgrid</code></h3>
 <p>One row of equal cells that scrolls horizontally — growing galleries and sighting reels.</p>
-<ul><li>single row, scrolls horizontally</li><li>viewport shows 3.2 cells — the cut-off cell signals there&#x27;s more</li><li>use when items outgrow the static grid&#x27;s 2-row cap</li></ul>
+<ul><li>single row, scrolls horizontally</li><li>viewport shows 3.2 cells — the cut-off cell signals there&#x27;s more</li><li>use when items outgrow the static grid&#x27;s 2-row cap</li><li>each cell may pin ONE small overlay to a corner (tl · tr · bl · br)</li></ul>
 <h3 id="strip-strip">Strip <code>strip</code></h3>
 <p>A horizontal rail of fixed-size items — compact recent-events scanning.</p>
 <ul><li>fixed-size items, horizontally scannable</li></ul>
@@ -2335,7 +2340,7 @@ Goal: *"Did the bins go out — and come back?"*
     name: S(&#x27;name-tag&#x27;,&#x27;text-tagline&#x27;,{txt:&#x27;TRASH BINS&#x27;}) },
   sections:[ { lab:&#x27;state · how long&#x27;, parts:[ /* nodes */ ] }, … ] }</code></pre>
 <p><strong>Node grammar</strong> (what <code>parts</code> may contain):</p>
-<table><thead><tr><th>node</th><th>renders</th></tr></thead><tbody><tr><td><code>S(el, fmt, sample?)</code></td><td>one element render — the leaf</td></tr><tr><td><code>C(...slots)</code></td><td>a column stacking slots</td></tr><tr><td><code>{hdr:{t, right?}}</code></td><td>section header (+ optional right slot)</td></tr><tr><td><code>{row:[slots]}</code></td><td>a flex row of slots</td></tr><tr><td><code>{card:[parts]}</code></td><td>bordered card (open with a <code>hdr</code>)</td></tr><tr><td><code>{idcard:{t?, badge?, media, lines:[slots], foot?}}</code></td><td>entity intro — portrait + name/attributes/stats + optional verdict badge &amp; confidence</td></tr><tr><td><code>{list:[[slots],…]}</code></td><td>list rows (lead · middle · right)</td></tr><tr><td><code>{log:[[slots],…]}</code></td><td>log rows (left · middle · right)</td></tr><tr><td><code>{grid:{cols, cells:[[slots],…]}}</code></td><td>static grid, ≤ 2 rows</td></tr><tr><td><code>{sgrid:{cells:[[slots],…]}}</code></td><td>scrollable one-row grid</td></tr><tr><td><code>{strip:[slots]}</code></td><td>media rail</td></tr><tr><td>`{hero:{grad, ov:[{el,fmt,s,at} \</td><td>{col:[slots],at}]}}`</td><td>media hero with corner overlays (<code>tl/tr/bl/br</code>)</td></tr><tr><td><code>{chips:[slots]}</code></td><td>chip bar</td></tr><tr><td><code>{more:true}</code></td><td>More paging footer</td></tr><tr><td><code>{empty:{txt,sub}}</code> / <code>{loading:true}</code></td><td>element-state chrome, claims nothing</td></tr></tbody></table>
+<table><thead><tr><th>node</th><th>renders</th></tr></thead><tbody><tr><td><code>S(el, fmt, sample?)</code></td><td>one element render — the leaf</td></tr><tr><td><code>C(...slots)</code></td><td>a column stacking slots</td></tr><tr><td><code>{hdr:{t, right?}}</code></td><td>section header (+ optional right slot)</td></tr><tr><td><code>{row:[slots]}</code></td><td>a flex row of slots</td></tr><tr><td><code>{card:[parts]}</code></td><td>bordered card (open with a <code>hdr</code>)</td></tr><tr><td><code>{idcard:{t?, badge?, media, lines:[slots]}}</code></td><td>entity intro — portrait + name/attributes/stats + optional verdict badge</td></tr><tr><td><code>{list:[[slots],…]}</code></td><td>list rows (lead · middle · right)</td></tr><tr><td><code>{log:[[slots],…]}</code></td><td>log rows (left · middle · right)</td></tr><tr><td><code>{grid:{cols, cells:[[slots],…]}}</code></td><td>static grid, ≤ 2 rows; a cell item <code>{ov, at}</code> pins a corner overlay</td></tr><tr><td><code>{sgrid:{cells:[[slots],…]}}</code></td><td>scrollable one-row grid; cell overlays as in grid</td></tr><tr><td><code>{strip:[slots]}</code></td><td>media rail</td></tr><tr><td>`{hero:{grad, ov:[{el,fmt,s,at} \</td><td>{col:[slots],at}]}}`</td><td>media hero with corner overlays (<code>tl/tr/bl/br</code>)</td></tr><tr><td><code>{chips:[slots]}</code></td><td>chip bar</td></tr><tr><td><code>{more:true}</code></td><td>More paging footer</td></tr><tr><td><code>{empty:{txt,sub}}</code> / <code>{loading:true}</code></td><td>element-state chrome, claims nothing</td></tr></tbody></table>
 <p>Every <code>S()</code> emits a claim <code>element·format</code> that the lint validates against the registry.</p>
 <hr />
 <h2 id="8-worked-example-trash-bin-checker">8. Worked example — Trash Bin Checker</h2>
@@ -4852,19 +4857,19 @@ const EL_REGISTRY=[
   sample:{},stage:{card:s=>`<div style="border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;background:var(--card)"><div style="display:flex;align-items:center;gap:8px">${lslot('title row','height:12px;flex:1')}${lslot('right','height:11px;width:44px')}</div>${lslot('content','height:56px;width:100%')}${lslot('line','height:10px;width:70%')}</div>`}},
  {id:'layout-idcard',grp:'structure',label:'ID card',
   desc:'A detailed introduction of ONE entity — a media / instance / clip / group: portrait beside its name, attributes and stats.',
-  rules:['Square media left; name &middot; attributes &middot; stats stacked right','Opens with an optional verdict badge; closes with an optional confidence row','One ID card = one entity (a species, a person, a clip, a group)'],
+  rules:['Square media left; name &middot; attributes &middot; stats stacked right','Opens with an optional verdict badge','One ID card = one entity (a species, a person, a clip, a group)'],
   sig:'layout · single',formats:['idcard'],layouts:['standalone'],action:'open-clip',accepts:['id'],
-  sample:{},stage:{idcard:s=>`<div style="border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:9px;background:var(--card)"><div style="display:flex;align-items:center;justify-content:space-between">${lslot('title','height:11px;width:54px')}${lslot('badge','height:14px;width:48px;border-radius:999px')}</div><div style="display:flex;gap:11px"><span>${lslot('media','width:64px;height:64px;flex:none')}</span><div style="flex:1;display:flex;flex-direction:column;gap:5px">${lslot('name','height:12px;width:78%')}${lslot('attribute','height:9px;width:52%')}${lslot('stats','height:9px;width:90%')}</div></div>${lslot('confidence','height:26px;width:100%;border-radius:8px')}</div>`}},
+  sample:{},stage:{idcard:s=>`<div style="border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:9px;background:var(--card)"><div style="display:flex;align-items:center;justify-content:space-between">${lslot('title','height:11px;width:54px')}${lslot('badge','height:14px;width:48px;border-radius:999px')}</div><div style="display:flex;gap:11px"><span>${lslot('media','width:64px;height:64px;flex:none')}</span><div style="flex:1;display:flex;flex-direction:column;gap:5px">${lslot('name','height:12px;width:78%')}${lslot('attribute','height:9px;width:52%')}${lslot('stats','height:9px;width:90%')}</div></div></div>`}},
  {id:'layout-grid',grp:'structure',label:'Grid',
   desc:'Equal cells in fixed rows — device fleets, KPI tiles, multi-camera walls.',
-  rules:['Equal-width cells; full-bleed content fills the cell and drops the cell outline — the content IS the cell','2&ndash;3 columns at phone width','Non-scrolling — at most 2 rows; more items move to the Scroll grid'],
+  rules:['Equal-width cells; full-bleed content fills the cell and drops the cell outline — the content IS the cell','2&ndash;3 columns at phone width','Non-scrolling — at most 2 rows; more items move to the Scroll grid','Each cell may pin ONE small overlay to a corner (tl &middot; tr &middot; bl &middot; br)'],
   sig:'layout · repeat',formats:['grid'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
-  sample:{},stage:{grid:s=>`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">${Array.from({length:6},()=>lslot('cell','aspect-ratio:16/11')).join('')}</div>`}},
+  sample:{},stage:{grid:s=>`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">${Array.from({length:6},(_,i)=>i?lslot('cell','aspect-ratio:16/11'):`<span style="position:relative;display:block">${lslot('cell','aspect-ratio:16/11')}${lslot('overlay','position:absolute;right:4px;top:4px;width:34px;height:11px')}</span>`).join('')}</div>`}},
  {id:'layout-sgrid',grp:'structure',label:'Scroll grid',
   desc:'One row of equal cells that scrolls horizontally — growing galleries and sighting reels.',
-  rules:['Single row, scrolls horizontally','Viewport shows 3.2 cells — the cut-off cell signals there&rsquo;s more','Use when items outgrow the static grid&rsquo;s 2-row cap'],
+  rules:['Single row, scrolls horizontally','Viewport shows 3.2 cells — the cut-off cell signals there&rsquo;s more','Use when items outgrow the static grid&rsquo;s 2-row cap','Each cell may pin ONE small overlay to a corner (tl &middot; tr &middot; bl &middot; br)'],
   sig:'layout · repeat',formats:['sgrid'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
-  sample:{},stage:{sgrid:s=>`<div style="display:flex;gap:6px;overflow:hidden">${Array.from({length:4},()=>lslot('cell','width:29%;aspect-ratio:16/11;flex:none')).join('')}</div>`}},
+  sample:{},stage:{sgrid:s=>`<div style="display:flex;gap:6px;overflow:hidden">${Array.from({length:4},(_,i)=>i?lslot('cell','width:29%;aspect-ratio:16/11;flex:none'):`<span style="position:relative;display:block;width:29%;flex:none">${lslot('cell','aspect-ratio:16/11')}${lslot('overlay','position:absolute;right:4px;top:4px;width:30px;height:11px')}</span>`).join('')}</div>`}},
  {id:'layout-strip',grp:'structure',label:'Strip',
   desc:'A horizontal rail of fixed-size items — compact recent-events scanning.',
   rules:['Fixed-size items, horizontally scannable'],
@@ -5406,8 +5411,9 @@ function renderV4Nodes(parts){
     if(n.hdr) return `<div class="v4ph"><b data-v4i="section-header&middot;header|section header|standalone">${n.hdr.t}</b>${n.hdr.right?rSlot(n.hdr.right,'section header'):''}</div>`;
     if(n.list) return `<div class="v4list">${n.list.map(r=>`<div class="v4row">${r.map(x=>rSlot(x,'list')).join('')}</div>`).join('')}</div>`;
     if(n.log) return `<div class="v4list v4log">${n.log.map(r=>`<div class="v4row" style="padding:6px 0">${r.map(x=>rSlot(x,'log')).join('')}</div>`).join('')}</div>`;
-    if(n.grid) return `<div class="v4grid" style="grid-template-columns:repeat(${n.grid.cols},1fr)">${n.grid.cells.map(c=>`<div class="v4cell">${c.map(x=>rSlot(x,'grid')).join('')}</div>`).join('')}</div>`;
-    if(n.sgrid) return `<div class="v4grid v4sgrid">${n.sgrid.cells.map(c=>`<div class="v4cell">${c.map(x=>rSlot(x,'sgrid')).join('')}</div>`).join('')}</div>`;
+    const cell=(c,ctx)=>`<div class="v4cell">${c.filter(x=>!x.ov).map(x=>rSlot(x,ctx)).join('')}${c.filter(x=>x.ov).map(o=>`<span class="v4cellov v4cellov-${o.at||'tr'}">${rSlot(o.ov,ctx)}</span>`).join('')}</div>`;
+    if(n.grid) return `<div class="v4grid" style="grid-template-columns:repeat(${n.grid.cols},1fr)">${n.grid.cells.map(c=>cell(c,'grid')).join('')}</div>`;
+    if(n.sgrid) return `<div class="v4grid v4sgrid">${n.sgrid.cells.map(c=>cell(c,'sgrid')).join('')}</div>`;
     if(n.strip) return `<div class="v4strip">${n.strip.map(x=>rSlot(x,'strip')).join('')}</div>`;
     if(n.hero){
       const ov=(n.hero.ov||[]).map(o=>o.el==='detection-marker'
@@ -5420,7 +5426,6 @@ function renderV4Nodes(parts){
     if(n.idcard){const ic=n.idcard;return `<div class="v4idcard" style="border:1px solid var(--line);border-radius:11px;padding:10px;display:flex;flex-direction:column;gap:9px;background:#0e1726">`
       +((ic.t||ic.badge)?`<div class="v4ph"><b data-v4i="section-header&middot;header|section header|standalone">${ic.t||''}</b>${ic.badge?rSlot(ic.badge,'section header'):''}</div>`:'')
       +`<div class="v4idrow" style="display:flex;gap:11px;align-items:flex-start"><span class="v4idmedia">${rSlot(ic.media,'idcard')}</span><div class="v4idcol" style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px">${(ic.lines||[]).map(x=>rSlot(x,'idcard')).join('')}</div></div>`
-      +(ic.foot?`<div>${rSlot(ic.foot,'idcard')}</div>`:'')
       +`</div>`;}
     if(n.row) return `<div class="v4row">${n.row.map(x=>rSlot(x,ctx)).join('')}</div>`;
     if(n.more) return `<button class="dc-more" data-v4i="more-paging&middot;button-pill|stack|standalone" style="margin:0">More &middot; 20 earlier &rsaquo;</button>`;
@@ -5448,13 +5453,13 @@ function claimsOfParts(parts){
     if(n.hdr){ set.add('section-header·header'); if(n.hdr.right) slot(n.hdr.right); return; }
     if(n.list){ set.add('layout-list·list'); n.list.forEach(r=>r.forEach(slot)); return; }
     if(n.log){ set.add('layout-log·log'); n.log.forEach(r=>r.forEach(slot)); return; }
-    if(n.grid){ set.add('layout-grid·grid'); n.grid.cells.forEach(c=>c.forEach(slot)); return; }
-    if(n.sgrid){ set.add('layout-sgrid·sgrid'); n.sgrid.cells.forEach(c=>c.forEach(slot)); return; }
+    if(n.grid){ set.add('layout-grid·grid'); n.grid.cells.forEach(c=>c.forEach(x=>slot(x.ov||x))); return; }
+    if(n.sgrid){ set.add('layout-sgrid·sgrid'); n.sgrid.cells.forEach(c=>c.forEach(x=>slot(x.ov||x))); return; }
     if(n.strip){ set.add('layout-strip·strip'); n.strip.forEach(slot); return; }
     if(n.hero){ set.add('layout-hero·hero'); set.add('media·full-card'); (n.hero.ov||[]).forEach(o=>o.col?o.col.forEach(slot):slot(o)); return; }
     if(n.chips){ set.add('layout-chips·chips'); n.chips.forEach(slot); return; }
     if(n.card){ set.add('layout-card·card'); n.card.forEach(walk); return; }
-    if(n.idcard){ set.add('layout-idcard·idcard'); const ic=n.idcard; if(ic.badge) slot(ic.badge); if(ic.media) slot(ic.media); (ic.lines||[]).forEach(slot); if(ic.foot) slot(ic.foot); return; }
+    if(n.idcard){ set.add('layout-idcard·idcard'); const ic=n.idcard; if(ic.badge) slot(ic.badge); if(ic.media) slot(ic.media); (ic.lines||[]).forEach(slot); return; }
     if(n.row){ n.row.forEach(slot); return; }
     if(n.more){ set.add('more-paging·button-pill'); return; }
     if(n.widget){ set.add('layout-widget·widget'); set.add('media·small-thumb');
@@ -5686,8 +5691,7 @@ const T4=[
             S('attribute-tag','text-tagline',{txt:'Cardinalis cardinalis'}),
             S('description-detail','text-small',{txt:'Mid-sized songbird &mdash; the male&rsquo;s brilliant red body and black face mask make it unmistakable at the feeder.'}),
             S('instance-count','text-tagline',{name:'Seen',txt:'9 times this month'}),
-            S('media','sound-clip',{dur:'0:06'})],
-     foot:S('confidence','button-pill')}}]},
+            S('media','sound-clip',{dur:'0:06'})]}}]},
    {lab:'today&rsquo;s visitors',parts:[{hdr:{t:'Today&rsquo;s visitors'}},
     {chips:[S('category-count','badge',{tag:'All &middot; 5',c:'#4f8ff0'}),S('instance-tag','badge',{tag:'Cardinal',c:'#f25c5c'}),S('instance-tag','badge',{tag:'Blue jay',c:'#9cc3f5'}),S('instance-tag','badge',{tag:'Goldfinch',c:'#f6b73c'}),S('instance-tag','badge',{tag:'Chickadee',c:'#93a3bd'})]},
     {sgrid:{cells:[
@@ -5710,10 +5714,10 @@ const T4=[
        [S('device-count','tile')],
        [S('instance-count','tile',{txt:'2',sub:'alerts to review'})]]}}]},
    {lab:'all four cameras',parts:[{grid:{cols:2,cells:[
-       [S('media','small-thumb',{grad:G1}),S('device-name','text-small',{txt:'Lisbon flat'}),S('device-state','badge',{tag:'ONLINE',c:'#34d399'})],
-       [S('media','small-thumb',{grad:G2}),S('device-name','text-small',{txt:'Kyoto house'}),S('device-state','badge',{tag:'OFFLINE &middot; 2h',c:'#f25c5c'})],
-       [S('media','small-thumb',{grad:G3}),S('device-name','text-small',{txt:'Bali villa'}),S('device-state','badge',{tag:'ONLINE',c:'#34d399'})],
-       [S('media','small-thumb',{grad:GH}),S('device-name','text-small',{txt:'Paris loft'}),S('device-state','badge',{tag:'ONLINE',c:'#34d399'})]]}}]},
+       [S('media','small-thumb',{grad:G1}),S('device-name','text-small',{txt:'Lisbon flat'}),{ov:S('device-state','badge',{tag:'ONLINE',c:'#34d399'}),at:'tr'}],
+       [S('media','small-thumb',{grad:G2}),S('device-name','text-small',{txt:'Kyoto house'}),{ov:S('device-state','badge',{tag:'OFFLINE &middot; 2h',c:'#f25c5c'}),at:'tr'}],
+       [S('media','small-thumb',{grad:G3}),S('device-name','text-small',{txt:'Bali villa'}),{ov:S('device-state','badge',{tag:'ONLINE',c:'#34d399'}),at:'tr'}],
+       [S('media','small-thumb',{grad:GH}),S('device-name','text-small',{txt:'Paris loft'}),{ov:S('device-state','badge',{tag:'ONLINE',c:'#34d399'}),at:'tr'}]]}}]},
    {lab:'kyoto uptime',parts:[{hdr:{t:'Kyoto connection today'}},{row:[S('time-trend','state-chart',{on:[22,23],c:'#f25c5c',legend:[{c:'#f25c5c',t:'offline'},{c:'#22314b',t:'online'}]})]}]},
    {lab:'insight',parts:[{card:[{hdr:{t:'Insight'}},{row:[S('insight','text-medium',{txt:'Two things need you: a <b style="color:#f6b73c">late checkout</b> approved at the Lisbon flat, and Kyoto&rsquo;s camera <b style="color:#f25c5c">offline 2h</b> &mdash; otherwise a quiet week.',tagline:'This week &middot; all 4 properties'})]}]}]},
    {lab:'across properties',parts:[
