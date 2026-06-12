@@ -2364,9 +2364,11 @@ EMIT  -&gt; see §13
       <div class="dc-cap" style="padding-top:8px"><b>Layout reference</b> — the arrangement vocabulary. An agent composes
         <b>elements</b> (each rendered through a format) into these patterns; the compose flow is
         <b>elements + layout &rarr; template</b>. Patterns were learned from the 27 components; each card shows the
-        wireframe and what currently uses it.</div>
+        wireframe and what currently uses it. The <b>rules</b> below are the fit contract — every visual adjustment
+        lands in an element format or as a rule here, never as one-off styling.</div>
       <div class="dc-summary" id="layoutSummary"></div>
     </div>
+    <div id="layoutRules"></div>
     <div id="layoutGrid" class="v4wrap"></div>
   </div>
 
@@ -5356,7 +5358,20 @@ function renderDcV4(){
     +`<span class="dc-stat"><b>${structUsed}/9</b> layout patterns used</span>`;
 }
 lintV4();   /* startup verification — the v4 view itself renders on demand */
-/* ---- Layout tab: the 9 arrangement patterns as a reference page ---- */
+/* ---- Layout tab: the 9 arrangement patterns as a reference page ----
+   LAYOUT_RULES is the contract for every adjustment: a visual fix lands
+   either in an element FORMAT (keep renders fluid) or as a rule here —
+   never as one-off styling on a single component / template. */
+const LAYOUT_RULES=[
+ ['Fix at the right level','Every adjustment goes to the element format (make the render fluid) or to a rule on this list — never one-off styling on one screen.'],
+ ['Lone slot fills the row','A slot standing alone in a row takes the full width — charts, calendars, suggestions and buttons stretch instead of shrink-wrapping.'],
+ ['Thumbs have a size','In list rows a media thumb is a fixed 56&times;42; inside grid cells it fills the cell width.'],
+ ['Buttons reach the edge','Action rows span the screen; a block button standing alone spans full width (capped at 240px when it shares a row).'],
+ ['Axis under the chart','Time-axis labels render in a row below the bars, never overlaid on them.'],
+ ['Box bare values','A state word, reading or insight never floats on the background — it sits inside a card with its companions (duration, detail).'],
+ ['Hero leads','A media hero appears in the first two sections of every template screen (lintT4 enforces it).'],
+ ['Lists show depth','An event list renders at least 4 rows before the More footer.'],
+];
 function renderLayoutPane(){
   const grid=document.getElementById('layoutGrid'); if(!grid) return;
   const lint=window.__v4lint||lintV4();
@@ -5370,6 +5385,12 @@ function renderLayoutPane(){
   if(window.__t4lint) Object.entries(window.__t4lint.usedBy||{}).forEach(([el,list])=>{
     (usedBy[el]=usedBy[el]||[]).push(...list);
   });
+  const rules=document.getElementById('layoutRules');
+  if(rules) rules.innerHTML=
+    `<div class="famblock dc-fam" style="margin-top:14px"><h3>Layout rules <span class="el-h3n">(${LAYOUT_RULES.length})</span></h3>`
+    +`<div class="v4wrap" style="margin-top:10px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))">`
+    +LAYOUT_RULES.map(([t,d],i)=>`<div class="v4card" style="gap:6px"><div class="v4head"><span><span class="v4cid">R${i+1}</span> <b>${t}</b></span></div>`
+      +`<div style="font-size:10px;line-height:1.55;color:var(--mut)">${d}</div></div>`).join('')+`</div></div>`;
   const pats=EL_REGISTRY.filter(u=>u.grp==='structure');
   grid.innerHTML=pats.map(u=>{
     const users=[...new Set(usedBy[u.id]||[])];
