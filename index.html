@@ -5181,7 +5181,7 @@ const G1='linear-gradient(150deg,#4f8ff040,#0c1119)',G2='linear-gradient(150deg,
       G3='linear-gradient(150deg,#34d39930,#0c1119)',GH='linear-gradient(165deg,#1d2d49,#0f1828)';
 const V4={
  'C-LIVE':{parts:[
-   {hero:{ov:[{el:'state',fmt:'text-small',s:{txt:'&#9679; Front door &middot; LIVE'},at:'tl'},
+   {hero:{ov:[{col:[S('state','badge',{tag:'&#9679; LIVE',c:'#f25c5c'}),S('state','text-small',{txt:'Front door'})],at:'tl'},
               {el:'absolute-time',fmt:'text-tagline',s:{txt:'14:09:22'},at:'br'}]}}]},
  'C-FEED':{parts:[
    {hdr:{t:'Entry history',right:S('instance-count','text-small',{name:'Events',txt:'38'})}},
@@ -5273,8 +5273,8 @@ const V4={
      [S('media','small-thumb',{grad:G2}),S('name-tag','text-tagline',{txt:'Cooper'})]]}}]},
  'C-MULTIVIEW':{parts:[
    {grid:{cols:2,cells:[
-     [S('media','small-thumb',{grad:G1}),S('device-name','text-tagline',{txt:'Front cam'}),S('state','badge',{tag:'LIVE',c:'#34d399'})],
-     [S('media','small-thumb',{grad:G2}),S('device-name','text-tagline',{txt:'Garage cam'}),S('state','badge',{tag:'LIVE',c:'#34d399'})]]}}]},
+     [S('media','small-thumb',{grad:G1}),S('device-name','text-tagline',{txt:'Front cam'}),S('state','badge',{tag:'&#9679; LIVE',c:'#f25c5c'})],
+     [S('media','small-thumb',{grad:G2}),S('device-name','text-tagline',{txt:'Garage cam'}),S('state','badge',{tag:'&#9679; LIVE',c:'#f25c5c'})]]}}]},
  'C-LOG':{parts:[
    {hdr:{t:'Sensor log'}},
    {list:[[S('absolute-time','text-small',{txt:'2:14 PM'}),S('state','text-small',{txt:'CLOSED'}),S('trend-delta','text-small',{txt:'&#9650; 2'})],
@@ -5524,7 +5524,7 @@ const T4=[
    name:S('name-tag','text-tagline',{txt:'BABY MONITOR'})},
   sections:[
    {lab:'hero · live',parts:[{hero:{grad:'linear-gradient(165deg,#10182b,#070b14)',ov:[
-     {el:'state',fmt:'text-small',s:{txt:'&#9679; Asleep &middot; LIVE'},at:'tl'},
+     {col:[S('state','badge',{tag:'&#9679; LIVE',c:'#f25c5c'}),S('state','text-small',{txt:'Asleep'})],at:'tl'},
      {el:'absolute-time',fmt:'text-tagline',s:{txt:'2:14 AM'},at:'br'}]}}]},
    {lab:'insight &middot; tonight in one line',parts:[{card:[{hdr:{t:'Insight'}},{row:[S('insight','text-medium')]}]}]},
    {lab:'last hour',parts:[{hdr:{t:'Last hour'}},{row:[S('time-trend','hourly-chart')]}]},
