@@ -512,6 +512,14 @@
   .v4tpl .actions{width:100%;max-width:none!important}
   /* a block button standing alone in its section spans the full width */
   .v4tpl .v4slot:only-child > [style*="min-width:108px"]{max-width:none!important}
+  /* v4 element hover popup: element · format + hosting layout */
+  .v4pop{position:fixed;z-index:99;display:none;pointer-events:none;max-width:240px;
+    background:#0e1726f5;border:1px solid #4f8ff055;border-radius:9px;padding:8px 11px;
+    box-shadow:0 10px 26px #000a;font-size:11px;color:var(--ink)}
+  .v4pop b{font-size:11.5px}
+  .v4pop .v4pop-m{font-family:var(--mono);font-size:9px;color:#9cc3f5;margin-top:2px}
+  .v4pop .v4pop-l{font-family:var(--mono);font-size:9px;color:#c4b3f0;margin-top:1px}
+  #screen [data-v4i]{cursor:help}
   /* v4 template picker chips: clamp the goal line */
   #intents .chip[data-t4]{height:auto;min-height:0}
   #intents .chip[data-t4] span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.35}
@@ -5294,39 +5302,40 @@ const V4={
 };
 /* render one composition node → html (claims are collected separately) */
 function renderV4Nodes(parts){
-  const rSlot=n=>n.col?`<span class="v4col">${n.col.map(rSlot).join('')}</span>`
-                      :`<span class="v4slot">${elRender(n.el,n.fmt,n.s)}</span>`;
+  const at=(n,ctx,lay)=>` data-v4i="${n.el}\u00b7${n.fmt}|${ctx||'stack'}|${lay||'standalone'}"`;
+  const rSlot=(n,ctx,lay)=>n.col?`<span class="v4col">${n.col.map(x=>rSlot(x,ctx,lay)).join('')}</span>`
+                      :`<span class="v4slot"${at(n,ctx,lay)}>${elRender(n.el,n.fmt,n.s)}</span>`;
   const pos={tl:'left:9px;top:9px',tr:'right:9px;top:9px',bl:'left:9px;bottom:9px',br:'right:9px;bottom:9px'};
-  const node=n=>{
-    if(n.el&&n.fmt) return rSlot(n);
-    if(n.hdr) return `<div class="v4ph"><b>${n.hdr.t}</b>${n.hdr.right?rSlot(n.hdr.right):''}</div>`;
-    if(n.list) return `<div class="v4list">${n.list.map(r=>`<div class="v4row">${r.map(rSlot).join('')}</div>`).join('')}</div>`;
-    if(n.grid) return `<div class="v4grid" style="grid-template-columns:repeat(${n.grid.cols},1fr)">${n.grid.cells.map(c=>`<div class="v4cell">${c.map(rSlot).join('')}</div>`).join('')}</div>`;
-    if(n.strip) return `<div class="v4strip">${n.strip.map(rSlot).join('')}</div>`;
+  const node=(n,ctx)=>{
+    if(n.el&&n.fmt) return rSlot(n,ctx);
+    if(n.hdr) return `<div class="v4ph"><b>${n.hdr.t}</b>${n.hdr.right?rSlot(n.hdr.right,'section header'):''}</div>`;
+    if(n.list) return `<div class="v4list">${n.list.map(r=>`<div class="v4row">${r.map(x=>rSlot(x,'list')).join('')}</div>`).join('')}</div>`;
+    if(n.grid) return `<div class="v4grid" style="grid-template-columns:repeat(${n.grid.cols},1fr)">${n.grid.cells.map(c=>`<div class="v4cell">${c.map(x=>rSlot(x,'grid')).join('')}</div>`).join('')}</div>`;
+    if(n.strip) return `<div class="v4strip">${n.strip.map(x=>rSlot(x,'strip')).join('')}</div>`;
     if(n.hero){
       const ov=(n.hero.ov||[]).map(o=>o.el==='detection-marker'
-        ?`<div class="annbox" style="left:20%;top:26%;width:56%;height:46%"></div><div class="annbadge" style="left:20%;top:26%">${(o.s&&o.s.tag)||'garage door'}</div>`
-        :`<div class="v4ovl" style="${pos[o.at||'bl']}">${o.col?o.col.map(rSlot).join(''):elRender(o.el,o.fmt,o.s)}</div>`).join('');
-      const cap=n.hero.cap?`<div style="position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:8px;padding:8px 10px;background:#0d1626cc;border-radius:0 0 10px 10px">${n.hero.cap.icon?`<span style="flex:none;width:22px;height:22px;border-radius:6px;background:${n.hero.cap.iconBg||'#f6b73c22'};display:grid;place-items:center;font-size:11px">${n.hero.cap.icon}</span>`:''}<span style="flex:1;display:flex;flex-direction:column;gap:1px;min-width:0">${elRender(n.hero.cap.head.el,n.hero.cap.head.fmt,n.hero.cap.head.s)}${n.hero.cap.sub?elRender(n.hero.cap.sub.el,n.hero.cap.sub.fmt,n.hero.cap.sub.s):''}</span></div>`:'';
-      return `<div class="hero v4hero"><div class="videobox" style="background:${n.hero.grad||GH}">${ov}${cap}</div></div>`;
+        ?`<span${at(o,'hero','overlay')}><div class="annbox" style="left:20%;top:26%;width:56%;height:46%"></div><div class="annbadge" style="left:20%;top:26%">${(o.s&&o.s.tag)||'garage door'}</div></span>`
+        :`<div class="v4ovl" style="${pos[o.at||'bl']}">${o.col?o.col.map(x=>rSlot(x,'hero','overlay')).join(''):rSlot(o,'hero','overlay')}</div>`).join('');
+      const cap=n.hero.cap?`<div style="position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:8px;padding:8px 10px;background:#0d1626cc;border-radius:0 0 10px 10px">${n.hero.cap.icon?`<span style="flex:none;width:22px;height:22px;border-radius:6px;background:${n.hero.cap.iconBg||'#f6b73c22'};display:grid;place-items:center;font-size:11px">${n.hero.cap.icon}</span>`:''}<span style="flex:1;display:flex;flex-direction:column;gap:1px;min-width:0">${rSlot(n.hero.cap.head,'caption bar','overlay')}${n.hero.cap.sub?rSlot(n.hero.cap.sub,'caption bar','overlay'):''}</span></div>`:'';
+      return `<div class="hero v4hero"><div class="videobox" style="background:${n.hero.grad||GH}"><span data-v4i="media\u00b7full-card|hero|standalone" style="position:absolute;inset:0"></span>${ov}${cap}</div></div>`;
     }
-    if(n.chips) return `<div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">${n.chips.map(rSlot).join('')}</div>`;
-    if(n.card) return `<div style="border:1px solid var(--line);border-radius:11px;padding:10px;display:flex;flex-direction:column;gap:8px;background:#0e1726">${n.card.map(node).join('')}</div>`;
-    if(n.row) return `<div class="v4row">${n.row.map(rSlot).join('')}</div>`;
+    if(n.chips) return `<div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">${n.chips.map(x=>rSlot(x,'chip bar')).join('')}</div>`;
+    if(n.card) return `<div style="border:1px solid var(--line);border-radius:11px;padding:10px;display:flex;flex-direction:column;gap:8px;background:#0e1726">${n.card.map(x=>node(x,'card')).join('')}</div>`;
+    if(n.row) return `<div class="v4row">${n.row.map(x=>rSlot(x,ctx)).join('')}</div>`;
     if(n.more) return `<button class="dc-more" style="margin:0">More &middot; 20 earlier &rsaquo;</button>`;
     if(n.widget){
       const w=n.widget;
       return `<div class="aghome" style="margin:0"><div class="agwrap"><div class="agcard">`
-        +`<div class="agthumb-wrap"><div class="agthumb" style="background:${w.grad||GH}"></div>${w.alert?`<span class="agalert" style="background:${w.alert}"></span>`:''}</div>`
-        +`<div class="agtitle">${elRender(w.pill.el,w.pill.fmt,w.pill.s)}</div>`
-        +`<div class="agsub">${elRender(w.sub.el,w.sub.fmt,w.sub.s)}</div></div>`
-        +`<div class="agname">${elRender(w.name.el,w.name.fmt,w.name.s)}</div></div></div>`;
+        +`<div class="agthumb-wrap"><div class="agthumb" style="background:${w.grad||GH}" data-v4i="media\u00b7small-thumb|widget|standalone"></div>${w.alert?`<span class="agalert" style="background:${w.alert}" data-v4i="priority-marker\u00b7dot|widget|overlay"></span>`:''}</div>`
+        +`<div class="agtitle">${rSlot(w.pill,'widget')}</div>`
+        +`<div class="agsub">${rSlot(w.sub,'widget')}</div></div>`
+        +`<div class="agname">${rSlot(w.name,'widget')}</div></div></div>`;
     }
-    if(n.empty){const e=n.s||{};return `<div style="border:1px dashed var(--line);border-radius:12px;padding:18px 12px;text-align:center"><div style="font-size:11px;font-weight:600;color:var(--mut)">${e.txt||'No events today'}</div><div style="font-size:9px;color:var(--dim);margin-top:3px">${e.sub||'quiet so far — check back later'}</div></div>`;}
-    if(n.loading) return `<div style="display:flex;flex-direction:column;gap:7px">${[70,100,46].map(w=>`<i style="display:block;height:9px;width:${w}%;border-radius:4px;background:linear-gradient(90deg,#1b2638,#27354e,#1b2638)"></i>`).join('')}</div>`;
+    if(n.empty){const e=n.s||{};return `<div data-v4i="empty-state\u00b7tile|stack|standalone" style="border:1px dashed var(--line);border-radius:12px;padding:18px 12px;text-align:center"><div style="font-size:11px;font-weight:600;color:var(--mut)">${e.txt||'No events today'}</div><div style="font-size:9px;color:var(--dim);margin-top:3px">${e.sub||'quiet so far — check back later'}</div></div>`;}
+    if(n.loading) return `<div data-v4i="loading-state\u00b7tile|stack|standalone" style="display:flex;flex-direction:column;gap:7px">${[70,100,46].map(w=>`<i style="display:block;height:9px;width:${w}%;border-radius:4px;background:linear-gradient(90deg,#1b2638,#27354e,#1b2638)"></i>`).join('')}</div>`;
     return '';
   };
-  return parts.map(node).join('');
+  return parts.map(n=>node(n)).join('');
 }
 function renderV4(cid){ return renderV4Nodes(V4[cid].parts); }
 /* walk a composition collecting (element·format) claims, incl. structural */
@@ -5584,7 +5593,7 @@ const T4=[
    {lab:'week trend',parts:[{row:[S('time-trend','weekly-chart')]}]}]},
 ];
 function renderT4Screen(t){
-  return tbar(t.title,t.sub)+`<div class="ui">`
+  return `<div class="appbar"><div><div class="ttl">${t.title}</div></div><div class="gear">${I.gear}</div></div>`+`<div class="ui">`
     +t.sections.map(sec=>slot(sec.lab,`<div class="v4tpl">${renderV4Nodes(sec.parts)}</div>`)).join('')+`</div>`;
 }
 /* ---- Templates version switcher: t1 (existing flow) | t4 (elements + layout → template) ---- */
@@ -5651,6 +5660,30 @@ document.getElementById('intents').addEventListener('click',e=>{
   const ch=e.target.closest('.chip[data-t4]'); if(!ch) return;
   renderT4(ch.dataset.t4);
 });
+/* hover an element inside a v4 template -> which element · format + layout */
+(function(){
+  const pop=document.createElement('div'); pop.className='v4pop'; document.body.appendChild(pop);
+  const hide=()=>{pop.style.display='none';};
+  const move=e=>{
+    const x=Math.min(e.clientX+14,window.innerWidth-250), y=Math.min(e.clientY+14,window.innerHeight-70);
+    pop.style.left=x+'px'; pop.style.top=y+'px';
+  };
+  const over=e=>{
+    if(tplVer!=='t4'){hide();return;}
+    const t=e.target.closest('[data-v4i]'); if(!t){hide();return;}
+    const [pair,ctx,lay]=t.dataset.v4i.split('|');
+    const el=EL_REGISTRY.find(x=>x.id===pair.split('\u00b7')[0]);
+    pop.innerHTML=`<b>${el?el.label:pair}</b><div class="v4pop-m">${pair}</div>`
+      +`<div class="v4pop-l">layout: ${ctx}${lay==='overlay'?' &middot; overlay':''}</div>`;
+    pop.style.display='block'; move(e);
+  };
+  ['screen','tplHomeCard'].forEach(id=>{
+    const host=document.getElementById(id); if(!host) return;
+    host.addEventListener('mouseover',over);
+    host.addEventListener('mousemove',e=>{if(pop.style.display==='block')move(e);});
+    host.addEventListener('mouseleave',hide);
+  });
+})();
 /* cross-verification of the new flow: every template claim must be valid
    vocabulary; combined with the v4 components it yields the full
    element×format coverage of the system */
@@ -5798,6 +5831,7 @@ renderDcVer('v25');
   const agCol=document.getElementById('tplHomeCard');
   if(agCol){
     agCol.addEventListener('mouseover',e=>{
+      if(typeof tplVer!=='undefined'&&tplVer==='t4'){pop.style.display='none';return;}
       const anchor=e.target.closest('.aghome, .agstates'); if(!anchor){pop.style.display='none';return;}
       const html=cardFor('C-AGENT');
       if(!html){pop.style.display='none';return;}
