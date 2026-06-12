@@ -5515,7 +5515,10 @@ const T4=[
    {lab:'open events today',parts:[{hdr:{t:'Today by hour'}},{row:[S('time-trend','daily-chart')]}]},
    {lab:'open / close log',parts:[{list:[
      [S('absolute-time','text-small',{txt:'4:02 PM'}),S('state','text-small',{txt:'CLOSED'}),S('trend-delta','text-small',{txt:'12m open'})],
-     [S('absolute-time','text-small',{txt:'3:50 PM'}),S('state','text-small',{txt:'OPEN'}),S('trend-delta','text-small',{txt:'&mdash;'})]]}]},
+     [S('absolute-time','text-small',{txt:'3:50 PM'}),S('state','text-small',{txt:'OPEN'}),S('trend-delta','text-small',{txt:'&mdash;'})],
+     [S('absolute-time','text-small',{txt:'11:02 AM'}),S('state','text-small',{txt:'CLOSED'}),S('trend-delta','text-small',{txt:'4m open'})],
+     [S('absolute-time','text-small',{txt:'10:58 AM'}),S('state','text-small',{txt:'OPEN'}),S('trend-delta','text-small',{txt:'&mdash;'})]]},
+     {more:true}]},
    {lab:'insight',parts:[{card:[{hdr:{t:'Insight'}},{row:[S('insight','text-medium',{txt:'Left open <b style="color:#f6b73c">twice</b> this week &mdash; both around 4 PM departures.'})]}]}]},
    {lab:'act + verify',parts:[{row:[S('device-control','button-pill',{txt:'Close door'})]},{row:[S('confidence','button-pill')]}]}]},
  {id:'baby_monitor_v4',title:'Baby Monitor',sub:'Wellbeing Monitor',goal:'Is the baby okay — without staring at a feed all night?',
@@ -5530,8 +5533,11 @@ const T4=[
    {lab:'last hour',parts:[{hdr:{t:'Last hour'}},{row:[S('time-trend','hourly-chart')]}]},
    {lab:'soothe',parts:[S('device-control','button-block',{txt:'Two-way talk'})]},
    {lab:'overnight moments',parts:[{list:[
-     [S('media','small-thumb',{grad:'linear-gradient(150deg,#10182b,#070b14)'}),C(S('description','text-small',{txt:'Brief waking &mdash; self-settled in 3 min'}),S('absolute-time','text-tagline',{txt:'2:14 AM'}))],
-     [S('media','small-thumb',{grad:G2}),C(S('description','text-small',{txt:'True cry &mdash; you went in'}),S('absolute-time','text-tagline',{txt:'11:48 PM'}))]]}]},
+     [S('media','small-thumb',{grad:'linear-gradient(150deg,#10182b,#070b14)'}),C(S('description','text-small',{txt:'Brief waking &mdash; self-settled in 3 min'}),S('absolute-time','text-tagline',{txt:'2:14 AM'})),S('state','badge',{tag:'SETTLED',c:'#7eecc4'})],
+     [S('media','small-thumb',{grad:G2}),C(S('description','text-small',{txt:'True cry &mdash; you went in'}),S('absolute-time','text-tagline',{txt:'11:48 PM'})),S('state','badge',{tag:'CRY',c:'#f25c5c'})],
+     [S('media','small-thumb',{grad:G1}),C(S('description','text-small',{txt:'Stirred &mdash; rolled over'}),S('absolute-time','text-tagline',{txt:'1:32 AM'})),S('state','badge',{tag:'STIRRED',c:'#9cc3f5'})],
+     [S('media','small-thumb',{grad:G3}),C(S('description','text-small',{txt:'Put down for the night'}),S('absolute-time','text-tagline',{txt:'8:40 PM'})),S('state','badge',{tag:'ASLEEP',c:'#7eecc4'})]]},
+     {more:true}]},
    {lab:'verify',parts:[S('confidence','button-pill')]}]},
  {id:'pet_monitor_v4',title:'Pet Monitor',sub:'Wellbeing Monitor',goal:'Where is Cooper and what has he been up to?',
     widget:{grad:'linear-gradient(150deg,#34d39930,#0c1119)',
@@ -5564,7 +5570,10 @@ const T4=[
    {lab:'escalate',parts:[S('contact-action','button-block')]},
    {lab:'on / off log',parts:[{list:[
      [S('absolute-time','text-small',{txt:'6:00 PM'}),S('state','text-small',{txt:'ON'})],
-     [S('absolute-time','text-small',{txt:'12:14 PM'}),S('state','text-small',{txt:'OFF &middot; 22m'})]]}]},
+     [S('absolute-time','text-small',{txt:'12:14 PM'}),S('state','text-small',{txt:'OFF &middot; 22m'})],
+     [S('absolute-time','text-small',{txt:'11:52 AM'}),S('state','text-small',{txt:'ON'})],
+     [S('absolute-time','text-small',{txt:'7:30 AM'}),S('state','text-small',{txt:'OFF &middot; 18m'})]]},
+     {more:true}]},
    {lab:'insight',parts:[{card:[{hdr:{t:'Insight'}},{row:[S('insight','text-medium',{txt:'Rarely on past <b style="color:#f25c5c">7 PM</b> &mdash; tonight is unusual.'})]}]}]},
    {lab:'verify',parts:[S('confidence','button-pill')]}]},
  {id:'bird_monitor_v4',title:'Bird Monitor',sub:'Discovery / Collection',goal:'Who visited the feeder — anything new for the collection?',
@@ -5598,7 +5607,9 @@ const T4=[
    {lab:'across properties',parts:[
      {hdr:{t:'Recent'}},
      {list:[[S('media','small-thumb',{grad:G1}),C(S('description','text-small',{txt:'Guest checked in'}),S('absolute-time','text-tagline',{txt:'3:05 AM local'})),S('name-tag','badge',{tag:'LISBON',c:'#9cc3f5'})],
-            [S('media','small-thumb',{grad:G2}),C(S('description','text-small',{txt:'Cleaner arrived'}),S('absolute-time','text-tagline',{txt:'10:00 AM local'})),S('name-tag','badge',{tag:'KYOTO',c:'#c4b3f0'})]]},
+            [S('media','small-thumb',{grad:G2}),C(S('description','text-small',{txt:'Cleaner arrived'}),S('absolute-time','text-tagline',{txt:'10:00 AM local'})),S('name-tag','badge',{tag:'KYOTO',c:'#c4b3f0'})],
+            [S('media','small-thumb',{grad:G3}),C(S('description','text-small',{txt:'Late checkout approved'}),S('absolute-time','text-tagline',{txt:'11:00 AM local'})),S('name-tag','badge',{tag:'LISBON',c:'#9cc3f5'})],
+            [S('media','small-thumb',{grad:GH}),C(S('description','text-small',{txt:'Smoke-alarm test passed'}),S('absolute-time','text-tagline',{txt:'9:00 AM local'})),S('name-tag','badge',{tag:'KYOTO',c:'#c4b3f0'})]]},
      {more:true}]},
    {lab:'week trend',parts:[{row:[S('time-trend','weekly-chart')]}]}]},
 ];
@@ -5717,6 +5728,10 @@ function lintT4(){
       if(n.card){ if(!n.card.some(c=>c.hdr)) console.warn('T4:',t.id,'card without a title in section:',sec.lab); n.card.forEach(chk); }
     }));
     const TIMEY=['absolute-time','relative-time','duration'];
+    t.sections.forEach(sec=>sec.parts.forEach(n=>{ if(!n.list) return;
+      const timey=n.list.some(r=>r.some(function f(x){return x.col?x.col.some(f):TIMEY.includes(x.el);}));
+      if(timey&&n.list.length<4) console.warn('T4:',t.id,'event list has',n.list.length,'rows — rule: at least 4 before More —',sec.lab);
+    }));
     t.sections.forEach(sec=>sec.parts.forEach(n=>{ if(!n.list) return;
       n.list.forEach(r=>r.forEach(x=>{ if(!x.col) return;
         x.col.slice(1).forEach(c=>{ if(TIMEY.includes(c.el)&&c.fmt!=='text-tagline')
