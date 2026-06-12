@@ -4713,7 +4713,7 @@ const FMT_MICRO={
    Format + Layout are presentation axes; bindings derive from MAPLINES x SEL2UI. ---- */
 const EL_REGISTRY=[
  /* media attribute */
- {id:'media',grp:'media-attr',label:'Media',desc:'Raw visual data — stream, still, clip, lapse, animated preview or identity portrait crop (square)',sig:'video/frame · none',formats:['full-card','small-thumb','square'],layouts:['standalone'],action:'open-clip',accepts:['media'],
+ {id:'media',grp:'media-attr',label:'Media',desc:'Raw visual data — stream, still, clip, lapse, animated preview or identity portrait crop (square)',states:['empty','loading'],sig:'video/frame · none',formats:['full-card','small-thumb','square'],layouts:['standalone'],action:'open-clip',accepts:['media'],
   sample:{txt:'&#9654; GIF',tag:'&#9654; GIF &middot; 0:06',c:'#e9eef6',grad:'linear-gradient(165deg,#1d2d49,#0f1828)'},
   stage:{'full-card':s=>FMT_STAGE['surface'](s),'small-thumb':s=>FMT_STAGE['thumb'](s),'square':s=>FMT_STAGE['portrait'](s)}},
  /* media correspondence (anchored ON media) */
@@ -4730,13 +4730,13 @@ const EL_REGISTRY=[
  /* instance aggregation */
  {id:'category-tag',grp:'count-agg',label:'Category tag',desc:'Classifier tag on one instance (person / vehicle / pet)',sig:'instance · none · category',formats:['badge','text-tagline'],layouts:['standalone','overlay'],action:'filter',accepts:['id','score'],
   modifier:{provenance:'detector',confidenceField:'tag_conf'},sample:{tag:'VEHICLE',c:'#9cc3f5'}},
- {id:'category-count',grp:'count-agg',label:'Category count',desc:'Instances grouped + counted per category — the filter row',sig:'category · count · category',formats:['filter','badge'],layouts:['standalone'],action:'filter',accepts:['id','count'],
+ {id:'category-count',grp:'count-agg',label:'Category count',desc:'Instances grouped + counted per category — the filter row',states:['empty','loading'],sig:'category · count · category',formats:['filter','badge'],layouts:['standalone'],action:'filter',accepts:['id','count'],
   sample:{tag:'All &middot; 24',sub:'Person &middot; 11'}},
  /* type-count aggregation */
- {id:'instance-tag',grp:'count-agg',label:'Instance tag',desc:'The instance by name only — no count attached',sig:'instance · none',formats:['filter','badge','text-small','text-tagline'],layouts:['standalone','overlay'],action:'filter',accepts:['text','id'],
+ {id:'instance-tag',grp:'count-agg',label:'Instance tag',desc:'The instance by name only — no count attached',states:['empty','loading'],sig:'instance · none',formats:['filter','badge','text-small','text-tagline'],layouts:['standalone','overlay'],action:'filter',accepts:['text','id'],
   sample:{txt:'Cat',tag:'Cat'},
   stage:{'filter':s=>`<div class="chips2" style="margin:0"><span class="fc on">${s.txt}</span><span class="fc">${s.sub||'Person'}</span></div>`}},
- {id:'instance-count',grp:'count-agg',label:'Instance count',desc:'How many — events, devices online, frames, sightings',rules:['The name of what&rsquo;s counted leads the value (Cats &middot; 4)'],sig:'instance/device · count',formats:['tile','text-small','badge','text-tagline','filter'],layouts:['standalone','overlay'],action:'navigate',accepts:['count'],
+ {id:'instance-count',grp:'count-agg',label:'Instance count',desc:'How many — events, devices online, frames, sightings',states:['empty','loading'],rules:['The name of what&rsquo;s counted leads the value (Cats &middot; 4)'],sig:'instance/device · count',formats:['tile','text-small','badge','text-tagline','filter'],layouts:['standalone','overlay'],action:'navigate',accepts:['count'],
   sample:{txt:'4',name:'Cats',sub:'cats today'},
   stage:{'tile':s=>FMT_STAGE['block'](s),
          'filter':s=>`<div class="chips2" style="margin:0"><span class="fc on">${s.name} &middot; ${s.txt}</span><span class="fc">${s.sub}</span></div>`,
@@ -4744,7 +4744,7 @@ const EL_REGISTRY=[
          'badge':s=>agPill(`${s.name} &middot; ${s.txt}`,'#9cc3f5'),
          'text-tagline':s=>`<div style="font-size:9.5px;letter-spacing:.4px;color:var(--mut)">${s.name} <b style="color:var(--ink)">${s.txt}</b></div>`}},
  /* time aggregation */
- {id:'time-trend',grp:'time-agg',label:'Time trend chart',desc:'Activity binned over time — hourly (minute bins), daily (hour bins), weekly (day bins), monthly (calendar grid)',rules:['Axis labels sit below the chart, never over the bars'],sig:'instance · count · span:hour/day/week/month',formats:['hourly-chart','daily-chart','weekly-chart','month-chart'],layouts:['standalone'],action:'navigate',accepts:['time','count'],
+ {id:'time-trend',grp:'time-agg',label:'Time trend chart',desc:'Activity binned over time — hourly (minute bins), daily (hour bins), weekly (day bins), monthly (calendar grid)',states:['empty','loading'],rules:['Axis labels sit below the chart, never over the bars'],sig:'instance · count · span:hour/day/week/month',formats:['hourly-chart','daily-chart','weekly-chart','month-chart'],layouts:['standalone'],action:'navigate',accepts:['time','count'],
   sample:{},stage:{
    'hourly-chart':s=>`<div class="scrub" style="height:42px">${[34,52,40,66,28,58,45,38,60,30,48,36].map(h=>`<div class="seg" style="height:${h}%;background:#3a5fa0"></div>`).join('')}</div><div class="axis-below"><span>:00</span><span>:15</span><span>:30</span><span>:45</span><span>now</span></div>`,
    'daily-chart':s=>`<div class="scrub" style="height:42px">${Array.from({length:24},(_,i)=>{const a=i>=16&&i<=18;const h=a?60+((i*17)%38):8+((i*13)%22);return `<div class="seg" style="height:${h}%;background:${a?'#f6b73c':'#3a5fa0'}"></div>`;}).join('')}</div><div class="axis-below"><span>12a</span><span>6a</span><span>12p</span><span>6p</span><span>now</span></div>`,
@@ -4769,21 +4769,21 @@ const EL_REGISTRY=[
  {id:'attribute-tag',grp:'nametags',label:'Attribute tag',desc:'Identity / device attributes (species, descriptors, battery)',sig:'identity/device · none',formats:['text-tagline','text-small','badge'],layouts:['standalone'],action:'none',accepts:['text','bool'],
   sample:{txt:'Cardinalis cardinalis'},stage:{'text-tagline':s=>`<div class="sci" style="font-style:italic;font-size:10px;color:var(--mut)">${s.txt}</div>`}},
  /* chat */
- {id:'insight',grp:'chat',label:'Insight',desc:'AI-synthesized prose over a period — tap opens the chat sheet',sig:'household/agent · narrative · time',formats:['text-medium','text-large'],layouts:['standalone'],action:'open-chat',accepts:['text'],
+ {id:'insight',grp:'chat',label:'Insight',desc:'AI-synthesized prose over a period — tap opens the chat sheet',states:['empty','loading'],sig:'household/agent · narrative · time',formats:['text-medium','text-large'],layouts:['standalone'],action:'open-chat',accepts:['text'],
   modifier:{provenance:'llm'},sample:{txt:'Slept <b style="color:#9cc3f5">10h 4m</b> with 2 brief wakings.'}},
- {id:'suggestion',grp:'chat',label:'Suggestion',desc:'Proactive question / nudge — tap opens the chat sheet',sig:'agent · none',formats:['button'],layouts:['standalone'],action:'open-chat',accepts:['text'],
+ {id:'suggestion',grp:'chat',label:'Suggestion',desc:'Proactive question / nudge — tap opens the chat sheet',states:['empty','loading'],sig:'agent · none',formats:['button'],layouts:['standalone'],action:'open-chat',accepts:['text'],
   sample:{tag:'What did I miss today?'},stage:{button:s=>`<div class="suglist"><div class="sugq"><span class="sugq-t">${s.tag}</span><span class="sugq-go">&rarr;</span></div></div>`}},
  /* description */
- {id:'description',grp:'description',label:'Description title',desc:'Short factual headline for ONE media item — event or group',sig:'instance/video · narrative',formats:['text-small','text-tagline'],layouts:['standalone','overlay'],action:'open-clip',accepts:['text'],
+ {id:'description',grp:'description',label:'Description title',desc:'Short factual headline for ONE media item — event or group',states:['empty','loading'],sig:'instance/video · narrative',formats:['text-small','text-tagline'],layouts:['standalone','overlay'],action:'open-clip',accepts:['text'],
   modifier:{provenance:'vlm'},sample:{txt:'Vehicle departed'}},
- {id:'description-detail',grp:'description',label:'Description detail',desc:'The full VLM sentence behind the title — what actually happened',sig:'instance/video · narrative',formats:['text-medium','text-small'],layouts:['standalone','overlay'],action:'open-clip',accepts:['text'],
+ {id:'description-detail',grp:'description',label:'Description detail',desc:'The full VLM sentence behind the title — what actually happened',states:['empty','loading'],sig:'instance/video · narrative',formats:['text-medium','text-small'],layouts:['standalone','overlay'],action:'open-clip',accepts:['text'],
   modifier:{provenance:'vlm'},sample:{txt:'A car backs out of the garage and turns left onto the street.'}},
  /* devices */
  {id:'device-name',grp:'devices',label:'Device name',desc:'Which camera / device — the tile and overlay label',sig:'device · none',formats:['text-tagline','text-small'],layouts:['standalone','overlay'],action:'navigate',accepts:['text','id'],
   sample:{txt:'Front door cam'}},
  {id:'device-state',grp:'devices',label:'Device state',desc:'Connectivity & power — online / offline, on / off',sig:'device · state',formats:['badge','text-small'],layouts:['standalone','overlay'],action:'navigate',accepts:['state','bool'],
   sample:{txt:'Online',tag:'ONLINE',c:'#34d399'}},
- {id:'device-count',grp:'devices',label:'Device count',desc:'Fleet roll-up — devices online vs total',sig:'device · count',formats:['text-small','tile'],layouts:['standalone'],action:'navigate',accepts:['count'],
+ {id:'device-count',grp:'devices',label:'Device count',desc:'Fleet roll-up — devices online vs total',states:['empty','loading'],sig:'device · count',formats:['text-small','tile'],layouts:['standalone'],action:'navigate',accepts:['count'],
   sample:{txt:'3 / 4',sub:'devices online'},
   stage:{'text-small':s=>`<span style="font-size:12px;font-weight:700;color:#7eecc4">3 / 4 <span style="color:var(--mut);font-weight:600">online</span></span>`,
          'tile':s=>`<div class="tilegrid"><div class="gtile num"><b>3 / 4</b><span>devices online</span></div></div>`}},
@@ -4842,16 +4842,6 @@ const EL_REGISTRY=[
   rules:['Text pills only, never media (that&rsquo;s Strip); wraps freely','Filter role sits between a header and its list; exactly one chip carries the selected state'],
   sig:'layout · repeat',formats:['chips'],layouts:['standalone'],action:'filter',accepts:['count','id'],
   sample:{},stage:{chips:s=>`<div style="display:flex;flex-wrap:wrap;gap:5px">${lslot('chip · on','width:58px;height:18px;border-radius:999px;border-style:solid')}${[64,46,70].map(w=>lslot('chip',`width:${w}px;height:18px;border-radius:999px`)).join('')}</div>`}},
- {id:'empty-state',grp:'feedback',label:'Empty state',
-  desc:'Stands in for a section body when the query returns nothing.',
-  rules:['Replaces the section body, same width','Says what WILL happen next, not just &ldquo;no data&rdquo;'],
-  sig:'feedback · none',formats:['tile'],layouts:['standalone'],action:'none',accepts:['text'],
-  sample:{txt:'No events today',sub:'quiet so far — check back later'},stage:{tile:s=>`<div style="border:1px dashed var(--line);border-radius:12px;padding:18px 12px;text-align:center"><div style="font-size:11px;font-weight:600;color:var(--mut)">${s.txt||'No events today'}</div><div style="font-size:9px;color:var(--dim);margin-top:3px">${s.sub||'quiet so far — check back later'}</div></div>`}},
- {id:'loading-state',grp:'feedback',label:'Loading state',
-  desc:'Skeleton stand-in for a section body while data is fetching.',
-  rules:['Replaces the section body, same width','Mirrors the shape of the content it stands in for'],
-  sig:'feedback · none',formats:['tile'],layouts:['standalone'],action:'none',accepts:['text'],
-  sample:{},stage:{tile:s=>`<div style="display:flex;flex-direction:column;gap:7px">${[70,100,46].map(w=>`<i style="display:block;height:9px;width:${w}%;border-radius:4px;background:linear-gradient(90deg,#1b2638,#27354e,#1b2638)"></i>`).join('')}</div>`}},
  {id:'more-paging',grp:'feedback',label:'More',
   desc:'The paging footer that closes a list and discloses how much more there is.',
   rules:['Full width; always the LAST row of a list','Carries the remaining count'],
@@ -4940,6 +4930,14 @@ function elStage(el,fmt,lay){
 function elStageAll(el,fmt){
   return `<div class="el-stage-part"><div class="el-stage-r">${elStage(el,fmt,'standalone')}</div></div>`;
 }
+/* loading / empty are STATES of query-backed elements, not elements */
+const elEmptyHTML=(txt,sub)=>`<div style="border:1px dashed var(--line);border-radius:12px;padding:18px 12px;text-align:center"><div style="font-size:11px;font-weight:600;color:var(--mut)">${txt||'Nothing here yet'}</div><div style="font-size:9px;color:var(--dim);margin-top:3px">${sub||'fills as soon as data arrives'}</div></div>`;
+const elLoadingHTML=()=>`<div style="display:flex;flex-direction:column;gap:7px">${[70,100,46].map(w=>`<i style="display:block;height:9px;width:${w}%;border-radius:4px;background:linear-gradient(90deg,#1b2638,#27354e,#1b2638)"></i>`).join('')}</div>`;
+function elStateStage(el,fmt,st){
+  if(st==='empty') return `<div class="el-stage-part"><div class="el-stage-r">${elEmptyHTML('No '+el.label.toLowerCase()+' yet')}</div></div>`;
+  if(st==='loading') return `<div class="el-stage-part"><div class="el-stage-r">${elLoadingHTML()}</div></div>`;
+  return elStageAll(el,fmt);
+}
 /* component recipe = dedup of its (element·format·layout) triples */
 function recipeOf(cid){
   const seen={},out=[];
@@ -4996,6 +4994,8 @@ function renderElCanvas(){
           +`<div class="el-chip-head"><span class="el-chip-name">${u.label}</span></div>`
           +`<div class="el-chip-body"><div class="el-chip-stage">${elStageAll(u,fmt)}</div>`
           +`<div class="el-fmtcol" style="width:220px"><span class="el-axis-t">Format</span><span class="el-fmts">${fmts}</span>`
+          +((u.states&&u.states.length)?`<span class="el-axis-t" style="margin-top:7px">State</span><span class="el-fmts">`
+            +['default'].concat(u.states).map(st=>`<span class="el-fmt el-st${st==='default'?' on':''}" data-st="${st}">${st}</span>`).join('')+`</span>`:'')
           +`<span class="el-axis-t" style="margin-top:7px">Description</span>`
           +`<div style="font-size:10px;line-height:1.55;color:var(--mut)">${u.desc}</div>`
           +((u.rules&&u.rules.length)?`<span class="el-axis-t" style="margin-top:7px">Rules</span>`
@@ -5144,7 +5144,16 @@ function showElComps(ui){
     if(fbtn){
       const chip0=e.target.closest('.el-chip'); if(!chip0) return;
       const u0=EL_REGISTRY.find(x=>x.id===chip0.dataset.ui); if(!u0) return;
-      chip0.dataset.fmt=fbtn.dataset.fmt; chip0.querySelectorAll('.el-fmt').forEach(n=>n.classList.toggle('on',n===fbtn));
+      if(fbtn.dataset.st){
+        chip0.dataset.elst=fbtn.dataset.st;
+        chip0.querySelectorAll('.el-fmt[data-st]').forEach(n=>n.classList.toggle('on',n===fbtn));
+        chip0.querySelector('.el-chip-stage').innerHTML=elStateStage(u0,chip0.dataset.fmt,fbtn.dataset.st);
+        scheduleDrawElemLines();
+        return;
+      }
+      chip0.dataset.fmt=fbtn.dataset.fmt; chip0.dataset.elst='default';
+      chip0.querySelectorAll('.el-fmt[data-fmt]').forEach(n=>n.classList.toggle('on',n===fbtn));
+      chip0.querySelectorAll('.el-fmt[data-st]').forEach(n=>n.classList.toggle('on',n.dataset.st==='default'));
       chip0.querySelector('.el-chip-stage').innerHTML=elStageAll(u0,chip0.dataset.fmt);
       scheduleDrawElemLines();
       return;
@@ -5350,8 +5359,8 @@ function renderV4Nodes(parts){
         +`<div class="agsub">${rSlot(w.sub,'widget')}</div></div>`
         +`<div class="agname">${rSlot(w.name,'widget')}</div></div></div>`;
     }
-    if(n.empty){const e=n.s||{};return `<div data-v4i="empty-state\u00b7tile|stack|standalone" style="border:1px dashed var(--line);border-radius:12px;padding:18px 12px;text-align:center"><div style="font-size:11px;font-weight:600;color:var(--mut)">${e.txt||'No events today'}</div><div style="font-size:9px;color:var(--dim);margin-top:3px">${e.sub||'quiet so far — check back later'}</div></div>`;}
-    if(n.loading) return `<div data-v4i="loading-state\u00b7tile|stack|standalone" style="display:flex;flex-direction:column;gap:7px">${[70,100,46].map(w=>`<i style="display:block;height:9px;width:${w}%;border-radius:4px;background:linear-gradient(90deg,#1b2638,#27354e,#1b2638)"></i>`).join('')}</div>`;
+    if(n.empty){const e=n.s||{};return elEmptyHTML(e.txt,e.sub);}
+    if(n.loading) return elLoadingHTML();
     return '';
   };
   return parts.map(n=>node(n)).join('');
@@ -5376,8 +5385,7 @@ function claimsOfParts(parts){
     if(n.widget){ set.add('layout-widget·widget'); set.add('media·small-thumb');
       if(n.widget.alert) set.add('priority-marker·dot');
       slot(n.widget.pill); slot(n.widget.sub); slot(n.widget.name); return; }
-    if(n.empty){ set.add('empty-state·tile'); return; }
-    if(n.loading){ set.add('loading-state·tile'); return; }
+    if(n.empty||n.loading) return;   /* element STATES, not elements — no claim */
   };
   parts.forEach(walk);
   return set;
