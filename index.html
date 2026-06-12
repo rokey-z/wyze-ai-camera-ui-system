@@ -513,12 +513,14 @@
   /* a block button standing alone in its section spans the full width */
   .v4tpl .v4slot:only-child > [style*="min-width:108px"]{max-width:none!important}
   /* v4 element hover popup: element · format + hosting layout */
-  .v4pop{position:fixed;z-index:99;display:none;pointer-events:none;max-width:240px;
-    background:#0e1726f5;border:1px solid #4f8ff055;border-radius:9px;padding:8px 11px;
-    box-shadow:0 10px 26px #000a;font-size:11px;color:var(--ink)}
+  .v4pop{position:fixed;z-index:99;display:none;pointer-events:none;width:270px;
+    background:#0e1726f8;border:1px solid #4f8ff055;border-radius:11px;padding:10px 12px;
+    box-shadow:0 12px 30px #000c;font-size:11px;color:var(--ink)}
   .v4pop b{font-size:11.5px}
-  .v4pop .v4pop-m{font-family:var(--mono);font-size:9px;color:#9cc3f5;margin-top:2px}
-  .v4pop .v4pop-l{font-family:var(--mono);font-size:9px;color:#c4b3f0;margin-top:1px}
+  .v4pop .v4pop-m{font-family:var(--mono);font-size:9px;color:#9cc3f5;flex:none}
+  .v4pop .v4pop-l{font-family:var(--mono);font-size:9px;color:#c4b3f0;margin-top:7px}
+  .v4pop .v4pop-prev{margin-top:8px;padding:9px;border:1px solid var(--line);border-radius:9px;background:#0b1322;overflow:hidden}
+  .v4pop .v4pop-lay{margin-top:5px;padding:9px;border:1px dashed #a78bfa33;border-radius:9px;overflow:hidden}
   #screen [data-v4i]{cursor:help}
   /* v4 template picker chips: clamp the goal line */
   #intents .chip[data-t4]{height:auto;min-height:0}
@@ -5665,16 +5667,24 @@ document.getElementById('intents').addEventListener('click',e=>{
   const pop=document.createElement('div'); pop.className='v4pop'; document.body.appendChild(pop);
   const hide=()=>{pop.style.display='none';};
   const move=e=>{
-    const x=Math.min(e.clientX+14,window.innerWidth-250), y=Math.min(e.clientY+14,window.innerHeight-70);
+    const x=Math.min(e.clientX+14,window.innerWidth-290);
+    const y=Math.min(e.clientY+14,window.innerHeight-pop.offsetHeight-12);
     pop.style.left=x+'px'; pop.style.top=y+'px';
   };
+  const CTX2LAYOUT={'list':'layout-list','grid':'layout-grid','strip':'layout-strip','hero':'layout-hero',
+    'card':'layout-card','chip bar':'layout-chips','caption bar':'layout-caption','widget':'layout-widget',
+    'section header':'section-header'};
   const over=e=>{
     if(tplVer!=='t4'){hide();return;}
     const t=e.target.closest('[data-v4i]'); if(!t){hide();return;}
     const [pair,ctx,lay]=t.dataset.v4i.split('|');
-    const el=EL_REGISTRY.find(x=>x.id===pair.split('\u00b7')[0]);
-    pop.innerHTML=`<b>${el?el.label:pair}</b><div class="v4pop-m">${pair}</div>`
-      +`<div class="v4pop-l">layout: ${ctx}${lay==='overlay'?' &middot; overlay':''}</div>`;
+    const [elId,fmt]=pair.split('\u00b7');
+    const el=EL_REGISTRY.find(x=>x.id===elId);
+    const layId=CTX2LAYOUT[ctx], layEl=layId&&EL_REGISTRY.find(x=>x.id===layId);
+    pop.innerHTML=`<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px"><b>${el?el.label:pair}</b><span class="v4pop-m">${pair}</span></div>`
+      +`<div class="v4pop-prev v4prev">${elRender(elId,fmt)}</div>`
+      +`<div class="v4pop-l">layout: ${ctx}${lay==='overlay'?' &middot; overlay':''}</div>`
+      +(layEl?`<div class="v4pop-lay">${elRender(layId,layEl.formats[0])}</div>`:'');
     pop.style.display='block'; move(e);
   };
   ['screen','tplHomeCard'].forEach(id=>{
