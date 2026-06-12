@@ -5612,10 +5612,11 @@ const T4=[
    pill:S('instance-count','badge',{name:'Alerts',txt:'2'}),sub:S('device-count','text-small'),
    name:S('name-tag','text-tagline',{txt:'OVERSEAS RENTALS'})},
   sections:[
-   {lab:'fleet &middot; properties',parts:[{hdr:{t:'Overseas rentals',right:S('device-count','text-small')}},
+   {lab:'fleet',parts:[{hdr:{t:'Overseas rentals',right:S('device-count','text-small')}},
      {grid:{cols:2,cells:[
        [S('device-count','tile')],
-       [S('instance-count','tile',{txt:'2',sub:'alerts to review'})],
+       [S('instance-count','tile',{txt:'2',sub:'alerts to review'})]]}}]},
+   {lab:'all four cameras',parts:[{grid:{cols:2,cells:[
        [S('media','small-thumb',{grad:G1}),S('device-name','text-small',{txt:'Lisbon flat'}),S('device-state','badge',{tag:'ONLINE',c:'#34d399'})],
        [S('media','small-thumb',{grad:G2}),S('device-name','text-small',{txt:'Kyoto house'}),S('device-state','badge',{tag:'OFFLINE &middot; 2h',c:'#f25c5c'})],
        [S('media','small-thumb',{grad:G3}),S('device-name','text-small',{txt:'Bali villa'}),S('device-state','badge',{tag:'ONLINE',c:'#34d399'})],
