@@ -2369,7 +2369,7 @@ EMIT  -&gt; see §13
       <div class="dc-summary" id="layoutSummary"></div>
     </div>
     <div id="layoutRules"></div>
-    <div id="layoutGrid" class="v4wrap"></div>
+    <div id="layoutGrid"></div>
   </div>
 
   <!-- ============ TAB: ELEMENTS — each element = one data source ============ -->
@@ -4743,10 +4743,8 @@ const EL_REGISTRY=[
  {id:'relative-time',grp:'timestamps',label:'Relative time',desc:'Elapsed since — recency stamps like &ldquo;2m ago&rdquo;',sig:'any · none · time',formats:['text-tagline','text-small'],layouts:['standalone','overlay'],action:'navigate',accepts:['time'],
   sample:{txt:'&#9679; 2m ago'}},
  /* priority & confidence */
- {id:'priority-marker',grp:'priority-conf',label:'Priority marker',desc:'Urgency / ranking — three levels: P1 urgent, P2 notable, P3 routine',sig:'agent/instance · none · score',formats:['dot','badge'],layouts:['standalone','overlay'],action:'navigate',accepts:['score'],
-  sample:{c:'#f25c5c',tag:'P1'},stage:{
-   dot:s=>`<span style="display:inline-flex;gap:12px;align-items:center">${[['#f25c5c','P1'],['#f6b73c','P2'],['#4f8ff0','P3']].map(([c,p])=>`<span style="display:inline-flex;align-items:center;gap:5px"><span style="width:13px;height:13px;border-radius:50%;background:${c};display:inline-block"></span><span style="font-size:8.5px;color:var(--dim);font-family:var(--mono)">${p}</span></span>`).join('')}</span>`,
-   badge:s=>`<span style="display:inline-flex;gap:6px">${[['#f25c5c','P1'],['#f6b73c','P2'],['#4f8ff0','P3']].map(([c,p])=>agPill(p,c)).join('')}</span>`}},
+ {id:'priority-marker',grp:'priority-conf',label:'High priority marker',desc:'Flags what needs attention NOW — a single red dot, or an Important badge',sig:'agent/instance · none · score',formats:['dot','badge'],layouts:['standalone','overlay'],action:'navigate',accepts:['score'],
+  sample:{c:'#f25c5c',tag:'Important'}},
  {id:'confidence',grp:'chat',label:'Confidence',desc:'Attachable modifier — model confidence + tap-to-correct on any AI-derived element',sig:'modifier · score',formats:['button-pill'],layouts:['standalone'],action:'correct',accepts:['score'],
   sample:{txt:'confidence 0.96',sub:'tap to correct'},stage:{'button-pill':s=>cf15('confidence 0.96','tap to correct')}},
  /* compare */
@@ -5376,13 +5374,6 @@ lintV4();   /* startup verification — the v4 view itself renders on demand */
    either in an element FORMAT (keep renders fluid) or as a rule here —
    never as one-off styling on a single component / template. */
 const LAYOUT_RULES=[
- ['Fix at the right level','Every adjustment goes to the element format (make the render fluid) or to a rule on this list — never one-off styling on one screen.'],
- ['Lone slot fills the row','A slot standing alone in a row takes the full width — charts, calendars, suggestions and buttons stretch instead of shrink-wrapping.'],
- ['Thumbs have a size','In list rows a media thumb is a fixed 56&times;42; inside grid cells it fills the cell width.'],
- ['Buttons reach the edge','Action rows span the screen; a block button standing alone spans full width (capped at 240px when it shares a row).'],
- ['Axis under the chart','Time-axis labels render in a row below the bars, never overlaid on them.'],
- ['Box bare values','A state word, reading or insight never floats on the background — it sits inside a card with its companions (duration, detail).'],
- ['Hero leads','A media hero appears in the first two sections of every template screen (lintT4 enforces it).'],
  ['Lists show depth','An event list renders at least 4 rows before the More footer.'],
  ['Widget is widget-only','The widget pattern (round thumb &middot; one pill &middot; freshness &middot; name) renders the home-screen widget; it never appears inside a template screen (lintT4 enforces it).'],
 ];
@@ -5406,15 +5397,20 @@ function renderLayoutPane(){
     +LAYOUT_RULES.map(([t,d],i)=>`<div class="v4card" style="gap:6px"><div class="v4head"><span><span class="v4cid">R${i+1}</span> <b>${t}</b></span></div>`
       +`<div style="font-size:10px;line-height:1.55;color:var(--mut)">${d}</div></div>`).join('')+`</div></div>`;
   const pats=EL_REGISTRY.filter(u=>u.grp==='structure');
-  grid.innerHTML=pats.map(u=>{
-    const users=[...new Set(usedBy[u.id]||[])];
-    return `<div class="v4card"><div class="v4head"><span><b>${u.label}</b> <span class="v4cid">${u.id}&middot;${u.formats[0]}</span></span>`
-      +`<span class="v4ver ${users.length?'ok':'bad'}">${users.length?users.length+' use'+(users.length>1?'s':''):'reference only'}</span></div>`
-      +`<div class="v4prev">${elRender(u.id,u.formats[0])}</div>`
-      +`<div style="font-size:10px;line-height:1.5;color:var(--mut)">${u.desc}</div>`
-      +(users.length?`<div class="v4rcps">${users.map(n=>`<span class="dc-rcp v4struct">${n}</span>`).join('')}</div>`:'')
-      +`</div>`;
-  }).join('');
+  /* same row anatomy as the Elements tab: name top-right, render left,
+     a captioned chip column on the right (here: who uses the pattern) */
+  grid.innerHTML=`<div class="famblock dc-fam el-fam" style="max-width:640px"><h3 style="text-align:right;font-size:15px">Layout patterns <span class="el-h3n">(${pats.length})</span></h3>`
+    +pats.map(u=>{
+      const users=[...new Set(usedBy[u.id]||[])];
+      return `<div class="el-chip" style="cursor:default" title="${u.desc}">`
+        +`<div class="el-chip-head"><span class="el-chip-name">${u.label}</span></div>`
+        +`<div class="el-chip-body"><div class="el-chip-stage"><div class="el-stage-part"><div class="el-stage-r">${elRender(u.id,u.formats[0])}</div></div></div>`
+        +`<div class="el-fmtcol" style="width:190px"><span class="el-axis-t">Used by</span><span class="el-fmts" style="flex-direction:row;flex-wrap:wrap;justify-content:flex-end">${
+          users.length?(users.slice(0,8).map(n=>`<span class="el-fmt" style="cursor:default">${n}</span>`).join('')
+            +(users.length>8?`<span class="el-fmt" style="cursor:default" title="${users.slice(8).join(', ')}">+${users.length-8} more</span>`:''))
+          :'<span class="el-fmt" style="cursor:default;opacity:.55">reference only</span>'}</span></div></div>`
+        +`</div>`;
+    }).join('')+`</div>`;
   document.getElementById('layoutSummary').innerHTML=
     `<span class="dc-stat dc-total dc-on"><b>${pats.length}</b> patterns</span>`
     +`<span class="dc-stat dc-have"><b>${pats.filter(u=>(usedBy[u.id]||[]).length).length}/${pats.length}</b> in use</span>`
