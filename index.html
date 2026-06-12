@@ -505,7 +505,9 @@
   .v4sgrid::-webkit-scrollbar{display:none}
   .v4sgrid > .v4cell{flex:0 0 calc((100% - 21px)/3.2)}
   .v4cell{border:1px solid var(--line);border-radius:9px;background:var(--bg2,#0e1726);padding:8px;display:flex;flex-direction:column;gap:5px;min-width:0}
-  .v4strip{display:flex;gap:7px;align-items:flex-start;overflow:hidden}
+  .v4strip{display:flex;gap:7px;align-items:flex-start;overflow-x:auto;scrollbar-width:none}
+  .v4strip::-webkit-scrollbar{display:none}
+  .v4chips .v4slot:first-child .agpill{box-shadow:inset 0 0 0 1.5px currentColor}
   .v4hero .videobox{border-radius:10px}
   .v4ovl{position:absolute;display:flex;flex-direction:column;gap:3px;align-items:flex-start;max-width:60%}
   .v4rcps{display:flex;flex-wrap:wrap;gap:4px;border-top:1px solid var(--line);padding-top:8px}
@@ -4622,7 +4624,7 @@ const EL_REGISTRY=[
          'text-tagline':s=>FMT_STAGE['text-tagline'](Object.assign({},s,{txt:(s.txt||'')+(s.unit||'')})),
          tile:s=>`<div class="tilegrid"><div class="gtile num"><b>${s.txt}<span style="font-size:12px;font-weight:600;color:var(--mut);letter-spacing:0;text-transform:none">${s.unit!==undefined?s.unit:' kWh'}</span></b><span>${s.sub||''}</span></div></div>`}},
  {id:'duration',grp:'state-agg',label:'Duration',desc:'Elapsed time in state — derived from state-change timestamps',rules:['Always reads with a leading &ldquo;for&rdquo;'],sig:'identity/device · duration · time',formats:['text-large','text-small','badge'],layouts:['standalone','overlay'],action:'none',accepts:['time','number'],
-  sample:{txt:'for 3h 42m',val:'3h 42m',c:'#7eecc4',mono:true},stage:{'text-large':s=>`<span style="font-family:var(--mono);font-weight:700;font-size:24px;color:${s.c}"><span style="color:var(--mut);font-size:15px;font-weight:600">for </span>${s.val}</span>`}},
+  sample:{txt:'for 3h 42m',c:'#7eecc4',mono:true},stage:{'text-large':s=>{const v=s.val||String(s.txt||'').replace(/^for\s*/,'');return `<span style="font-family:var(--mono);font-weight:700;font-size:24px;color:${s.c}"><span style="color:var(--mut);font-size:15px;font-weight:600">for </span>${v}</span>`;}}},
  /* instance aggregation */
  {id:'category-tag',grp:'count-agg',label:'Category tag',desc:'Classifier tag on one instance (person / vehicle / pet)',sig:'instance · none · category',formats:['badge','text-tagline'],layouts:['standalone','overlay'],action:'filter',accepts:['id','score'],
   modifier:{provenance:'detector',confidenceField:'tag_conf'},sample:{tag:'VEHICLE',c:'#9cc3f5'}},
@@ -4715,7 +4717,7 @@ const EL_REGISTRY=[
   sample:{},stage:{log:s=>Array.from({length:4},(_,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:5px 0;${i?'border-top:1px solid var(--line)':''}">${lslot('left','width:52px;height:10px;flex:none')}${lslot('middle','width:64px;height:10px;flex:none;margin:0 auto')}${lslot('right','width:40px;height:9px;flex:none')}</div>`).join('')}},
  {id:'layout-card',grp:'structure',label:'Card',
   desc:'A self-contained block for one subject — its state, media and detail boxed together.',
-  rules:['Every card opens with a title row','Bare values never float — a subject&rsquo;s values sit boxed together in its card','One card = one subject'],
+  rules:['Every screen card opens with a title row (lintT4 enforces it; identity / widget showcase cards are the exception)','Bare values never float — a subject&rsquo;s values sit boxed together in its card','One card = one subject'],
   sig:'layout · single',formats:['card'],layouts:['standalone'],action:'navigate',accepts:['id'],
   sample:{},stage:{card:s=>`<div style="border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;background:var(--card)"><div style="display:flex;align-items:center;gap:8px">${lslot('title row','height:12px;flex:1')}${lslot('right','height:11px;width:44px')}</div>${lslot('content','height:56px;width:100%')}${lslot('line','height:10px;width:70%')}</div>`}},
  {id:'layout-grid',grp:'structure',label:'Grid',
@@ -4732,7 +4734,7 @@ const EL_REGISTRY=[
   desc:'A horizontal rail of fixed-size items — compact recent-events scanning.',
   rules:['Fixed-size items, horizontally scannable'],
   sig:'layout · repeat',formats:['strip'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
-  sample:{},stage:{strip:s=>`<div style="display:flex;gap:6px">${Array.from({length:4},()=>lslot('item','width:46px;height:32px;flex:none')).join('')}${lslot('+N','width:46px;height:32px;flex:none;opacity:.6')}</div>`}},
+  sample:{},stage:{strip:s=>`<div style="display:flex;gap:6px">${Array.from({length:5},()=>lslot('item','width:46px;height:32px;flex:none')).join('')}</div>`}},
  {id:'layout-hero',grp:'structure',label:'Hero',
   desc:'The full-width media surface that anchors a screen; small elements overlay its corners.',
   rules:['Leads the screen — within the first two sections (lintT4 enforces it)','A media-led grid in the first two sections also satisfies the lead (camera consoles)','Overlays pin to corners (tl &middot; tr &middot; bl &middot; br); keep them small'],
@@ -4745,12 +4747,12 @@ const EL_REGISTRY=[
   sample:{},stage:{widget:s=>`<div style="display:flex;flex-direction:column;align-items:center;gap:6px;width:130px">${lslot('thumb','width:64px;height:64px;border-radius:50%')}${lslot('pill','width:70px;height:15px;border-radius:999px')}${lslot('freshness','width:48px;height:9px')}${lslot('name','width:64px;height:8px;opacity:.7')}</div>`}},
  {id:'layout-chips',grp:'structure',label:'Chip bar',
   desc:'A wrapping row of pill chips — category filters above a list, or link chips under a card.',
-  rules:['Text pills only, never media (that&rsquo;s Strip); wraps freely','Filter role sits between a header and its list; exactly one chip carries the selected state'],
+  rules:['Text pills only, never media (that&rsquo;s Strip); wraps freely','Filter role sits between a header and its list; the FIRST chip carries the selected state (solid outline)'],
   sig:'layout · repeat',formats:['chips'],layouts:['standalone'],action:'filter',accepts:['count','id'],
   sample:{},stage:{chips:s=>`<div style="display:flex;flex-wrap:wrap;gap:5px">${lslot('chip · on','width:58px;height:18px;border-radius:999px;border-style:solid')}${[64,46,70].map(w=>lslot('chip',`width:${w}px;height:18px;border-radius:999px`)).join('')}</div>`}},
  {id:'more-paging',grp:'feedback',label:'More',
   desc:'The paging footer that closes a list and discloses how much more there is.',
-  rules:['Full width; always the LAST row of a list','Carries the remaining count'],
+  rules:['Full width; always the last row of the list or collection it pages','Carries the remaining count'],
   sig:'feedback · count',formats:['button-pill'],layouts:['standalone'],action:'navigate',accepts:['count'],
   sample:{},stage:{'button-pill':s=>`<button class="dc-more" style="margin:0">More &middot; 20 earlier &rsaquo;</button>`}},
 ];
@@ -5264,7 +5266,7 @@ function renderV4Nodes(parts){
   const pos={tl:'left:9px;top:9px',tr:'right:9px;top:9px',bl:'left:9px;bottom:9px',br:'right:9px;bottom:9px'};
   const node=(n,ctx)=>{
     if(n.el&&n.fmt) return rSlot(n,ctx);
-    if(n.hdr) return `<div class="v4ph"><b>${n.hdr.t}</b>${n.hdr.right?rSlot(n.hdr.right,'section header'):''}</div>`;
+    if(n.hdr) return `<div class="v4ph"><b data-v4i="section-header&middot;header|section header|standalone">${n.hdr.t}</b>${n.hdr.right?rSlot(n.hdr.right,'section header'):''}</div>`;
     if(n.list) return `<div class="v4list">${n.list.map(r=>`<div class="v4row">${r.map(x=>rSlot(x,'list')).join('')}</div>`).join('')}</div>`;
     if(n.log) return `<div class="v4list v4log">${n.log.map(r=>`<div class="v4row" style="padding:6px 0">${r.map(x=>rSlot(x,'log')).join('')}</div>`).join('')}</div>`;
     if(n.grid) return `<div class="v4grid" style="grid-template-columns:repeat(${n.grid.cols},1fr)">${n.grid.cells.map(c=>`<div class="v4cell">${c.map(x=>rSlot(x,'grid')).join('')}</div>`).join('')}</div>`;
@@ -5276,7 +5278,7 @@ function renderV4Nodes(parts){
         :`<div class="v4ovl" style="${pos[o.at||'bl']}">${o.col?o.col.map(x=>rSlot(x,'hero','overlay')).join(''):rSlot(o,'hero','overlay')}</div>`).join('');
       return `<div class="hero v4hero"><div class="videobox" style="background:${n.hero.grad||GH}"><span data-v4i="media\u00b7full-card|hero|standalone" style="position:absolute;inset:0"></span>${ov}</div></div>`;
     }
-    if(n.chips) return `<div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">${n.chips.map(x=>rSlot(x,'chip bar')).join('')}</div>`;
+    if(n.chips) return `<div class="v4chips" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">${n.chips.map(x=>rSlot(x,'chip bar')).join('')}</div>`;
     if(n.card) return `<div style="border:1px solid var(--line);border-radius:11px;padding:10px;display:flex;flex-direction:column;gap:8px;background:#0e1726">${n.card.map(x=>node(x,'card')).join('')}</div>`;
     if(n.row) return `<div class="v4row">${n.row.map(x=>rSlot(x,ctx)).join('')}</div>`;
     if(n.more) return `<button class="dc-more" data-v4i="more-paging&middot;button-pill|stack|standalone" style="margin:0">More &middot; 20 earlier &rsaquo;</button>`;
@@ -5496,10 +5498,13 @@ const T4=[
      {el:'state',fmt:'badge',s:{tag:'IN YARD',c:'#7eecc4'},at:'br'}]}}]},
    {lab:'right now',parts:[{card:[{hdr:{t:'Right now'}},{row:[S('instance-count','text-small',{name:'Sightings',txt:'6'}),S('duration','text-small',{txt:'for 12m'})]}]}]},
    {lab:'act',parts:[{row:[S('device-control','button-block',{txt:'Two-way talk'}),S('device-control','button-block',{txt:'Yard lights'})]}]},
-   {lab:'today',parts:[{hdr:{t:'Today'}},{grid:{cols:3,cells:[
+   {lab:'today',parts:[{hdr:{t:'Today'}},{sgrid:{cells:[
      [S('media','small-thumb',{grad:G3}),S('relative-time','text-tagline',{txt:'12m ago'})],
      [S('media','small-thumb',{grad:G1}),S('relative-time','text-tagline',{txt:'2h ago'})],
-     [S('media','small-thumb',{grad:G2}),S('relative-time','text-tagline',{txt:'5h ago'})]]}}]},
+     [S('media','small-thumb',{grad:G2}),S('relative-time','text-tagline',{txt:'5h ago'})],
+     [S('media','small-thumb',{grad:GH}),S('relative-time','text-tagline',{txt:'7h ago'})],
+     [S('media','small-thumb',{grad:G1}),S('relative-time','text-tagline',{txt:'9h ago'})],
+     [S('media','small-thumb',{grad:G3}),S('relative-time','text-tagline',{txt:'11h ago'})]]}}]},
    {lab:'activity',parts:[{hdr:{t:'Cooper&rsquo;s day'}},{row:[S('time-trend','daily-chart')]}]},
    {lab:'insight',parts:[{card:[{hdr:{t:'Insight'}},{row:[S('insight','text-medium',{txt:'Cooper spends his afternoons by the <b style="color:#7eecc4">back fence</b> &mdash; usually out ~15 minutes.',tagline:'Today &middot; out for 12m'})]}]}]},
    {lab:'ask',parts:[S('suggestion','button',{tag:'Where is Cooper now?'})]},
@@ -5558,7 +5563,7 @@ const T4=[
        [S('media','small-thumb',{grad:G2}),S('device-name','text-small',{txt:'Kyoto house'}),S('device-state','badge',{tag:'OFFLINE &middot; 2h',c:'#f25c5c'})],
        [S('media','small-thumb',{grad:G3}),S('device-name','text-small',{txt:'Bali villa'}),S('device-state','badge',{tag:'ONLINE',c:'#34d399'})],
        [S('media','small-thumb',{grad:GH}),S('device-name','text-small',{txt:'Paris loft'}),S('device-state','badge',{tag:'ONLINE',c:'#34d399'})]]}}]},
-   {lab:'insight',parts:[{card:[{hdr:{t:'Insight'}},{row:[S('insight','text-medium',{txt:'A quiet week across all four properties &mdash; the only exception was one <b style="color:#f6b73c">late checkout</b> approved at the Lisbon flat.',tagline:'This week &middot; all 4 properties'})]}]}]},
+   {lab:'insight',parts:[{card:[{hdr:{t:'Insight'}},{row:[S('insight','text-medium',{txt:'Two things need you: a <b style="color:#f6b73c">late checkout</b> approved at the Lisbon flat, and Kyoto&rsquo;s camera <b style="color:#f25c5c">offline 2h</b> &mdash; otherwise a quiet week.',tagline:'This week &middot; all 4 properties'})]}]}]},
    {lab:'across properties',parts:[
      {hdr:{t:'Recent'}},
      {list:[[S('media','small-thumb',{grad:G1}),C(S('description','text-small',{txt:'Guest checked in'}),S('absolute-time','text-tagline',{txt:'3:05 AM local'})),S('name-tag','badge',{tag:'LISBON',c:'#9cc3f5'})],
