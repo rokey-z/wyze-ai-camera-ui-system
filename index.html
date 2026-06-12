@@ -4811,9 +4811,9 @@ const EL_REGISTRY=[
   sample:{},stage:{card:s=>`<div style="border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;background:var(--card)"><div style="display:flex;align-items:center;gap:8px">${lslot('title / state','height:12px;flex:1')}${lslot('meta','height:11px;width:44px')}</div>${lslot('media / content','height:56px;width:100%')}${lslot('text','height:10px;width:70%')}</div>`}},
  {id:'layout-grid',grp:'structure',label:'Grid',
   desc:'Equal cells in columns — device fleets, galleries, multi-camera walls.',
-  rules:['Equal-width cells; media fills the cell','2&ndash;3 columns at phone width'],
+  rules:['Equal-width cells; media fills the cell','2&ndash;3 columns at phone width','Scrolls horizontally when there are more cells than fit'],
   sig:'layout · repeat',formats:['grid'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
-  sample:{},stage:{grid:s=>`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">${Array.from({length:6},()=>lslot('cell','aspect-ratio:16/11')).join('')}</div>`}},
+  sample:{},stage:{grid:s=>`<div style="display:grid;grid-auto-flow:column;grid-template-rows:repeat(2,auto);grid-auto-columns:31%;gap:6px;overflow:hidden">${Array.from({length:9},()=>lslot('cell','aspect-ratio:16/11')).join('')}</div>`}},
  {id:'layout-strip',grp:'structure',label:'Strip',
   desc:'A horizontal rail of fixed-size media — compact recent-events scanning.',
   rules:['Fixed-size items, horizontally scannable','Overflow collapses into a +N cell'],
@@ -5312,7 +5312,14 @@ function renderV4Nodes(parts){
     if(n.el&&n.fmt) return rSlot(n,ctx);
     if(n.hdr) return `<div class="v4ph"><b>${n.hdr.t}</b>${n.hdr.right?rSlot(n.hdr.right,'section header'):''}</div>`;
     if(n.list) return `<div class="v4list">${n.list.map(r=>`<div class="v4row">${r.map(x=>rSlot(x,'list')).join('')}</div>`).join('')}</div>`;
-    if(n.grid) return `<div class="v4grid" style="grid-template-columns:repeat(${n.grid.cols},1fr)">${n.grid.cells.map(c=>`<div class="v4cell">${c.map(x=>rSlot(x,'grid')).join('')}</div>`).join('')}</div>`;
+    if(n.grid){
+      /* rule: more cells than fit -> the grid flows into columns and scrolls horizontally */
+      const scroll=n.grid.cells.length>n.grid.cols*2;
+      const st=scroll
+        ?`grid-auto-flow:column;grid-template-rows:repeat(2,auto);grid-auto-columns:calc(${(100/n.grid.cols).toFixed(2)}% - 6px);overflow-x:auto`
+        :`grid-template-columns:repeat(${n.grid.cols},1fr)`;
+      return `<div class="v4grid" style="${st}">${n.grid.cells.map(c=>`<div class="v4cell">${c.map(x=>rSlot(x,'grid')).join('')}</div>`).join('')}</div>`;
+    }
     if(n.strip) return `<div class="v4strip">${n.strip.map(x=>rSlot(x,'strip')).join('')}</div>`;
     if(n.hero){
       const ov=(n.hero.ov||[]).map(o=>o.el==='detection-marker'
