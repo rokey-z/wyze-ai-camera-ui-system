@@ -504,6 +504,8 @@
   .v4sgrid{display:flex;overflow-x:auto;scrollbar-width:none}
   .v4sgrid::-webkit-scrollbar{display:none}
   .v4sgrid > .v4cell{flex:0 0 calc((100% - 21px)/3.2)}
+  .v4idmedia{flex:none}
+  .v4idcard .v4idmedia .ethumb.esq{width:64px!important;height:64px!important;flex:0 0 64px}
   .v4cell{border:1px solid var(--line);border-radius:9px;background:var(--bg2,#0e1726);padding:8px;display:flex;flex-direction:column;gap:5px;min-width:0}
   .v4strip{display:flex;gap:7px;align-items:flex-start;overflow-x:auto;scrollbar-width:none}
   .v4strip::-webkit-scrollbar{display:none}
@@ -2006,7 +2008,7 @@ Format-level conventions (the renderer is the single source of styling):
 
 ---
 
-## 4. Layout patterns (10)
+## 4. Layout patterns (11)
 
 Patterns are **containers**: their slots fix size and position only — any reasonable
 element · format can fill a slot. Rules are recorded per pattern and enforced by lint
@@ -2036,6 +2038,12 @@ A self-contained block for one subject — its state, media and detail boxed tog
 - every card opens with a title row
 - bare values never float — a subject's values sit boxed together in its card
 - one card = one subject
+
+### ID card `idcard`
+A detailed introduction of ONE entity — a media / instance / clip / group: a square portrait beside its name, attributes and stats (e.g. a bird-species intro).
+- square media left; name · attributes · stats stacked right
+- opens with an optional verdict badge; closes with an optional confidence row
+- one ID card = one entity (a species, a person, a clip, a group)
 
 ### Grid `grid`
 Equal cells in fixed rows — device fleets, KPI tiles, multi-camera walls.
@@ -2121,6 +2129,7 @@ The runtime lint (lintT4) enforces, per template:
 | `{hdr:{t, right?}}` | section header (+ optional right slot) |
 | `{row:[slots]}` | a flex row of slots |
 | `{card:[parts]}` | bordered card (open with a `hdr`) |
+| `{idcard:{t?, badge?, media, lines:[slots], foot?}}` | entity intro — portrait + name/attributes/stats + optional verdict badge & confidence |
 | `{list:[[slots],…]}` | list rows (lead · middle · right) |
 | `{log:[[slots],…]}` | log rows (left · middle · right) |
 | `{grid:{cols, cells:[[slots],…]}}` | static grid, ≤ 2 rows |
@@ -2271,7 +2280,7 @@ Goal: *"Did the bins go out — and come back?"*
 <ul><li><strong>button-block</strong> — coloured fill with white icon and label, same treatment as the pill.</li><li><strong>tile</strong> — the shared tile anatomy: big value on top, name beneath.</li><li><strong>charts</strong> — see the time-trend rules: goal-named title, axis below, legend beneath,</li></ul>
 <p>  binary = state band, calendar cells self-labelled.</p>
 <hr />
-<h2 id="4-layout-patterns-10">4. Layout patterns (10)</h2>
+<h2 id="4-layout-patterns-11">4. Layout patterns (11)</h2>
 <p>Patterns are <strong>containers</strong>: their slots fix size and position only — any reasonable element · format can fill a slot. Rules are recorded per pattern and enforced by lint where marked.</p>
 <h3 id="section-header-hdr">Section header <code>hdr</code></h3>
 <p>Opens a section: names what follows and carries one glanceable number or status.</p>
@@ -2285,6 +2294,9 @@ Goal: *"Did the bins go out — and come back?"*
 <h3 id="card-card">Card <code>card</code></h3>
 <p>A self-contained block for one subject — its state, media and detail boxed together.</p>
 <ul><li>every card opens with a title row</li><li>bare values never float — a subject&#x27;s values sit boxed together in its card</li><li>one card = one subject</li></ul>
+<h3 id="id-card-idcard">ID card <code>idcard</code></h3>
+<p>A detailed introduction of ONE entity — a media / instance / clip / group: a square portrait beside its name, attributes and stats (e.g. a bird-species intro).</p>
+<ul><li>square media left; name · attributes · stats stacked right</li><li>opens with an optional verdict badge; closes with an optional confidence row</li><li>one ID card = one entity (a species, a person, a clip, a group)</li></ul>
 <h3 id="grid-grid">Grid <code>grid</code></h3>
 <p>Equal cells in fixed rows — device fleets, KPI tiles, multi-camera walls.</p>
 <ul><li>equal-width cells; full-bleed content fills the cell and drops the cell outline — the content IS the cell</li><li>2–3 columns at phone width</li><li>non-scrolling — at most 2 rows; more items move to the Scroll grid</li></ul>
@@ -2322,7 +2334,7 @@ Goal: *"Did the bins go out — and come back?"*
     name: S(&#x27;name-tag&#x27;,&#x27;text-tagline&#x27;,{txt:&#x27;TRASH BINS&#x27;}) },
   sections:[ { lab:&#x27;state · how long&#x27;, parts:[ /* nodes */ ] }, … ] }</code></pre>
 <p><strong>Node grammar</strong> (what <code>parts</code> may contain):</p>
-<table><thead><tr><th>node</th><th>renders</th></tr></thead><tbody><tr><td><code>S(el, fmt, sample?)</code></td><td>one element render — the leaf</td></tr><tr><td><code>C(...slots)</code></td><td>a column stacking slots</td></tr><tr><td><code>{hdr:{t, right?}}</code></td><td>section header (+ optional right slot)</td></tr><tr><td><code>{row:[slots]}</code></td><td>a flex row of slots</td></tr><tr><td><code>{card:[parts]}</code></td><td>bordered card (open with a <code>hdr</code>)</td></tr><tr><td><code>{list:[[slots],…]}</code></td><td>list rows (lead · middle · right)</td></tr><tr><td><code>{log:[[slots],…]}</code></td><td>log rows (left · middle · right)</td></tr><tr><td><code>{grid:{cols, cells:[[slots],…]}}</code></td><td>static grid, ≤ 2 rows</td></tr><tr><td><code>{sgrid:{cells:[[slots],…]}}</code></td><td>scrollable one-row grid</td></tr><tr><td><code>{strip:[slots]}</code></td><td>media rail</td></tr><tr><td>`{hero:{grad, ov:[{el,fmt,s,at} \</td><td>{col:[slots],at}]}}`</td><td>media hero with corner overlays (<code>tl/tr/bl/br</code>)</td></tr><tr><td><code>{chips:[slots]}</code></td><td>chip bar</td></tr><tr><td><code>{more:true}</code></td><td>More paging footer</td></tr><tr><td><code>{empty:{txt,sub}}</code> / <code>{loading:true}</code></td><td>element-state chrome, claims nothing</td></tr></tbody></table>
+<table><thead><tr><th>node</th><th>renders</th></tr></thead><tbody><tr><td><code>S(el, fmt, sample?)</code></td><td>one element render — the leaf</td></tr><tr><td><code>C(...slots)</code></td><td>a column stacking slots</td></tr><tr><td><code>{hdr:{t, right?}}</code></td><td>section header (+ optional right slot)</td></tr><tr><td><code>{row:[slots]}</code></td><td>a flex row of slots</td></tr><tr><td><code>{card:[parts]}</code></td><td>bordered card (open with a <code>hdr</code>)</td></tr><tr><td><code>{idcard:{t?, badge?, media, lines:[slots], foot?}}</code></td><td>entity intro — portrait + name/attributes/stats + optional verdict badge &amp; confidence</td></tr><tr><td><code>{list:[[slots],…]}</code></td><td>list rows (lead · middle · right)</td></tr><tr><td><code>{log:[[slots],…]}</code></td><td>log rows (left · middle · right)</td></tr><tr><td><code>{grid:{cols, cells:[[slots],…]}}</code></td><td>static grid, ≤ 2 rows</td></tr><tr><td><code>{sgrid:{cells:[[slots],…]}}</code></td><td>scrollable one-row grid</td></tr><tr><td><code>{strip:[slots]}</code></td><td>media rail</td></tr><tr><td>`{hero:{grad, ov:[{el,fmt,s,at} \</td><td>{col:[slots],at}]}}`</td><td>media hero with corner overlays (<code>tl/tr/bl/br</code>)</td></tr><tr><td><code>{chips:[slots]}</code></td><td>chip bar</td></tr><tr><td><code>{more:true}</code></td><td>More paging footer</td></tr><tr><td><code>{empty:{txt,sub}}</code> / <code>{loading:true}</code></td><td>element-state chrome, claims nothing</td></tr></tbody></table>
 <p>Every <code>S()</code> emits a claim <code>element·format</code> that the lint validates against the registry.</p>
 <hr />
 <h2 id="8-worked-example-trash-bin-checker">8. Worked example — Trash Bin Checker</h2>
@@ -4675,7 +4687,7 @@ const FIELD_META={
 /* ---- the 13 formats + per-format micro (strip) and stage (full) renderers ---- */
 const FORMATS=['text-large','text-medium','text-small','text-tagline','badge','dot','tile','list','small-thumb','square','full-card','bound-box','button','button-pill','button-block','hourly-chart','daily-chart','state-chart','weekly-chart','month-chart'];
 /* format switch tags are listed big -> small; first (biggest) is the default */
-const FMT_SIZE_ORDER=['full-card','bound-box','square','month-chart','weekly-chart','daily-chart','state-chart','hourly-chart','chart','widget','grid','strip','small-thumb','tile','list','log','header','button-block','button-pill','button','chips','text-large','text-medium','badge','text-small','text-tagline','dot'];
+const FMT_SIZE_ORDER=['full-card','bound-box','square','month-chart','weekly-chart','daily-chart','state-chart','hourly-chart','chart','widget','grid','strip','small-thumb','tile','list','log','idcard','card','sgrid','hero','header','button-block','button-pill','button','chips','text-large','text-medium','badge','text-small','text-tagline','dot'];
 const lslot=(label,st)=>`<span style="border:1px dashed #4f8ff066;background:#4f8ff00a;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:7.5px;letter-spacing:.3px;color:#9cc3f5;font-family:var(--mono);box-sizing:border-box;${st||''}">${label}</span>`;
 const elFmtOrder=f=>[...f].sort((a,b)=>FMT_SIZE_ORDER.indexOf(a)-FMT_SIZE_ORDER.indexOf(b));
 const chartLegend=items=>`<div class="axis-legend" style="display:flex;gap:10px;margin-top:5px">${items.map(i=>`<span style="display:inline-flex;align-items:center;gap:4px;font-size:8.5px;letter-spacing:.3px;color:var(--mut)"><i style="width:8px;height:8px;border-radius:2px;border:1px solid var(--line);background:${i.c};flex:none"></i>${i.t}</span>`).join('')}</div>`;
@@ -4835,6 +4847,11 @@ const EL_REGISTRY=[
   rules:['Every screen card opens with a title row (lintT4 enforces it; identity / widget showcase cards are the exception)','Bare values never float — a subject&rsquo;s values sit boxed together in its card','One card = one subject'],
   sig:'layout · single',formats:['card'],layouts:['standalone'],action:'navigate',accepts:['id'],
   sample:{},stage:{card:s=>`<div style="border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;background:var(--card)"><div style="display:flex;align-items:center;gap:8px">${lslot('title row','height:12px;flex:1')}${lslot('right','height:11px;width:44px')}</div>${lslot('content','height:56px;width:100%')}${lslot('line','height:10px;width:70%')}</div>`}},
+ {id:'layout-idcard',grp:'structure',label:'ID card',
+  desc:'A detailed introduction of ONE entity — a media / instance / clip / group: portrait beside its name, attributes and stats.',
+  rules:['Square media left; name &middot; attributes &middot; stats stacked right','Opens with an optional verdict badge; closes with an optional confidence row','One ID card = one entity (a species, a person, a clip, a group)'],
+  sig:'layout · single',formats:['idcard'],layouts:['standalone'],action:'open-clip',accepts:['id'],
+  sample:{},stage:{idcard:s=>`<div style="border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:9px;background:var(--card)"><div style="display:flex;align-items:center;justify-content:space-between">${lslot('title','height:11px;width:54px')}${lslot('badge','height:14px;width:48px;border-radius:999px')}</div><div style="display:flex;gap:11px"><span>${lslot('media','width:64px;height:64px;flex:none')}</span><div style="flex:1;display:flex;flex-direction:column;gap:5px">${lslot('name','height:12px;width:78%')}${lslot('attribute','height:9px;width:52%')}${lslot('stats','height:9px;width:90%')}</div></div>${lslot('confidence','height:26px;width:100%;border-radius:8px')}</div>`}},
  {id:'layout-grid',grp:'structure',label:'Grid',
   desc:'Equal cells in fixed rows — device fleets, KPI tiles, multi-camera walls.',
   rules:['Equal-width cells; full-bleed content fills the cell and drops the cell outline — the content IS the cell','2&ndash;3 columns at phone width','Non-scrolling — at most 2 rows; more items move to the Scroll grid'],
@@ -5397,6 +5414,11 @@ function renderV4Nodes(parts){
     }
     if(n.chips) return `<div class="v4chips" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">${n.chips.map(x=>rSlot(x,'chip bar')).join('')}</div>`;
     if(n.card) return `<div style="border:1px solid var(--line);border-radius:11px;padding:10px;display:flex;flex-direction:column;gap:8px;background:#0e1726">${n.card.map(x=>node(x,'card')).join('')}</div>`;
+    if(n.idcard){const ic=n.idcard;return `<div class="v4idcard" style="border:1px solid var(--line);border-radius:11px;padding:10px;display:flex;flex-direction:column;gap:9px;background:#0e1726">`
+      +((ic.t||ic.badge)?`<div class="v4ph"><b data-v4i="section-header&middot;header|section header|standalone">${ic.t||''}</b>${ic.badge?rSlot(ic.badge,'section header'):''}</div>`:'')
+      +`<div class="v4idrow" style="display:flex;gap:11px;align-items:flex-start"><span class="v4idmedia">${rSlot(ic.media,'idcard')}</span><div class="v4idcol" style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px">${(ic.lines||[]).map(x=>rSlot(x,'idcard')).join('')}</div></div>`
+      +(ic.foot?`<div>${rSlot(ic.foot,'idcard')}</div>`:'')
+      +`</div>`;}
     if(n.row) return `<div class="v4row">${n.row.map(x=>rSlot(x,ctx)).join('')}</div>`;
     if(n.more) return `<button class="dc-more" data-v4i="more-paging&middot;button-pill|stack|standalone" style="margin:0">More &middot; 20 earlier &rsaquo;</button>`;
     if(n.widget){
@@ -5429,6 +5451,7 @@ function claimsOfParts(parts){
     if(n.hero){ set.add('layout-hero·hero'); set.add('media·full-card'); (n.hero.ov||[]).forEach(o=>o.col?o.col.forEach(slot):slot(o)); return; }
     if(n.chips){ set.add('layout-chips·chips'); n.chips.forEach(slot); return; }
     if(n.card){ set.add('layout-card·card'); n.card.forEach(walk); return; }
+    if(n.idcard){ set.add('layout-idcard·idcard'); const ic=n.idcard; if(ic.badge) slot(ic.badge); if(ic.media) slot(ic.media); (ic.lines||[]).forEach(slot); if(ic.foot) slot(ic.foot); return; }
     if(n.row){ n.row.forEach(slot); return; }
     if(n.more){ set.add('more-paging·button-pill'); return; }
     if(n.widget){ set.add('layout-widget·widget'); set.add('media·small-thumb');
@@ -5468,7 +5491,7 @@ function lintV4(){
   window.__v4lint=res;
   return res;
 }
-const V4_STRUCT_IDS=['section-header','layout-list','layout-log','layout-card','layout-grid','layout-sgrid','layout-strip','layout-hero','layout-widget','layout-chips'];
+const V4_STRUCT_IDS=['section-header','layout-list','layout-log','layout-card','layout-idcard','layout-grid','layout-sgrid','layout-strip','layout-hero','layout-widget','layout-chips'];
 /* renders the v4.0 version view INSIDE the Components tab (dcGrids/dcSummary) */
 function renderDcV4(){
   const lint=lintV4();
@@ -5654,6 +5677,13 @@ const T4=[
      {el:'detection-marker',fmt:'bound-box',s:{tag:'northern cardinal'}},
      {el:'absolute-time',fmt:'text-tagline',s:{txt:'7:42 AM'},at:'br'}]}}]},
    {lab:'species + season count',parts:[{row:[S('attribute-tag','badge',{tag:'Cardinalis cardinalis',c:'#f25c5c'}),S('instance-count','badge',{name:'Season',txt:'128'})]}]},
+   {lab:'species ID',parts:[{idcard:{t:'Species ID',badge:S('state','badge',{tag:'KNOWN',c:'#7eecc4'}),
+     media:S('media','square',{grad:'linear-gradient(150deg,#b1402f,#5a1c14)'}),
+     lines:[S('name-tag','text-small',{txt:'Northern Cardinal'}),
+            S('attribute-tag','text-tagline',{txt:'Cardinalis cardinalis'}),
+            S('description-detail','text-small',{txt:'Mid-sized songbird &mdash; the male&rsquo;s brilliant red body and black face mask make it unmistakable at the feeder.'}),
+            S('instance-count','text-tagline',{name:'Seen',txt:'9 times this month'})],
+     foot:S('confidence','button-pill')}}]},
    {lab:'today&rsquo;s visitors',parts:[{hdr:{t:'Today&rsquo;s visitors'}},
     {chips:[S('category-count','badge',{tag:'All &middot; 5',c:'#4f8ff0'}),S('instance-tag','badge',{tag:'Cardinal',c:'#f25c5c'}),S('instance-tag','badge',{tag:'Blue jay',c:'#9cc3f5'}),S('instance-tag','badge',{tag:'Goldfinch',c:'#f6b73c'}),S('instance-tag','badge',{tag:'Chickadee',c:'#93a3bd'})]},
     {sgrid:{cells:[
@@ -5829,7 +5859,7 @@ document.getElementById('intents').addEventListener('click',e=>{
     const y=Math.min(e.clientY+14,window.innerHeight-pop.offsetHeight-12);
     pop.style.left=x+'px'; pop.style.top=y+'px';
   };
-  const CTX2LAYOUT={'list':'layout-list','log':'layout-log','grid':'layout-grid','sgrid':'layout-sgrid','strip':'layout-strip','hero':'layout-hero',
+  const CTX2LAYOUT={'list':'layout-list','log':'layout-log','grid':'layout-grid','sgrid':'layout-sgrid','strip':'layout-strip','hero':'layout-hero','idcard':'layout-idcard',
     'card':'layout-card','chip bar':'layout-chips','widget':'layout-widget',
     'section header':'section-header'};
   const over=e=>{

@@ -186,7 +186,7 @@ Format-level conventions (the renderer is the single source of styling):
 
 ---
 
-## 4. Layout patterns (10)
+## 4. Layout patterns (11)
 
 Patterns are **containers**: their slots fix size and position only — any reasonable
 element · format can fill a slot. Rules are recorded per pattern and enforced by lint
@@ -216,6 +216,12 @@ A self-contained block for one subject — its state, media and detail boxed tog
 - every card opens with a title row
 - bare values never float — a subject's values sit boxed together in its card
 - one card = one subject
+
+### ID card `idcard`
+A detailed introduction of ONE entity — a media / instance / clip / group: a square portrait beside its name, attributes and stats (e.g. a bird-species intro).
+- square media left; name · attributes · stats stacked right
+- opens with an optional verdict badge; closes with an optional confidence row
+- one ID card = one entity (a species, a person, a clip, a group)
 
 ### Grid `grid`
 Equal cells in fixed rows — device fleets, KPI tiles, multi-camera walls.
@@ -301,6 +307,7 @@ The runtime lint (lintT4) enforces, per template:
 | `{hdr:{t, right?}}` | section header (+ optional right slot) |
 | `{row:[slots]}` | a flex row of slots |
 | `{card:[parts]}` | bordered card (open with a `hdr`) |
+| `{idcard:{t?, badge?, media, lines:[slots], foot?}}` | entity intro — portrait + name/attributes/stats + optional verdict badge & confidence |
 | `{list:[[slots],…]}` | list rows (lead · middle · right) |
 | `{log:[[slots],…]}` | log rows (left · middle · right) |
 | `{grid:{cols, cells:[[slots],…]}}` | static grid, ≤ 2 rows |
