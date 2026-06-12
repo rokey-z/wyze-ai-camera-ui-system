@@ -2364,11 +2364,10 @@ EMIT  -&gt; see §13
       <div class="dc-cap" style="padding-top:8px"><b>Layout reference</b> — the arrangement vocabulary. An agent composes
         <b>elements</b> (each rendered through a format) into these patterns; the compose flow is
         <b>elements + layout &rarr; template</b>. Patterns were learned from the 27 components; each card shows the
-        wireframe and what currently uses it. The <b>rules</b> below are the fit contract — every visual adjustment
-        lands in an element format or as a rule here, never as one-off styling.</div>
+        slot anatomy (how element combinations sit — size and position), what it&rsquo;s used for, and the rules that
+        apply to it. Every visual adjustment lands in an element format or as a rule on its pattern — never one-off styling.</div>
       <div class="dc-summary" id="layoutSummary"></div>
     </div>
-    <div id="layoutRules"></div>
     <div id="layoutGrid"></div>
   </div>
 
@@ -4652,6 +4651,7 @@ const FIELD_META={
 const FORMATS=['text-large','text-medium','text-small','text-tagline','badge','dot','tile','filter','list','small-thumb','square','full-card','chart','bound-box','button','header','grid','strip'];
 /* format switch tags are listed big -> small; first (biggest) is the default */
 const FMT_SIZE_ORDER=['full-card','bound-box','square','month-chart','weekly-chart','daily-chart','hourly-chart','chart','widget','grid','strip','small-thumb','tile','list','header','button-block','button-pill','button','filter','text-large','text-medium','badge','text-small','text-tagline','dot'];
+const lslot=(label,st)=>`<span style="border:1px dashed #4f8ff066;background:#4f8ff00a;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:7.5px;letter-spacing:.3px;color:#9cc3f5;font-family:var(--mono);box-sizing:border-box;${st||''}">${label}</span>`;
 const elFmtOrder=f=>[...f].sort((a,b)=>FMT_SIZE_ORDER.indexOf(a)-FMT_SIZE_ORDER.indexOf(b));
 function inMedia(html,anchor){
   const pos={tl:'left:8px;top:8px',tr:'right:8px;top:8px',bl:'left:8px;bottom:8px',br:'right:8px;bottom:8px',center:'inset:0;display:grid;place-items:center'}[anchor||'bl'];
@@ -4784,26 +4784,56 @@ const EL_REGISTRY=[
    list:s=>`<div class="sosbook"><div class="sosc"><span class="sosc-av" style="background:#f6b73c22;color:#f6b73c">S</span><div class="sosc-main"><div class="sosc-name">Sarah &middot; sister</div><div class="sosc-num" style="font-size:9px;color:var(--dim);font-family:var(--mono)">(415) 555-0142</div></div><div class="sosc-acts"><span class="sosc-act" title="Call"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco.call}</svg></span><span class="sosc-act" title="Message"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco.text}</svg></span></div></div></div>`,
    'button-block':s=>`<div style="width:100%;min-width:108px;max-width:240px;box-sizing:border-box;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:13px 10px;display:flex;flex-direction:column;align-items:center;gap:8px"><span style="width:34px;height:34px;border-radius:50%;background:var(--blue);display:grid;place-items:center">${aIcon(sosIco.call)}</span><span style="display:flex;flex-direction:column;align-items:center;gap:2px;line-height:1.2"><b style="font-size:11px;color:var(--ink)">Call Sarah</b><span style="font-size:8.5px;font-weight:400;color:var(--mut);font-family:var(--mono);letter-spacing:0">${s.sub}</span></span></div>`}},
  /* structure — the arrangement layer; recipes execute these, agents compose them */
- {id:'section-header',grp:'structure',label:'Section header',desc:'Panel title row with optional count / status / AI chip — the header pattern in 16 components',sig:'structure · none',formats:['header'],layouts:['standalone'],action:'none',accepts:['text','count'],
-  sample:{txt:'Entry history',sub:'12 today'}},
- {id:'layout-list',grp:'structure',label:'List',desc:'Rows repeated per item — thumb · text · meta (C-FEED, C-LOG, C-VISIT, C-SOS, C-LEARN)',sig:'layout · repeat',formats:['list'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
-  sample:{},stage:{list:s=>Array.from({length:3},(_,i)=>`<div style="display:flex;align-items:center;gap:9px;padding:7px 0;${i?'border-top:1px solid var(--line)':''}"><span style="flex:none;width:34px;height:24px;border-radius:5px;background:#1d2a40"></span><span style="flex:1;display:flex;flex-direction:column;gap:4px"><i style="display:block;height:7px;width:${[62,48,70][i]}%;border-radius:3px;background:#2c3b56"></i><i style="display:block;height:6px;width:${[30,38,24][i]}%;border-radius:3px;background:#1f2c44"></i></span><i style="flex:none;display:block;height:6px;width:22px;border-radius:3px;background:#1f2c44"></i></div>`).join('')}},
- {id:'layout-card',grp:'structure',label:'Card',desc:'Self-contained block — header, media / content, meta footer (C-GROUPED, C-IDCARD, the agent cards)',sig:'layout · single',formats:['card'],layouts:['standalone'],action:'navigate',accepts:['id'],
-  sample:{},stage:{card:s=>`<div style="border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;background:var(--card)"><div style="display:flex;align-items:center;justify-content:space-between"><i style="display:block;height:7px;width:42%;border-radius:3px;background:#2c3b56"></i><span style="width:30px;height:11px;border-radius:999px;background:#1f2c44"></span></div><div style="height:64px;border-radius:8px;background:linear-gradient(165deg,#1d2a40,#131d30)"></div><i style="display:block;height:6px;width:70%;border-radius:3px;background:#1f2c44"></i></div>`}},
- {id:'layout-grid',grp:'structure',label:'Grid',desc:'Equal cells in columns — tiles &amp; galleries (C-TILES, C-GALLERY, C-MULTIVIEW)',sig:'layout · repeat',formats:['grid'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
-  sample:{},stage:{grid:s=>`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">${Array.from({length:6},()=>`<div style="aspect-ratio:16/11;border-radius:7px;background:#1d2a40;border:1px solid var(--line)"></div>`).join('')}</div>`}},
- {id:'layout-strip',grp:'structure',label:'Strip',desc:'Horizontal thumb rail — compact media row (C-STRIP)',sig:'layout · repeat',formats:['strip'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
-  sample:{},stage:{strip:s=>`<div style="display:flex;gap:6px">${Array.from({length:4},()=>`<span style="flex:none;width:46px;height:32px;border-radius:6px;background:#1d2a40;border:1px solid var(--line)"></span>`).join('')}<span style="flex:none;width:46px;height:32px;border-radius:6px;border:1px dashed var(--line);display:grid;place-items:center;font-size:9px;color:var(--dim)">+8</span></div>`}},
- {id:'layout-hero',grp:'structure',label:'Hero',desc:'Full-width media surface carrying overlay elements (C-LIVE, C-RECVIDEO, C-SNAP, C-TIMELAPSE)',sig:'layout · single',formats:['hero'],layouts:['standalone'],action:'open-clip',accepts:['id'],
-  sample:{},stage:{hero:s=>`<div style="position:relative;aspect-ratio:16/9;border-radius:10px;background:linear-gradient(165deg,#1d2a40,#101a2c);border:1px solid var(--line)"><span style="position:absolute;left:7px;top:7px;width:34px;height:10px;border-radius:999px;background:#2c3b56"></span><span style="position:absolute;left:7px;bottom:7px;width:46px;height:9px;border-radius:3px;background:#1f2c44"></span><span style="position:absolute;right:7px;bottom:7px;width:26px;height:9px;border-radius:3px;background:#1f2c44"></span></div>`}},
- {id:'layout-widget',grp:'structure',label:'Widget',desc:'Home-screen widget — round media thumb, ONE state pill, a freshness line, the agent name beneath. Used ONLY for the home-screen widget, never inside a template screen.',sig:'layout · single',formats:['widget'],layouts:['standalone'],action:'navigate',accepts:['id'],
-  sample:{},stage:{widget:s=>`<div class="aghome" style="margin:0"><div class="agwrap"><div class="agcard"><div class="agthumb-wrap"><div class="agthumb" style="background:#1d2a40"></div></div><div class="agtitle"><span style="display:inline-block;width:64px;height:14px;border-radius:999px;background:#2c3b56"></span></div><div class="agsub"><i style="display:inline-block;width:40px;height:8px;border-radius:3px;background:#1f2c44"></i></div></div><div class="agname"><i style="display:inline-block;width:56px;height:7px;border-radius:3px;background:#1f2c44"></i></div></div></div>`}},
- {id:'empty-state',grp:'structure',label:'Empty state',desc:'No-results fallback when a query returns nothing',sig:'structure · none',formats:['tile'],layouts:['standalone'],action:'none',accepts:['text'],
-  sample:{},stage:{tile:s=>`<div style="border:1px dashed var(--line);border-radius:12px;padding:18px 12px;text-align:center"><div style="font-size:11px;font-weight:600;color:var(--mut)">${s.txt||'No events today'}</div><div style="font-size:9px;color:var(--dim);margin-top:3px">${s.sub||'quiet so far — check back later'}</div></div>`}},
- {id:'loading-state',grp:'structure',label:'Loading state',desc:'Skeleton placeholder while data is fetching',sig:'structure · none',formats:['tile'],layouts:['standalone'],action:'none',accepts:['text'],
-  sample:{},stage:{tile:s=>`<div style="display:flex;flex-direction:column;gap:7px">${[70,100,46].map(w=>`<i style="display:block;height:9px;width:${w}%;border-radius:4px;background:linear-gradient(90deg,#1b2638,#27354e,#1b2638)"></i>`).join('')}</div>`}},
- {id:'more-paging',grp:'structure',label:'More',desc:'Pagination footer — load older items (the feed More button)',sig:'structure · none',formats:['button-pill'],layouts:['standalone'],action:'navigate',accepts:['count'],
-  sample:{},stage:{'button-pill':s=>`<button class="dc-more" style="margin:0">More &middot; 20 earlier &rsaquo;</button>`}},
+ {id:'section-header',grp:'structure',label:'Section header',
+  desc:'Opens a section: names what follows and carries one glanceable number or status.',
+  rules:['Title left; ONE optional meta / count slot on the right','Closes with a divider — one header per section'],
+  sig:'layout · single',formats:['header'],layouts:['standalone'],action:'none',accepts:['text','count'],
+  sample:{},stage:{header:s=>`<div style="display:flex;align-items:center;gap:8px;padding-bottom:7px;border-bottom:1px solid var(--line)">${lslot('title','height:16px;flex:1')}${lslot('count / meta','height:14px;width:70px')}</div>`}},
+ {id:'layout-list',grp:'structure',label:'List',
+  desc:'Repeated rows for a stream of items — the event feed, logs, visits, contacts.',
+  rules:['At least 4 rows before the More footer','Row anatomy: media (fixed 56&times;42) &middot; text (flex) &middot; meta (fixed, right)'],
+  sig:'layout · repeat',formats:['list'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
+  sample:{},stage:{list:s=>Array.from({length:4},(_,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;${i?'border-top:1px solid var(--line)':''}">${lslot('media','width:56px;height:42px;flex:none')}<span style="flex:1;display:flex;flex-direction:column;gap:4px;min-width:0">${lslot('text','height:11px;width:72%')}${lslot('time / meta','height:9px;width:42%')}</span>${lslot('badge','width:44px;height:15px;flex:none;border-radius:999px')}</div>`).join('')}},
+ {id:'layout-card',grp:'structure',label:'Card',
+  desc:'A self-contained block for one subject — its state, media and detail boxed together.',
+  rules:['Bare values never float — state &middot; duration &middot; detail share one card','One card = one subject'],
+  sig:'layout · single',formats:['card'],layouts:['standalone'],action:'navigate',accepts:['id'],
+  sample:{},stage:{card:s=>`<div style="border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;background:var(--card)"><div style="display:flex;align-items:center;gap:8px">${lslot('title / state','height:12px;flex:1')}${lslot('meta','height:11px;width:44px')}</div>${lslot('media / content','height:56px;width:100%')}${lslot('text','height:10px;width:70%')}</div>`}},
+ {id:'layout-grid',grp:'structure',label:'Grid',
+  desc:'Equal cells in columns — device fleets, galleries, multi-camera walls.',
+  rules:['Equal-width cells; media fills the cell','2&ndash;3 columns at phone width'],
+  sig:'layout · repeat',formats:['grid'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
+  sample:{},stage:{grid:s=>`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">${Array.from({length:6},()=>lslot('cell','aspect-ratio:16/11')).join('')}</div>`}},
+ {id:'layout-strip',grp:'structure',label:'Strip',
+  desc:'A horizontal rail of fixed-size media — compact recent-events scanning.',
+  rules:['Fixed-size items, horizontally scannable','Overflow collapses into a +N cell'],
+  sig:'layout · repeat',formats:['strip'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
+  sample:{},stage:{strip:s=>`<div style="display:flex;gap:6px">${Array.from({length:4},()=>lslot('media','width:46px;height:32px;flex:none')).join('')}${lslot('+N','width:46px;height:32px;flex:none;opacity:.6')}</div>`}},
+ {id:'layout-hero',grp:'structure',label:'Hero',
+  desc:'The full-width media surface that anchors a screen; small elements overlay its corners.',
+  rules:['Leads the screen — within the first two sections (lintT4 enforces it)','Overlays pin to corners (tl &middot; tr &middot; bl &middot; br); keep them small'],
+  sig:'layout · single',formats:['hero'],layouts:['standalone'],action:'open-clip',accepts:['id'],
+  sample:{},stage:{hero:s=>`<div style="position:relative;aspect-ratio:16/9;border-radius:10px;background:linear-gradient(165deg,#1d2a40,#101a2c);border:1px solid var(--line)"><span style="position:absolute;inset:0;display:grid;place-items:center;font-size:8px;color:var(--dim);font-family:var(--mono)">media surface</span>${lslot('overlay','position:absolute;left:7px;top:7px;width:52px;height:13px')}${lslot('overlay','position:absolute;right:7px;top:7px;width:40px;height:13px')}${lslot('overlay','position:absolute;left:7px;bottom:7px;width:64px;height:13px')}${lslot('overlay','position:absolute;right:7px;bottom:7px;width:40px;height:13px')}</div>`}},
+ {id:'layout-widget',grp:'structure',label:'Widget',
+  desc:'The home-screen widget: one glance answers the template&rsquo;s question.',
+  rules:['Widget-only — never inside a template screen (lintT4 enforces it)','Round media thumb &middot; exactly ONE state pill &middot; one freshness line &middot; name beneath'],
+  sig:'layout · single',formats:['widget'],layouts:['standalone'],action:'navigate',accepts:['id'],
+  sample:{},stage:{widget:s=>`<div style="display:flex;flex-direction:column;align-items:center;gap:6px;width:130px">${lslot('media','width:64px;height:64px;border-radius:50%')}${lslot('state pill','width:70px;height:15px;border-radius:999px')}${lslot('freshness','width:48px;height:9px')}${lslot('name','width:64px;height:8px;opacity:.7')}</div>`}},
+ {id:'empty-state',grp:'structure',label:'Empty state',
+  desc:'Stands in for a section body when the query returns nothing.',
+  rules:['Replaces the section body, same width','Says what WILL happen next, not just &ldquo;no data&rdquo;'],
+  sig:'layout · single',formats:['tile'],layouts:['standalone'],action:'none',accepts:['text'],
+  sample:{},stage:{tile:s=>`<div style="border:1px dashed var(--line);border-radius:12px;padding:14px 12px;display:flex;flex-direction:column;align-items:center;gap:5px">${lslot('message','height:11px;width:46%')}${lslot('what happens next','height:8px;width:62%;opacity:.7')}</div>`}},
+ {id:'loading-state',grp:'structure',label:'Loading state',
+  desc:'Skeleton stand-in for a section body while data is fetching.',
+  rules:['Replaces the section body, same width','Mirrors the shape of the content it stands in for'],
+  sig:'layout · single',formats:['tile'],layouts:['standalone'],action:'none',accepts:['text'],
+  sample:{},stage:{tile:s=>`<div style="display:flex;flex-direction:column;gap:7px">${[70,100,46].map(w=>lslot('skeleton',`height:9px;width:${w}%;opacity:.55`)).join('')}</div>`}},
+ {id:'more-paging',grp:'structure',label:'More',
+  desc:'The paging footer that closes a list and discloses how much more there is.',
+  rules:['Full width; always the LAST row of a list','Carries the remaining count'],
+  sig:'layout · single',formats:['button-pill'],layouts:['standalone'],action:'navigate',accepts:['count'],
+  sample:{},stage:{'button-pill':s=>lslot('more &middot; remaining count','width:100%;height:26px;border-radius:999px')}},
 ];
 /* ---- selector -> (element, format, layout): translates every MAPLINES binding.
    MAPLINES stays the single source of truth for which solid pairs exist. ---- */
@@ -5280,8 +5310,8 @@ function renderV4Nodes(parts){
         +`<div class="agsub">${elRender(w.sub.el,w.sub.fmt,w.sub.s)}</div></div>`
         +`<div class="agname">${elRender(w.name.el,w.name.fmt,w.name.s)}</div></div></div>`;
     }
-    if(n.empty) return elRender('empty-state','tile',n.s);
-    if(n.loading) return elRender('loading-state','tile',n.s);
+    if(n.empty){const e=n.s||{};return `<div style="border:1px dashed var(--line);border-radius:12px;padding:18px 12px;text-align:center"><div style="font-size:11px;font-weight:600;color:var(--mut)">${e.txt||'No events today'}</div><div style="font-size:9px;color:var(--dim);margin-top:3px">${e.sub||'quiet so far — check back later'}</div></div>`;}
+    if(n.loading) return `<div style="display:flex;flex-direction:column;gap:7px">${[70,100,46].map(w=>`<i style="display:block;height:9px;width:${w}%;border-radius:4px;background:linear-gradient(90deg,#1b2638,#27354e,#1b2638)"></i>`).join('')}</div>`;
     return '';
   };
   return parts.map(node).join('');
@@ -5373,10 +5403,7 @@ lintV4();   /* startup verification — the v4 view itself renders on demand */
    LAYOUT_RULES is the contract for every adjustment: a visual fix lands
    either in an element FORMAT (keep renders fluid) or as a rule here —
    never as one-off styling on a single component / template. */
-const LAYOUT_RULES=[
- ['Lists show depth','An event list renders at least 4 rows before the More footer.'],
- ['Widget is widget-only','The widget pattern (round thumb &middot; one pill &middot; freshness &middot; name) renders the home-screen widget; it never appears inside a template screen (lintT4 enforces it).'],
-];
+
 function renderLayoutPane(){
   const grid=document.getElementById('layoutGrid'); if(!grid) return;
   const lint=window.__v4lint||lintV4();
@@ -5390,25 +5417,23 @@ function renderLayoutPane(){
   if(window.__t4lint) Object.entries(window.__t4lint.usedBy||{}).forEach(([el,list])=>{
     (usedBy[el]=usedBy[el]||[]).push(...list);
   });
-  const rules=document.getElementById('layoutRules');
-  if(rules) rules.innerHTML=
-    `<div class="famblock dc-fam" style="margin-top:14px"><h3>Layout rules <span class="el-h3n">(${LAYOUT_RULES.length})</span></h3>`
-    +`<div class="v4wrap" style="margin-top:10px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))">`
-    +LAYOUT_RULES.map(([t,d],i)=>`<div class="v4card" style="gap:6px"><div class="v4head"><span><span class="v4cid">R${i+1}</span> <b>${t}</b></span></div>`
-      +`<div style="font-size:10px;line-height:1.55;color:var(--mut)">${d}</div></div>`).join('')+`</div></div>`;
   const pats=EL_REGISTRY.filter(u=>u.grp==='structure');
   /* same row anatomy as the Elements tab: name top-right, render left,
      a captioned chip column on the right (here: who uses the pattern) */
-  grid.innerHTML=`<div class="famblock dc-fam el-fam" style="max-width:640px"><h3 style="text-align:right;font-size:15px">Layout patterns <span class="el-h3n">(${pats.length})</span></h3>`
+  /* each pattern is a CONTAINER: the wireframe shows its element slots
+     (size + position); the right column carries what it's for + the rules
+     that apply. Edits that affect a layout get remarked here as a rule. */
+  grid.innerHTML=`<div class="famblock dc-fam el-fam" style="max-width:720px"><h3 style="text-align:right;font-size:15px">Layout patterns <span class="el-h3n">(${pats.length})</span></h3>`
     +pats.map(u=>{
-      const users=[...new Set(usedBy[u.id]||[])];
-      return `<div class="el-chip" style="cursor:default" title="${u.desc}">`
+      return `<div class="el-chip" style="cursor:default">`
         +`<div class="el-chip-head"><span class="el-chip-name">${u.label}</span></div>`
         +`<div class="el-chip-body"><div class="el-chip-stage"><div class="el-stage-part"><div class="el-stage-r">${elRender(u.id,u.formats[0])}</div></div></div>`
-        +`<div class="el-fmtcol" style="width:190px"><span class="el-axis-t">Used by</span><span class="el-fmts" style="flex-direction:row;flex-wrap:wrap;justify-content:flex-end">${
-          users.length?(users.slice(0,8).map(n=>`<span class="el-fmt" style="cursor:default">${n}</span>`).join('')
-            +(users.length>8?`<span class="el-fmt" style="cursor:default" title="${users.slice(8).join(', ')}">+${users.length-8} more</span>`:''))
-          :'<span class="el-fmt" style="cursor:default;opacity:.55">reference only</span>'}</span></div></div>`
+        +`<div class="el-fmtcol" style="width:250px;align-items:flex-start">`
+          +`<span class="el-axis-t">Description</span>`
+          +`<div style="font-size:10px;line-height:1.55;color:var(--mut)">${u.desc}</div>`
+          +`<span class="el-axis-t" style="margin-top:6px">Rules</span>`
+          +(u.rules||[]).map(r=>`<div style="font-size:9.5px;line-height:1.5;color:var(--mut)"><span style="color:#9cc3f5">&bull;</span> ${r}</div>`).join('')
+        +`</div></div>`
         +`</div>`;
     }).join('')+`</div>`;
   document.getElementById('layoutSummary').innerHTML=
