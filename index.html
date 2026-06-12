@@ -1535,8 +1535,8 @@
         <div class="playstatus" id="playStatus" hidden></div>
       </div>
         <div class="dc-vertabs" id="tplVerTabs" style="margin:4px 0 6px">
-          <button class="dc-vertab on" data-tver="t1">v1 <span class="dc-vn">36</span></button>
-          <button class="dc-vertab" data-tver="t4">v4 <span class="dc-vn">7</span> · latest</button>
+          <button class="dc-vertab" data-tver="t1">v1 <span class="dc-vn">36</span></button>
+          <button class="dc-vertab on" data-tver="t4">v4 <span class="dc-vn">7</span> · latest</button>
         </div>
         <h2 id="intentTrigger" class="intenthead"><span class="lbl">Agent templates</span><span class="cur" id="curIntent"></span></h2>
         <div class="promptline" id="tplPromptline">36 Wyze AI One templates — ordered most common to most personalized; pick one to preview:</div>
@@ -5990,6 +5990,7 @@ applyCompFilter();
 /* land on the first Wyze AI One template so the home-wall entry card + states show by default */
 if(TEMPLATES&&TEMPLATES.length){ currentTpl=TEMPLATES[0]; current=currentTpl.screen; updateCurLabel(); }
 build();
+renderTplVer('t4');   /* Templates tab opens on the v4 set (after the v1 seed above) */
 
 /* ---------- builder reference: copy / download ---------- */
 (function(){
