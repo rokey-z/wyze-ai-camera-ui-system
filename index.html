@@ -510,6 +510,8 @@
   .v4prev .v4cell .ethumb,.v4tpl .v4cell .ethumb{flex:1 1 auto;width:100%;height:auto}
   .v4prev .v4cell .estrip,.v4tpl .v4cell .estrip{width:100%}
   .v4tpl .actions{width:100%;max-width:none!important}
+  /* a block button standing alone in its section spans the full width */
+  .v4tpl .v4slot:only-child > [style*="min-width:108px"]{max-width:none!important}
   /* v4 template picker chips: clamp the goal line */
   #intents .chip[data-t4]{height:auto;min-height:0}
   #intents .chip[data-t4] span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.35}
@@ -5396,7 +5398,7 @@ const T4=[
      {el:'detection-marker',fmt:'bound-box',s:{tag:'package'}},
      {el:'absolute-time',fmt:'text-tagline',s:{txt:'2:14 PM'},at:'br'}]}}]},
    {lab:'state &middot; how long &middot; detail',parts:[{card:[
-     {row:[S('state','text-large',{txt:'WAITING',c:'#f6b73c'}),S('duration','badge',{txt:'for 2h 14m',c:'#f6b73c'})]},
+     {row:[S('state','text-large',{txt:'HAVE PACKAGE',c:'#f6b73c'}),S('duration','badge',{txt:'for 2h 14m',c:'#f6b73c'})]},
      {row:[S('description-detail','text-medium',{txt:'FedEx left a box by the planter &mdash; visible from the street.'})]}]}]},
    {lab:'today&rsquo;s deliveries',parts:[
      {hdr:{t:'Today'}},
@@ -5404,7 +5406,7 @@ const T4=[
             [S('media','small-thumb',{grad:G2}),C(S('description','text-small',{txt:'Envelope through slot'}),S('relative-time','text-small',{txt:'5h ago'})),S('category-tag','badge',{tag:'MAIL',c:'#9cc3f5'})]]},
      {more:true}]},
    {lab:'nudge',parts:[S('suggestion','button',{tag:'Remind me again at 6 PM'})]},
-   {lab:'empty variant',parts:[{empty:true,s:{txt:'No packages right now',sub:'I&rsquo;ll nudge you the moment one arrives'}}]}]},
+   {lab:'no-package state',parts:[{empty:true,s:{txt:'NO PACKAGE',sub:'door is clear &mdash; I&rsquo;ll nudge you the moment one arrives'}}]}]},
  {id:'garage_door_watcher_v4',title:'Garage Door Watcher',sub:'State Monitor',goal:'Is the garage closed — and was it left open?',
   sections:[
    {lab:'state + duration',parts:[{card:[{hdr:{t:'Garage door'}},{row:[S('state','text-large',{txt:'CLOSED',c:'#7eecc4'}),S('duration','text-large')]}]}]},
