@@ -399,7 +399,7 @@
   .dc-more:hover{background:#4f8ff022;border-color:#4f8ff066}
   /* ===== Elements tab — bipartite canvas: chip-level UI elements ⇆ data fields ===== */
   #elCanvas{position:relative;display:grid;
-    grid-template-columns:minmax(300px,340px) minmax(360px,430px) minmax(0,1fr);gap:0 26px;
+    grid-template-columns:minmax(380px,470px) minmax(0,1fr);gap:0 26px;
     align-items:start;margin-top:6px}
   /* the bezier gutter lives between the UI column and the data panel */
   .el-col-data{margin-left:110px}
@@ -2398,13 +2398,6 @@ EMIT  -&gt; see §13
     </div>
     <div id="elCanvas">
       <svg class="el-net" aria-hidden="true"></svg>
-      <div class="el-col-comps"><div class="dc-card el-comppanel">
-        <div class="dc-lab">Used in components</div>
-        <div class="el-compfor" id="elCompFor">&mdash;</div>
-        <div class="el-complist" id="elCompList">
-          <div class="el-comp-hint">Hover a UI element to see which components use it.</div>
-        </div>
-      </div></div>
       <div id="elUiCol"></div>
       <div class="el-col-data"><div class="dc-card el-fieldpanel" id="elFieldPanel"></div></div>
     </div>
