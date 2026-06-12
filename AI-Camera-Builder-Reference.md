@@ -86,7 +86,7 @@ Activity binned over time — hourly (minute bins), daily (hour bins), weekly (d
 - RULE: the chart title names the template's goal ("Pickups this month", not "Monthly chart")
 - RULE: axis labels sit below the chart, never over the bars
 - RULE: bar charts carry a colour legend beneath the axis — month-calendar cells are self-labelled
-- RULE: binary signals (open / closed, on / off) render the state band — two levels only, never count-height bars
+- RULE: binary signals (open / closed, on / off) render the state mode on ANY span (`on:[bins]`) — two levels only, never count-height bars; the month calendar fills on-days
 - RULE: month calendar: marked days carry their value — a count, duration or ✓; unmarked days show a dimmed day number
 
 ### Absolute time `absolute-time`
