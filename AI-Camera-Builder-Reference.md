@@ -222,7 +222,7 @@ Moments on a vertical thread — a dot and its time on the line, content beside;
 
 ### Card `card`
 A self-contained block for one subject — its state, media and detail boxed together.
-- every card opens with a title row
+- every screen card opens with a title row (lint-enforced; identity / widget showcase cards are the exception)
 - bare values never float — a subject's values sit boxed together in its card
 - one card = one subject
 
