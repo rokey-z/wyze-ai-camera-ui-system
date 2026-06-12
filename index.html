@@ -1549,7 +1549,7 @@
       </div>
         <div class="dc-vertabs" id="tplVerTabs" style="margin:4px 0 6px">
           <button class="dc-vertab" data-tver="t1">v1 <span class="dc-vn">36</span></button>
-          <button class="dc-vertab on" data-tver="t4">v4 <span class="dc-vn">7</span> · latest</button>
+          <button class="dc-vertab on" data-tver="t4">v4 <span class="dc-vn">10</span> · latest</button>
         </div>
         <h2 id="intentTrigger" class="intenthead"><span class="lbl">Agent templates</span><span class="cur" id="curIntent"></span></h2>
         <div class="promptline" id="tplPromptline">36 Wyze AI One templates — ordered most common to most personalized; pick one to preview:</div>
@@ -5630,6 +5630,67 @@ const T4=[
             [S('media','small-thumb',{grad:GH}),C(S('description','text-small',{txt:'Smoke-alarm test passed'}),S('absolute-time','text-tagline',{txt:'9:00 AM local'})),S('name-tag','badge',{tag:'KYOTO',c:'#c4b3f0'})]]},
      {more:true}]},
    {lab:'week trend',parts:[{hdr:{t:'Week across properties'}},{row:[S('time-trend','weekly-chart')]}]}]},
+ {id:'trash_bin_checker_v4',emoji:'🗑',title:'Trash Bin Checker',sub:'Attendance Verifier',goal:'Did the bins go out — and come back?',
+  widget:{grad:'linear-gradient(150deg,#3b342c,#140f0d)',alert:'#f6b73c',
+   pill:S('state','badge',{tag:'BINS OUT',c:'#f6b73c'}),sub:S('duration','text-small',{txt:'for 2h 4m'}),
+   name:S('name-tag','text-tagline',{txt:'TRASH BINS'})},
+  sections:[
+   {lab:'state &middot; how long',parts:[{card:[{hdr:{t:'Trash bins'}},
+     {row:[S('state','text-large',{txt:'OUT',c:'#f6b73c'}),S('duration','badge',{txt:'for 2h 4m',c:'#f6b73c'})]},
+     {row:[S('description-detail','text-medium',{txt:'Both bins at the curb &mdash; truck usually passes between <b style="color:#9cc3f5">9 and 10 AM</b>.'})]}]}]},
+   {lab:'hero &middot; curb check',parts:[{hero:{grad:'linear-gradient(165deg,#3b342c,#140f0d)',ov:[
+     {el:'detection-marker',fmt:'bound-box',s:{tag:'bins at curb'}},
+     {el:'absolute-time',fmt:'text-tagline',s:{txt:'checked 9:14 AM'},at:'br'}]}}]},
+   {lab:'insight',parts:[{card:[{hdr:{t:'Insight'}},{row:[S('insight','text-medium',{txt:'Bins went out <b style="color:#7eecc4">on time</b> &mdash; pickup is usually done by 10 AM.',tagline:'Tuesday &middot; pickup day'})]}]}]},
+   {lab:'this month',parts:[
+     {hdr:{t:'Bin events'}},
+     {list:[[S('media','small-thumb',{grad:'linear-gradient(150deg,#f6b73c30,#0c1119)'}),C(S('description','text-small',{txt:'Bins out to curb'}),S('relative-time','text-tagline',{txt:'2h ago'})),S('state','badge',{tag:'OUT',c:'#f6b73c'})],
+            [S('media','small-thumb',{grad:G1}),C(S('description','text-small',{txt:'Pickup truck passed'}),S('relative-time','text-tagline',{txt:'1w ago'})),S('state','badge',{tag:'PICKED UP',c:'#7eecc4'})],
+            [S('media','small-thumb',{grad:G2}),C(S('description','text-small',{txt:'Bins back inside'}),S('relative-time','text-tagline',{txt:'1w ago'})),S('state','badge',{tag:'BACK',c:'#9cc3f5'})],
+            [S('media','small-thumb',{grad:GH}),C(S('description','text-small',{txt:'Bins out to curb'}),S('relative-time','text-tagline',{txt:'1w ago'})),S('state','badge',{tag:'OUT',c:'#f6b73c'})]]},
+     {more:true}]},
+   {lab:'nudge',parts:[S('suggestion','button',{tag:'Remind me to bring them back'})]}]},
+ {id:'fridge_temp_v4',emoji:'🧊',title:'Walk-in Fridge Temp',sub:'Instrument Reader',goal:'Is the walk-in holding temperature?',
+  widget:{grad:'linear-gradient(150deg,#1d3340,#0c1419)',
+   pill:S('state','badge',{tag:'38&deg;F &middot; OK',c:'#7eecc4'}),sub:S('duration','text-small',{txt:'for 6h 12m'}),
+   name:S('name-tag','text-tagline',{txt:'WALK-IN FRIDGE'})},
+  sections:[
+   {lab:'reading &middot; how long',parts:[{card:[{hdr:{t:'Walk-in fridge'}},
+     {row:[S('measurement','text-large',{txt:'38.2&deg;F',c:'#7eecc4',mono:true}),S('duration','badge',{txt:'for 6h 12m',c:'#7eecc4'})]},
+     {row:[S('state','text-small',{txt:'In range &middot; 36&ndash;40&deg;F'})]}]}]},
+   {lab:'hero &middot; gauge frame',parts:[{hero:{grad:'linear-gradient(165deg,#1d3340,#0c1419)',ov:[
+     {el:'detection-marker',fmt:'bound-box',s:{tag:'thermometer'}},
+     {el:'absolute-time',fmt:'text-tagline',s:{txt:'read 2:00 PM'},at:'br'}]}}]},
+   {lab:'temperature today',parts:[{hdr:{t:'Temperature today'}},{row:[S('time-trend','daily-chart')]}]},
+   {lab:'reading log',parts:[{hdr:{t:'Reading log'}},{log:[
+     [S('absolute-time','text-small',{txt:'2:00 PM'}),S('measurement','text-tagline',{txt:'38.2&deg;F'}),S('trend-delta','text-small',{txt:'+0.4'})],
+     [S('absolute-time','text-small',{txt:'1:00 PM'}),S('measurement','text-tagline',{txt:'37.8&deg;F'}),S('trend-delta','text-small',{txt:'&minus;0.1'})],
+     [S('absolute-time','text-small',{txt:'12:00 PM'}),S('measurement','text-tagline',{txt:'37.9&deg;F'}),S('trend-delta','text-small',{txt:'+0.2'})],
+     [S('absolute-time','text-small',{txt:'11:00 AM'}),S('measurement','text-tagline',{txt:'37.7&deg;F'}),S('trend-delta','text-small',{txt:'&mdash;'})]]},
+     {more:true}]},
+   {lab:'insight',parts:[{card:[{hdr:{t:'Insight'}},{row:[S('insight','text-medium',{txt:'Door stood open <b style="color:#f6b73c">4 minutes</b> at lunch &mdash; temperature recovered in 12.',tagline:'Today &middot; 12:40 PM'})]}]}]},
+   {lab:'verify',parts:[S('confidence','button-pill')]}]},
+ {id:'lawn_crew_v4',emoji:'🌿',title:'Lawn Crew Checker',sub:'Attendance Verifier',goal:'Did the crew come — and how long did they work?',
+  widget:{grad:'linear-gradient(150deg,#2c3b2e,#0d140e)',
+   pill:S('state','badge',{tag:'VISITED',c:'#7eecc4'}),sub:S('duration','text-small',{txt:'for 42m'}),
+   name:S('name-tag','text-tagline',{txt:'LAWN CREW'})},
+  sections:[
+   {lab:'state &middot; how long',parts:[{card:[{hdr:{t:'Lawn crew'}},
+     {row:[S('state','text-large',{txt:'VISITED',c:'#7eecc4'}),S('duration','badge',{txt:'for 42m',c:'#7eecc4'})]},
+     {row:[S('description-detail','text-medium',{txt:'Crew of three arrived <b style="color:#9cc3f5">10:02 AM</b> &mdash; mowing, edging, blower.'})]}]}]},
+   {lab:'hero &middot; yard frame',parts:[{hero:{grad:'linear-gradient(165deg,#2c3b2e,#0d140e)',ov:[
+     {el:'detection-marker',fmt:'bound-box',s:{tag:'mower'}},
+     {el:'absolute-time',fmt:'text-tagline',s:{txt:'10:02 AM'},at:'br'}]}}]},
+   {lab:'visits',parts:[
+     {hdr:{t:'Visits'}},
+     {list:[[S('media','small-thumb',{grad:G3}),C(S('description','text-small',{txt:'Full service &mdash; mow + edge'}),S('relative-time','text-tagline',{txt:'2h ago'})),S('duration','badge',{txt:'for 42m',c:'#7eecc4'})],
+            [S('media','small-thumb',{grad:G1}),C(S('description','text-small',{txt:'Quick mow only'}),S('relative-time','text-tagline',{txt:'1w ago'})),S('duration','badge',{txt:'for 28m',c:'#9cc3f5'})],
+            [S('media','small-thumb',{grad:G2}),C(S('description','text-small',{txt:'Skipped &mdash; rain'}),S('relative-time','text-tagline',{txt:'2w ago'})),S('state','badge',{tag:'MISSED',c:'#f25c5c'})],
+            [S('media','small-thumb',{grad:GH}),C(S('description','text-small',{txt:'Full service'}),S('relative-time','text-tagline',{txt:'3w ago'})),S('duration','badge',{txt:'for 45m',c:'#7eecc4'})]]},
+     {more:true}]},
+   {lab:'crew time by week',parts:[{hdr:{t:'Crew time by week'}},{row:[S('time-trend','weekly-chart')]}]},
+   {lab:'insight',parts:[{card:[{hdr:{t:'Insight'}},{row:[S('insight','text-medium',{txt:'They usually come <b style="color:#7eecc4">Thursdays before noon</b> &mdash; today was on schedule.',tagline:'This month &middot; 3 of 4 weeks'})]}]}]},
+   {lab:'verify',parts:[S('confidence','button-pill')]}]},
 ];
 function renderT4Screen(t){
   return `<div class="appbar"><div><div class="ttl">${t.title}</div></div><div class="gear">${I.gear}</div></div>`+`<div class="ui">`
@@ -5683,7 +5744,7 @@ function renderTplVer(ver){
   if(ver==='t4'){
     if(!window.__t1Picker) window.__t1Picker=document.getElementById('intents').innerHTML;
     show('playBlock',false); show('tplHomeCard',true); show('pipe',false);
-    document.getElementById('tplPromptline').innerHTML='7 v4 templates — composed <b>directly from elements + layout patterns</b> (no component layer); pick one:';
+    document.getElementById('tplPromptline').innerHTML=T4.length+' v4 templates — composed <b>directly from elements + layout patterns</b> (no component layer); pick one:';
     renderT4(t4Cur);
   }else{
     show('playBlock',true); show('tplHomeCard',true); show('pipe',true);
