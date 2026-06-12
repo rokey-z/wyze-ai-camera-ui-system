@@ -5529,7 +5529,7 @@ const T4=[
    {lab:'hero · annotated frame',parts:[{hero:{grad:'linear-gradient(165deg,#2c3d5b,#0d1626)',ov:[
      {el:'detection-marker',fmt:'bound-box',s:{tag:'garage door'}},
      {el:'absolute-time',fmt:'text-tagline',s:{txt:'checked 4:18 PM'},at:'br'}]}}]},
-   {lab:'open events today',parts:[{hdr:{t:'Today by hour'}},{row:[S('time-trend','daily-chart')]}]},
+   {lab:'open events today',parts:[{hdr:{t:'Door opens today'}},{row:[S('time-trend','daily-chart')]}]},
    {lab:'open / close log',parts:[{log:[
      [S('absolute-time','text-small',{txt:'4:02 PM'}),S('state','text-small',{txt:'CLOSED'}),S('trend-delta','text-small',{txt:'12m open'})],
      [S('absolute-time','text-small',{txt:'3:50 PM'}),S('state','text-small',{txt:'OPEN'}),S('trend-delta','text-small',{txt:'&mdash;'})],
@@ -5548,7 +5548,7 @@ const T4=[
      {el:'state',fmt:'badge',s:{tag:'ASLEEP',c:'#9cc3f5'},at:'bl'},
      {el:'absolute-time',fmt:'text-tagline',s:{txt:'2:14 AM'},at:'br'}]}}]},
    {lab:'insight &middot; tonight in one line',parts:[{card:[{hdr:{t:'Insight'}},{row:[S('insight','text-medium')]}]}]},
-   {lab:'last hour',parts:[{hdr:{t:'Last hour'}},{row:[S('time-trend','hourly-chart')]}]},
+   {lab:'last hour',parts:[{hdr:{t:'Stirrings &middot; last hour'}},{row:[S('time-trend','hourly-chart')]}]},
    {lab:'soothe',parts:[S('device-control','button-block',{txt:'Two-way talk'})]},
    {lab:'overnight moments',parts:[{list:[
      [S('media','small-thumb',{grad:'linear-gradient(150deg,#10182b,#070b14)'}),C(S('description','text-small',{txt:'Brief waking &mdash; self-settled in 3 min'}),S('absolute-time','text-tagline',{txt:'2:14 AM'})),S('state','badge',{tag:'SETTLED',c:'#7eecc4'})],
@@ -5570,7 +5570,7 @@ const T4=[
      [S('media','small-thumb',{grad:G3}),S('relative-time','text-tagline',{txt:'12m ago'})],
      [S('media','small-thumb',{grad:G1}),S('relative-time','text-tagline',{txt:'2h ago'})],
      [S('media','small-thumb',{grad:G2}),S('relative-time','text-tagline',{txt:'5h ago'})]]}}]},
-   {lab:'activity',parts:[{row:[S('time-trend','daily-chart')]}]},
+   {lab:'activity',parts:[{hdr:{t:'Cooper&rsquo;s day'}},{row:[S('time-trend','daily-chart')]}]},
    {lab:'insight',parts:[{card:[{hdr:{t:'Insight'}},{row:[S('insight','text-medium',{txt:'Cooper spends his afternoons by the <b style="color:#7eecc4">back fence</b> &mdash; usually out ~15 minutes.'})]}]}]},
    {lab:'ask',parts:[S('suggestion','button',{tag:'Where is Cooper now?'})]},
    {lab:'loading variant',parts:[{loading:true}]}]},
@@ -5608,7 +5608,7 @@ const T4=[
      [S('media','small-thumb',{grad:'linear-gradient(150deg,#b1402f40,#0c1119)'}),S('attribute-tag','text-small',{txt:'Cardinal'})],
      [S('media','small-thumb',{grad:'linear-gradient(150deg,#4f8ff040,#0c1119)'}),S('attribute-tag','text-small',{txt:'Blue jay'})],
      [S('media','small-thumb',{grad:'linear-gradient(150deg,#f6b73c40,#0c1119)'}),S('attribute-tag','text-small',{txt:'Goldfinch'})]]}}]},
-   {lab:'sighting calendar',parts:[{row:[S('time-trend','month-chart')]}]},
+   {lab:'sighting calendar',parts:[{hdr:{t:'Sightings this month'}},{row:[S('time-trend','month-chart')]}]},
    {lab:'insight',parts:[{card:[{hdr:{t:'Insight'}},{row:[S('insight','text-medium',{txt:'Cardinals visit at <b style="color:#f25c5c">sunrise</b> &mdash; this is your busiest week of the season.'})]}]}]},
    {lab:'history',parts:[{more:true}]}]},
  {id:'overseas_rentals_v4',emoji:'🏡',title:'Overseas Rentals',sub:'Operations Console',goal:'Are all four properties okay — what needs my attention?',
@@ -5630,7 +5630,7 @@ const T4=[
             [S('media','small-thumb',{grad:G3}),C(S('description','text-small',{txt:'Late checkout approved'}),S('absolute-time','text-tagline',{txt:'11:00 AM local'})),S('name-tag','badge',{tag:'LISBON',c:'#9cc3f5'})],
             [S('media','small-thumb',{grad:GH}),C(S('description','text-small',{txt:'Smoke-alarm test passed'}),S('absolute-time','text-tagline',{txt:'9:00 AM local'})),S('name-tag','badge',{tag:'KYOTO',c:'#c4b3f0'})]]},
      {more:true}]},
-   {lab:'week trend',parts:[{row:[S('time-trend','weekly-chart')]}]}]},
+   {lab:'week trend',parts:[{hdr:{t:'Week across properties'}},{row:[S('time-trend','weekly-chart')]}]}]},
 ];
 function renderT4Screen(t){
   return `<div class="appbar"><div><div class="ttl">${t.title}</div></div><div class="gear">${I.gear}</div></div>`+`<div class="ui">`
