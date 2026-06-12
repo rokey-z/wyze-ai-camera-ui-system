@@ -511,7 +511,8 @@
   .v4tl::before{content:'';position:absolute;left:4px;top:10px;bottom:10px;width:2px;border-radius:1px;background:var(--line)}
   .v4tlrow{position:relative;display:flex;gap:9px;align-items:center;padding:7px 0}
   .v4tldot{position:absolute;left:-18px;top:50%;transform:translate(0.5px,-50%);width:9px;height:9px;border-radius:50%;background:#4f8ff0;border:2px solid #0e1726;z-index:1}
-  .v4tltime{flex:none;width:58px}
+  .v4tltime{flex:none;width:58px;display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+  .v4tltime .ethumb{flex:none;width:56px;height:40px}
   .v4tlbody{flex:1;min-width:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   .v4tlbody > .v4slot:last-child{margin-left:auto}
   .v4cellov{position:absolute;z-index:2}
@@ -2048,7 +2049,7 @@ Compact text-only rows for readings and state changes — a journal, not a feed.
 Moments on a vertical thread — a dot and its time on the line, content beside; for stories where the sequence itself matters.
 - a vertical thread connects the dots — one dot per moment, its time beside the dot
 - dots may take the moment's state colour
-- an optional fixed lead (clip thumb) may open the body
+- a lead (clip thumb) sits under the time — if one moment carries it, all do
 - body takes any reasonable element · format — clip, group, instance, text; the trailing slot right-aligns
 - at least 3 moments, newest first
 
@@ -2153,7 +2154,7 @@ The runtime lint (lintT4) enforces, per template:
 | `{idcard:{t?, badge?, media, lines:[slots]}}` | entity intro — portrait + name/attributes/stats + optional verdict badge |
 | `{list:[[slots],…]}` | list rows (lead · middle · right) |
 | `{log:[[slots],…]}` | log rows (left · middle · right) |
-| `{timeline:[{time, c?, body:[slots]},…]}` | vertical thread — dot + time per moment, any content beside; newest first |
+| `{timeline:[{time, lead?, c?, body:[slots]},…]}` | vertical thread — dot + time (lead beneath) per moment, any content beside; newest first |
 | `{grid:{cols, cells:[[slots],…]}}` | static grid, ≤ 2 rows; a cell item `{ov, at}` pins a corner overlay |
 | `{sgrid:{cells:[[slots],…]}}` | scrollable one-row grid; cell overlays as in grid |
 | `{strip:[slots]}` | media rail |
@@ -2315,7 +2316,7 @@ Goal: *"Did the bins go out — and come back?"*
 <ul><li>titled by a section header in the same section (lint-enforced)</li><li>at least 4 rows before the More footer</li><li>text renders only — media belongs in List</li><li>three slots per row align left · middle · right — any reasonable element · format in each</li></ul>
 <h3 id="timeline-timeline">Timeline <code>timeline</code></h3>
 <p>Moments on a vertical thread — a dot and its time on the line, content beside; for stories where the sequence itself matters.</p>
-<ul><li>a vertical thread connects the dots — one dot per moment, its time beside the dot</li><li>dots may take the moment&#x27;s state colour</li><li>an optional fixed lead (clip thumb) may open the body</li><li>body takes any reasonable element · format — clip, group, instance, text; the trailing slot right-aligns</li><li>at least 3 moments, newest first</li></ul>
+<ul><li>a vertical thread connects the dots — one dot per moment, its time beside the dot</li><li>dots may take the moment&#x27;s state colour</li><li>a lead (clip thumb) sits under the time — if one moment carries it, all do</li><li>body takes any reasonable element · format — clip, group, instance, text; the trailing slot right-aligns</li><li>at least 3 moments, newest first</li></ul>
 <h3 id="card-card">Card <code>card</code></h3>
 <p>A self-contained block for one subject — its state, media and detail boxed together.</p>
 <ul><li>every card opens with a title row</li><li>bare values never float — a subject&#x27;s values sit boxed together in its card</li><li>one card = one subject</li></ul>
@@ -2359,7 +2360,7 @@ Goal: *"Did the bins go out — and come back?"*
     name: S(&#x27;name-tag&#x27;,&#x27;text-tagline&#x27;,{txt:&#x27;TRASH BINS&#x27;}) },
   sections:[ { lab:&#x27;state · how long&#x27;, parts:[ /* nodes */ ] }, … ] }</code></pre>
 <p><strong>Node grammar</strong> (what <code>parts</code> may contain):</p>
-<table><thead><tr><th>node</th><th>renders</th></tr></thead><tbody><tr><td><code>S(el, fmt, sample?)</code></td><td>one element render — the leaf</td></tr><tr><td><code>C(...slots)</code></td><td>a column stacking slots</td></tr><tr><td><code>{hdr:{t, right?}}</code></td><td>section header (+ optional right slot)</td></tr><tr><td><code>{row:[slots]}</code></td><td>a flex row of slots</td></tr><tr><td><code>{card:[parts]}</code></td><td>bordered card (open with a <code>hdr</code>)</td></tr><tr><td><code>{idcard:{t?, badge?, media, lines:[slots]}}</code></td><td>entity intro — portrait + name/attributes/stats + optional verdict badge</td></tr><tr><td><code>{list:[[slots],…]}</code></td><td>list rows (lead · middle · right)</td></tr><tr><td><code>{log:[[slots],…]}</code></td><td>log rows (left · middle · right)</td></tr><tr><td><code>{timeline:[{time, c?, body:[slots]},…]}</code></td><td>vertical thread — dot + time per moment, any content beside; newest first</td></tr><tr><td><code>{grid:{cols, cells:[[slots],…]}}</code></td><td>static grid, ≤ 2 rows; a cell item <code>{ov, at}</code> pins a corner overlay</td></tr><tr><td><code>{sgrid:{cells:[[slots],…]}}</code></td><td>scrollable one-row grid; cell overlays as in grid</td></tr><tr><td><code>{strip:[slots]}</code></td><td>media rail</td></tr><tr><td>`{hero:{grad, ov:[{el,fmt,s,at} \</td><td>{col:[slots],at}]}}`</td><td>media hero with corner overlays (<code>tl/tr/bl/br</code>)</td></tr><tr><td><code>{chips:[slots]}</code></td><td>chip bar</td></tr><tr><td><code>{more:true}</code></td><td>More paging footer</td></tr><tr><td><code>{empty:{txt,sub}}</code> / <code>{loading:true}</code></td><td>element-state chrome, claims nothing</td></tr></tbody></table>
+<table><thead><tr><th>node</th><th>renders</th></tr></thead><tbody><tr><td><code>S(el, fmt, sample?)</code></td><td>one element render — the leaf</td></tr><tr><td><code>C(...slots)</code></td><td>a column stacking slots</td></tr><tr><td><code>{hdr:{t, right?}}</code></td><td>section header (+ optional right slot)</td></tr><tr><td><code>{row:[slots]}</code></td><td>a flex row of slots</td></tr><tr><td><code>{card:[parts]}</code></td><td>bordered card (open with a <code>hdr</code>)</td></tr><tr><td><code>{idcard:{t?, badge?, media, lines:[slots]}}</code></td><td>entity intro — portrait + name/attributes/stats + optional verdict badge</td></tr><tr><td><code>{list:[[slots],…]}</code></td><td>list rows (lead · middle · right)</td></tr><tr><td><code>{log:[[slots],…]}</code></td><td>log rows (left · middle · right)</td></tr><tr><td><code>{timeline:[{time, lead?, c?, body:[slots]},…]}</code></td><td>vertical thread — dot + time (lead beneath) per moment, any content beside; newest first</td></tr><tr><td><code>{grid:{cols, cells:[[slots],…]}}</code></td><td>static grid, ≤ 2 rows; a cell item <code>{ov, at}</code> pins a corner overlay</td></tr><tr><td><code>{sgrid:{cells:[[slots],…]}}</code></td><td>scrollable one-row grid; cell overlays as in grid</td></tr><tr><td><code>{strip:[slots]}</code></td><td>media rail</td></tr><tr><td>`{hero:{grad, ov:[{el,fmt,s,at} \</td><td>{col:[slots],at}]}}`</td><td>media hero with corner overlays (<code>tl/tr/bl/br</code>)</td></tr><tr><td><code>{chips:[slots]}</code></td><td>chip bar</td></tr><tr><td><code>{more:true}</code></td><td>More paging footer</td></tr><tr><td><code>{empty:{txt,sub}}</code> / <code>{loading:true}</code></td><td>element-state chrome, claims nothing</td></tr></tbody></table>
 <p>Every <code>S()</code> emits a claim <code>element·format</code> that the lint validates against the registry.</p>
 <hr />
 <h2 id="8-worked-example-trash-bin-checker">8. Worked example — Trash Bin Checker</h2>
@@ -4871,9 +4872,9 @@ const EL_REGISTRY=[
   sample:{},stage:{log:s=>Array.from({length:4},(_,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:5px 0;${i?'border-top:1px solid var(--line)':''}">${lslot('left','width:52px;height:10px;flex:none')}${lslot('middle','width:64px;height:10px;flex:none;margin:0 auto')}${lslot('right','width:40px;height:9px;flex:none')}</div>`).join('')}},
  {id:'layout-timeline',grp:'structure',label:'Timeline',
   desc:'Moments on a vertical thread — a dot and its time on the line, content beside; for stories where the sequence itself matters.',
-  rules:['A vertical thread connects the dots — one dot per moment, its time beside the dot','Dots may take the moment&rsquo;s state colour','An optional fixed lead (clip thumb) may open the body','Body takes any reasonable element &middot; format — clip, group, instance, text; the trailing slot right-aligns','At least 3 moments, newest first'],
+  rules:['A vertical thread connects the dots — one dot per moment, its time beside the dot','Dots may take the moment&rsquo;s state colour','A lead (clip thumb) sits under the time — if one moment carries it, all do','Body takes any reasonable element &middot; format — clip, group, instance, text; the trailing slot right-aligns','At least 3 moments, newest first'],
   sig:'layout · repeat',formats:['timeline'],layouts:['standalone'],action:'open-clip',accepts:['time','id'],
-  sample:{},stage:{timeline:s=>`<div style="position:relative;padding-left:17px"><i style="position:absolute;left:4px;top:10px;bottom:10px;width:2px;border-radius:1px;background:#4f8ff066"></i>${[14,30,12].map((h,i)=>`<div style="position:relative;display:flex;gap:8px;align-items:center;padding:6px 0"><i style="position:absolute;left:-16.5px;top:50%;transform:translateY(-50%);width:8px;height:8px;border-radius:50%;background:#4f8ff0aa;border:2px solid #0c1422"></i>${lslot('time','width:46px;height:10px;flex:none')}${i===1?lslot('lead','width:34px;height:26px;flex:none'):''}${lslot('body','height:'+(i===1?12:h)+'px;flex:1')}</div>`).join('')}</div>`}},
+  sample:{},stage:{timeline:s=>`<div style="position:relative;padding-left:17px"><i style="position:absolute;left:4px;top:10px;bottom:10px;width:2px;border-radius:1px;background:#4f8ff066"></i>${[14,12,12].map((h,i)=>`<div style="position:relative;display:flex;gap:8px;align-items:flex-start;padding:6px 0"><i style="position:absolute;left:-16.5px;top:14px;width:8px;height:8px;border-radius:50%;background:#4f8ff0aa;border:2px solid #0c1422"></i><span style="display:flex;flex-direction:column;gap:3px;flex:none">${lslot('time','width:46px;height:10px')}${lslot('lead','width:46px;height:28px')}</span>${lslot('body','height:'+h+'px;flex:1;margin-top:2px')}</div>`).join('')}</div>`}},
  {id:'layout-card',grp:'structure',label:'Card',
   desc:'A self-contained block for one subject — its state, media and detail boxed together.',
   rules:['Every screen card opens with a title row (lintT4 enforces it; identity / widget showcase cards are the exception)','Bare values never float — a subject&rsquo;s values sit boxed together in its card','One card = one subject'],
@@ -5435,7 +5436,7 @@ function renderV4Nodes(parts){
     if(n.hdr) return `<div class="v4ph"><b data-v4i="section-header&middot;header|section header|standalone">${n.hdr.t}</b>${n.hdr.right?rSlot(n.hdr.right,'section header'):''}</div>`;
     if(n.list) return `<div class="v4list">${n.list.map(r=>`<div class="v4row">${r.map(x=>rSlot(x,'list')).join('')}</div>`).join('')}</div>`;
     if(n.log) return `<div class="v4list v4log">${n.log.map(r=>`<div class="v4row" style="padding:6px 0">${r.map(x=>rSlot(x,'log')).join('')}</div>`).join('')}</div>`;
-    if(n.timeline) return `<div class="v4tl">${n.timeline.map(m=>`<div class="v4tlrow"><span class="v4tldot"${m.c?` style="background:${m.c}"`:''}></span><div class="v4tltime">${rSlot(m.time,'timeline')}</div><div class="v4tlbody">${(m.body||[]).map(x=>rSlot(x,'timeline')).join('')}</div></div>`).join('')}</div>`;
+    if(n.timeline) return `<div class="v4tl">${n.timeline.map(m=>`<div class="v4tlrow"><span class="v4tldot"${m.c?` style="background:${m.c}"`:''}></span><div class="v4tltime">${rSlot(m.time,'timeline')}${m.lead?rSlot(m.lead,'timeline'):''}</div><div class="v4tlbody">${(m.body||[]).map(x=>rSlot(x,'timeline')).join('')}</div></div>`).join('')}</div>`;
     const cell=(c,ctx)=>`<div class="v4cell">${c.filter(x=>!x.ov).map(x=>rSlot(x,ctx)).join('')}${c.filter(x=>x.ov).map(o=>`<span class="v4cellov v4cellov-${o.at||'tr'}">${rSlot(o.ov,ctx)}</span>`).join('')}</div>`;
     if(n.grid) return `<div class="v4grid" style="grid-template-columns:repeat(${n.grid.cols},1fr)">${n.grid.cells.map(c=>cell(c,'grid')).join('')}</div>`;
     if(n.sgrid) return `<div class="v4grid v4sgrid">${n.sgrid.cells.map(c=>cell(c,'sgrid')).join('')}</div>`;
@@ -5478,7 +5479,7 @@ function claimsOfParts(parts){
     if(n.hdr){ set.add('section-header·header'); if(n.hdr.right) slot(n.hdr.right); return; }
     if(n.list){ set.add('layout-list·list'); n.list.forEach(r=>r.forEach(slot)); return; }
     if(n.log){ set.add('layout-log·log'); n.log.forEach(r=>r.forEach(slot)); return; }
-    if(n.timeline){ set.add('layout-timeline·timeline'); n.timeline.forEach(m=>{ if(m.time) slot(m.time); (m.body||[]).forEach(slot); }); return; }
+    if(n.timeline){ set.add('layout-timeline·timeline'); n.timeline.forEach(m=>{ if(m.time) slot(m.time); if(m.lead) slot(m.lead); (m.body||[]).forEach(slot); }); return; }
     if(n.grid){ set.add('layout-grid·grid'); n.grid.cells.forEach(c=>c.forEach(x=>slot(x.ov||x))); return; }
     if(n.sgrid){ set.add('layout-sgrid·sgrid'); n.sgrid.cells.forEach(c=>c.forEach(x=>slot(x.ov||x))); return; }
     if(n.strip){ set.add('layout-strip·strip'); n.strip.forEach(slot); return; }
@@ -5657,10 +5658,10 @@ const T4=[
    {lab:'last hour',parts:[{hdr:{t:'Stirrings &middot; last hour'}},{row:[S('time-trend','hourly-chart',{legend:[{c:'#3a5fa0',t:'stirrings'}]})]}]},
    {lab:'soothe',parts:[{row:[S('device-control','button-block',{txt:'Talk',ico:'mic'}),S('device-control','button-block',{txt:'Lullaby',ico:'music'}),S('device-control','button-block',{txt:'Night light',ico:'moon'})]}]},
    {lab:'overnight moments',parts:[{hdr:{t:'Overnight'}},{timeline:[
-     {time:S('absolute-time','text-small',{txt:'2:14 AM'}),c:'#7eecc4',body:[S('media','small-thumb',{grad:'linear-gradient(150deg,#10182b,#070b14)'}),S('description','text-small',{txt:'Brief waking &mdash; self-settled in 3 min'}),S('state','badge',{tag:'SETTLED',c:'#7eecc4'})]},
-     {time:S('absolute-time','text-small',{txt:'1:32 AM'}),c:'#9cc3f5',body:[S('description','text-small',{txt:'Stirred &mdash; rolled over'}),S('state','badge',{tag:'STIRRED',c:'#9cc3f5'})]},
-     {time:S('absolute-time','text-small',{txt:'11:48 PM'}),c:'#f25c5c',body:[S('media','small-thumb',{grad:G2}),S('description','text-small',{txt:'True cry &mdash; you went in'}),S('state','badge',{tag:'CRY',c:'#f25c5c'})]},
-     {time:S('absolute-time','text-small',{txt:'8:40 PM'}),c:'#4f8ff0',body:[S('description','text-small',{txt:'Put down for the night'}),S('state','badge',{tag:'ASLEEP',c:'#7eecc4'})]}]},
+     {time:S('absolute-time','text-small',{txt:'2:14 AM'}),lead:S('media','small-thumb',{grad:'linear-gradient(150deg,#10182b,#070b14)'}),c:'#7eecc4',body:[S('description','text-small',{txt:'Brief waking &mdash; self-settled in 3 min'}),S('state','badge',{tag:'SETTLED',c:'#7eecc4'})]},
+     {time:S('absolute-time','text-small',{txt:'1:32 AM'}),lead:S('media','small-thumb',{grad:G1}),c:'#9cc3f5',body:[S('description','text-small',{txt:'Stirred &mdash; rolled over'}),S('state','badge',{tag:'STIRRED',c:'#9cc3f5'})]},
+     {time:S('absolute-time','text-small',{txt:'11:48 PM'}),lead:S('media','small-thumb',{grad:G2}),c:'#f25c5c',body:[S('description','text-small',{txt:'True cry &mdash; you went in'}),S('state','badge',{tag:'CRY',c:'#f25c5c'})]},
+     {time:S('absolute-time','text-small',{txt:'8:40 PM'}),lead:S('media','small-thumb',{grad:G3}),c:'#4f8ff0',body:[S('description','text-small',{txt:'Put down for the night'}),S('state','badge',{tag:'ASLEEP',c:'#7eecc4'})]}]},
      {more:true}]}]},
  {id:'pet_monitor_v4',emoji:'🐶',title:'Pet Monitor',sub:'Wellbeing Monitor',goal:'Where is Cooper and what has he been up to?',
     widget:{grad:'linear-gradient(150deg,#34d39930,#0c1119)',

@@ -216,7 +216,7 @@ Compact text-only rows for readings and state changes — a journal, not a feed.
 Moments on a vertical thread — a dot and its time on the line, content beside; for stories where the sequence itself matters.
 - a vertical thread connects the dots — one dot per moment, its time beside the dot
 - dots may take the moment's state colour
-- an optional fixed lead (clip thumb) may open the body
+- a lead (clip thumb) sits under the time — if one moment carries it, all do
 - body takes any reasonable element · format — clip, group, instance, text; the trailing slot right-aligns
 - at least 3 moments, newest first
 
@@ -321,7 +321,7 @@ The runtime lint (lintT4) enforces, per template:
 | `{idcard:{t?, badge?, media, lines:[slots]}}` | entity intro — portrait + name/attributes/stats + optional verdict badge |
 | `{list:[[slots],…]}` | list rows (lead · middle · right) |
 | `{log:[[slots],…]}` | log rows (left · middle · right) |
-| `{timeline:[{time, c?, body:[slots]},…]}` | vertical thread — dot + time per moment, any content beside; newest first |
+| `{timeline:[{time, lead?, c?, body:[slots]},…]}` | vertical thread — dot + time (lead beneath) per moment, any content beside; newest first |
 | `{grid:{cols, cells:[[slots],…]}}` | static grid, ≤ 2 rows; a cell item `{ov, at}` pins a corner overlay |
 | `{sgrid:{cells:[[slots],…]}}` | scrollable one-row grid; cell overlays as in grid |
 | `{strip:[slots]}` | media rail |
