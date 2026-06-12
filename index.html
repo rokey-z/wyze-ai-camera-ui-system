@@ -510,6 +510,8 @@
   .v4prev .v4slot .ethumb,.v4tpl .v4slot .ethumb{flex:0 0 56px;width:56px;height:42px}
   .v4prev .v4cell .ethumb,.v4tpl .v4cell .ethumb{flex:1 1 auto;width:100%;height:auto}
   .v4prev .v4cell .estrip,.v4tpl .v4cell .estrip{width:100%}
+  .v4prev .v4cell .tilegrid,.v4tpl .v4cell .tilegrid{width:100%;grid-template-columns:1fr}
+  .v4prev .v4cell:has(.gtile),.v4tpl .v4cell:has(.gtile){border:none;background:none;padding:0}
   .v4tpl .actions{width:100%;max-width:none!important}
   /* a block button standing alone in its section spans the full width */
   .v4tpl .v4slot:only-child > [style*="min-width:108px"]{max-width:none!important}
@@ -4817,7 +4819,7 @@ const EL_REGISTRY=[
   sample:{},stage:{card:s=>`<div style="border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;background:var(--card)"><div style="display:flex;align-items:center;gap:8px">${lslot('title / state','height:12px;flex:1')}${lslot('meta','height:11px;width:44px')}</div>${lslot('media / content','height:56px;width:100%')}${lslot('text','height:10px;width:70%')}</div>`}},
  {id:'layout-grid',grp:'structure',label:'Grid',
   desc:'Equal cells in columns — device fleets, galleries, multi-camera walls.',
-  rules:['Equal-width cells; media fills the cell','2&ndash;3 columns at phone width','Scrolls horizontally when there are more cells than fit'],
+  rules:['Equal-width cells; media and tiles fill the cell','2&ndash;3 columns at phone width','Scrolls horizontally when there are more cells than fit'],
   sig:'layout · repeat',formats:['grid'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
   sample:{},stage:{grid:s=>`<div style="display:grid;grid-auto-flow:column;grid-template-rows:repeat(2,auto);grid-auto-columns:31%;gap:6px;overflow:hidden">${Array.from({length:9},()=>lslot('cell','aspect-ratio:16/11')).join('')}</div>`}},
  {id:'layout-strip',grp:'structure',label:'Strip',
