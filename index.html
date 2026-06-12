@@ -5498,7 +5498,7 @@ renderLayoutPane();
    use; renderT4Screen feeds them through the phone chrome (tbar/slot).
    ==================================================================== */
 const T4=[
- {id:'package_reminder_v4',title:'Package Reminder',sub:'Event Watcher',goal:'Is something waiting at the door — and for how long?',
+ {id:'package_reminder_v4',emoji:'📦',title:'Package Reminder',sub:'Event Watcher',goal:'Is something waiting at the door — and for how long?',
     widget:{grad:'linear-gradient(150deg,#2c3d5b,#0d1626)',alert:'#f6b73c',
    pill:S('state','badge',{tag:'PACKAGE',c:'#f6b73c'}),sub:S('relative-time','text-tagline',{txt:'2h 14m'}),
    name:S('name-tag','text-tagline',{txt:'PACKAGE REMINDER'})},
@@ -5520,7 +5520,7 @@ const T4=[
    {lab:'nudge',parts:[S('suggestion','button',{tag:'Remind me again at 6 PM'})]},
    {lab:'if it sits too long',parts:[{list:[[S('contact-action','list')]]}]},
 ]},
- {id:'garage_door_watcher_v4',title:'Garage Door Watcher',sub:'State Monitor',goal:'Is the garage closed — and was it left open?',
+ {id:'garage_door_watcher_v4',emoji:'🚪',title:'Garage Door Watcher',sub:'State Monitor',goal:'Is the garage closed — and was it left open?',
     widget:{grad:'linear-gradient(150deg,#1d2a40,#0c1119)',
    pill:S('state','badge',{tag:'CLOSED',c:'#7eecc4'}),sub:S('duration','text-small',{txt:'for 3h 42m'}),
    name:S('name-tag','text-tagline',{txt:'GARAGE DOOR'})},
@@ -5538,7 +5538,7 @@ const T4=[
      {more:true}]},
    {lab:'insight',parts:[{card:[{hdr:{t:'Insight'}},{row:[S('insight','text-medium',{txt:'Left open <b style="color:#f6b73c">twice</b> this week &mdash; both around 4 PM departures.'})]}]}]},
    {lab:'act + verify',parts:[{row:[S('device-control','button-pill',{txt:'Close door'})]},{row:[S('confidence','button-pill')]}]}]},
- {id:'baby_monitor_v4',title:'Baby Monitor',sub:'Wellbeing Monitor',goal:'Is the baby okay — without staring at a feed all night?',
+ {id:'baby_monitor_v4',emoji:'👶',title:'Baby Monitor',sub:'Wellbeing Monitor',goal:'Is the baby okay — without staring at a feed all night?',
     widget:{grad:'linear-gradient(150deg,#10182b,#070b14)',
    pill:S('state','badge',{tag:'ASLEEP',c:'#9cc3f5'}),sub:S('relative-time','text-tagline',{txt:'since 8:40 PM'}),
    name:S('name-tag','text-tagline',{txt:'BABY MONITOR'})},
@@ -5557,7 +5557,7 @@ const T4=[
      [S('media','small-thumb',{grad:G3}),C(S('description','text-small',{txt:'Put down for the night'}),S('absolute-time','text-tagline',{txt:'8:40 PM'})),S('state','badge',{tag:'ASLEEP',c:'#7eecc4'})]]},
      {more:true}]},
    {lab:'verify',parts:[S('confidence','button-pill')]}]},
- {id:'pet_monitor_v4',title:'Pet Monitor',sub:'Wellbeing Monitor',goal:'Where is Cooper and what has he been up to?',
+ {id:'pet_monitor_v4',emoji:'🐶',title:'Pet Monitor',sub:'Wellbeing Monitor',goal:'Where is Cooper and what has he been up to?',
     widget:{grad:'linear-gradient(150deg,#34d39930,#0c1119)',
    pill:S('state','badge',{tag:'IN YARD',c:'#7eecc4'}),sub:S('relative-time','text-tagline',{txt:'12m ago'}),
    name:S('name-tag','text-tagline',{txt:'PET MONITOR'})},
@@ -5574,7 +5574,7 @@ const T4=[
    {lab:'insight',parts:[{card:[{hdr:{t:'Insight'}},{row:[S('insight','text-medium',{txt:'Cooper spends his afternoons by the <b style="color:#7eecc4">back fence</b> &mdash; usually out ~15 minutes.'})]}]}]},
    {lab:'ask',parts:[S('suggestion','button',{tag:'Where is Cooper now?'})]},
    {lab:'loading variant',parts:[{loading:true}]}]},
- {id:'stove_watcher_v4',title:'Stove Watcher',sub:'State Monitor',goal:'Did I leave the stove on?',
+ {id:'stove_watcher_v4',emoji:'🔥',title:'Stove Watcher',sub:'State Monitor',goal:'Did I leave the stove on?',
     widget:{grad:'linear-gradient(150deg,#3b2c2c,#140d0d)',alert:'#f25c5c',
    pill:S('state','badge',{tag:'ON',c:'#f25c5c'}),sub:S('duration','text-small',{txt:'for 42m'}),
    name:S('name-tag','text-tagline',{txt:'STOVE WATCHER'})},
@@ -5594,7 +5594,7 @@ const T4=[
      {more:true}]},
    {lab:'insight',parts:[{card:[{hdr:{t:'Insight'}},{row:[S('insight','text-medium',{txt:'Rarely on past <b style="color:#f25c5c">7 PM</b> &mdash; tonight is unusual.'})]}]}]},
    {lab:'verify',parts:[S('confidence','button-pill')]}]},
- {id:'bird_monitor_v4',title:'Bird Monitor',sub:'Discovery / Collection',goal:'Who visited the feeder — anything new for the collection?',
+ {id:'bird_monitor_v4',emoji:'🐦',title:'Bird Monitor',sub:'Discovery / Collection',goal:'Who visited the feeder — anything new for the collection?',
     widget:{grad:'linear-gradient(150deg,#2c3b2e,#0d140e)',
    pill:S('attribute-tag','badge',{tag:'CARDINAL',c:'#f25c5c'}),sub:S('absolute-time','text-tagline',{txt:'7:42 AM'}),
    name:S('name-tag','text-tagline',{txt:'BIRD MONITOR'})},
@@ -5611,7 +5611,7 @@ const T4=[
    {lab:'sighting calendar',parts:[{row:[S('time-trend','month-chart')]}]},
    {lab:'insight',parts:[{card:[{hdr:{t:'Insight'}},{row:[S('insight','text-medium',{txt:'Cardinals visit at <b style="color:#f25c5c">sunrise</b> &mdash; this is your busiest week of the season.'})]}]}]},
    {lab:'history',parts:[{more:true}]}]},
- {id:'overseas_rentals_v4',title:'Overseas Rentals',sub:'Operations Console',goal:'Are all four properties okay — what needs my attention?',
+ {id:'overseas_rentals_v4',emoji:'🏡',title:'Overseas Rentals',sub:'Operations Console',goal:'Are all four properties okay — what needs my attention?',
     widget:{grad:'linear-gradient(150deg,#4f8ff040,#0c1119)',alert:'#f6b73c',
    pill:S('instance-count','badge',{name:'Alerts',txt:'2'}),sub:S('device-count','text-small'),
    name:S('name-tag','text-tagline',{txt:'OVERSEAS RENTALS'})},
@@ -5639,9 +5639,8 @@ function renderT4Screen(t){
 /* ---- Templates version switcher: t1 (existing flow) | t4 (elements + layout → template) ---- */
 var tplVer='t1', t4Cur=T4[0].id;
 function t4Chips(){
-  return `<div class="tplgrid">`+T4.map(t=>`<div class="chip${t.id===t4Cur?' on':''}" data-t4="${t.id}">`
-    +`<b style="display:block;font-size:11px;color:var(--ink)">${t.title}</b>`
-    +`<span style="font-size:9px;color:var(--mut)">${t.goal}</span></div>`).join('')+`</div>`;
+  return `<div class="tplgrid">`+T4.map(t=>`<div class="chip${t.id===t4Cur?' on':''}" data-t4="${t.id}" title="${t.goal}">`
+    +`<b style="display:flex;align-items:center;gap:7px;font-size:11px;color:var(--ink)"><span style="font-size:15px">${t.emoji||''}</span>${t.title}</b></div>`).join('')+`</div>`;
 }
 function renderT4(id){
   t4Cur=id;
