@@ -4741,7 +4741,7 @@ const EL_REGISTRY=[
          'badge':s=>agPill(`${s.name} &middot; ${s.txt}`,'#9cc3f5'),
          'text-tagline':s=>`<div style="font-size:9.5px;letter-spacing:.4px;color:var(--mut);font-weight:400;font-style:normal;text-transform:none">${s.name} <b style="color:var(--ink)">${s.txt}</b></div>`}},
  /* time aggregation */
- {id:'time-trend',grp:'time-agg',label:'Time trend chart',desc:'Activity binned over time — hourly (minute bins), daily (hour bins), weekly (day bins), monthly (calendar grid); binary signals get a two-level state band',states:['empty','loading'],rules:['Axis labels sit below the chart, never over the bars','Binary signals (open / closed, on / off) render the state band — two levels only, never count-height bars','Month calendar: marked days carry their value — a count, duration or ✓; unmarked days show a dimmed day number'],sig:'instance · count · span:hour/day/week/month',formats:['hourly-chart','daily-chart','state-chart','weekly-chart','month-chart'],layouts:['standalone'],action:'navigate',accepts:['time','count'],
+ {id:'time-trend',grp:'time-agg',label:'Time trend chart',desc:'Activity binned over time — hourly (minute bins), daily (hour bins), weekly (day bins), monthly (calendar grid); binary signals get a two-level state band',states:['empty','loading'],rules:['Use a time chart only when the time axis answers the template&rsquo;s question — cross-subject comparisons use rows or tiles instead','Axis labels sit below the chart, never over the bars','Binary signals (open / closed, on / off) render the state band — two levels only, never count-height bars','Month calendar: marked days carry their value — a count, duration or ✓; unmarked days show a dimmed day number'],sig:'instance · count · span:hour/day/week/month',formats:['hourly-chart','daily-chart','state-chart','weekly-chart','month-chart'],layouts:['standalone'],action:'navigate',accepts:['time','count'],
   sample:{},stage:{
    'hourly-chart':s=>`<div class="scrub" style="height:42px">${[34,52,40,66,28,58,45,38,60,30,48,36].map(h=>`<div class="seg" style="height:${h}%;background:#3a5fa0"></div>`).join('')}</div><div class="axis-below"><span>:00</span><span>:15</span><span>:30</span><span>:45</span><span>now</span></div>`,
    'daily-chart':s=>`<div class="scrub" style="height:42px">${Array.from({length:24},(_,i)=>{const a=i>=16&&i<=18;const h=a?60+((i*17)%38):8+((i*13)%22);return `<div class="seg" style="height:${h}%;background:${a?'#f6b73c':'#3a5fa0'}"></div>`;}).join('')}</div><div class="axis-below"><span>12a</span><span>6a</span><span>12p</span><span>6p</span><span>now</span></div>`,
@@ -5635,7 +5635,11 @@ const T4=[
             [S('media','small-thumb',{grad:G3}),C(S('description','text-small',{txt:'Late checkout approved'}),S('absolute-time','text-tagline',{txt:'11:00 AM local'})),S('name-tag','badge',{tag:'LISBON',c:'#9cc3f5'})],
             [S('media','small-thumb',{grad:GH}),C(S('description','text-small',{txt:'Smoke-alarm test passed'}),S('absolute-time','text-tagline',{txt:'9:00 AM local'})),S('name-tag','badge',{tag:'KYOTO',c:'#c4b3f0'})]]},
      {more:true}]},
-   {lab:'week trend',parts:[{hdr:{t:'Week across properties'}},{row:[S('time-trend','weekly-chart')]}]}]},
+   {lab:'week by property',parts:[{hdr:{t:'This week by property'}},{log:[
+     [S('device-name','text-small',{txt:'Lisbon flat'}),S('instance-count','text-small',{name:'events',txt:'12'}),S('state','badge',{tag:'1 ALERT',c:'#f6b73c'})],
+     [S('device-name','text-small',{txt:'Kyoto house'}),S('instance-count','text-small',{name:'events',txt:'6'}),S('device-state','badge',{tag:'OFFLINE &middot; 2h'})],
+     [S('device-name','text-small',{txt:'Bali villa'}),S('instance-count','text-small',{name:'events',txt:'9'}),S('state','badge',{tag:'QUIET',c:'#7eecc4'})],
+     [S('device-name','text-small',{txt:'Paris loft'}),S('instance-count','text-small',{name:'events',txt:'4'}),S('state','badge',{tag:'QUIET',c:'#7eecc4'})]]}]}]},
  {id:'trash_bin_checker_v4',emoji:'🗑',title:'Trash Bin Checker',sub:'Attendance Verifier',goal:'Did the bins go out — and come back?',
   widget:{grad:'linear-gradient(150deg,#3b342c,#140f0d)',alert:'#f6b73c',
    pill:S('state','badge',{tag:'BINS OUT',c:'#f6b73c'}),sub:S('duration','text-small',{txt:'for 2h 4m'}),
