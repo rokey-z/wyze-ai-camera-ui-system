@@ -4801,7 +4801,7 @@ const EL_REGISTRY=[
   sample:{},stage:{header:s=>`<div style="display:flex;align-items:center;gap:8px;padding-bottom:7px;border-bottom:1px solid var(--line)">${lslot('title','height:16px;flex:1')}${lslot('count / meta','height:14px;width:70px')}</div>`}},
  {id:'layout-list',grp:'structure',label:'List',
   desc:'Repeated rows for a stream of items — the event feed, logs, visits, contacts.',
-  rules:['At least 4 rows before the More footer','Row anatomy: media (fixed 56&times;42) &middot; text (flex) &middot; meta (fixed, right)'],
+  rules:['At least 4 rows before the More footer','Row anatomy: media (fixed 56&times;42) &middot; text (flex) &middot; meta (fixed, right)','The time / meta line under the text uses the tagline format'],
   sig:'layout · repeat',formats:['list'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
   sample:{},stage:{list:s=>Array.from({length:4},(_,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;${i?'border-top:1px solid var(--line)':''}">${lslot('media','width:56px;height:42px;flex:none')}<span style="flex:1;display:flex;flex-direction:column;gap:4px;min-width:0">${lslot('text','height:11px;width:72%')}${lslot('time / meta','height:9px;width:42%')}</span>${lslot('badge','width:44px;height:15px;flex:none;border-radius:999px')}</div>`).join('')}},
  {id:'layout-card',grp:'structure',label:'Card',
@@ -5493,10 +5493,10 @@ const T4=[
      {row:[S('description-detail','text-medium',{txt:'FedEx left a box by the planter &mdash; visible from the street.'})]}]}]},
    {lab:'today&rsquo;s deliveries',parts:[
      {hdr:{t:'Today'}},
-     {list:[[S('media','small-thumb',{grad:G1}),C(S('description','text-small',{txt:'Box left by planter'}),S('relative-time','text-small',{txt:'2h ago'})),S('category-tag','badge',{tag:'BOX',c:'#f6b73c'})],
-            [S('media','small-thumb',{grad:G2}),C(S('description','text-small',{txt:'Envelope through slot'}),S('relative-time','text-small',{txt:'5h ago'})),S('category-tag','badge',{tag:'MAIL',c:'#9cc3f5'})],
-            [S('media','small-thumb',{grad:G3}),C(S('description','text-small',{txt:'USPS at the mailbox'}),S('relative-time','text-small',{txt:'7h ago'})),S('category-tag','badge',{tag:'MAIL',c:'#9cc3f5'})],
-            [S('media','small-thumb',{grad:GH}),C(S('description','text-small',{txt:'Box picked up by you'}),S('relative-time','text-small',{txt:'9h ago'})),S('category-tag','badge',{tag:'PICKED UP',c:'#7eecc4'})]]},
+     {list:[[S('media','small-thumb',{grad:G1}),C(S('description','text-small',{txt:'Box left by planter'}),S('relative-time','text-tagline',{txt:'2h ago'})),S('category-tag','badge',{tag:'BOX',c:'#f6b73c'})],
+            [S('media','small-thumb',{grad:G2}),C(S('description','text-small',{txt:'Envelope through slot'}),S('relative-time','text-tagline',{txt:'5h ago'})),S('category-tag','badge',{tag:'MAIL',c:'#9cc3f5'})],
+            [S('media','small-thumb',{grad:G3}),C(S('description','text-small',{txt:'USPS at the mailbox'}),S('relative-time','text-tagline',{txt:'7h ago'})),S('category-tag','badge',{tag:'MAIL',c:'#9cc3f5'})],
+            [S('media','small-thumb',{grad:GH}),C(S('description','text-small',{txt:'Box picked up by you'}),S('relative-time','text-tagline',{txt:'9h ago'})),S('category-tag','badge',{tag:'PICKED UP',c:'#7eecc4'})]]},
      {more:true}]},
    {lab:'insight',parts:[{card:[{hdr:{t:'Insight'}},{row:[S('insight','text-medium',{txt:'Couriers usually come before <b style="color:#9cc3f5">3 PM</b> &mdash; today&rsquo;s box arrived right on pattern.'})]}]}]},
    {lab:'nudge',parts:[S('suggestion','button',{tag:'Remind me again at 6 PM'})]},
@@ -5714,6 +5714,13 @@ function lintT4(){
       if(has) console.warn('T4:',t.id,'widget layout inside a screen section — widget is widget-only');});
     t.sections.forEach(sec=>sec.parts.forEach(function chk(n){
       if(n.card){ if(!n.card.some(c=>c.hdr)) console.warn('T4:',t.id,'card without a title in section:',sec.lab); n.card.forEach(chk); }
+    }));
+    const TIMEY=['absolute-time','relative-time','duration'];
+    t.sections.forEach(sec=>sec.parts.forEach(n=>{ if(!n.list) return;
+      n.list.forEach(r=>r.forEach(x=>{ if(!x.col) return;
+        x.col.slice(1).forEach(c=>{ if(TIMEY.includes(c.el)&&c.fmt!=='text-tagline')
+          console.warn('T4:',t.id,'list time/meta should use the tagline format —',c.el+'·'+c.fmt,'in',sec.lab); });
+      }));
     }));
     claims.forEach(k=>{
       const [el,fmt]=k.split('·'); const reg=EL_REGISTRY.find(x=>x.id===el);
