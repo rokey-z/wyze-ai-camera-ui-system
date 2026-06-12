@@ -4805,7 +4805,7 @@ const EL_REGISTRY=[
   sample:{},stage:{list:s=>Array.from({length:4},(_,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;${i?'border-top:1px solid var(--line)':''}">${lslot('media','width:56px;height:42px;flex:none')}<span style="flex:1;display:flex;flex-direction:column;gap:4px;min-width:0">${lslot('text','height:11px;width:72%')}${lslot('time / meta','height:9px;width:42%')}</span>${lslot('badge','width:44px;height:15px;flex:none;border-radius:999px')}</div>`).join('')}},
  {id:'layout-log',grp:'structure',label:'Log',
   desc:'Compact text-only rows for readings and state changes — a journal, not a feed.',
-  rules:['At least 4 rows before the More footer','Columns: time (fixed) &middot; value &middot; change / meta — never media (that&rsquo;s List)'],
+  rules:['Opens with a title row','At least 4 rows before the More footer','Columns: time (fixed) &middot; value &middot; change / meta — never media (that&rsquo;s List)'],
   sig:'layout · repeat',formats:['log'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
   sample:{},stage:{log:s=>Array.from({length:4},(_,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:5px 0;${i?'border-top:1px solid var(--line)':''}">${lslot('time','width:52px;height:10px;flex:none')}${lslot('value','height:10px;flex:1')}${lslot('change','width:40px;height:9px;flex:none')}</div>`).join('')}},
  {id:'layout-card',grp:'structure',label:'Card',
@@ -5526,7 +5526,7 @@ const T4=[
      {el:'detection-marker',fmt:'bound-box',s:{tag:'garage door'}},
      {el:'absolute-time',fmt:'text-tagline',s:{txt:'checked 4:18 PM'},at:'br'}]}}]},
    {lab:'open events today',parts:[{hdr:{t:'Door opens today'}},{row:[S('time-trend','daily-chart')]}]},
-   {lab:'open / close log',parts:[{log:[
+   {lab:'open / close log',parts:[{hdr:{t:'Open / close log'}},{log:[
      [S('absolute-time','text-small',{txt:'4:02 PM'}),S('state','text-small',{txt:'CLOSED'}),S('trend-delta','text-small',{txt:'12m open'})],
      [S('absolute-time','text-small',{txt:'3:50 PM'}),S('state','text-small',{txt:'OPEN'}),S('trend-delta','text-small',{txt:'&mdash;'})],
      [S('absolute-time','text-small',{txt:'11:02 AM'}),S('state','text-small',{txt:'CLOSED'}),S('trend-delta','text-small',{txt:'4m open'})],
@@ -5582,7 +5582,7 @@ const T4=[
      {el:'detection-marker',fmt:'bound-box',s:{tag:'burner on'}},
      {col:[S('state','text-small',{txt:'Stove ON &middot; unattended'}),S('measurement','text-tagline',{txt:'412&deg;F &middot; burner 2'})],at:'bl'}]}}]},
    {lab:'escalate',parts:[S('contact-action','button-block')]},
-   {lab:'on / off log',parts:[{log:[
+   {lab:'on / off log',parts:[{hdr:{t:'On / off log'}},{log:[
      [S('absolute-time','text-small',{txt:'6:00 PM'}),S('state','text-small',{txt:'ON'})],
      [S('absolute-time','text-small',{txt:'12:14 PM'}),S('state','text-small',{txt:'OFF &middot; 22m'})],
      [S('absolute-time','text-small',{txt:'11:52 AM'}),S('state','text-small',{txt:'ON'})],
@@ -5751,6 +5751,8 @@ function lintT4(){
     }));
     t.sections.forEach(sec=>sec.parts.forEach(n=>{ if(n.log&&n.log.length<4)
       console.warn('T4:',t.id,'log has',n.log.length,'rows — rule: at least 4 before More —',sec.lab); }));
+    t.sections.forEach(sec=>{ if(sec.parts.some(n=>n.log)&&!sec.parts.some(n=>n.hdr))
+      console.warn('T4:',t.id,'log without a title row —',sec.lab); });
     t.sections.forEach(sec=>sec.parts.forEach(n=>{ if(!n.list) return;
       n.list.forEach(r=>r.forEach(x=>{ if(!x.col) return;
         x.col.slice(1).forEach(c=>{ if(TIMEY.includes(c.el)&&c.fmt!=='text-tagline')
