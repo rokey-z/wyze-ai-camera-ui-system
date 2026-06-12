@@ -2385,7 +2385,8 @@ EMIT  -&gt; see §13
         <b>elements</b> (each rendered through a format) into these patterns; the compose flow is
         <b>elements + layout &rarr; template</b>. Patterns were learned from the 27 components; each card shows the
         slot anatomy (how element combinations sit — size and position), what it&rsquo;s used for, and the rules that
-        apply to it. Every visual adjustment lands in an element format or as a rule on its pattern — never one-off styling.</div>
+        apply to it. Slots fix <b>size and position only</b> — they never lock which element fills them; any reasonable
+        element &middot; format can take a slot. Every visual adjustment lands in an element format or as a rule on its pattern — never one-off styling.</div>
       <div class="dc-summary" id="layoutSummary"></div>
     </div>
     <div id="layoutGrid"></div>
@@ -4662,7 +4663,7 @@ const FIELD_META={
 /* ---- the 13 formats + per-format micro (strip) and stage (full) renderers ---- */
 const FORMATS=['text-large','text-medium','text-small','text-tagline','badge','dot','tile','filter','list','small-thumb','square','full-card','chart','bound-box','button','header','grid','strip'];
 /* format switch tags are listed big -> small; first (biggest) is the default */
-const FMT_SIZE_ORDER=['full-card','bound-box','square','month-chart','weekly-chart','daily-chart','hourly-chart','chart','widget','grid','strip','small-thumb','tile','list','log','header','button-block','button-pill','button','filter','chips','text-large','text-medium','badge','text-small','text-tagline','dot'];
+const FMT_SIZE_ORDER=['full-card','bound-box','square','month-chart','weekly-chart','daily-chart','state-chart','hourly-chart','chart','widget','grid','strip','small-thumb','tile','list','log','header','button-block','button-pill','button','filter','chips','text-large','text-medium','badge','text-small','text-tagline','dot'];
 const lslot=(label,st)=>`<span style="border:1px dashed #4f8ff066;background:#4f8ff00a;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:7.5px;letter-spacing:.3px;color:#9cc3f5;font-family:var(--mono);box-sizing:border-box;${st||''}">${label}</span>`;
 const elFmtOrder=f=>[...f].sort((a,b)=>FMT_SIZE_ORDER.indexOf(a)-FMT_SIZE_ORDER.indexOf(b));
 function inMedia(html,anchor){
@@ -4743,10 +4744,11 @@ const EL_REGISTRY=[
          'badge':s=>agPill(`${s.name} &middot; ${s.txt}`,'#9cc3f5'),
          'text-tagline':s=>`<div style="font-size:9.5px;letter-spacing:.4px;color:var(--mut)">${s.name} <b style="color:var(--ink)">${s.txt}</b></div>`}},
  /* time aggregation */
- {id:'time-trend',grp:'time-agg',label:'Time trend chart',desc:'Activity binned over time — hourly (minute bins), daily (hour bins), weekly (day bins), monthly (calendar grid)',states:['empty','loading'],rules:['Axis labels sit below the chart, never over the bars','Month calendar: marked days carry their value — a count, duration or ✓; unmarked days show a dimmed day number'],sig:'instance · count · span:hour/day/week/month',formats:['hourly-chart','daily-chart','weekly-chart','month-chart'],layouts:['standalone'],action:'navigate',accepts:['time','count'],
+ {id:'time-trend',grp:'time-agg',label:'Time trend chart',desc:'Activity binned over time — hourly (minute bins), daily (hour bins), weekly (day bins), monthly (calendar grid); binary signals get a two-level state band',states:['empty','loading'],rules:['Axis labels sit below the chart, never over the bars','Binary signals (open / closed, on / off) render the state band — two levels only, never count-height bars','Month calendar: marked days carry their value — a count, duration or ✓; unmarked days show a dimmed day number'],sig:'instance · count · span:hour/day/week/month',formats:['hourly-chart','daily-chart','state-chart','weekly-chart','month-chart'],layouts:['standalone'],action:'navigate',accepts:['time','count'],
   sample:{},stage:{
    'hourly-chart':s=>`<div class="scrub" style="height:42px">${[34,52,40,66,28,58,45,38,60,30,48,36].map(h=>`<div class="seg" style="height:${h}%;background:#3a5fa0"></div>`).join('')}</div><div class="axis-below"><span>:00</span><span>:15</span><span>:30</span><span>:45</span><span>now</span></div>`,
    'daily-chart':s=>`<div class="scrub" style="height:42px">${Array.from({length:24},(_,i)=>{const a=i>=16&&i<=18;const h=a?60+((i*17)%38):8+((i*13)%22);return `<div class="seg" style="height:${h}%;background:${a?'#f6b73c':'#3a5fa0'}"></div>`;}).join('')}</div><div class="axis-below"><span>12a</span><span>6a</span><span>12p</span><span>6p</span><span>now</span></div>`,
+   'state-chart':s=>`<div class="scrub" style="height:42px">${Array.from({length:24},(_,i)=>{const on=(s.on||[11,16]).includes(i);return `<div class="seg" style="height:${on?'85':'16'}%;background:${on?(s.c||'#f6b73c'):'#22314b'}"></div>`;}).join('')}</div><div class="axis-below"><span>12a</span><span>6a</span><span>12p</span><span>6p</span><span>now</span></div>`,
    'weekly-chart':s=>`<div class="trendbars">${[40,62,55,78,48,90,70].map((h,i)=>`<div class="tb" style="height:${h}%;${i===5?'background:linear-gradient(#34d399,#1f7a5a)':''}"></div>`).join('')}</div><div class="trendx">${['M','T','W','T','F','S','S'].map(d=>`<span>${d}</span>`).join('')}</div>`,
    'month-chart':s=>`<div style="width:100%"><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;font-size:7px;color:var(--dim);text-align:center;margin-bottom:3px">${['S','M','T','W','T','F','S'].map(d=>`<span>${d}</span>`).join('')}</div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px">${Array.from({length:35},(_,i)=>{const d=i-1;if(d<0||d>=30)return '<div></div>';if(s.marks){const mk=s.marks[d+1];return `<div class="ml-daycell" style="aspect-ratio:1;border-radius:3px;display:grid;place-items:center;font-size:8px;font-weight:${mk?'800':'500'};color:${mk?'#04231a':'var(--dim)'};background:rgba(56,198,219,${mk?'.85':'.06'})">${mk||d+1}</div>`;}const c=(d*13+5)%9;return `<div class="ml-daycell" style="aspect-ratio:1;border-radius:3px;display:grid;place-items:center;font-size:${c?'9px':'8px'};font-weight:${c?'800':'500'};color:${c>5?'#04231a':c?'#cfe3ff':'var(--dim)'};background:rgba(56,198,219,${c?Math.min(0.16+c/10,1).toFixed(2):'0.07'})">${c||d+1}</div>`;}).join('')}</div></div>`}},
  /* timestamps */
@@ -4802,27 +4804,27 @@ const EL_REGISTRY=[
  /* structure — the arrangement layer; recipes execute these, agents compose them */
  {id:'section-header',grp:'structure',label:'Section header',
   desc:'Opens a section: names what follows and carries one glanceable number or status.',
-  rules:['Title left; ONE optional meta / count slot on the right','Titles render regular weight, dimmed — the content carries the emphasis','Closes with a divider — one header per section'],
+  rules:['Title left; ONE optional fixed slot on the right — any glanceable element','Titles render regular weight, dimmed — the content carries the emphasis','Closes with a divider — one header per section'],
   sig:'layout · single',formats:['header'],layouts:['standalone'],action:'none',accepts:['text','count'],
-  sample:{},stage:{header:s=>`<div style="display:flex;align-items:center;gap:8px;padding-bottom:7px;border-bottom:1px solid var(--line)">${lslot('title','height:16px;flex:1')}${lslot('count / meta','height:14px;width:70px')}</div>`}},
+  sample:{},stage:{header:s=>`<div style="display:flex;align-items:center;gap:8px;padding-bottom:7px;border-bottom:1px solid var(--line)">${lslot('title','height:16px;flex:1')}${lslot('right slot','height:14px;width:70px')}</div>`}},
  {id:'layout-list',grp:'structure',label:'List',
   desc:'Repeated rows for a stream of items — the event feed, logs, visits, contacts.',
-  rules:['At least 4 rows before the More footer','Row anatomy: media (fixed 56&times;42) &middot; text (flex) &middot; meta (fixed, right)','The time / meta line under the text uses the tagline format'],
+  rules:['At least 4 rows before the More footer','Row anatomy: fixed lead slot (56&times;42 when media) &middot; flex middle &middot; fixed right slot — any reasonable element &middot; format','The second line under the main text uses the tagline format'],
   sig:'layout · repeat',formats:['list'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
-  sample:{},stage:{list:s=>Array.from({length:4},(_,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;${i?'border-top:1px solid var(--line)':''}">${lslot('media','width:56px;height:42px;flex:none')}<span style="flex:1;display:flex;flex-direction:column;gap:4px;min-width:0">${lslot('text','height:11px;width:72%')}${lslot('time / meta','height:9px;width:42%')}</span>${lslot('badge','width:44px;height:15px;flex:none;border-radius:999px')}</div>`).join('')}},
+  sample:{},stage:{list:s=>Array.from({length:4},(_,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;${i?'border-top:1px solid var(--line)':''}">${lslot('lead','width:56px;height:42px;flex:none')}<span style="flex:1;display:flex;flex-direction:column;gap:4px;min-width:0">${lslot('main','height:11px;width:72%')}${lslot('tagline','height:9px;width:42%')}</span>${lslot('right','width:44px;height:15px;flex:none;border-radius:999px')}</div>`).join('')}},
  {id:'layout-log',grp:'structure',label:'Log',
   desc:'Compact text-only rows for readings and state changes — a journal, not a feed.',
-  rules:['Opens with a title row','At least 4 rows before the More footer','Columns: time (fixed) &middot; value &middot; change / meta — never media (that&rsquo;s List)','Three slots per row align left &middot; middle &middot; right'],
+  rules:['Opens with a title row','At least 4 rows before the More footer','Text renders only — media belongs in List','Three slots per row align left &middot; middle &middot; right — any reasonable element &middot; format in each'],
   sig:'layout · repeat',formats:['log'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
-  sample:{},stage:{log:s=>Array.from({length:4},(_,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:5px 0;${i?'border-top:1px solid var(--line)':''}">${lslot('time','width:52px;height:10px;flex:none')}${lslot('value','width:64px;height:10px;flex:none;margin:0 auto')}${lslot('change','width:40px;height:9px;flex:none')}</div>`).join('')}},
+  sample:{},stage:{log:s=>Array.from({length:4},(_,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:5px 0;${i?'border-top:1px solid var(--line)':''}">${lslot('left','width:52px;height:10px;flex:none')}${lslot('middle','width:64px;height:10px;flex:none;margin:0 auto')}${lslot('right','width:40px;height:9px;flex:none')}</div>`).join('')}},
  {id:'layout-card',grp:'structure',label:'Card',
   desc:'A self-contained block for one subject — its state, media and detail boxed together.',
-  rules:['Every card opens with a title row','Bare values never float — state &middot; duration &middot; detail share one card','One card = one subject'],
+  rules:['Every card opens with a title row','Bare values never float — a subject&rsquo;s values sit boxed together in its card','One card = one subject'],
   sig:'layout · single',formats:['card'],layouts:['standalone'],action:'navigate',accepts:['id'],
-  sample:{},stage:{card:s=>`<div style="border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;background:var(--card)"><div style="display:flex;align-items:center;gap:8px">${lslot('title / state','height:12px;flex:1')}${lslot('meta','height:11px;width:44px')}</div>${lslot('media / content','height:56px;width:100%')}${lslot('text','height:10px;width:70%')}</div>`}},
+  sample:{},stage:{card:s=>`<div style="border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;background:var(--card)"><div style="display:flex;align-items:center;gap:8px">${lslot('title row','height:12px;flex:1')}${lslot('right','height:11px;width:44px')}</div>${lslot('content','height:56px;width:100%')}${lslot('line','height:10px;width:70%')}</div>`}},
  {id:'layout-grid',grp:'structure',label:'Grid',
   desc:'Equal cells in fixed rows — device fleets, KPI tiles, multi-camera walls.',
-  rules:['Equal-width cells; media and tiles fill the cell and drop the cell outline — the content IS the cell','2&ndash;3 columns at phone width','Non-scrolling — at most 2 rows; more items move to the Scroll grid'],
+  rules:['Equal-width cells; full-bleed content fills the cell and drops the cell outline — the content IS the cell','2&ndash;3 columns at phone width','Non-scrolling — at most 2 rows; more items move to the Scroll grid'],
   sig:'layout · repeat',formats:['grid'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
   sample:{},stage:{grid:s=>`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">${Array.from({length:6},()=>lslot('cell','aspect-ratio:16/11')).join('')}</div>`}},
  {id:'layout-sgrid',grp:'structure',label:'Scroll grid',
@@ -4831,10 +4833,10 @@ const EL_REGISTRY=[
   sig:'layout · repeat',formats:['sgrid'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
   sample:{},stage:{sgrid:s=>`<div style="display:flex;gap:6px;overflow:hidden">${Array.from({length:4},()=>lslot('cell','width:29%;aspect-ratio:16/11;flex:none')).join('')}</div>`}},
  {id:'layout-strip',grp:'structure',label:'Strip',
-  desc:'A horizontal rail of fixed-size media — compact recent-events scanning.',
+  desc:'A horizontal rail of fixed-size items — compact recent-events scanning.',
   rules:['Fixed-size items, horizontally scannable','Overflow collapses into a +N cell'],
   sig:'layout · repeat',formats:['strip'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
-  sample:{},stage:{strip:s=>`<div style="display:flex;gap:6px">${Array.from({length:4},()=>lslot('media','width:46px;height:32px;flex:none')).join('')}${lslot('+N','width:46px;height:32px;flex:none;opacity:.6')}</div>`}},
+  sample:{},stage:{strip:s=>`<div style="display:flex;gap:6px">${Array.from({length:4},()=>lslot('item','width:46px;height:32px;flex:none')).join('')}${lslot('+N','width:46px;height:32px;flex:none;opacity:.6')}</div>`}},
  {id:'layout-hero',grp:'structure',label:'Hero',
   desc:'The full-width media surface that anchors a screen; small elements overlay its corners.',
   rules:['Leads the screen — within the first two sections (lintT4 enforces it)','Overlays pin to corners (tl &middot; tr &middot; bl &middot; br); keep them small'],
@@ -4842,9 +4844,9 @@ const EL_REGISTRY=[
   sample:{},stage:{hero:s=>`<div style="position:relative;aspect-ratio:16/9;border-radius:10px;background:linear-gradient(165deg,#1d2a40,#101a2c);border:1px solid var(--line)"><span style="position:absolute;inset:0;display:grid;place-items:center;font-size:8px;color:var(--dim);font-family:var(--mono)">media surface</span>${lslot('overlay','position:absolute;left:7px;top:7px;width:52px;height:13px')}${lslot('overlay','position:absolute;right:7px;top:7px;width:40px;height:13px')}${lslot('overlay','position:absolute;left:7px;bottom:7px;width:64px;height:13px')}${lslot('overlay','position:absolute;right:7px;bottom:7px;width:40px;height:13px')}</div>`}},
  {id:'layout-widget',grp:'structure',label:'Widget',
   desc:'The home-screen widget: one glance answers the template&rsquo;s question.',
-  rules:['Widget-only — never inside a template screen (lintT4 enforces it)','Round media thumb &middot; exactly ONE state pill &middot; one freshness line &middot; name beneath'],
+  rules:['Widget-only — never inside a template screen (lintT4 enforces it)','Round thumb &middot; exactly ONE pill &middot; one freshness line &middot; name beneath'],
   sig:'layout · single',formats:['widget'],layouts:['standalone'],action:'navigate',accepts:['id'],
-  sample:{},stage:{widget:s=>`<div style="display:flex;flex-direction:column;align-items:center;gap:6px;width:130px">${lslot('media','width:64px;height:64px;border-radius:50%')}${lslot('state pill','width:70px;height:15px;border-radius:999px')}${lslot('freshness','width:48px;height:9px')}${lslot('name','width:64px;height:8px;opacity:.7')}</div>`}},
+  sample:{},stage:{widget:s=>`<div style="display:flex;flex-direction:column;align-items:center;gap:6px;width:130px">${lslot('thumb','width:64px;height:64px;border-radius:50%')}${lslot('pill','width:70px;height:15px;border-radius:999px')}${lslot('freshness','width:48px;height:9px')}${lslot('name','width:64px;height:8px;opacity:.7')}</div>`}},
  {id:'layout-chips',grp:'structure',label:'Chip bar',
   desc:'A wrapping row of pill chips — category filters above a list, or link chips under a card.',
   rules:['Text pills only, never media (that&rsquo;s Strip); wraps freely','Filter role sits between a header and its list; exactly one chip carries the selected state'],
@@ -5530,7 +5532,7 @@ const T4=[
    {lab:'hero · annotated frame',parts:[{hero:{grad:'linear-gradient(165deg,#2c3d5b,#0d1626)',ov:[
      {el:'detection-marker',fmt:'bound-box',s:{tag:'garage door'}},
      {el:'absolute-time',fmt:'text-tagline',s:{txt:'checked 4:18 PM'},at:'br'}]}}]},
-   {lab:'open events today',parts:[{hdr:{t:'Door opens today'}},{row:[S('time-trend','daily-chart')]}]},
+   {lab:'open events today',parts:[{hdr:{t:'Door opens today'}},{row:[S('time-trend','state-chart',{on:[11,15]})]}]},
    {lab:'open / close log',parts:[{hdr:{t:'Open / close log'}},{log:[
      [S('absolute-time','text-small',{txt:'4:02 PM'}),S('state','text-small',{txt:'CLOSED'}),S('trend-delta','text-small',{txt:'12m open'})],
      [S('absolute-time','text-small',{txt:'3:50 PM'}),S('state','text-small',{txt:'OPEN'}),S('trend-delta','text-small',{txt:'&mdash;'})],
