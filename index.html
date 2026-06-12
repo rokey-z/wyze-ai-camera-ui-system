@@ -501,6 +501,9 @@
   .v4col{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
   .v4slot{min-width:0}
   .v4grid{display:grid;gap:7px}
+  .v4sgrid{display:flex;overflow-x:auto;scrollbar-width:none}
+  .v4sgrid::-webkit-scrollbar{display:none}
+  .v4sgrid > .v4cell{flex:0 0 calc((100% - 21px)/3.2)}
   .v4cell{border:1px solid var(--line);border-radius:9px;background:var(--bg2,#0e1726);padding:8px;display:flex;flex-direction:column;gap:5px;min-width:0}
   .v4strip{display:flex;gap:7px;align-items:flex-start;overflow:hidden}
   .v4hero .videobox{border-radius:10px}
@@ -2734,7 +2737,7 @@ const SCREENS = {
   ]),
  lawncrew:()=>renderScreen('Lawn Service','Attendance Verifier',[
    ['C-STATE · S0', v3State('Lawn service','Window open','#7eecc4','Tue 9–11 AM','awaiting crew')],
-   ['C-VISIT · S1', v3Visit([['#34d399','linear-gradient(150deg,#2c5a3e,#13261a)','Today, Tue','9:12 → 10:05 AM','53m','VERIFIED','#7eecc4'],['#f6b73c','linear-gradient(150deg,#5a4a2c,#26200f)','Tue, May 13','9:05 → 9:34 AM','29m','SHORT','#f3cd86'],['#34d399','linear-gradient(150deg,#2c5a3e,#13261a)','Tue, May 6','9:20 → 10:18 AM','58m','VERIFIED','#7eecc4']],'0.90')],
+   ['C-VISIT · S1', v3Visit([['#34d399','linear-gradient(150deg,#2c5a3e,#13261a)','Today, Tue','9:12 → 10:05 AM','53m','VERIFIED','#7eecc4'],['#f6b73c','linear-gradient(150deg,#5a4a2c,#26200f)','Tue, May 13','9:05 → 9:34 AM','29m','SHORT','#f3cd86'],['#34d399','linear-gradient(150deg,#2c5a3e,#13261a)','Tue, May 6','9:20 → 10:18 AM','58m','VERIFIED','#7eecc4']])],
    ['C-LIVE · S2', v3Live('linear-gradient(165deg,#1f3a2c,#0e1a14)','Front yard cam','10:41')],
    ['C-MONTHTREND · S3', monthCal('Visit history','every Tue',d=>[3,10,17,24].includes(d)?1:0)],
    ['C-FEED · S3', v3Feed('Today&rsquo;s clips',null,[['Crew arrived — truck + 2 people','9:12 AM','ARRIVAL','#7eecc4'],['Crew departed','10:05 AM','DEPARTURE','#9cc3f5']])],
@@ -4114,8 +4117,7 @@ const MAPLINES={
     {sel:'.tsrow .cliptip', fld:'thumbnail_url',    color:'#c4b3f0'},
     {sel:'.tsrow .ctg',     fld:'url',              color:'#7eecc4'},
     {sel:'.tsrow .dd',      fld:'event_ts',         color:'#f3cd86'},
-    {sel:'.tsrow .ds',      fld:'verify_status',    color:'#ff9a9a'},
-    {sel:'.cv',             fld:'match_confidence', color:'#93a3bd'}
+    {sel:'.tsrow .ds',      fld:'verify_status',    color:'#ff9a9a'}
   ],
   'C-IDCARD':[
     {sel:'.idcard .nm',   fld:'identity_name',      color:'#9cc3f5'},
@@ -4819,10 +4821,15 @@ const EL_REGISTRY=[
   sig:'layout · single',formats:['card'],layouts:['standalone'],action:'navigate',accepts:['id'],
   sample:{},stage:{card:s=>`<div style="border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;background:var(--card)"><div style="display:flex;align-items:center;gap:8px">${lslot('title / state','height:12px;flex:1')}${lslot('meta','height:11px;width:44px')}</div>${lslot('media / content','height:56px;width:100%')}${lslot('text','height:10px;width:70%')}</div>`}},
  {id:'layout-grid',grp:'structure',label:'Grid',
-  desc:'Equal cells in columns — device fleets, galleries, multi-camera walls.',
-  rules:['Equal-width cells; media and tiles fill the cell and drop the cell outline — the content IS the cell','2&ndash;3 columns at phone width','Scrolls horizontally when there are more cells than fit'],
+  desc:'Equal cells in fixed rows — device fleets, KPI tiles, multi-camera walls.',
+  rules:['Equal-width cells; media and tiles fill the cell and drop the cell outline — the content IS the cell','2&ndash;3 columns at phone width','Non-scrolling — at most 2 rows; more items move to the Scroll grid'],
   sig:'layout · repeat',formats:['grid'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
-  sample:{},stage:{grid:s=>`<div style="display:grid;grid-auto-flow:column;grid-template-rows:repeat(2,auto);grid-auto-columns:31%;gap:6px;overflow:hidden">${Array.from({length:9},()=>lslot('cell','aspect-ratio:16/11')).join('')}</div>`}},
+  sample:{},stage:{grid:s=>`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">${Array.from({length:6},()=>lslot('cell','aspect-ratio:16/11')).join('')}</div>`}},
+ {id:'layout-sgrid',grp:'structure',label:'Scroll grid',
+  desc:'One row of equal cells that scrolls horizontally — growing galleries and sighting reels.',
+  rules:['Single row, scrolls horizontally','Viewport shows 3.2 cells — the cut-off cell signals there&rsquo;s more','Use when items outgrow the static grid&rsquo;s 2-row cap'],
+  sig:'layout · repeat',formats:['sgrid'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
+  sample:{},stage:{sgrid:s=>`<div style="display:flex;gap:6px;overflow:hidden">${Array.from({length:4},()=>lslot('cell','width:29%;aspect-ratio:16/11;flex:none')).join('')}</div>`}},
  {id:'layout-strip',grp:'structure',label:'Strip',
   desc:'A horizontal rail of fixed-size media — compact recent-events scanning.',
   rules:['Fixed-size items, horizontally scannable','Overflow collapses into a +N cell'],
@@ -4875,7 +4882,7 @@ const SEL2UI={
  'C-GALLERY':{'.gallery .gcell':T('media','small-thumb'),'.gallery .gcell span':T('name-tag','text-tagline','overlay'),'.sig-coll':T('instance-count','badge'),'.chips2 .fc.on':T('category-count','filter'),'.chips2 .fc:not(.on)':T('category-count','filter')},
  'C-MULTIVIEW':{'.gallery .gcell':T('device-name','text-tagline','overlay'),'.gallery .gcell i':T('state','badge','overlay'),'.sig-multi':T('media','small-thumb')},
  'C-LOG':{'.logrow .lt':T('absolute-time','text-small'),'.logrow .lv':T('state','text-small'),'.logrow .ld':T('trend-delta','text-small')},
- 'C-VISIT':{'.tsrow .tn':T('absolute-time','text-small'),'.tsrow .tm':T('absolute-time','text-tagline'),'.tsrow .cliptip':T('media','small-thumb'),'.tsrow .ctg':T('media','small-thumb','overlay'),'.tsrow .dd':T('duration','text-small'),'.tsrow .ds':T('state','badge'),'.cv':T('confidence','button-pill')},
+ 'C-VISIT':{'.tsrow .tn':T('absolute-time','text-small'),'.tsrow .tm':T('absolute-time','text-tagline'),'.tsrow .cliptip':T('media','small-thumb'),'.tsrow .ctg':T('media','small-thumb','overlay'),'.tsrow .dd':T('duration','text-small'),'.tsrow .ds':T('state','badge')},
  'C-IDCARD':{'.idcard .nm':T('name-tag','text-small'),'.idcard .sci':T('attribute-tag','text-tagline'),'.idcard .pic':T('media','square'),'.idcard .meta':T('absolute-time','text-tagline'),'.pvbadge':T('state','badge'),'.cv':T('confidence','button-pill')},
  'C-TREND':{'.trendbars .tb':T('time-trend','weekly-chart'),'.delta':T('trend-delta','badge')},
  'C-DETER':{'.act.danger':T('device-control','button-pill'),'.act:not(.danger)':T('device-control','button-pill')},
@@ -5331,14 +5338,8 @@ function renderV4Nodes(parts){
     if(n.hdr) return `<div class="v4ph"><b>${n.hdr.t}</b>${n.hdr.right?rSlot(n.hdr.right,'section header'):''}</div>`;
     if(n.list) return `<div class="v4list">${n.list.map(r=>`<div class="v4row">${r.map(x=>rSlot(x,'list')).join('')}</div>`).join('')}</div>`;
     if(n.log) return `<div class="v4list v4log">${n.log.map(r=>`<div class="v4row" style="padding:6px 0">${r.map(x=>rSlot(x,'log')).join('')}</div>`).join('')}</div>`;
-    if(n.grid){
-      /* rule: more cells than fit -> the grid flows into columns and scrolls horizontally */
-      const scroll=n.grid.cells.length>n.grid.cols*2;
-      const st=scroll
-        ?`grid-auto-flow:column;grid-template-rows:repeat(2,auto);grid-auto-columns:calc(${(100/n.grid.cols).toFixed(2)}% - 6px);overflow-x:auto`
-        :`grid-template-columns:repeat(${n.grid.cols},1fr)`;
-      return `<div class="v4grid" style="${st}">${n.grid.cells.map(c=>`<div class="v4cell">${c.map(x=>rSlot(x,'grid')).join('')}</div>`).join('')}</div>`;
-    }
+    if(n.grid) return `<div class="v4grid" style="grid-template-columns:repeat(${n.grid.cols},1fr)">${n.grid.cells.map(c=>`<div class="v4cell">${c.map(x=>rSlot(x,'grid')).join('')}</div>`).join('')}</div>`;
+    if(n.sgrid) return `<div class="v4grid v4sgrid">${n.sgrid.cells.map(c=>`<div class="v4cell">${c.map(x=>rSlot(x,'sgrid')).join('')}</div>`).join('')}</div>`;
     if(n.strip) return `<div class="v4strip">${n.strip.map(x=>rSlot(x,'strip')).join('')}</div>`;
     if(n.hero){
       const ov=(n.hero.ov||[]).map(o=>o.el==='detection-marker'
@@ -5375,6 +5376,7 @@ function claimsOfParts(parts){
     if(n.list){ set.add('layout-list·list'); n.list.forEach(r=>r.forEach(slot)); return; }
     if(n.log){ set.add('layout-log·log'); n.log.forEach(r=>r.forEach(slot)); return; }
     if(n.grid){ set.add('layout-grid·grid'); n.grid.cells.forEach(c=>c.forEach(slot)); return; }
+    if(n.sgrid){ set.add('layout-sgrid·sgrid'); n.sgrid.cells.forEach(c=>c.forEach(slot)); return; }
     if(n.strip){ set.add('layout-strip·strip'); n.strip.forEach(slot); return; }
     if(n.hero){ set.add('layout-hero·hero'); set.add('media·full-card'); (n.hero.ov||[]).forEach(o=>o.col?o.col.forEach(slot):slot(o)); return; }
     if(n.chips){ set.add('layout-chips·chips'); n.chips.forEach(slot); return; }
@@ -5418,7 +5420,7 @@ function lintV4(){
   window.__v4lint=res;
   return res;
 }
-const V4_STRUCT_IDS=['section-header','layout-list','layout-log','layout-card','layout-grid','layout-strip','layout-hero','layout-widget','layout-chips'];
+const V4_STRUCT_IDS=['section-header','layout-list','layout-log','layout-card','layout-grid','layout-sgrid','layout-strip','layout-hero','layout-widget','layout-chips'];
 /* renders the v4.0 version view INSIDE the Components tab (dcGrids/dcSummary) */
 function renderDcV4(){
   const lint=lintV4();
@@ -5601,10 +5603,12 @@ const T4=[
      {el:'absolute-time',fmt:'text-tagline',s:{txt:'7:42 AM'},at:'br'}]}}]},
    {lab:'species + season count',parts:[{row:[S('attribute-tag','badge',{tag:'Cardinalis cardinalis',c:'#f25c5c'}),S('instance-count','badge',{name:'Season',txt:'128'})]}]},
    {lab:'species filter · chip bar',parts:[{chips:[S('instance-tag','filter',{txt:'Cardinal',sub:'All'}),S('instance-tag','badge',{tag:'Blue jay',c:'#9cc3f5'}),S('instance-tag','badge',{tag:'Goldfinch',c:'#f6b73c'})]}]},
-   {lab:'collection',parts:[{hdr:{t:'Collection'}},{grid:{cols:3,cells:[
+   {lab:'today&rsquo;s visitors',parts:[{hdr:{t:'Today&rsquo;s visitors'}},{sgrid:{cells:[
      [S('media','small-thumb',{grad:'linear-gradient(150deg,#b1402f40,#0c1119)'}),S('attribute-tag','text-small',{txt:'Cardinal'})],
      [S('media','small-thumb',{grad:'linear-gradient(150deg,#4f8ff040,#0c1119)'}),S('attribute-tag','text-small',{txt:'Blue jay'})],
-     [S('media','small-thumb',{grad:'linear-gradient(150deg,#f6b73c40,#0c1119)'}),S('attribute-tag','text-small',{txt:'Goldfinch'})]]}}]},
+     [S('media','small-thumb',{grad:'linear-gradient(150deg,#f6b73c40,#0c1119)'}),S('attribute-tag','text-small',{txt:'Goldfinch'})],
+     [S('media','small-thumb',{grad:'linear-gradient(150deg,#7eecc440,#0c1119)'}),S('attribute-tag','text-small',{txt:'Chickadee'})],
+     [S('media','small-thumb',{grad:'linear-gradient(150deg,#c4b3f040,#0c1119)'}),S('attribute-tag','text-small',{txt:'House finch'})]]}}]},
    {lab:'sighting calendar',parts:[{hdr:{t:'Sightings this month'}},{row:[S('time-trend','month-chart')]}]},
    {lab:'insight',parts:[{card:[{hdr:{t:'Insight'}},{row:[S('insight','text-medium',{txt:'Cardinals visit at <b style="color:#f25c5c">sunrise</b> &mdash; this is your busiest week of the season.',tagline:'This season &middot; week 9'})]}]}]},
    {lab:'history',parts:[{more:true}]}]},
@@ -5767,7 +5771,7 @@ document.getElementById('intents').addEventListener('click',e=>{
     const y=Math.min(e.clientY+14,window.innerHeight-pop.offsetHeight-12);
     pop.style.left=x+'px'; pop.style.top=y+'px';
   };
-  const CTX2LAYOUT={'list':'layout-list','log':'layout-log','grid':'layout-grid','strip':'layout-strip','hero':'layout-hero',
+  const CTX2LAYOUT={'list':'layout-list','log':'layout-log','grid':'layout-grid','sgrid':'layout-sgrid','strip':'layout-strip','hero':'layout-hero',
     'card':'layout-card','chip bar':'layout-chips','widget':'layout-widget',
     'section header':'section-header'};
   const over=e=>{
@@ -5813,6 +5817,8 @@ function lintT4(){
       console.warn('T4:',t.id,'log has',n.log.length,'rows — rule: at least 4 before More —',sec.lab); }));
     t.sections.forEach(sec=>{ if(sec.parts.some(n=>n.log)&&!sec.parts.some(n=>n.hdr))
       console.warn('T4:',t.id,'log without a title row —',sec.lab); });
+    t.sections.forEach(sec=>sec.parts.forEach(n=>{ if(n.grid&&Math.ceil(n.grid.cells.length/n.grid.cols)>2)
+      console.warn('T4:',t.id,'static grid has',Math.ceil(n.grid.cells.length/n.grid.cols),'rows — rule: at most 2; use the scroll grid —',sec.lab); }));
     t.sections.forEach(sec=>sec.parts.forEach(n=>{ if(!n.list) return;
       n.list.forEach(r=>r.forEach(x=>{ if(!x.col) return;
         x.col.slice(1).forEach(c=>{ if(TIMEY.includes(c.el)&&c.fmt!=='text-tagline')
@@ -5827,7 +5833,7 @@ function lintT4(){
       if(V4_STRUCT_IDS.includes(el)&&!(res.usedBy[el]||[]).includes(t.title)) (res.usedBy[el]=res.usedBy[el]||[]).push(t.title);
     });
     const heroEarly=t.sections.slice(0,2).some(sec=>sec.parts.some(function chk(n){
-      return !!n.hero||(n.card&&n.card.some(chk))||(n.grid&&n.grid.cells.some(c=>c.some(x=>x.el==='media')));}));
+      return !!n.hero||(n.card&&n.card.some(chk))||(n.grid&&n.grid.cells.some(c=>c.some(x=>x.el==='media')))||(n.sgrid&&n.sgrid.cells.some(c=>c.some(x=>x.el==='media')));}));
     if(!heroEarly) console.warn('T4:',t.id,'no media hero in the first two sections');
     res[t.id]={claims:[...claims],bad};
   });
