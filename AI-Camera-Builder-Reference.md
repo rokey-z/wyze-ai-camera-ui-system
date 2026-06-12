@@ -59,7 +59,7 @@ Value + unit read from the scene (VLM, no OCR endpoint)
 
 ### Duration `duration`
 Elapsed time in state — derived from state-change timestamps
-- formats: `text-large` `text-small` `badge` · layouts: standalone / overlay
+- formats: `text-large` `text-small` `badge` `text-tagline` · layouts: standalone / overlay
 - RULE: always reads with a leading "for"
 
 ### Category tag `category-tag`
@@ -187,7 +187,7 @@ Format-level conventions (the renderer is the single source of styling):
 
 ---
 
-## 4. Layout patterns (11)
+## 4. Layout patterns (12)
 
 Patterns are **containers**: their slots fix size and position only — any reasonable
 element · format can fill a slot. Rules are recorded per pattern and enforced by lint
@@ -211,6 +211,13 @@ Compact text-only rows for readings and state changes — a journal, not a feed.
 - at least 4 rows before the More footer
 - text renders only — media belongs in List
 - three slots per row align left · middle · right — any reasonable element · format in each
+
+### Timeline `timeline`
+Moments on a vertical thread — a dot and its time on the line, content beside; for stories where the sequence itself matters.
+- a vertical thread connects the dots — one dot per moment, its time beside the dot
+- dots may take the moment's state colour
+- body takes any reasonable element · format — clip, group, instance, text; the trailing slot right-aligns
+- at least 3 moments, newest first
 
 ### Card `card`
 A self-contained block for one subject — its state, media and detail boxed together.
@@ -251,7 +258,7 @@ The full-width media surface that anchors a screen; small elements overlay its c
 ### Widget `widget`
 The home-screen widget: one glance answers the template's question.
 - widget-only — never inside a template screen (lint-enforced)
-- round thumb · exactly ONE pill · one freshness line · name beneath
+- round thumb · exactly ONE pill · one freshness line (tagline format) · name beneath
 - an optional alert dot (priority-marker) pins to the thumb
 
 ### Chip bar `chips`
@@ -265,7 +272,7 @@ A wrapping row of pill chips — category filters above a list, or link chips un
 
 Every template ships a home-screen widget: `{grad, alert?, pill, sub, name}` —
 a round media thumb on a gradient, exactly ONE state pill, one freshness line
-(relative time or duration), the agent name beneath, and an optional alert dot.
+(relative time or duration, in the tagline format), the agent name beneath, and an optional alert dot.
 The widget answers the template's question without opening it.
 
 ---
@@ -313,6 +320,7 @@ The runtime lint (lintT4) enforces, per template:
 | `{idcard:{t?, badge?, media, lines:[slots]}}` | entity intro — portrait + name/attributes/stats + optional verdict badge |
 | `{list:[[slots],…]}` | list rows (lead · middle · right) |
 | `{log:[[slots],…]}` | log rows (left · middle · right) |
+| `{timeline:[{time, c?, body:[slots]},…]}` | vertical thread — dot + time per moment, any content beside; newest first |
 | `{grid:{cols, cells:[[slots],…]}}` | static grid, ≤ 2 rows; a cell item `{ov, at}` pins a corner overlay |
 | `{sgrid:{cells:[[slots],…]}}` | scrollable one-row grid; cell overlays as in grid |
 | `{strip:[slots]}` | media rail |

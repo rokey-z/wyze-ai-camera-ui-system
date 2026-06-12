@@ -507,6 +507,13 @@
   .v4idmedia{flex:none}
   .v4idcard .v4idmedia .ethumb.esq{width:64px!important;height:64px!important;flex:0 0 64px}
   .v4cell{position:relative;border:1px solid var(--line);border-radius:9px;background:var(--bg2,#0e1726);padding:8px;display:flex;flex-direction:column;gap:5px;min-width:0}
+  .v4tl{position:relative;padding-left:18px}
+  .v4tl::before{content:'';position:absolute;left:4px;top:10px;bottom:10px;width:2px;border-radius:1px;background:var(--line)}
+  .v4tlrow{position:relative;display:flex;gap:9px;align-items:center;padding:7px 0}
+  .v4tldot{position:absolute;left:-18px;top:50%;transform:translate(0.5px,-50%);width:9px;height:9px;border-radius:50%;background:#4f8ff0;border:2px solid #0e1726;z-index:1}
+  .v4tltime{flex:none;width:58px}
+  .v4tlbody{flex:1;min-width:0;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .v4tlbody > .v4slot:last-child{margin-left:auto}
   .v4cellov{position:absolute;z-index:2}
   .v4cellov-tl{left:5px;top:5px}.v4cellov-tr{right:5px;top:5px}.v4cellov-bl{left:5px;bottom:5px}.v4cellov-br{right:5px;bottom:5px}
   .v4cellov .agpill{font-size:8px;padding:2px 6px}
@@ -1884,7 +1891,7 @@ Value + unit read from the scene (VLM, no OCR endpoint)
 
 ### Duration `duration`
 Elapsed time in state — derived from state-change timestamps
-- formats: `text-large` `text-small` `badge` · layouts: standalone / overlay
+- formats: `text-large` `text-small` `badge` `text-tagline` · layouts: standalone / overlay
 - RULE: always reads with a leading "for"
 
 ### Category tag `category-tag`
@@ -2012,7 +2019,7 @@ Format-level conventions (the renderer is the single source of styling):
 
 ---
 
-## 4. Layout patterns (11)
+## 4. Layout patterns (12)
 
 Patterns are **containers**: their slots fix size and position only — any reasonable
 element · format can fill a slot. Rules are recorded per pattern and enforced by lint
@@ -2036,6 +2043,13 @@ Compact text-only rows for readings and state changes — a journal, not a feed.
 - at least 4 rows before the More footer
 - text renders only — media belongs in List
 - three slots per row align left · middle · right — any reasonable element · format in each
+
+### Timeline `timeline`
+Moments on a vertical thread — a dot and its time on the line, content beside; for stories where the sequence itself matters.
+- a vertical thread connects the dots — one dot per moment, its time beside the dot
+- dots may take the moment's state colour
+- body takes any reasonable element · format — clip, group, instance, text; the trailing slot right-aligns
+- at least 3 moments, newest first
 
 ### Card `card`
 A self-contained block for one subject — its state, media and detail boxed together.
@@ -2076,7 +2090,7 @@ The full-width media surface that anchors a screen; small elements overlay its c
 ### Widget `widget`
 The home-screen widget: one glance answers the template's question.
 - widget-only — never inside a template screen (lint-enforced)
-- round thumb · exactly ONE pill · one freshness line · name beneath
+- round thumb · exactly ONE pill · one freshness line (tagline format) · name beneath
 - an optional alert dot (priority-marker) pins to the thumb
 
 ### Chip bar `chips`
@@ -2090,7 +2104,7 @@ A wrapping row of pill chips — category filters above a list, or link chips un
 
 Every template ships a home-screen widget: `{grad, alert?, pill, sub, name}` —
 a round media thumb on a gradient, exactly ONE state pill, one freshness line
-(relative time or duration), the agent name beneath, and an optional alert dot.
+(relative time or duration, in the tagline format), the agent name beneath, and an optional alert dot.
 The widget answers the template's question without opening it.
 
 ---
@@ -2138,6 +2152,7 @@ The runtime lint (lintT4) enforces, per template:
 | `{idcard:{t?, badge?, media, lines:[slots]}}` | entity intro — portrait + name/attributes/stats + optional verdict badge |
 | `{list:[[slots],…]}` | list rows (lead · middle · right) |
 | `{log:[[slots],…]}` | log rows (left · middle · right) |
+| `{timeline:[{time, c?, body:[slots]},…]}` | vertical thread — dot + time per moment, any content beside; newest first |
 | `{grid:{cols, cells:[[slots],…]}}` | static grid, ≤ 2 rows; a cell item `{ov, at}` pins a corner overlay |
 | `{sgrid:{cells:[[slots],…]}}` | scrollable one-row grid; cell overlays as in grid |
 | `{strip:[slots]}` | media rail |
@@ -2206,7 +2221,7 @@ Goal: *"Did the bins go out — and come back?"*
 <ul><li>formats: <code>tile</code> <code>text-large</code> <code>text-tagline</code> · layouts: standalone / overlay · action: <code>correct</code> · provenance: vlm, correctable</li><li>RULE: the unit rides with the value</li></ul>
 <h3 id="duration-duration">Duration <code>duration</code></h3>
 <p>Elapsed time in state — derived from state-change timestamps</p>
-<ul><li>formats: <code>text-large</code> <code>text-small</code> <code>badge</code> · layouts: standalone / overlay</li><li>RULE: always reads with a leading &quot;for&quot;</li></ul>
+<ul><li>formats: <code>text-large</code> <code>text-small</code> <code>badge</code> <code>text-tagline</code> · layouts: standalone / overlay</li><li>RULE: always reads with a leading &quot;for&quot;</li></ul>
 <h3 id="category-tag-categorytag">Category tag <code>category-tag</code></h3>
 <p>Classifier tag on one instance (person / vehicle / pet)</p>
 <ul><li>formats: <code>badge</code> <code>text-tagline</code> · layouts: standalone / overlay · action: <code>filter</code> · provenance: detector</li></ul>
@@ -2286,7 +2301,7 @@ Goal: *"Did the bins go out — and come back?"*
 <ul><li><strong>button-block</strong> — coloured fill with white icon and label, same treatment as the pill.</li><li><strong>tile</strong> — the shared tile anatomy: big value on top, name beneath.</li><li><strong>charts</strong> — see the time-trend rules: goal-named title, axis below, legend beneath,</li></ul>
 <p>  binary = state band, calendar cells self-labelled.</p>
 <hr />
-<h2 id="4-layout-patterns-11">4. Layout patterns (11)</h2>
+<h2 id="4-layout-patterns-12">4. Layout patterns (12)</h2>
 <p>Patterns are <strong>containers</strong>: their slots fix size and position only — any reasonable element · format can fill a slot. Rules are recorded per pattern and enforced by lint where marked.</p>
 <h3 id="section-header-hdr">Section header <code>hdr</code></h3>
 <p>Opens a section: names what follows and carries one glanceable number or status.</p>
@@ -2297,6 +2312,9 @@ Goal: *"Did the bins go out — and come back?"*
 <h3 id="log-log">Log <code>log</code></h3>
 <p>Compact text-only rows for readings and state changes — a journal, not a feed.</p>
 <ul><li>titled by a section header in the same section (lint-enforced)</li><li>at least 4 rows before the More footer</li><li>text renders only — media belongs in List</li><li>three slots per row align left · middle · right — any reasonable element · format in each</li></ul>
+<h3 id="timeline-timeline">Timeline <code>timeline</code></h3>
+<p>Moments on a vertical thread — a dot and its time on the line, content beside; for stories where the sequence itself matters.</p>
+<ul><li>a vertical thread connects the dots — one dot per moment, its time beside the dot</li><li>dots may take the moment&#x27;s state colour</li><li>body takes any reasonable element · format — clip, group, instance, text; the trailing slot right-aligns</li><li>at least 3 moments, newest first</li></ul>
 <h3 id="card-card">Card <code>card</code></h3>
 <p>A self-contained block for one subject — its state, media and detail boxed together.</p>
 <ul><li>every card opens with a title row</li><li>bare values never float — a subject&#x27;s values sit boxed together in its card</li><li>one card = one subject</li></ul>
@@ -2317,13 +2335,13 @@ Goal: *"Did the bins go out — and come back?"*
 <ul><li>leads the screen — within the first two sections (lint-enforced)</li><li>a media-led grid in the first two sections also satisfies the lead (camera consoles)</li><li>overlays pin to corners (tl · tr · bl · br); keep them small</li></ul>
 <h3 id="widget-widget">Widget <code>widget</code></h3>
 <p>The home-screen widget: one glance answers the template&#x27;s question.</p>
-<ul><li>widget-only — never inside a template screen (lint-enforced)</li><li>round thumb · exactly ONE pill · one freshness line · name beneath</li><li>an optional alert dot (priority-marker) pins to the thumb</li></ul>
+<ul><li>widget-only — never inside a template screen (lint-enforced)</li><li>round thumb · exactly ONE pill · one freshness line (tagline format) · name beneath</li><li>an optional alert dot (priority-marker) pins to the thumb</li></ul>
 <h3 id="chip-bar-chips">Chip bar <code>chips</code></h3>
 <p>A wrapping row of pill chips — category filters above a list, or link chips under a card.</p>
 <ul><li>text pills only, never media (that&#x27;s Strip); wraps freely</li><li>filter role sits between a header and its list; exactly one chip carries the selected state</li></ul>
 <hr />
 <h2 id="5-widget-contract">5. Widget contract</h2>
-<p>Every template ships a home-screen widget: <code>{grad, alert?, pill, sub, name}</code> — a round media thumb on a gradient, exactly ONE state pill, one freshness line (relative time or duration), the agent name beneath, and an optional alert dot. The widget answers the template&#x27;s question without opening it.</p>
+<p>Every template ships a home-screen widget: <code>{grad, alert?, pill, sub, name}</code> — a round media thumb on a gradient, exactly ONE state pill, one freshness line (relative time or duration, in the tagline format), the agent name beneath, and an optional alert dot. The widget answers the template&#x27;s question without opening it.</p>
 <hr />
 <h2 id="6-states-verification">6. States &amp; verification</h2>
 <p><strong>Empty / Loading are element STATES</strong>, not layouts or elements: query-backed elements declare <code>states:[&#x27;empty&#x27;,&#x27;loading&#x27;]</code> and render their own empty / loading chrome. Grammar nodes <code>{empty:…}</code> / <code>{loading:true}</code> render the chrome and claim nothing.</p>
@@ -2340,7 +2358,7 @@ Goal: *"Did the bins go out — and come back?"*
     name: S(&#x27;name-tag&#x27;,&#x27;text-tagline&#x27;,{txt:&#x27;TRASH BINS&#x27;}) },
   sections:[ { lab:&#x27;state · how long&#x27;, parts:[ /* nodes */ ] }, … ] }</code></pre>
 <p><strong>Node grammar</strong> (what <code>parts</code> may contain):</p>
-<table><thead><tr><th>node</th><th>renders</th></tr></thead><tbody><tr><td><code>S(el, fmt, sample?)</code></td><td>one element render — the leaf</td></tr><tr><td><code>C(...slots)</code></td><td>a column stacking slots</td></tr><tr><td><code>{hdr:{t, right?}}</code></td><td>section header (+ optional right slot)</td></tr><tr><td><code>{row:[slots]}</code></td><td>a flex row of slots</td></tr><tr><td><code>{card:[parts]}</code></td><td>bordered card (open with a <code>hdr</code>)</td></tr><tr><td><code>{idcard:{t?, badge?, media, lines:[slots]}}</code></td><td>entity intro — portrait + name/attributes/stats + optional verdict badge</td></tr><tr><td><code>{list:[[slots],…]}</code></td><td>list rows (lead · middle · right)</td></tr><tr><td><code>{log:[[slots],…]}</code></td><td>log rows (left · middle · right)</td></tr><tr><td><code>{grid:{cols, cells:[[slots],…]}}</code></td><td>static grid, ≤ 2 rows; a cell item <code>{ov, at}</code> pins a corner overlay</td></tr><tr><td><code>{sgrid:{cells:[[slots],…]}}</code></td><td>scrollable one-row grid; cell overlays as in grid</td></tr><tr><td><code>{strip:[slots]}</code></td><td>media rail</td></tr><tr><td>`{hero:{grad, ov:[{el,fmt,s,at} \</td><td>{col:[slots],at}]}}`</td><td>media hero with corner overlays (<code>tl/tr/bl/br</code>)</td></tr><tr><td><code>{chips:[slots]}</code></td><td>chip bar</td></tr><tr><td><code>{more:true}</code></td><td>More paging footer</td></tr><tr><td><code>{empty:{txt,sub}}</code> / <code>{loading:true}</code></td><td>element-state chrome, claims nothing</td></tr></tbody></table>
+<table><thead><tr><th>node</th><th>renders</th></tr></thead><tbody><tr><td><code>S(el, fmt, sample?)</code></td><td>one element render — the leaf</td></tr><tr><td><code>C(...slots)</code></td><td>a column stacking slots</td></tr><tr><td><code>{hdr:{t, right?}}</code></td><td>section header (+ optional right slot)</td></tr><tr><td><code>{row:[slots]}</code></td><td>a flex row of slots</td></tr><tr><td><code>{card:[parts]}</code></td><td>bordered card (open with a <code>hdr</code>)</td></tr><tr><td><code>{idcard:{t?, badge?, media, lines:[slots]}}</code></td><td>entity intro — portrait + name/attributes/stats + optional verdict badge</td></tr><tr><td><code>{list:[[slots],…]}</code></td><td>list rows (lead · middle · right)</td></tr><tr><td><code>{log:[[slots],…]}</code></td><td>log rows (left · middle · right)</td></tr><tr><td><code>{timeline:[{time, c?, body:[slots]},…]}</code></td><td>vertical thread — dot + time per moment, any content beside; newest first</td></tr><tr><td><code>{grid:{cols, cells:[[slots],…]}}</code></td><td>static grid, ≤ 2 rows; a cell item <code>{ov, at}</code> pins a corner overlay</td></tr><tr><td><code>{sgrid:{cells:[[slots],…]}}</code></td><td>scrollable one-row grid; cell overlays as in grid</td></tr><tr><td><code>{strip:[slots]}</code></td><td>media rail</td></tr><tr><td>`{hero:{grad, ov:[{el,fmt,s,at} \</td><td>{col:[slots],at}]}}`</td><td>media hero with corner overlays (<code>tl/tr/bl/br</code>)</td></tr><tr><td><code>{chips:[slots]}</code></td><td>chip bar</td></tr><tr><td><code>{more:true}</code></td><td>More paging footer</td></tr><tr><td><code>{empty:{txt,sub}}</code> / <code>{loading:true}</code></td><td>element-state chrome, claims nothing</td></tr></tbody></table>
 <p>Every <code>S()</code> emits a claim <code>element·format</code> that the lint validates against the registry.</p>
 <hr />
 <h2 id="8-worked-example-trash-bin-checker">8. Worked example — Trash Bin Checker</h2>
@@ -4694,7 +4712,7 @@ const FIELD_META={
 /* ---- the 13 formats + per-format micro (strip) and stage (full) renderers ---- */
 const FORMATS=['text-large','text-medium','text-small','text-tagline','badge','dot','tile','list','small-thumb','square','full-card','bound-box','button','button-pill','button-block','sound-clip','hourly-chart','daily-chart','state-chart','weekly-chart','month-chart'];
 /* format switch tags are listed big -> small; first (biggest) is the default */
-const FMT_SIZE_ORDER=['full-card','bound-box','square','month-chart','weekly-chart','daily-chart','state-chart','hourly-chart','chart','widget','grid','strip','small-thumb','sound-clip','tile','list','log','idcard','card','sgrid','hero','header','button-block','button-pill','button','chips','text-large','text-medium','badge','text-small','text-tagline','dot'];
+const FMT_SIZE_ORDER=['full-card','bound-box','square','month-chart','weekly-chart','daily-chart','state-chart','hourly-chart','chart','widget','grid','strip','small-thumb','sound-clip','tile','list','log','timeline','idcard','card','sgrid','hero','header','button-block','button-pill','button','chips','text-large','text-medium','badge','text-small','text-tagline','dot'];
 const lslot=(label,st)=>`<span style="border:1px dashed #4f8ff066;background:#4f8ff00a;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:7.5px;letter-spacing:.3px;color:#9cc3f5;font-family:var(--mono);box-sizing:border-box;${st||''}">${label}</span>`;
 const elFmtOrder=f=>[...f].sort((a,b)=>FMT_SIZE_ORDER.indexOf(a)-FMT_SIZE_ORDER.indexOf(b));
 const chartLegend=items=>`<div class="axis-legend" style="display:flex;gap:10px;margin-top:5px">${items.map(i=>`<span style="display:inline-flex;align-items:center;gap:4px;font-size:8.5px;letter-spacing:.3px;color:var(--mut)"><i style="width:8px;height:8px;border-radius:2px;border:1px solid var(--line);background:${i.c};flex:none"></i>${i.t}</span>`).join('')}</div>`;
@@ -4758,7 +4776,7 @@ const EL_REGISTRY=[
   stage:{'text-large':s=>{const u=(s.unit&&!/[°%a-zA-Z]/.test(String(s.txt||'')))?s.unit:'';return FMT_STAGE['text-large'](Object.assign({},s,{txt:(s.txt||'')+u}));},
          'text-tagline':s=>{const u=(s.unit&&!/[°%a-zA-Z]/.test(String(s.txt||'')))?s.unit:'';return FMT_STAGE['text-tagline'](Object.assign({},s,{txt:(s.txt||'')+u}));},
          tile:s=>`<div class="tilegrid"><div class="gtile num"><b>${s.txt}<span style="font-size:12px;font-weight:600;color:var(--mut);letter-spacing:0;text-transform:none">${s.unit!==undefined?s.unit:' kWh'}</span></b><span>${s.sub||''}</span></div></div>`}},
- {id:'duration',grp:'state-agg',label:'Duration',desc:'Elapsed time in state — derived from state-change timestamps',rules:['Always reads with a leading &ldquo;for&rdquo;'],sig:'identity/device · duration · time',formats:['text-large','text-small','badge'],layouts:['standalone','overlay'],action:'none',accepts:['time','number'],
+ {id:'duration',grp:'state-agg',label:'Duration',desc:'Elapsed time in state — derived from state-change timestamps',rules:['Always reads with a leading &ldquo;for&rdquo;'],sig:'identity/device · duration · time',formats:['text-large','text-small','badge','text-tagline'],layouts:['standalone','overlay'],action:'none',accepts:['time','number'],
   sample:{txt:'for 3h 42m',c:'#7eecc4',mono:true},stage:{'text-large':s=>{const v=s.val||String(s.txt||'').replace(/^for\s*/,'');return `<span style="font-family:var(--mono);font-weight:700;font-size:24px;color:${s.c}"><span style="color:var(--mut);font-size:15px;font-weight:600">for </span>${v}</span>`;}}},
  /* instance aggregation */
  {id:'category-tag',grp:'count-agg',label:'Category tag',desc:'Classifier tag on one instance (person / vehicle / pet)',sig:'instance · none · category',formats:['badge','text-tagline'],layouts:['standalone','overlay'],action:'filter',accepts:['id','score'],
@@ -4850,6 +4868,11 @@ const EL_REGISTRY=[
   rules:['Titled by a section header in the same section (lintT4 enforces it)','At least 4 rows before the More footer','Text renders only — media belongs in List','Three slots per row align left &middot; middle &middot; right — any reasonable element &middot; format in each'],
   sig:'layout · repeat',formats:['log'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
   sample:{},stage:{log:s=>Array.from({length:4},(_,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:5px 0;${i?'border-top:1px solid var(--line)':''}">${lslot('left','width:52px;height:10px;flex:none')}${lslot('middle','width:64px;height:10px;flex:none;margin:0 auto')}${lslot('right','width:40px;height:9px;flex:none')}</div>`).join('')}},
+ {id:'layout-timeline',grp:'structure',label:'Timeline',
+  desc:'Moments on a vertical thread — a dot and its time on the line, content beside; for stories where the sequence itself matters.',
+  rules:['A vertical thread connects the dots — one dot per moment, its time beside the dot','Dots may take the moment&rsquo;s state colour','Body takes any reasonable element &middot; format — clip, group, instance, text; the trailing slot right-aligns','At least 3 moments, newest first'],
+  sig:'layout · repeat',formats:['timeline'],layouts:['standalone'],action:'open-clip',accepts:['time','id'],
+  sample:{},stage:{timeline:s=>`<div style="position:relative;padding-left:17px"><i style="position:absolute;left:4px;top:10px;bottom:10px;width:2px;border-radius:1px;background:#4f8ff066"></i>${[14,30,12].map((h,i)=>`<div style="position:relative;display:flex;gap:8px;align-items:center;padding:6px 0"><i style="position:absolute;left:-16.5px;top:50%;transform:translateY(-50%);width:8px;height:8px;border-radius:50%;background:#4f8ff0aa;border:2px solid #0c1422"></i>${lslot('time','width:46px;height:10px;flex:none')}${lslot('body','height:'+h+'px;flex:1')}</div>`).join('')}</div>`}},
  {id:'layout-card',grp:'structure',label:'Card',
   desc:'A self-contained block for one subject — its state, media and detail boxed together.',
   rules:['Every screen card opens with a title row (lintT4 enforces it; identity / widget showcase cards are the exception)','Bare values never float — a subject&rsquo;s values sit boxed together in its card','One card = one subject'],
@@ -4882,7 +4905,7 @@ const EL_REGISTRY=[
   sample:{},stage:{hero:s=>`<div style="position:relative;aspect-ratio:16/9;border-radius:10px;background:linear-gradient(165deg,#1d2a40,#101a2c);border:1px solid var(--line)"><span style="position:absolute;inset:0;display:grid;place-items:center;font-size:8px;color:var(--dim);font-family:var(--mono)">media surface</span>${lslot('overlay','position:absolute;left:7px;top:7px;width:52px;height:13px')}${lslot('overlay','position:absolute;right:7px;top:7px;width:40px;height:13px')}${lslot('overlay','position:absolute;left:7px;bottom:7px;width:64px;height:13px')}${lslot('overlay','position:absolute;right:7px;bottom:7px;width:40px;height:13px')}</div>`}},
  {id:'layout-widget',grp:'structure',label:'Widget',
   desc:'The home-screen widget: one glance answers the template&rsquo;s question.',
-  rules:['Widget-only — never inside a template screen (lintT4 enforces it)','Round thumb &middot; exactly ONE pill &middot; one freshness line &middot; name beneath','An optional alert dot (priority-marker) pins to the thumb'],
+  rules:['Widget-only — never inside a template screen (lintT4 enforces it)','Round thumb &middot; exactly ONE pill &middot; one freshness line (tagline format) &middot; name beneath','An optional alert dot (priority-marker) pins to the thumb'],
   sig:'layout · single',formats:['widget'],layouts:['standalone'],action:'navigate',accepts:['id'],
   sample:{},stage:{widget:s=>`<div style="display:flex;flex-direction:column;align-items:center;gap:6px;width:130px">${lslot('thumb','width:64px;height:64px;border-radius:50%')}${lslot('pill','width:70px;height:15px;border-radius:999px')}${lslot('freshness','width:48px;height:9px')}${lslot('name','width:64px;height:8px;opacity:.7')}</div>`}},
  {id:'layout-chips',grp:'structure',label:'Chip bar',
@@ -5411,6 +5434,7 @@ function renderV4Nodes(parts){
     if(n.hdr) return `<div class="v4ph"><b data-v4i="section-header&middot;header|section header|standalone">${n.hdr.t}</b>${n.hdr.right?rSlot(n.hdr.right,'section header'):''}</div>`;
     if(n.list) return `<div class="v4list">${n.list.map(r=>`<div class="v4row">${r.map(x=>rSlot(x,'list')).join('')}</div>`).join('')}</div>`;
     if(n.log) return `<div class="v4list v4log">${n.log.map(r=>`<div class="v4row" style="padding:6px 0">${r.map(x=>rSlot(x,'log')).join('')}</div>`).join('')}</div>`;
+    if(n.timeline) return `<div class="v4tl">${n.timeline.map(m=>`<div class="v4tlrow"><span class="v4tldot"${m.c?` style="background:${m.c}"`:''}></span><div class="v4tltime">${rSlot(m.time,'timeline')}</div><div class="v4tlbody">${(m.body||[]).map(x=>rSlot(x,'timeline')).join('')}</div></div>`).join('')}</div>`;
     const cell=(c,ctx)=>`<div class="v4cell">${c.filter(x=>!x.ov).map(x=>rSlot(x,ctx)).join('')}${c.filter(x=>x.ov).map(o=>`<span class="v4cellov v4cellov-${o.at||'tr'}">${rSlot(o.ov,ctx)}</span>`).join('')}</div>`;
     if(n.grid) return `<div class="v4grid" style="grid-template-columns:repeat(${n.grid.cols},1fr)">${n.grid.cells.map(c=>cell(c,'grid')).join('')}</div>`;
     if(n.sgrid) return `<div class="v4grid v4sgrid">${n.sgrid.cells.map(c=>cell(c,'sgrid')).join('')}</div>`;
@@ -5453,6 +5477,7 @@ function claimsOfParts(parts){
     if(n.hdr){ set.add('section-header·header'); if(n.hdr.right) slot(n.hdr.right); return; }
     if(n.list){ set.add('layout-list·list'); n.list.forEach(r=>r.forEach(slot)); return; }
     if(n.log){ set.add('layout-log·log'); n.log.forEach(r=>r.forEach(slot)); return; }
+    if(n.timeline){ set.add('layout-timeline·timeline'); n.timeline.forEach(m=>{ if(m.time) slot(m.time); (m.body||[]).forEach(slot); }); return; }
     if(n.grid){ set.add('layout-grid·grid'); n.grid.cells.forEach(c=>c.forEach(x=>slot(x.ov||x))); return; }
     if(n.sgrid){ set.add('layout-sgrid·sgrid'); n.sgrid.cells.forEach(c=>c.forEach(x=>slot(x.ov||x))); return; }
     if(n.strip){ set.add('layout-strip·strip'); n.strip.forEach(slot); return; }
@@ -5499,7 +5524,7 @@ function lintV4(){
   window.__v4lint=res;
   return res;
 }
-const V4_STRUCT_IDS=['section-header','layout-list','layout-log','layout-card','layout-idcard','layout-grid','layout-sgrid','layout-strip','layout-hero','layout-widget','layout-chips'];
+const V4_STRUCT_IDS=['section-header','layout-list','layout-log','layout-timeline','layout-card','layout-idcard','layout-grid','layout-sgrid','layout-strip','layout-hero','layout-widget','layout-chips'];
 /* renders the v4.0 version view INSIDE the Components tab (dcGrids/dcSummary) */
 function renderDcV4(){
   const lint=lintV4();
@@ -5580,7 +5605,7 @@ renderLayoutPane();
 const T4=[
  {id:'package_reminder_v4',emoji:'📦',title:'Package Reminder',sub:'Event Watcher',goal:'Is something waiting at the door — and for how long?',
     widget:{grad:'linear-gradient(150deg,#2c3d5b,#0d1626)',alert:'#f6b73c',
-   pill:S('state','badge',{tag:'PACKAGE',c:'#f6b73c'}),sub:S('duration','text-small',{txt:'for 2h 14m'}),
+   pill:S('state','badge',{tag:'PACKAGE',c:'#f6b73c'}),sub:S('duration','text-tagline',{txt:'for 2h 14m'}),
    name:S('name-tag','text-tagline',{txt:'PACKAGE REMINDER'})},
   sections:[
    {lab:'hero · porch snapshot',parts:[{hero:{grad:'linear-gradient(165deg,#2c3d5b,#0d1626)',ov:[
@@ -5602,7 +5627,7 @@ const T4=[
 ]},
  {id:'garage_door_watcher_v4',emoji:'🚪',title:'Garage Door Watcher',sub:'State Monitor',goal:'Is the garage closed — and was it left open?',
     widget:{grad:'linear-gradient(150deg,#1d2a40,#0c1119)',
-   pill:S('state','badge',{tag:'CLOSED',c:'#7eecc4'}),sub:S('duration','text-small',{txt:'for 16m'}),
+   pill:S('state','badge',{tag:'CLOSED',c:'#7eecc4'}),sub:S('duration','text-tagline',{txt:'for 16m'}),
    name:S('name-tag','text-tagline',{txt:'GARAGE DOOR'})},
   sections:[
    {lab:'state + duration',parts:[{card:[{hdr:{t:'Garage door'}},{row:[S('state','text-large',{txt:'CLOSED',c:'#7eecc4'}),S('duration','text-large',{val:'16m'})]},{row:[S('confidence','button-pill')]}]}]},
@@ -5630,11 +5655,11 @@ const T4=[
    {lab:'insight &middot; tonight in one line',parts:[{card:[{hdr:{t:'Insight'}},{row:[S('insight','text-medium',{txt:'One true cry at <b style="color:#f3cd86">11:48 PM</b> &mdash; you went in; two stirs since, each self-settled within 3 minutes.',tagline:'Tonight &middot; asleep since 8:40 PM'})]}]}]},
    {lab:'last hour',parts:[{hdr:{t:'Stirrings &middot; last hour'}},{row:[S('time-trend','hourly-chart',{legend:[{c:'#3a5fa0',t:'stirrings'}]})]}]},
    {lab:'soothe',parts:[{row:[S('device-control','button-block',{txt:'Talk',ico:'mic'}),S('device-control','button-block',{txt:'Lullaby',ico:'music'}),S('device-control','button-block',{txt:'Night light',ico:'moon'})]}]},
-   {lab:'overnight moments',parts:[{list:[
-     [S('media','small-thumb',{grad:'linear-gradient(150deg,#10182b,#070b14)'}),C(S('description','text-small',{txt:'Brief waking &mdash; self-settled in 3 min'}),S('absolute-time','text-tagline',{txt:'2:14 AM'})),S('state','badge',{tag:'SETTLED',c:'#7eecc4'})],
-     [S('media','small-thumb',{grad:G1}),C(S('description','text-small',{txt:'Stirred &mdash; rolled over'}),S('absolute-time','text-tagline',{txt:'1:32 AM'})),S('state','badge',{tag:'STIRRED',c:'#9cc3f5'})],
-     [S('media','small-thumb',{grad:G2}),C(S('description','text-small',{txt:'True cry &mdash; you went in'}),S('absolute-time','text-tagline',{txt:'11:48 PM'})),S('state','badge',{tag:'CRY',c:'#f25c5c'})],
-     [S('media','small-thumb',{grad:G3}),C(S('description','text-small',{txt:'Put down for the night'}),S('absolute-time','text-tagline',{txt:'8:40 PM'})),S('state','badge',{tag:'ASLEEP',c:'#7eecc4'})]]},
+   {lab:'overnight moments',parts:[{hdr:{t:'Overnight'}},{timeline:[
+     {time:S('absolute-time','text-small',{txt:'2:14 AM'}),c:'#7eecc4',body:[S('media','small-thumb',{grad:'linear-gradient(150deg,#10182b,#070b14)'}),S('description','text-small',{txt:'Brief waking &mdash; self-settled in 3 min'}),S('state','badge',{tag:'SETTLED',c:'#7eecc4'})]},
+     {time:S('absolute-time','text-small',{txt:'1:32 AM'}),c:'#9cc3f5',body:[S('description','text-small',{txt:'Stirred &mdash; rolled over'}),S('state','badge',{tag:'STIRRED',c:'#9cc3f5'})]},
+     {time:S('absolute-time','text-small',{txt:'11:48 PM'}),c:'#f25c5c',body:[S('media','small-thumb',{grad:G2}),S('description','text-small',{txt:'True cry &mdash; you went in'}),S('state','badge',{tag:'CRY',c:'#f25c5c'})]},
+     {time:S('absolute-time','text-small',{txt:'8:40 PM'}),c:'#4f8ff0',body:[S('description','text-small',{txt:'Put down for the night'}),S('state','badge',{tag:'ASLEEP',c:'#7eecc4'})]}]},
      {more:true}]}]},
  {id:'pet_monitor_v4',emoji:'🐶',title:'Pet Monitor',sub:'Wellbeing Monitor',goal:'Where is Cooper and what has he been up to?',
     widget:{grad:'linear-gradient(150deg,#34d39930,#0c1119)',
@@ -5659,7 +5684,7 @@ const T4=[
    {lab:'loading variant',parts:[{loading:true}]}]},
  {id:'stove_watcher_v4',emoji:'🔥',title:'Stove Watcher',sub:'State Monitor',goal:'Did I leave the stove on?',
     widget:{grad:'linear-gradient(150deg,#3b2c2c,#140d0d)',alert:'#f25c5c',
-   pill:S('state','badge',{tag:'ON',c:'#f25c5c'}),sub:S('duration','text-small',{txt:'for 42m'}),
+   pill:S('state','badge',{tag:'ON',c:'#f25c5c'}),sub:S('duration','text-tagline',{txt:'for 42m'}),
    name:S('name-tag','text-tagline',{txt:'STOVE WATCHER'})},
   sections:[
    {lab:'state &middot; level &middot; reading',parts:[{card:[{hdr:{t:'Stove',right:S('priority-marker','badge')}},
@@ -5734,7 +5759,7 @@ const T4=[
      [S('device-name','text-small',{txt:'Paris loft'}),S('instance-count','text-small',{name:'events',txt:'4'}),S('state','badge',{tag:'QUIET',c:'#7eecc4'})]]}]}]},
  {id:'trash_bin_checker_v4',emoji:'🗑',title:'Trash Bin Checker',sub:'Attendance Verifier',goal:'Did the bins go out — and come back?',
   widget:{grad:'linear-gradient(150deg,#3b342c,#140f0d)',alert:'#f6b73c',
-   pill:S('state','badge',{tag:'BINS OUT',c:'#f6b73c'}),sub:S('duration','text-small',{txt:'for 2h 4m'}),
+   pill:S('state','badge',{tag:'BINS OUT',c:'#f6b73c'}),sub:S('duration','text-tagline',{txt:'for 2h 4m'}),
    name:S('name-tag','text-tagline',{txt:'TRASH BINS'})},
   sections:[
    {lab:'state &middot; how long',parts:[{card:[{hdr:{t:'Trash bins'}},
@@ -5748,7 +5773,7 @@ const T4=[
    {lab:'nudge',parts:[S('suggestion','button',{tag:'Remind me to bring them back'})]}]},
  {id:'fridge_temp_v4',emoji:'🧊',title:'Walk-in Fridge Temp',sub:'Instrument Reader',goal:'Is the walk-in holding temperature?',
   widget:{grad:'linear-gradient(150deg,#1d3340,#0c1419)',
-   pill:S('state','badge',{tag:'38&deg;F &middot; OK',c:'#7eecc4'}),sub:S('duration','text-small',{txt:'for 6h 12m'}),
+   pill:S('state','badge',{tag:'38&deg;F &middot; OK',c:'#7eecc4'}),sub:S('duration','text-tagline',{txt:'for 6h 12m'}),
    name:S('name-tag','text-tagline',{txt:'WALK-IN FRIDGE'})},
   sections:[
    {lab:'reading &middot; how long',parts:[{card:[{hdr:{t:'Walk-in fridge'}},
@@ -5766,7 +5791,7 @@ const T4=[
    {lab:'insight',parts:[{card:[{hdr:{t:'Insight'}},{row:[S('insight','text-medium',{txt:'Door stood open <b style="color:#f6b73c">4 minutes</b> at lunch &mdash; temperature recovered in 12.',tagline:'Today &middot; 12:40 PM'})]}]}]}]},
  {id:'lawn_crew_v4',emoji:'🌿',title:'Lawn Crew Checker',sub:'Attendance Verifier',goal:'Did the crew come — and how long did they work?',
   widget:{grad:'linear-gradient(150deg,#2c3b2e,#0d140e)',
-   pill:S('state','badge',{tag:'VISITED',c:'#7eecc4'}),sub:S('duration','text-small',{txt:'for 42m'}),
+   pill:S('state','badge',{tag:'VISITED',c:'#7eecc4'}),sub:S('duration','text-tagline',{txt:'for 42m'}),
    name:S('name-tag','text-tagline',{txt:'LAWN CREW'})},
   sections:[
    {lab:'state &middot; how long',parts:[{card:[{hdr:{t:'Lawn crew'}},
@@ -5883,7 +5908,7 @@ document.getElementById('intents').addEventListener('click',e=>{
     const y=Math.min(e.clientY+14,window.innerHeight-pop.offsetHeight-12);
     pop.style.left=x+'px'; pop.style.top=y+'px';
   };
-  const CTX2LAYOUT={'list':'layout-list','log':'layout-log','grid':'layout-grid','sgrid':'layout-sgrid','strip':'layout-strip','hero':'layout-hero','idcard':'layout-idcard',
+  const CTX2LAYOUT={'list':'layout-list','log':'layout-log','grid':'layout-grid','sgrid':'layout-sgrid','strip':'layout-strip','hero':'layout-hero','idcard':'layout-idcard','timeline':'layout-timeline',
     'card':'layout-card','chip bar':'layout-chips','widget':'layout-widget',
     'section header':'section-header'};
   const over=e=>{
