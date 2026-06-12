@@ -1967,6 +1967,7 @@ Which camera / device — the tile and overlay label
 Connectivity & power — online / offline, on / off
 - formats: `badge` `text-small` · layouts: standalone / overlay
 - RULE: colored by the state — green online / on, red offline / off
+- RULE: text-small leads with a status dot
 
 ### Device count `device-count`
 Fleet roll-up — devices online vs total
@@ -2254,7 +2255,7 @@ Goal: *"Did the bins go out — and come back?"*
 <ul><li>formats: <code>text-tagline</code> <code>text-small</code> · layouts: standalone / overlay</li></ul>
 <h3 id="device-state-devicestate">Device state <code>device-state</code></h3>
 <p>Connectivity &amp; power — online / offline, on / off</p>
-<ul><li>formats: <code>badge</code> <code>text-small</code> · layouts: standalone / overlay</li><li>RULE: colored by the state — green online / on, red offline / off</li></ul>
+<ul><li>formats: <code>badge</code> <code>text-small</code> · layouts: standalone / overlay</li><li>RULE: colored by the state — green online / on, red offline / off</li><li>RULE: text-small leads with a status dot</li></ul>
 <h3 id="device-count-devicecount">Device count <code>device-count</code></h3>
 <p>Fleet roll-up — devices online vs total</p>
 <ul><li>formats: <code>text-small</code> <code>tile</code> · states: empty, loading</li></ul>
@@ -4811,9 +4812,9 @@ const EL_REGISTRY=[
  /* devices */
  {id:'device-name',grp:'devices',label:'Device name',desc:'Which camera / device — the tile and overlay label',sig:'device · none',formats:['text-tagline','text-small'],layouts:['standalone','overlay'],action:'navigate',accepts:['text','id'],
   sample:{txt:'Front door cam'}},
- {id:'device-state',grp:'devices',label:'Device state',desc:'Connectivity & power — online / offline, on / off',rules:['Colored by the state — green online / on, red offline / off'],sig:'device · state',formats:['badge','text-small'],layouts:['standalone','overlay'],action:'navigate',accepts:['state','bool'],
+ {id:'device-state',grp:'devices',label:'Device state',desc:'Connectivity & power — online / offline, on / off',rules:['Colored by the state — green online / on, red offline / off','text-small leads with a status dot'],sig:'device · state',formats:['badge','text-small'],layouts:['standalone','overlay'],action:'navigate',accepts:['state','bool'],
   sample:{txt:'Online',tag:'ONLINE',c:'#34d399'},stage:{
-   'text-small':s=>{const off=/off/i.test(s.txt||s.tag||'');const c=off?'#f25c5c':(s.c||'#34d399');return `<div style="font-size:12px;font-weight:700;color:${c}">${s.txt||s.tag}</div>`;},
+   'text-small':s=>{const off=/off/i.test(s.txt||s.tag||'');const c=off?'#f25c5c':(s.c||'#34d399');return `<div style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:${c}"><i style="width:7px;height:7px;border-radius:50%;background:${c};flex:none"></i>${s.txt||s.tag}</div>`;},
    'badge':s=>{const off=/off/i.test(s.tag||s.txt||'');return agPill(s.tag||s.txt,off?'#f25c5c':(s.c||'#34d399'));}}},
  {id:'device-count',grp:'devices',label:'Device count',desc:'Fleet roll-up — devices online vs total',states:['empty','loading'],sig:'device · count',formats:['text-small','tile'],layouts:['standalone'],action:'navigate',accepts:['count'],
   sample:{txt:'3 / 4',sub:'devices online'},
@@ -5295,7 +5296,7 @@ const V4={
  'C-ACT':{parts:[
    {hdr:{t:'Controls'}},
    {row:[S('device-control','button-pill',{txt:'Power on'}),S('device-control','button-pill',{txt:'Two-way talk'})]},
-   {row:[S('device-state','text-small',{txt:'&#9679; Plug is ON &middot; confirmed 1s ago'})]}]},
+   {row:[S('device-state','text-small',{txt:'Plug is ON &middot; confirmed 1s ago'})]}]},
  'C-READOUT':{parts:[
    {hdr:{t:'Utility meter'}},
    {row:[S('measurement','tile')]},

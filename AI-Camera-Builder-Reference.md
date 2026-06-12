@@ -145,6 +145,7 @@ Which camera / device — the tile and overlay label
 Connectivity & power — online / offline, on / off
 - formats: `badge` `text-small` · layouts: standalone / overlay
 - RULE: colored by the state — green online / on, red offline / off
+- RULE: text-small leads with a status dot
 
 ### Device count `device-count`
 Fleet roll-up — devices online vs total
