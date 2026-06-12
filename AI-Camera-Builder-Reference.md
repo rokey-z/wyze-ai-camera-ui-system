@@ -37,10 +37,10 @@ Each element lists its formats (first = default), allowed layouts (standalone / 
 tap action, query states, AI provenance, and its recorded rules.
 
 ### Media `media`
-Raw visual data — stream, still, clip, lapse, animated preview or identity portrait crop (square)
-- formats: `full-card` `small-thumb` `square` (first = default)
+Raw media — stream, still, clip, lapse, animated preview, identity portrait crop (square) or sound clip. Recognition can key on audio as well as visuals (bird song, cry) — no audio field in the API yet (`audio_track` is recorded as the gap).
+- formats: `full-card` `small-thumb` `square` `sound-clip` (first = default)
 - layouts: standalone / overlay · action: `open-clip` · states: empty, loading
-- RULE: the three formats share one gradient, border and radius family
+- RULE: the visual formats share one gradient, border and radius family; sound-clip renders a play button · waveform · duration pill
 
 ### Detection marker `detection-marker`
 Bounding box + label anchored to the frame by detector geometry
@@ -167,11 +167,11 @@ The paging footer that closes a list and discloses how much more there is
 
 ---
 
-## 3. Formats (20)
+## 3. Formats (21)
 
 `text-large` `text-medium` `text-small` `text-tagline` `badge` `dot` `tile` `list`
-`small-thumb` `square` `full-card` `bound-box` `button` `button-pill` `button-block`
-`hourly-chart` `daily-chart` `state-chart` `weekly-chart` `month-chart`
+`small-thumb` `square` `full-card` `sound-clip` `bound-box` `button` `button-pill`
+`button-block` `hourly-chart` `daily-chart` `state-chart` `weekly-chart` `month-chart`
 
 Format-level conventions (the renderer is the single source of styling):
 
