@@ -81,7 +81,7 @@ How many — events, devices online, frames, sightings
 
 ### Time trend chart `time-trend`
 Activity binned over time — hourly (minute bins), daily (hour bins), weekly (day bins), monthly (calendar grid); binary signals get a two-level state band
-- formats: `hourly-chart` `daily-chart` `state-chart` `weekly-chart` `month-chart` · states: empty, loading
+- formats: `hourly-chart` `daily-chart` `weekly-chart` `month-chart` · states: state mode, empty, loading
 - RULE: use a time chart only when the time axis answers the template's question — cross-subject comparisons use rows or tiles instead
 - RULE: the chart title names the template's goal ("Pickups this month", not "Monthly chart")
 - RULE: axis labels sit below the chart, never over the bars
@@ -168,11 +168,11 @@ The paging footer that closes a list and discloses how much more there is
 
 ---
 
-## 3. Formats (21)
+## 3. Formats (20)
 
 `text-large` `text-medium` `text-small` `text-tagline` `badge` `dot` `tile` `list`
 `small-thumb` `square` `full-card` `sound-clip` `bound-box` `button` `button-pill`
-`button-block` `hourly-chart` `daily-chart` `state-chart` `weekly-chart` `month-chart`
+`button-block` `hourly-chart` `daily-chart` `weekly-chart` `month-chart`
 
 Format-level conventions (the renderer is the single source of styling):
 
@@ -356,7 +356,7 @@ Goal: *"Did the bins go out — and come back?"*
 
 | goal shape | lead with | evidence | trend |
 |---|---|---|---|
-| binary state watch (door, stove) | state card + duration | state-band chart, log | state-chart |
+| binary state watch (door, stove) | state card + duration | state-band chart, log | daily-chart (state mode) |
 | presence / wellbeing (baby, pet) | live hero + state overlay | event list, hourly chart | hourly/daily-chart |
 | attendance verify (crew, trash) | state card | visit list + More | month-chart with marks |
 | collection / discovery (birds) | hero + counts | scroll-grid gallery + chips | month-chart counts |
