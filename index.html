@@ -1993,7 +1993,7 @@ Escalation contact — name, number and the call / text actions
 - formats: `list` `button-block` · action: `control`
 - RULE: blocks sit 2–3 to a row — a single contact uses the list row
 
-### More `more-paging` (system feedback)
+### More `more-paging` (System group, with contact-action)
 The paging footer that closes a list and discloses how much more there is
 - formats: `button-pill`
 - RULE: full width; always the LAST row of a list · carries the remaining count
@@ -2048,6 +2048,7 @@ Compact text-only rows for readings and state changes — a journal, not a feed.
 Moments on a vertical thread — a dot and its time on the line, content beside; for stories where the sequence itself matters.
 - a vertical thread connects the dots — one dot per moment, its time beside the dot
 - dots may take the moment's state colour
+- an optional fixed lead (clip thumb) may open the body
 - body takes any reasonable element · format — clip, group, instance, text; the trailing slot right-aligns
 - at least 3 moments, newest first
 
@@ -2314,7 +2315,7 @@ Goal: *"Did the bins go out — and come back?"*
 <ul><li>titled by a section header in the same section (lint-enforced)</li><li>at least 4 rows before the More footer</li><li>text renders only — media belongs in List</li><li>three slots per row align left · middle · right — any reasonable element · format in each</li></ul>
 <h3 id="timeline-timeline">Timeline <code>timeline</code></h3>
 <p>Moments on a vertical thread — a dot and its time on the line, content beside; for stories where the sequence itself matters.</p>
-<ul><li>a vertical thread connects the dots — one dot per moment, its time beside the dot</li><li>dots may take the moment&#x27;s state colour</li><li>body takes any reasonable element · format — clip, group, instance, text; the trailing slot right-aligns</li><li>at least 3 moments, newest first</li></ul>
+<ul><li>a vertical thread connects the dots — one dot per moment, its time beside the dot</li><li>dots may take the moment&#x27;s state colour</li><li>an optional fixed lead (clip thumb) may open the body</li><li>body takes any reasonable element · format — clip, group, instance, text; the trailing slot right-aligns</li><li>at least 3 moments, newest first</li></ul>
 <h3 id="card-card">Card <code>card</code></h3>
 <p>A self-contained block for one subject — its state, media and detail boxed together.</p>
 <ul><li>every card opens with a title row</li><li>bare values never float — a subject&#x27;s values sit boxed together in its card</li><li>one card = one subject</li></ul>
@@ -4583,7 +4584,7 @@ const EL_GROUPS=[['media-attr','Media attribute'],['media-corr','Media correspon
  ['state-agg','State aggregation'],['count-agg','Count aggregation'],
  ['time-agg','Time aggregation'],['timestamps','Timestamps'],['priority-conf','Priority'],
  ['compare','Compare'],['nametags','Name tags'],['chat','Chat trigger'],['description','Description'],
- ['devices','Devices'],['escalation','Escalation'],['feedback','System feedback'],['structure','Layout reference']];
+ ['devices','Devices'],['feedback','System'],['structure','Layout reference']];
 /* --- the 74 elements: fld → {arch, label, desc, prev, ctx?} --- */
 const ELEMS={
  /* text */
@@ -4848,7 +4849,7 @@ const EL_REGISTRY=[
    'button-pill':s=>`<div class="actions" style="max-width:200px"><div class="act primary" style="border-radius:999px"><span class="ai">${aIcon('<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3" fill="#fff" stroke="none"/>')}</span>${s.txt}</div></div>`,
    'button-block':s=>`<div class="btnblock" style="width:100%;max-width:240px;box-sizing:border-box;background:var(--blue);border-radius:12px;padding:13px 10px;display:flex;flex-direction:column;align-items:center;gap:8px"><span style="width:34px;height:34px;border-radius:50%;background:#ffffff22;display:grid;place-items:center">${aIcon(dcIco[s.ico]||dcIco.power)}</span><b style="font-size:11px;color:#fff">${s.txt}</b></div>`}},
  /* escalation */
- {id:'contact-action',grp:'escalation',label:'Contact action',desc:'Escalation contact — name, number and the call / text actions',rules:['Blocks sit 2&ndash;3 to a row — a single contact uses the list row'],sig:'household · none',formats:['list','button-block'],layouts:['standalone'],action:'control',accepts:['command','text'],
+ {id:'contact-action',grp:'feedback',label:'Contact action',desc:'Escalation contact — name, number and the call / text actions',rules:['Blocks sit 2&ndash;3 to a row — a single contact uses the list row'],sig:'household · none',formats:['list','button-block'],layouts:['standalone'],action:'control',accepts:['command','text'],
   sample:{txt:'Sarah &middot; sister',sub:'(415) 555-0142'},stage:{
    list:s=>`<div class="sosbook"><div class="sosc"><span class="sosc-av" style="background:#f6b73c22;color:#f6b73c">S</span><div class="sosc-main"><div class="sosc-name">Sarah &middot; sister</div><div class="sosc-num" style="font-size:9px;color:var(--dim);font-family:var(--mono)">(415) 555-0142</div></div><div class="sosc-acts"><span class="sosc-act" title="Call"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco.call}</svg></span><span class="sosc-act" title="Message"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${sosIco.text}</svg></span></div></div></div>`,
    'button-block':s=>`<div class="btnblock" style="width:100%;max-width:240px;box-sizing:border-box;background:var(--blue);border-radius:12px;padding:13px 10px;display:flex;flex-direction:column;align-items:center;gap:8px"><span style="width:34px;height:34px;border-radius:50%;background:#ffffff22;display:grid;place-items:center">${aIcon(sosIco[s.ico||'call'])}</span><span style="display:flex;flex-direction:column;align-items:center;gap:2px;line-height:1.2"><b style="font-size:11px;color:#fff">${s.label||'Call Sarah'}</b><span style="font-size:8.5px;font-weight:400;color:#ffffffb3;font-family:var(--mono);letter-spacing:0">${s.sub}</span></span></div>`}},
@@ -4870,9 +4871,9 @@ const EL_REGISTRY=[
   sample:{},stage:{log:s=>Array.from({length:4},(_,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:5px 0;${i?'border-top:1px solid var(--line)':''}">${lslot('left','width:52px;height:10px;flex:none')}${lslot('middle','width:64px;height:10px;flex:none;margin:0 auto')}${lslot('right','width:40px;height:9px;flex:none')}</div>`).join('')}},
  {id:'layout-timeline',grp:'structure',label:'Timeline',
   desc:'Moments on a vertical thread — a dot and its time on the line, content beside; for stories where the sequence itself matters.',
-  rules:['A vertical thread connects the dots — one dot per moment, its time beside the dot','Dots may take the moment&rsquo;s state colour','Body takes any reasonable element &middot; format — clip, group, instance, text; the trailing slot right-aligns','At least 3 moments, newest first'],
+  rules:['A vertical thread connects the dots — one dot per moment, its time beside the dot','Dots may take the moment&rsquo;s state colour','An optional fixed lead (clip thumb) may open the body','Body takes any reasonable element &middot; format — clip, group, instance, text; the trailing slot right-aligns','At least 3 moments, newest first'],
   sig:'layout · repeat',formats:['timeline'],layouts:['standalone'],action:'open-clip',accepts:['time','id'],
-  sample:{},stage:{timeline:s=>`<div style="position:relative;padding-left:17px"><i style="position:absolute;left:4px;top:10px;bottom:10px;width:2px;border-radius:1px;background:#4f8ff066"></i>${[14,30,12].map((h,i)=>`<div style="position:relative;display:flex;gap:8px;align-items:center;padding:6px 0"><i style="position:absolute;left:-16.5px;top:50%;transform:translateY(-50%);width:8px;height:8px;border-radius:50%;background:#4f8ff0aa;border:2px solid #0c1422"></i>${lslot('time','width:46px;height:10px;flex:none')}${lslot('body','height:'+h+'px;flex:1')}</div>`).join('')}</div>`}},
+  sample:{},stage:{timeline:s=>`<div style="position:relative;padding-left:17px"><i style="position:absolute;left:4px;top:10px;bottom:10px;width:2px;border-radius:1px;background:#4f8ff066"></i>${[14,30,12].map((h,i)=>`<div style="position:relative;display:flex;gap:8px;align-items:center;padding:6px 0"><i style="position:absolute;left:-16.5px;top:50%;transform:translateY(-50%);width:8px;height:8px;border-radius:50%;background:#4f8ff0aa;border:2px solid #0c1422"></i>${lslot('time','width:46px;height:10px;flex:none')}${i===1?lslot('lead','width:34px;height:26px;flex:none'):''}${lslot('body','height:'+(i===1?12:h)+'px;flex:1')}</div>`).join('')}</div>`}},
  {id:'layout-card',grp:'structure',label:'Card',
   desc:'A self-contained block for one subject — its state, media and detail boxed together.',
   rules:['Every screen card opens with a title row (lintT4 enforces it; identity / widget showcase cards are the exception)','Bare values never float — a subject&rsquo;s values sit boxed together in its card','One card = one subject'],

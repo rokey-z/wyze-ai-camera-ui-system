@@ -161,7 +161,7 @@ Escalation contact — name, number and the call / text actions
 - formats: `list` `button-block` · action: `control`
 - RULE: blocks sit 2–3 to a row — a single contact uses the list row
 
-### More `more-paging` (system feedback)
+### More `more-paging` (System group, with contact-action)
 The paging footer that closes a list and discloses how much more there is
 - formats: `button-pill`
 - RULE: full width; always the LAST row of a list · carries the remaining count
@@ -216,6 +216,7 @@ Compact text-only rows for readings and state changes — a journal, not a feed.
 Moments on a vertical thread — a dot and its time on the line, content beside; for stories where the sequence itself matters.
 - a vertical thread connects the dots — one dot per moment, its time beside the dot
 - dots may take the moment's state colour
+- an optional fixed lead (clip thumb) may open the body
 - body takes any reasonable element · format — clip, group, instance, text; the trailing slot right-aligns
 - at least 3 moments, newest first
 
