@@ -5506,7 +5506,7 @@ const T4=[
    {lab:'insight',parts:[{card:[{hdr:{t:'Insight'}},{row:[S('insight','text-medium',{txt:'Couriers usually come before <b style="color:#9cc3f5">3 PM</b> &mdash; today&rsquo;s box arrived right on pattern.'})]}]}]},
    {lab:'nudge',parts:[S('suggestion','button',{tag:'Remind me again at 6 PM'})]},
    {lab:'if it sits too long',parts:[{list:[[S('contact-action','list')]]}]},
-   {lab:'no-package state',parts:[{empty:true,s:{txt:'NO PACKAGE',sub:'door is clear &mdash; I&rsquo;ll nudge you the moment one arrives'}}]}]},
+]},
  {id:'garage_door_watcher_v4',title:'Garage Door Watcher',sub:'State Monitor',goal:'Is the garage closed — and was it left open?',
     widget:{grad:'linear-gradient(150deg,#1d2a40,#0c1119)',
    pill:S('state','badge',{tag:'CLOSED',c:'#7eecc4'}),sub:S('duration','text-small',{txt:'for 3h 42m'}),
@@ -5603,11 +5603,12 @@ const T4=[
    pill:S('instance-count','badge',{name:'Alerts',txt:'2'}),sub:S('device-count','text-small'),
    name:S('name-tag','text-tagline',{txt:'OVERSEAS RENTALS'})},
   sections:[
-   {lab:'fleet',parts:[{hdr:{t:'Overseas rentals',right:S('device-count','text-small')}},
-     {grid:{cols:2,cells:[[S('device-count','tile')],[S('instance-count','tile',{txt:'2',sub:'alerts to review'})]]}}]},
-   {lab:'properties',parts:[{grid:{cols:2,cells:[
-     [S('media','small-thumb',{grad:G1}),S('device-name','text-small',{txt:'Lisbon flat'}),S('device-state','badge',{tag:'ONLINE',c:'#34d399'})],
-     [S('media','small-thumb',{grad:G2}),S('device-name','text-small',{txt:'Kyoto house'}),S('device-state','badge',{tag:'OFFLINE &middot; 2h',c:'#f25c5c'})]]}}]},
+   {lab:'fleet &middot; properties',parts:[{hdr:{t:'Overseas rentals',right:S('device-count','text-small')}},
+     {grid:{cols:2,cells:[
+       [S('device-count','tile')],
+       [S('instance-count','tile',{txt:'2',sub:'alerts to review'})],
+       [S('media','small-thumb',{grad:G1}),S('device-name','text-small',{txt:'Lisbon flat'}),S('device-state','badge',{tag:'ONLINE',c:'#34d399'})],
+       [S('media','small-thumb',{grad:G2}),S('device-name','text-small',{txt:'Kyoto house'}),S('device-state','badge',{tag:'OFFLINE &middot; 2h',c:'#f25c5c'})]]}}]},
    {lab:'insight &middot; the one headline',parts:[{card:[{hdr:{t:'Insight'}},{row:[S('insight','text-large',{txt:'Quiet week &mdash; one late checkout',c:'#e9eef6'})]}]}]},
    {lab:'across properties',parts:[
      {hdr:{t:'Recent'}},
