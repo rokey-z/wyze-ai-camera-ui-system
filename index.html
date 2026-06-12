@@ -5176,7 +5176,8 @@ const G1='linear-gradient(150deg,#4f8ff040,#0c1119)',G2='linear-gradient(150deg,
       G3='linear-gradient(150deg,#34d39930,#0c1119)',GH='linear-gradient(165deg,#1d2d49,#0f1828)';
 const V4={
  'C-LIVE':{parts:[
-   {hero:{ov:[{col:[S('state','badge',{tag:'&#9679; LIVE',c:'#f25c5c'}),S('state','text-small',{txt:'Front door'})],at:'tl'},
+   {hero:{ov:[{el:'state',fmt:'badge',s:{tag:'&#9679; LIVE',c:'#f25c5c'},at:'tl'},
+              {el:'state',fmt:'text-small',s:{txt:'Front door'},at:'bl'},
               {el:'absolute-time',fmt:'text-tagline',s:{txt:'14:09:22'},at:'br'}]}}]},
  'C-FEED':{parts:[
    {hdr:{t:'Entry history',right:S('instance-count','text-small',{name:'Events',txt:'38'})}},
@@ -5520,7 +5521,8 @@ const T4=[
    name:S('name-tag','text-tagline',{txt:'BABY MONITOR'})},
   sections:[
    {lab:'hero · live',parts:[{hero:{grad:'linear-gradient(165deg,#10182b,#070b14)',ov:[
-     {col:[S('state','badge',{tag:'&#9679; LIVE',c:'#f25c5c'}),S('state','text-small',{txt:'Asleep'})],at:'tl'},
+     {el:'state',fmt:'badge',s:{tag:'&#9679; LIVE',c:'#f25c5c'},at:'tl'},
+     {el:'state',fmt:'badge',s:{tag:'ASLEEP',c:'#9cc3f5'},at:'bl'},
      {el:'absolute-time',fmt:'text-tagline',s:{txt:'2:14 AM'},at:'br'}]}}]},
    {lab:'insight &middot; tonight in one line',parts:[{card:[{hdr:{t:'Insight'}},{row:[S('insight','text-medium')]}]}]},
    {lab:'last hour',parts:[{hdr:{t:'Last hour'}},{row:[S('time-trend','hourly-chart')]}]},
