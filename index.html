@@ -852,6 +852,9 @@
   .scrub .pin{position:absolute;top:0;bottom:0;width:2px;background:var(--blue)}
   .scrub .axis{position:absolute;left:8px;bottom:3px;right:8px;display:flex;
     justify-content:space-between;font-size:8px;color:var(--dim);font-family:var(--mono)}
+  /* axis row rendered BELOW a chart (v4 time-trend renders) */
+  .axis-below{display:flex;justify-content:space-between;margin-top:4px;padding:0 2px;
+    font-size:8px;color:var(--dim);font-family:var(--mono)}
 
   .actions{display:flex;gap:8px}
   .act{flex:1;background:var(--card);border:1px solid var(--line);border-radius:11px;
@@ -4726,8 +4729,8 @@ const EL_REGISTRY=[
  /* time aggregation */
  {id:'time-trend',grp:'time-agg',label:'Time trend chart',desc:'Activity binned over time — hourly (minute bins), daily (hour bins), weekly (day bins), monthly (calendar grid)',sig:'instance · count · span:hour/day/week/month',formats:['hourly-chart','daily-chart','weekly-chart','month-chart'],layouts:['standalone'],action:'navigate',accepts:['time','count'],
   sample:{},stage:{
-   'hourly-chart':s=>`<div class="scrub" style="height:42px">${[34,52,40,66,28,58,45,38,60,30,48,36].map(h=>`<div class="seg" style="height:${h}%;background:#3a5fa0"></div>`).join('')}<div class="axis"><span>:00</span><span>:15</span><span>:30</span><span>:45</span><span>now</span></div></div>`,
-   'daily-chart':s=>`<div class="scrub" style="height:42px">${Array.from({length:24},(_,i)=>{const a=i>=16&&i<=18;const h=a?60+((i*17)%38):8+((i*13)%22);return `<div class="seg" style="height:${h}%;background:${a?'#f6b73c':'#3a5fa0'}"></div>`;}).join('')}<div class="axis"><span>12a</span><span>6a</span><span>12p</span><span>6p</span><span>now</span></div></div>`,
+   'hourly-chart':s=>`<div class="scrub" style="height:42px">${[34,52,40,66,28,58,45,38,60,30,48,36].map(h=>`<div class="seg" style="height:${h}%;background:#3a5fa0"></div>`).join('')}</div><div class="axis-below"><span>:00</span><span>:15</span><span>:30</span><span>:45</span><span>now</span></div>`,
+   'daily-chart':s=>`<div class="scrub" style="height:42px">${Array.from({length:24},(_,i)=>{const a=i>=16&&i<=18;const h=a?60+((i*17)%38):8+((i*13)%22);return `<div class="seg" style="height:${h}%;background:${a?'#f6b73c':'#3a5fa0'}"></div>`;}).join('')}</div><div class="axis-below"><span>12a</span><span>6a</span><span>12p</span><span>6p</span><span>now</span></div>`,
    'weekly-chart':s=>`<div class="trendbars">${[40,62,55,78,48,90,70].map((h,i)=>`<div class="tb" style="height:${h}%;${i===5?'background:linear-gradient(#34d399,#1f7a5a)':''}"></div>`).join('')}</div><div class="trendx">${['M','T','W','T','F','S','S'].map(d=>`<span>${d}</span>`).join('')}</div>`,
    'month-chart':s=>`<div style="width:100%"><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;font-size:7px;color:var(--dim);text-align:center;margin-bottom:3px">${['S','M','T','W','T','F','S'].map(d=>`<span>${d}</span>`).join('')}</div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px">${Array.from({length:35},(_,i)=>{const d=i-1;if(d<0||d>=30)return '<div></div>';const c=(d*13+5)%9;return `<div class="ml-daycell" style="aspect-ratio:1;border-radius:3px;display:grid;place-items:center;font-size:9px;font-weight:800;color:${c>5?'#04231a':'#cfe3ff'};background:rgba(56,198,219,${c?Math.min(0.16+c/10,1).toFixed(2):'0.07'})">${c||''}</div>`;}).join('')}</div></div>`}},
  /* timestamps */
