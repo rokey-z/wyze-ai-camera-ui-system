@@ -578,8 +578,9 @@
   /* stat-pill popover */
   .dc-stat[data-pop]{cursor:pointer}
   .dc-stat[data-pop]:hover{border-color:var(--blue)}
-  .statpop{position:fixed;z-index:400;width:298px;max-height:340px;display:flex;flex-direction:column;
+  .statpop{position:fixed;z-index:400;width:298px;max-height:360px;display:flex;flex-direction:column;
     background:#101b2e;border:1px solid var(--line);border-radius:10px;box-shadow:0 16px 38px #000b;overflow:hidden}
+  .statpop.statpop-wide{width:340px}
   .statpop-h{font-size:10px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--mut);
     padding:9px 12px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px}
   .statpop-h span{color:var(--blue);font-family:var(--mono)}
@@ -588,6 +589,9 @@
   .statpop-l > div:nth-child(even){background:#ffffff05}
   .statpop-l b{font-weight:600;color:var(--ink)}
   .statpop-l span{color:var(--dim);font-family:var(--mono);font-size:9px;text-align:right}
+  /* fields popover reuses the field-panel chip styling */
+  .statpop-f{overflow:auto;padding:8px 12px 12px}
+  .statpop-f .el-epgrp + .el-epgrp{margin-top:10px}
   /* legend (lives inside #elSummary) */
   .el-legend{display:inline-flex;align-items:center;gap:14px;font-size:10.5px;
     color:var(--mut);padding:6px 4px}
@@ -4946,7 +4950,7 @@ function renderElCanvas(){
   window.__elPops={
     elements:{t:'Elements',items:EL_REGISTRY.filter(u=>u.grp!=='structure').map(u=>`<b>${u.label}</b><span>${u.id}</span>`)},
     formats:{t:'Formats',items:FORMATS.map(f=>`<b>${f}</b>`)},
-    fields:{t:'Data fields',items:Object.keys(map).map(f=>`<b>${f}</b>`)},
+    fields:{t:'Data fields',count:Object.keys(map).length,wide:1,html:grpHtml},
     bindings:{t:'Bindings &middot; element &larr; field',items:EL_PAIRS.filter(p=>p.kind==='real').map(p=>`<b>${p.ui}</b><span>&larr; ${p.fld}</span>`)},
     fills:{t:'Possible fills',items:EL_PAIRS.filter(p=>p.kind==='poss').map(p=>`<b>${p.ui}</b><span>&larr; ${p.fld}</span>`)},
     unused:{t:'Unused fields',items:FIELD_GROUPS.flatMap(g=>(g.unused||[]).map(u=>`<b>${Array.isArray(u)?u[0]:u}</b>${Array.isArray(u)&&u[1]?`<span>${u[1]}</span>`:''}`))},
@@ -4958,11 +4962,13 @@ function renderElCanvas(){
     if(old) old.remove();
     if(!pill||!pill.dataset.pop||oldFor===pill.dataset.pop) return;
     const pop=window.__elPops[pill.dataset.pop]; if(!pop) return;
-    const d=document.createElement('div'); d.className='statpop'; d.dataset.for=pill.dataset.pop;
-    d.innerHTML=`<div class="statpop-h">${pop.t}<span>${pop.items.length}</span></div><div class="statpop-l">${pop.items.map(i=>`<div>${i}</div>`).join('')}</div>`;
+    const d=document.createElement('div'); d.className='statpop'+(pop.wide?' statpop-wide':''); d.dataset.for=pill.dataset.pop;
+    const count=pop.count!=null?pop.count:(pop.items?pop.items.length:0);
+    const body=pop.html?`<div class="statpop-f">${pop.html}</div>`:`<div class="statpop-l">${pop.items.map(i=>`<div>${i}</div>`).join('')}</div>`;
+    d.innerHTML=`<div class="statpop-h">${pop.t}<span>${count}</span></div>${body}`;
     document.body.appendChild(d);
     const r=pill.getBoundingClientRect();
-    d.style.left=Math.max(8,Math.min(r.left,innerWidth-306))+'px';
+    d.style.left=Math.max(8,Math.min(r.left,innerWidth-d.offsetWidth-8))+'px';
     d.style.top=Math.min(r.bottom+8,innerHeight-360)+'px';
   };
   if(!window.__statpopBound){window.__statpopBound=1;
