@@ -489,7 +489,8 @@
   .v4prev .reminder,.v4prev .estrip,.v4prev .aghome{margin:0}
   .v4prev .hero{width:100%!important}
   .v4ph{display:flex;align-items:center;justify-content:space-between;gap:8px;
-    font-size:11px;font-weight:700;color:var(--ink);padding-bottom:7px;border-bottom:1px solid var(--line)}
+    font-size:11px;font-weight:400;color:var(--mut);padding-bottom:7px;border-bottom:1px solid var(--line)}
+  .v4ph b{font-weight:400;color:var(--mut)}
   .v4row{display:flex;align-items:center;gap:9px;min-width:0}
   .v4list .v4row{padding:7px 0}
   .v4list .v4row + .v4row{border-top:1px solid var(--line)}
@@ -4796,7 +4797,7 @@ const EL_REGISTRY=[
  /* structure — the arrangement layer; recipes execute these, agents compose them */
  {id:'section-header',grp:'structure',label:'Section header',
   desc:'Opens a section: names what follows and carries one glanceable number or status.',
-  rules:['Title left; ONE optional meta / count slot on the right','Closes with a divider — one header per section'],
+  rules:['Title left; ONE optional meta / count slot on the right','Titles render regular weight, dimmed — the content carries the emphasis','Closes with a divider — one header per section'],
   sig:'layout · single',formats:['header'],layouts:['standalone'],action:'none',accepts:['text','count'],
   sample:{},stage:{header:s=>`<div style="display:flex;align-items:center;gap:8px;padding-bottom:7px;border-bottom:1px solid var(--line)">${lslot('title','height:16px;flex:1')}${lslot('count / meta','height:14px;width:70px')}</div>`}},
  {id:'layout-list',grp:'structure',label:'List',
