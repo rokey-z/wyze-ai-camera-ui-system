@@ -494,6 +494,10 @@
   .v4row{display:flex;align-items:center;gap:9px;min-width:0}
   .v4list .v4row{padding:7px 0}
   .v4list .v4row + .v4row{border-top:1px solid var(--line)}
+  .v4log .v4row{justify-content:space-between}
+  .v4log .v4row:has(> .v4slot:nth-child(3)){display:grid;grid-template-columns:1fr auto 1fr}
+  .v4log .v4row .v4slot:nth-child(2){justify-self:center}
+  .v4log .v4row .v4slot:nth-child(3){justify-self:end}
   .v4col{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
   .v4slot{min-width:0}
   .v4grid{display:grid;gap:7px}
@@ -4806,9 +4810,9 @@ const EL_REGISTRY=[
   sample:{},stage:{list:s=>Array.from({length:4},(_,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 0;${i?'border-top:1px solid var(--line)':''}">${lslot('media','width:56px;height:42px;flex:none')}<span style="flex:1;display:flex;flex-direction:column;gap:4px;min-width:0">${lslot('text','height:11px;width:72%')}${lslot('time / meta','height:9px;width:42%')}</span>${lslot('badge','width:44px;height:15px;flex:none;border-radius:999px')}</div>`).join('')}},
  {id:'layout-log',grp:'structure',label:'Log',
   desc:'Compact text-only rows for readings and state changes — a journal, not a feed.',
-  rules:['Opens with a title row','At least 4 rows before the More footer','Columns: time (fixed) &middot; value &middot; change / meta — never media (that&rsquo;s List)'],
+  rules:['Opens with a title row','At least 4 rows before the More footer','Columns: time (fixed) &middot; value &middot; change / meta — never media (that&rsquo;s List)','Three slots per row align left &middot; middle &middot; right'],
   sig:'layout · repeat',formats:['log'],layouts:['standalone'],action:'navigate',accepts:['count','id'],
-  sample:{},stage:{log:s=>Array.from({length:4},(_,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:5px 0;${i?'border-top:1px solid var(--line)':''}">${lslot('time','width:52px;height:10px;flex:none')}${lslot('value','height:10px;flex:1')}${lslot('change','width:40px;height:9px;flex:none')}</div>`).join('')}},
+  sample:{},stage:{log:s=>Array.from({length:4},(_,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:5px 0;${i?'border-top:1px solid var(--line)':''}">${lslot('time','width:52px;height:10px;flex:none')}${lslot('value','width:64px;height:10px;flex:none;margin:0 auto')}${lslot('change','width:40px;height:9px;flex:none')}</div>`).join('')}},
  {id:'layout-card',grp:'structure',label:'Card',
   desc:'A self-contained block for one subject — its state, media and detail boxed together.',
   rules:['Every card opens with a title row','Bare values never float — state &middot; duration &middot; detail share one card','One card = one subject'],
@@ -5326,7 +5330,7 @@ function renderV4Nodes(parts){
     if(n.el&&n.fmt) return rSlot(n,ctx);
     if(n.hdr) return `<div class="v4ph"><b>${n.hdr.t}</b>${n.hdr.right?rSlot(n.hdr.right,'section header'):''}</div>`;
     if(n.list) return `<div class="v4list">${n.list.map(r=>`<div class="v4row">${r.map(x=>rSlot(x,'list')).join('')}</div>`).join('')}</div>`;
-    if(n.log) return `<div class="v4list">${n.log.map(r=>`<div class="v4row" style="padding:6px 0">${r.map(x=>rSlot(x,'log')).join('')}</div>`).join('')}</div>`;
+    if(n.log) return `<div class="v4list v4log">${n.log.map(r=>`<div class="v4row" style="padding:6px 0">${r.map(x=>rSlot(x,'log')).join('')}</div>`).join('')}</div>`;
     if(n.grid){
       /* rule: more cells than fit -> the grid flows into columns and scrolls horizontally */
       const scroll=n.grid.cells.length>n.grid.cols*2;
