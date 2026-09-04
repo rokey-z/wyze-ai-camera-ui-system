@@ -46,6 +46,12 @@ test('expanded evidence extends below a fixed-size camera scene', () => {
   assert.match(html, /\.sc-card\.is-expanded:before,\.sc-card\.is-expanded\[data-tone\]:before\{height:82px;opacity:0\}/);
 });
 
+test('expanded state and duration rise above the card while the goal label clears', () => {
+  assert.match(html, /\.sc-card\.is-expanded>\.sc-label\{opacity:0;visibility:hidden;transform:translateY\(-4px\)/);
+  assert.match(html, /\.sc-card\.is-expanded \.sc-card-top\{z-index:7;top:-12px;left:12px\}/);
+  assert.match(html, /\.sc-card-top\{transition:top \.3s cubic-bezier/);
+});
+
 test('footer readability gradient follows the rounded card corners', () => {
   assert.match(
     html,
