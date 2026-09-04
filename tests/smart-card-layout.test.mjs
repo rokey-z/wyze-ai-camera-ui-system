@@ -91,7 +91,7 @@ test('supporting evidence progressively reveals video and household inputs', () 
   assert.match(html, /class="sc-evidence-preview"/);
   assert.match(html, /<span class="sc-evidence-heading">Supporting Evidence<\/span>/);
   assert.doesNotMatch(html, /Evidence behind this state/);
-  assert.match(html, /class="sc-evidence-section-trigger"[^>]*aria-expanded="true"[^>]*><span>Video description<\/span><span class="sc-evidence-section-chevron"/);
+  assert.match(html, /<span>Video description<\/span><span class="sc-evidence-section-chevron"/);
   assert.match(html, /<span>Household memory<\/span><span class="sc-evidence-section-chevron"/);
   assert.match(html, /card\.classList\.toggle\('is-expanded',expanded\)/);
   assert.match(html, /\.sc-evidence-preview\{[^}]*max-height:21px[^}]*mask-image:linear-gradient/);
@@ -105,15 +105,19 @@ test('each supporting-evidence row has unfilled feedback controls and content-fi
   assert.match(html, /function evidenceFeedback\(label\)/);
   assert.match(html, /Rate \$\{label\}/);
   assert.doesNotMatch(html, /class="sc-evidence-icon"/);
-  assert.match(html, /\.sc-evidence-bullet\{display:grid;place-items:center;width:20px;height:20px;color:#91a3ba\}/);
+  assert.doesNotMatch(html, /class="sc-evidence-bullet"/);
   assert.match(html, /\.sc-evidence-item-feedback button\{[^}]*border:0;border-radius:0;background:none/);
-  assert.match(html, /\.sc-evidence-list li\{display:grid;grid-template-columns:20px minmax\(0,1fr\) auto/);
+  assert.match(html, /\.sc-evidence-list li\{position:relative;display:grid;grid-template-columns:minmax\(0,1fr\) auto/);
+  assert.match(html, /\.sc-evidence-list li:before\{content:'•';[^}]*color:#91a3ba/);
   assert.match(html, /\.sc-evidence-section-trigger\{[^}]*color:#91a3ba;font:750 9px\/1\.3/);
   assert.match(html, /\.sc-evidence-item p\{[^}]*color:#f4f7fb;font-size:11\.5px;font-weight:620/);
-  assert.match(html, /function evidenceList\(items,label,icon\)/);
+  assert.match(html, /function evidenceList\(items,label\)/);
 });
 
 test('video and household evidence titles independently disclose their lists', () => {
+  assert.match(html, /class="sc-evidence-title-icon">\$\{SMART_CARD_EVIDENCE_ICONS\.video\}<\/span><span>Video description/);
+  assert.match(html, /class="sc-evidence-title-icon">\$\{SMART_CARD_EVIDENCE_ICONS\.memory\}<\/span><span>Household memory/);
+  assert.match(html, /\.sc-evidence-title-icon svg\{width:15px;height:15px;fill:none;stroke:currentColor/);
   assert.match(html, /\.sc-evidence-section-chevron\{[^}]*transform:rotate\(90deg\)[^}]*transition:transform/);
   assert.match(html, /\.sc-evidence-item\.is-collapsed \.sc-evidence-section-chevron\{transform:rotate\(0\)\}/);
   assert.match(html, /\.sc-evidence-list-wrap\{max-height:190px;overflow:hidden;opacity:1;transition:max-height/);
@@ -133,8 +137,8 @@ test('normal and alert states provide three observations and two memories for ev
     assert.equal(occurrences.length, 2, `${scene} needs normal and alert evidence`);
   }
   assert.match(html, /card\.querySelector\('\.sc-evidence-preview'\)\.textContent=evidence\.video\[0\]/);
-  assert.match(html, /card\.querySelector\('\.sc-evidence-video'\)\.innerHTML=evidenceList\(evidence\.video,'video description',SMART_CARD_EVIDENCE_ICONS\.video\)/);
-  assert.match(html, /card\.querySelector\('\.sc-evidence-memory'\)\.innerHTML=evidenceList\(evidence\.memory,'household memory',SMART_CARD_EVIDENCE_ICONS\.memory\)/);
+  assert.match(html, /card\.querySelector\('\.sc-evidence-video'\)\.innerHTML=evidenceList\(evidence\.video,'video description'\)/);
+  assert.match(html, /card\.querySelector\('\.sc-evidence-memory'\)\.innerHTML=evidenceList\(evidence\.memory,'household memory'\)/);
 });
 
 test('bird watcher card has paired normal and alert evidence', () => {
