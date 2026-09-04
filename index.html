@@ -1687,7 +1687,7 @@
 
   /* Progressive disclosure: reveal the AI observation and household memory behind each state. */
   .sc-card:after{display:none}
-  .sc-card,.sc-card.sc-hero{transition:min-height .34s cubic-bezier(.22,1,.36,1),background-color .24s ease,box-shadow .24s ease}
+  .sc-card,.sc-card.sc-hero{transition:min-height .34s cubic-bezier(.22,1,.36,1),padding-top .34s cubic-bezier(.22,1,.36,1),background-color .24s ease,box-shadow .24s ease}
   .sc-card>.sc-label{opacity:1;visibility:visible;transform:translateY(0);transition:opacity .18s ease,transform .18s ease,visibility 0s}
   .sc-card-top{transition:top .3s cubic-bezier(.22,1,.36,1),left .3s cubic-bezier(.22,1,.36,1)}
   .sc-card:before,.sc-card[data-tone]:before{height:82px;opacity:1;transition:height .34s cubic-bezier(.22,1,.36,1),background .24s ease,opacity .18s ease}
@@ -1706,13 +1706,13 @@
   .sc-evidence-preview{display:block;max-height:21px;overflow:hidden;font-size:10.5px;font-weight:520;line-height:14px;text-shadow:0 1px 5px #020914;-webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 54%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0%,#000 54%,transparent 100%)}
   .sc-evidence-trigger:after{content:'›';position:absolute;top:12px;right:0;font-size:18px;font-weight:500;line-height:1;transform:rotate(90deg);transform-origin:center;opacity:.8;transition:transform .18s ease}
   .sc-evidence-details{display:grid;gap:0;max-height:0;padding-top:0;overflow:hidden;opacity:0;visibility:hidden;transform:translateY(-6px);transition:max-height .34s cubic-bezier(.22,1,.36,1),padding-top .34s ease,gap .34s ease,opacity .2s ease,transform .34s cubic-bezier(.22,1,.36,1),visibility 0s linear .34s}
-  .sc-card.is-expanded,.sc-card.sc-hero.is-expanded{--sc-expanded-height:620px;aspect-ratio:auto;min-height:var(--sc-expanded-height);background:transparent;box-shadow:none}
+  .sc-card.is-expanded,.sc-card.sc-hero.is-expanded{--sc-evidence-overlap-start:45.833%;aspect-ratio:auto;min-height:0;padding-top:var(--sc-evidence-overlap-start);background:transparent;box-shadow:none}
   .sc-card.is-expanded>.sc-label{opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .18s ease,transform .18s ease,visibility 0s linear .18s}
   .sc-card.is-expanded .sc-actions .sc-feedback{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .18s ease,visibility 0s linear .18s}
   .sc-card.is-expanded .sc-card-top{z-index:7;top:0;left:0}
   .sc-card.is-expanded .sc-scene{inset:0 0 auto;height:auto;aspect-ratio:16/11;box-shadow:0 14px 28px #0309144d}
   .sc-card.is-expanded:before,.sc-card.is-expanded[data-tone]:before{height:82px;opacity:0}
-  .sc-card.is-expanded .sc-evidence{right:0;bottom:0;left:0;padding:12px;border:1px solid rgba(255,255,255,.16);border-radius:16px;background:rgba(7,15,27,.98);box-shadow:0 12px 30px rgba(0,0,0,.28);backdrop-filter:blur(14px)}
+  .sc-card.is-expanded .sc-evidence{position:relative;right:auto;bottom:auto;left:auto;width:100%;padding:12px;border:1px solid rgba(255,255,255,.16);border-radius:16px;background:rgba(7,15,27,.98);box-shadow:0 12px 30px rgba(0,0,0,.28);backdrop-filter:blur(14px)}
   .sc-card.is-expanded .sc-evidence-trigger{padding:0 24px 10px 0;border-bottom:1px solid rgba(255,255,255,.16)}
   .sc-card.is-expanded .sc-evidence-heading{display:block}
   .sc-card.is-expanded .sc-evidence-preview{display:none}
@@ -1738,11 +1738,7 @@
   .sc-evidence-item-feedback button:hover{color:#fff}
   .sc-evidence-item-feedback button:focus-visible{outline:2px solid #fff;outline-offset:2px}
   .sc-evidence-item-feedback svg{width:13px;height:13px;fill:currentColor}
-  @media(max-width:620px){.sc-card.is-expanded .sc-scene{aspect-ratio:4/3}}
-  @media(max-width:390px){.sc-card.is-expanded,.sc-card.sc-hero.is-expanded{--sc-expanded-height:640px}}
-  .sc-card.is-expanded.is-video-evidence-collapsed{min-height:calc(var(--sc-expanded-height) - 136px)}
-  .sc-card.is-expanded.is-memory-evidence-collapsed{min-height:calc(var(--sc-expanded-height) - 95px)}
-  .sc-card.is-expanded.is-video-evidence-collapsed.is-memory-evidence-collapsed{min-height:calc(var(--sc-expanded-height) - 231px)}
+  @media(max-width:620px){.sc-card.is-expanded,.sc-card.sc-hero.is-expanded{--sc-evidence-overlap-start:50%}.sc-card.is-expanded .sc-scene{aspect-ratio:4/3}}
 
   /* Dedicated GitHub Pages view: keep only the mobile Smart Cards experience. */
   body.sc-standalone{min-height:100vh;background:#0d1726}

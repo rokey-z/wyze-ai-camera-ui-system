@@ -51,7 +51,7 @@ test('every card scene clips all four corners to the same radius', () => {
 });
 
 test('expanded evidence extends below a fixed-size camera scene', () => {
-  assert.match(html, /\.sc-card\.is-expanded,\.sc-card\.sc-hero\.is-expanded\{--sc-expanded-height:620px;aspect-ratio:auto;min-height:var\(--sc-expanded-height\);background:transparent;box-shadow:none\}/);
+  assert.match(html, /\.sc-card\.is-expanded,\.sc-card\.sc-hero\.is-expanded\{--sc-evidence-overlap-start:45\.833%;aspect-ratio:auto;min-height:0;padding-top:var\(--sc-evidence-overlap-start\);background:transparent;box-shadow:none\}/);
   assert.match(html, /\.sc-card\.is-expanded \.sc-scene\{inset:0 0 auto;height:auto;aspect-ratio:16\/11/);
   assert.match(html, /\.sc-card\.is-expanded:before,\.sc-card\.is-expanded\[data-tone\]:before\{height:82px;opacity:0\}/);
 });
@@ -64,8 +64,8 @@ test('expanded state and duration stay fixed while the goal label clears', () =>
 
 test('expansion keeps the image fixed and makes evidence match the card width', () => {
   assert.match(html, /\.sc-card\.is-expanded \.sc-scene\{inset:0 0 auto;height:auto;aspect-ratio:16\/11/);
-  assert.match(html, /@media\(max-width:620px\)\{\.sc-card\.is-expanded \.sc-scene\{aspect-ratio:4\/3\}\}/);
-  assert.match(html, /\.sc-card\.is-expanded \.sc-evidence\{right:0;bottom:0;left:0;padding:12px;[^}]*border-radius:16px/);
+  assert.match(html, /@media\(max-width:620px\)\{\.sc-card\.is-expanded,\.sc-card\.sc-hero\.is-expanded\{--sc-evidence-overlap-start:50%\}\.sc-card\.is-expanded \.sc-scene\{aspect-ratio:4\/3\}\}/);
+  assert.match(html, /\.sc-card\.is-expanded \.sc-evidence\{position:relative;right:auto;bottom:auto;left:auto;width:100%;padding:12px;[^}]*border-radius:16px/);
 });
 
 test('mobile expansion focuses and scrolls to the supporting evidence panel', () => {
@@ -128,8 +128,7 @@ test('video and household evidence titles independently disclose their lists', (
   assert.match(html, /card\.classList\.toggle\(`is-\$\{event\.currentTarget\.dataset\.evidenceSection\}-evidence-collapsed`,!expanded\)/);
   assert.match(html, /item\.querySelector\('\.sc-evidence-list-wrap'\)\.toggleAttribute\('inert',!expanded\)/);
   assert.match(html, /event\.currentTarget\.setAttribute\('aria-expanded',String\(expanded\)\)/);
-  assert.match(html, /\.sc-card\.is-expanded\.is-video-evidence-collapsed\{min-height:calc\(var\(--sc-expanded-height\) - 136px\)\}/);
-  assert.match(html, /\.sc-card\.is-expanded\.is-memory-evidence-collapsed\{min-height:calc\(var\(--sc-expanded-height\) - 95px\)\}/);
+  assert.doesNotMatch(html, /--sc-expanded-height/);
 });
 
 test('normal and alert states provide three observations and two memories for every scene', () => {
