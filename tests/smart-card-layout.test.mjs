@@ -96,7 +96,7 @@ test('folding evidence preserves the feed position without forced focus or scrol
   assert.doesNotMatch(html, /evidence\.focus\(\{preventScroll:true\}\)/);
   assert.doesNotMatch(html, /if\(expanded\)focusExpandedEvidence\(evidence\)/);
   assert.doesNotMatch(html, /evidence\.setAttribute\('tabindex','-1'\)/);
-  assert.match(html, /\.sc-card,\.sc-card\.sc-hero\{transition:height \.46s cubic-bezier\(\.22,1,\.36,1\),padding-top \.46s/);
+  assert.match(html, /\.sc-card,\.sc-card\.sc-hero\{transform-origin:top center;transition:height \.46s cubic-bezier\(\.22,1,\.36,1\),padding-top \.46s/);
   assert.match(html, /\.sc-card\.sc-is-measuring,\.sc-card\.sc-is-measuring \*\{transition:none!important;animation:none!important\}/);
   assert.match(html, /const startHeight=card\.getBoundingClientRect\(\)\.height/);
   assert.match(html, /const endHeight=card\.getBoundingClientRect\(\)\.height/);
@@ -104,6 +104,11 @@ test('folding evidence preserves the feed position without forced focus or scrol
   assert.match(html, /if\(event\.target===card&&event\.propertyName==='height'\)finishResize\(\)/);
   assert.match(html, /window\.matchMedia\('\(prefers-reduced-motion: reduce\)'\)\.matches/);
   assert.match(html, /--sc-evidence-details-height/);
+  assert.match(html, /\.sc-grid\{overflow-anchor:none\}/);
+  assert.match(html, /\.sc-card,\.sc-card\.sc-hero\{transform-origin:top center;transition:height/);
+  assert.match(html, /\.sc-evidence-details\{[^}]*clip-path:inset\(0 0 100% 0\)/);
+  assert.match(html, /\.sc-card\.is-expanded \.sc-evidence-details\{[^}]*clip-path:inset\(0\)/);
+  assert.doesNotMatch(html, /\.sc-evidence-details\{[^}]*translateY\(-6px\)/);
 });
 
 test('footer readability gradient follows the rounded card corners', () => {
