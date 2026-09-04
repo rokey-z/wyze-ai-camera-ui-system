@@ -116,6 +116,7 @@ test('each supporting-evidence row has unfilled feedback controls and content-fi
   assert.doesNotMatch(html, /class="sc-evidence-bullet"/);
   assert.match(html, /\.sc-evidence-item-feedback button\{[^}]*border:0;border-radius:0;background:none/);
   assert.match(html, /\.sc-evidence-list li\{position:relative;display:grid;grid-template-columns:minmax\(0,1fr\) auto/);
+  assert.match(html, /\.sc-evidence-list li\{[^}]*padding-left:24px\}/);
   assert.match(html, /\.sc-evidence-list li:before\{content:'•';[^}]*color:#91a3ba/);
   assert.match(html, /\.sc-evidence-section-header\{[^}]*color:#91a3ba;font:750 9px\/1\.3/);
   assert.match(html, /\.sc-evidence-item p\{[^}]*color:#f4f7fb;font-size:11\.5px;font-weight:620/);
