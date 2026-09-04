@@ -89,7 +89,7 @@ const inspect=()=>{
       hasVideo:expandedCard.querySelector('.sc-evidence-video').textContent.length>20,
       hasMemory:expandedCard.querySelector('.sc-evidence-memory').textContent.length>20,
     };
-    evidenceButton.click();
+    expandedCard.querySelector('.sc-scene').click();
     const collapsed={
       card:doc.querySelector('.sc-card').classList.contains('is-expanded'),
       aria:evidenceButton.getAttribute('aria-expanded'),

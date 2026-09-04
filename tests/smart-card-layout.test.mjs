@@ -64,9 +64,16 @@ test('expanded state and duration stay fixed while the goal label clears', () =>
 });
 
 test('expansion keeps the image fixed and makes evidence match the card width', () => {
-  assert.match(html, /\.sc-card\.is-expanded \.sc-scene\{inset:0 0 auto;height:auto;aspect-ratio:16\/11/);
+  assert.match(html, /\.sc-card\.is-expanded \.sc-scene\{inset:0 0 auto;height:auto;aspect-ratio:16\/11;cursor:pointer/);
   assert.match(html, /@media\(max-width:620px\)\{\.sc-card\.is-expanded,\.sc-card\.sc-hero\.is-expanded\{--sc-evidence-overlap-start:45%\}\.sc-card\.is-expanded \.sc-scene\{aspect-ratio:40\/27\}\}/);
   assert.match(html, /\.sc-card\.is-expanded \.sc-evidence\{position:relative;right:auto;bottom:auto;left:auto;width:100%;padding:12px;[^}]*border-radius:16px/);
+});
+
+test('clicking the image closes expanded supporting evidence', () => {
+  assert.match(html, /const setEvidenceExpanded=expanded=>\{/);
+  assert.match(html, /evidenceTrigger\.addEventListener\('click',\(\)=>setEvidenceExpanded\(!card\.classList\.contains\('is-expanded'\)\)\)/);
+  assert.match(html, /card\.querySelector\('\.sc-scene'\)\.addEventListener\('click',\(\)=>\{/);
+  assert.match(html, /if\(card\.classList\.contains\('is-expanded'\)\)setEvidenceExpanded\(false\)/);
 });
 
 test('mobile expansion focuses and scrolls to the supporting evidence panel', () => {
