@@ -38,6 +38,8 @@ test('theme and state toggles share one control row', () => {
 });
 
 test('normal-state duration uses a translucent pill without changing alert copy', () => {
+  assert.match(html, /security:\{state:'SAFE',sub:'for 2 hours'/);
+  assert.doesNotMatch(html, /since 9:12 PM/);
   assert.match(
     html,
     /\.smartcards:not\(\.is-alert\) \.sc-card-top \.sc-sub\{display:inline-flex;width:max-content;margin-top:5px;padding:3px 8px;border-radius:999px;background:rgba\(255,255,255,\.18\)/,
