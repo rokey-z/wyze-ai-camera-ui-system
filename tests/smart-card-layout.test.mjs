@@ -27,6 +27,14 @@ test('theme and state toggles share one control row', () => {
   assert.match(html, /<body class="sc-light-page">/);
 });
 
+test('normal-state duration uses a translucent pill without changing alert copy', () => {
+  assert.match(
+    html,
+    /\.smartcards:not\(\.is-alert\) \.sc-card-top \.sc-sub\{display:inline-flex;width:max-content;margin-top:5px;padding:3px 8px;border-radius:999px;background:rgba\(255,255,255,\.18\)/,
+  );
+  assert.doesNotMatch(html, /\.smartcards\.is-alert[^}]*\.sc-sub\{[^}]*border-radius:999px/);
+});
+
 test('every card scene clips all four corners to the same radius', () => {
   assert.match(html, /\.sc-card,\.sc-card\.sc-hero\{overflow:visible;border:0;outline:0;border-radius:16px\}/);
   assert.match(html, /\.sc-scene\{overflow:hidden;border-radius:16px;clip-path:inset\(0 round 16px\)\}/);
