@@ -1706,8 +1706,9 @@
   .sc-evidence-time{display:block;font-size:11px;font-weight:700;line-height:1.2;text-shadow:0 1px 5px #020914}
   .sc-evidence-heading-row{display:none;align-items:center;justify-content:space-between;gap:10px;margin-top:3px}
   .sc-evidence-heading{display:block;color:#a9b9ce;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
-  .sc-evidence-camera-summary{display:inline-flex;min-width:64px;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#91a3ba;font-size:8.5px;font-weight:650;line-height:1.05;white-space:nowrap;text-align:center}
-  .sc-evidence-camera-summary svg{width:24px;height:24px;flex:0 0 24px;fill:none;stroke:none}
+  .sc-evidence-camera-summary{display:inline-flex;align-items:flex-start;justify-content:flex-end;gap:3px;color:#91a3ba;font-size:8px;font-weight:650;line-height:1.05;white-space:nowrap;text-align:center}
+  .sc-evidence-camera-item{display:inline-flex;width:46px;min-width:0;flex-direction:column;align-items:center;justify-content:flex-start;gap:2px}
+  .sc-evidence-camera-summary svg{width:22px;height:22px;flex:0 0 22px;fill:none;stroke:none}
   .sc-evidence-rule{display:block;width:30px;height:1px;margin:5px 0 4px;background:rgba(255,255,255,.72)}
   .sc-evidence-preview{display:block;max-height:21px;overflow:hidden;font-size:10.5px;font-weight:520;line-height:14px;text-shadow:0 1px 5px #020914;-webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 54%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0%,#000 54%,transparent 100%)}
   .sc-evidence-trigger:after{content:'›';position:absolute;top:12px;right:0;font-size:18px;font-weight:500;line-height:1;transform:rotate(90deg);transform-origin:center;opacity:.8;transition:transform .18s ease}
@@ -6543,8 +6544,7 @@ function evidenceList(items,label){
   return items.map((text,index)=>`<li><p>${text}</p>${evidenceFeedback(`${label} ${index+1}`)}</li>`).join('');
 }
 function cameraSourceSummary(cameras){
-  const label=cameras.length===1?cameras[0]:`${cameras.length} cameras`;
-  return `${SMART_CARD_EVIDENCE_ICONS.camera}<span>${label}</span>`;
+  return cameras.map(camera=>`<span class="sc-evidence-camera-item">${SMART_CARD_EVIDENCE_ICONS.camera}<span>${camera.replace(/ Cam$/,'')}</span></span>`).join('');
 }
 function initSmartCardEvidence(){
   document.querySelectorAll('.sc-card[data-scene]').forEach(card=>{

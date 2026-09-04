@@ -73,6 +73,8 @@ const inspect=()=>{
       icons:expandedCard.querySelectorAll('.sc-evidence-title-icon svg').length,
       feedbackButtons:expandedCard.querySelectorAll('.sc-evidence-item-feedback button').length,
       cameraSummary:expandedCard.querySelector('.sc-evidence-camera-summary').textContent,
+      cameraItems:expandedCard.querySelectorAll('.sc-evidence-camera-item').length,
+      cameraNames:[...expandedCard.querySelectorAll('.sc-evidence-camera-item span')].map(node=>node.textContent),
       cameraSummaryRightAligned:cameraSummaryBounds.left>evidenceHeadingBounds.right&&Math.abs(cameraSummaryBounds.right-evidenceHeadingRowBounds.right)<=1&&Math.abs((cameraSummaryBounds.top+cameraSummaryBounds.height/2)-(evidenceHeadingBounds.top+evidenceHeadingBounds.height/2))<=1,
       cameraSourceSection:!!expandedCard.querySelector('.sc-camera-source-section'),
       videoItems:expandedCard.querySelectorAll('.sc-evidence-video li').length,
@@ -194,7 +196,7 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     assert.equal(result.error,undefined);
     assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:6,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:247,goalFeedbackButtons:12,goalFeedbackAligned:true});
     assert.deepEqual(result.alertStates,['PERSON','OPEN','NEEDS CHARGING','Package left','NOT OUT','CARDINAL']);
-    assert.deepEqual(result.expanded,{card:true,aria:'true',details:'grid',icons:2,feedbackButtons:10,cameraSummary:'4 cameras',cameraSummaryRightAligned:true,cameraSourceSection:false,videoItems:3,memoryItems:2,cardFeedback:'flex',cardFeedbackVisibility:'hidden',heading:'Supporting Evidence',preview:'none',cardHeight:542,sceneHeight:247,stateOffset:0,stateLeftOffset:0,stateShift:[0,0],sceneShift:[0,0,0,0],evidenceOverlap:82,evidenceOverlapRatio:.33,evidenceWidth:366,cardWidth:366,focusCentered:true,focusZoomed:true,goalVisibility:'hidden',hasVideo:true,hasMemory:true});
+    assert.deepEqual(result.expanded,{card:true,aria:'true',details:'grid',icons:2,feedbackButtons:10,cameraSummary:'Side GateGarageFront DoorDriveway',cameraItems:4,cameraNames:['Side Gate','Garage','Front Door','Driveway'],cameraSummaryRightAligned:true,cameraSourceSection:false,videoItems:3,memoryItems:2,cardFeedback:'flex',cardFeedbackVisibility:'hidden',heading:'Supporting Evidence',preview:'none',cardHeight:540,sceneHeight:247,stateOffset:0,stateLeftOffset:0,stateShift:[0,0],sceneShift:[0,0,0,0],evidenceOverlap:82,evidenceOverlapRatio:.33,evidenceWidth:366,cardWidth:366,focusCentered:true,focusZoomed:true,goalVisibility:'hidden',hasVideo:true,hasMemory:true});
     assert.deepEqual(result.collapsed,{card:false,aria:'false',focusZoomReset:true});
     assert.deepEqual(result.dark,{section:true,lightPage:false});
   }finally{
