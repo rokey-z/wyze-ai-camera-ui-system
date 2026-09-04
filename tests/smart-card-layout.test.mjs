@@ -110,25 +110,23 @@ test('each supporting-evidence row has unfilled feedback controls and content-fi
   assert.match(html, /\.sc-evidence-item-feedback button\{[^}]*border:0;border-radius:0;background:none/);
   assert.match(html, /\.sc-evidence-list li\{position:relative;display:grid;grid-template-columns:minmax\(0,1fr\) auto/);
   assert.match(html, /\.sc-evidence-list li:before\{content:'•';[^}]*color:#91a3ba/);
-  assert.match(html, /\.sc-evidence-section-trigger\{[^}]*color:#91a3ba;font:750 9px\/1\.3/);
+  assert.match(html, /\.sc-evidence-section-header\{[^}]*color:#91a3ba;font:750 9px\/1\.3/);
   assert.match(html, /\.sc-evidence-item p\{[^}]*color:#f4f7fb;font-size:11\.5px;font-weight:620/);
   assert.match(html, /function evidenceList\(items,label\)/);
 });
 
-test('video and household evidence titles independently disclose their lists', () => {
+test('video and household evidence stay open with hover-only more labels', () => {
   assert.match(html, /class="sc-evidence-title-icon">\$\{SMART_CARD_EVIDENCE_ICONS\.video\}<\/span><span>Video description/);
   assert.match(html, /class="sc-evidence-title-icon">\$\{SMART_CARD_EVIDENCE_ICONS\.memory\}<\/span><span>Household memory/);
   assert.match(html, /\.sc-evidence-title-icon svg\{width:15px;height:15px;fill:none;stroke:currentColor/);
   assert.doesNotMatch(html, /sc-evidence-section-chevron/);
-  assert.match(html, /\.sc-evidence-section-trigger\{[^}]*width:100%/);
-  assert.match(html, /\.sc-evidence-section-more\{margin-left:auto;[^}]*text-transform:none;white-space:nowrap\}/);
-  assert.match(html, /\.sc-evidence-list-wrap\{max-height:190px;overflow:hidden;opacity:1;transition:max-height/);
-  assert.match(html, /\.sc-evidence-item\.is-collapsed \.sc-evidence-list-wrap\{max-height:0;opacity:0\}/);
-  assert.match(html, /evidence\.querySelectorAll\('\.sc-evidence-section-trigger'\)/);
-  assert.match(html, /item\.classList\.toggle\('is-collapsed',!expanded\)/);
-  assert.match(html, /card\.classList\.toggle\(`is-\$\{event\.currentTarget\.dataset\.evidenceSection\}-evidence-collapsed`,!expanded\)/);
-  assert.match(html, /item\.querySelector\('\.sc-evidence-list-wrap'\)\.toggleAttribute\('inert',!expanded\)/);
-  assert.match(html, /event\.currentTarget\.setAttribute\('aria-expanded',String\(expanded\)\)/);
+  assert.match(html, /\.sc-evidence-section-header\{[^}]*width:100%/);
+  assert.match(html, /\.sc-evidence-section-more\{margin-left:auto;padding:3px 5px;[^}]*transition:color \.16s ease,background-color \.16s ease\}/);
+  assert.match(html, /\.sc-evidence-section-more:hover\{background:rgba\(255,255,255,\.1\);color:#fff\}/);
+  assert.match(html, /\.sc-evidence-list-wrap\{overflow:visible\}/);
+  assert.doesNotMatch(html, /sc-evidence-section-trigger/);
+  assert.doesNotMatch(html, /data-evidence-section/);
+  assert.doesNotMatch(html, /is-collapsed/);
   assert.doesNotMatch(html, /--sc-expanded-height/);
 });
 

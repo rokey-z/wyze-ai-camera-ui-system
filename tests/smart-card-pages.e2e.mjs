@@ -89,16 +89,6 @@ const inspect=()=>{
       hasVideo:expandedCard.querySelector('.sc-evidence-video').textContent.length>20,
       hasMemory:expandedCard.querySelector('.sc-evidence-memory').textContent.length>20,
     };
-    const videoDisclosure=expandedCard.querySelector('.sc-evidence-section-trigger');
-    videoDisclosure.click();
-    doc.getAnimations().forEach(animation=>animation.finish());
-    expanded.videoDisclosure={
-      aria:videoDisclosure.getAttribute('aria-expanded'),
-      collapsed:videoDisclosure.closest('.sc-evidence-item').classList.contains('is-collapsed'),
-      listHeight:Math.round(videoDisclosure.closest('.sc-evidence-item').querySelector('.sc-evidence-list-wrap').getBoundingClientRect().height),
-      inert:videoDisclosure.closest('.sc-evidence-item').querySelector('.sc-evidence-list-wrap').hasAttribute('inert'),
-      cardHeight:Math.round(expandedCard.getBoundingClientRect().height),
-    };
     evidenceButton.click();
     const collapsed={
       card:doc.querySelector('.sc-card').classList.contains('is-expanded'),
@@ -194,7 +184,7 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     assert.equal(result.error,undefined);
     assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:5,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:247,goalFeedbackButtons:10,goalFeedbackAligned:true});
     assert.deepEqual(result.alertStates,['PERSON','OPEN','Package left','NOT OUT','CARDINAL']);
-    assert.deepEqual(result.expanded,{card:true,aria:'true',details:'grid',icons:3,feedbackButtons:10,cameraSources:4,videoItems:3,memoryItems:2,cardFeedback:'flex',cardFeedbackVisibility:'hidden',heading:'Supporting Evidence',preview:'none',cardHeight:617,sceneHeight:247,stateOffset:0,stateLeftOffset:0,stateShift:[0,0],sceneShift:[0,0,0,0],evidenceOverlap:82,evidenceOverlapRatio:.33,evidenceWidth:366,cardWidth:366,goalVisibility:'hidden',hasVideo:true,hasMemory:true,videoDisclosure:{aria:'false',collapsed:true,listHeight:0,inert:true,cardHeight:481}});
+    assert.deepEqual(result.expanded,{card:true,aria:'true',details:'grid',icons:3,feedbackButtons:10,cameraSources:4,videoItems:3,memoryItems:2,cardFeedback:'flex',cardFeedbackVisibility:'hidden',heading:'Supporting Evidence',preview:'none',cardHeight:617,sceneHeight:247,stateOffset:0,stateLeftOffset:0,stateShift:[0,0],sceneShift:[0,0,0,0],evidenceOverlap:82,evidenceOverlapRatio:.33,evidenceWidth:366,cardWidth:366,goalVisibility:'hidden',hasVideo:true,hasMemory:true});
     assert.deepEqual(result.collapsed,{card:false,aria:'false'});
     assert.deepEqual(result.dark,{section:true,lightPage:false});
   }finally{
