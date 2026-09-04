@@ -68,6 +68,16 @@ test('expansion keeps the image fixed and makes evidence match the card width', 
   assert.match(html, /\.sc-card\.is-expanded \.sc-evidence\{right:0;bottom:0;left:0;padding:12px;[^}]*border-radius:16px/);
 });
 
+test('mobile expansion focuses and scrolls to the supporting evidence panel', () => {
+  assert.match(html, /\.sc-evidence\{[^}]*scroll-margin-top:76px;outline:none/);
+  assert.match(html, /function focusExpandedEvidence\(evidence\)\{/);
+  assert.match(html, /if\(!isStandaloneSmartCards&&!window\.matchMedia\('\(max-width:620px\)'\)\.matches\)return/);
+  assert.match(html, /evidence\.focus\(\{preventScroll:true\}\)/);
+  assert.match(html, /evidence\.scrollIntoView\(\{behavior:reducedMotion\?'auto':'smooth',block:'start'\}\)/);
+  assert.match(html, /evidence\.setAttribute\('tabindex','-1'\)/);
+  assert.match(html, /if\(expanded\)focusExpandedEvidence\(evidence\)/);
+});
+
 test('footer readability gradient follows the rounded card corners', () => {
   assert.match(
     html,
