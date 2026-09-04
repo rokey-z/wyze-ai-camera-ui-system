@@ -1687,27 +1687,35 @@
 
   /* Progressive disclosure: reveal the AI observation and household memory behind each state. */
   .sc-card:after{display:none}
-  .sc-card:before,.sc-card[data-tone]:before{height:82px}
-  .sc-evidence{position:absolute;z-index:5;right:76px;bottom:10px;left:12px;color:#fff;font-family:var(--sans)}
+  .sc-card,.sc-card.sc-hero{transition:min-height .34s cubic-bezier(.22,1,.36,1)}
+  .sc-card:before,.sc-card[data-tone]:before{height:82px;transition:height .34s cubic-bezier(.22,1,.36,1),background .24s ease}
+  .sc-evidence{position:absolute;z-index:5;right:76px;bottom:10px;left:12px;color:#fff;font-family:var(--sans);transition:right .3s ease,left .3s ease,bottom .3s ease,padding .3s ease,background .3s ease,border-color .3s ease}
   .sc-evidence-trigger{position:relative;display:block;width:100%;margin:0;padding:0;border:0;background:none;color:inherit;text-align:left;font:inherit;cursor:pointer}
   .sc-evidence-time{display:block;font-size:11px;font-weight:700;line-height:1.2;text-shadow:0 1px 5px #020914}
+  .sc-evidence-heading{display:none;margin-top:3px;color:#a9b9ce;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
   .sc-evidence-rule{display:block;width:30px;height:1px;margin:5px 0 4px;background:rgba(255,255,255,.72)}
   .sc-evidence-preview{display:block;max-height:21px;overflow:hidden;font-size:10.5px;font-weight:520;line-height:14px;text-shadow:0 1px 5px #020914;-webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 54%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0%,#000 54%,transparent 100%)}
   .sc-evidence-trigger:after{content:'›';position:absolute;top:12px;right:0;font-size:18px;font-weight:500;line-height:1;transform:rotate(90deg);transform-origin:center;opacity:.8;transition:transform .18s ease}
-  .sc-evidence-details{display:none}
+  .sc-evidence-details{display:grid;gap:0;max-height:0;padding-top:0;overflow:hidden;opacity:0;visibility:hidden;transform:translateY(-6px);transition:max-height .34s cubic-bezier(.22,1,.36,1),padding-top .34s ease,gap .34s ease,opacity .2s ease,transform .34s cubic-bezier(.22,1,.36,1),visibility 0s linear .34s}
   .sc-card.is-expanded,.sc-card.sc-hero.is-expanded{aspect-ratio:auto;min-height:500px}
   .sc-card.is-expanded:before,.sc-card.is-expanded[data-tone]:before{height:265px;background:linear-gradient(to top,rgba(3,9,18,.92) 0%,rgba(3,9,18,.78) 64%,rgba(3,9,18,0) 100%)}
   .sc-card.is-expanded .sc-evidence{right:12px;bottom:12px;left:12px;padding:12px 12px 42px;border:1px solid rgba(255,255,255,.16);border-radius:14px;background:rgba(7,15,27,.78);box-shadow:0 12px 30px rgba(0,0,0,.28);backdrop-filter:blur(14px)}
   .sc-card.is-expanded .sc-evidence-trigger{padding:0 24px 10px 0;border-bottom:1px solid rgba(255,255,255,.16)}
-  .sc-card.is-expanded .sc-evidence-preview{max-height:none;margin-top:1px;font-size:12px;line-height:16px;-webkit-mask-image:none;mask-image:none}
+  .sc-card.is-expanded .sc-evidence-heading{display:block}
+  .sc-card.is-expanded .sc-evidence-preview{display:none}
+  .sc-card.is-expanded .sc-evidence-rule{width:30px;margin:7px 0 0}
   .sc-card.is-expanded .sc-evidence-trigger:after{top:12px;transform:rotate(-90deg)}
-  .sc-card.is-expanded .sc-evidence-details{display:grid;gap:11px;padding-top:11px}
-  .sc-evidence-heading{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#a9bcd5}
-  .sc-evidence-item{display:grid;grid-template-columns:24px 1fr;gap:9px;align-items:start}
-  .sc-evidence-icon{display:grid;place-items:center;width:24px;height:24px;border-radius:7px;background:rgba(255,255,255,.1);color:#cfe1f5}
+  .sc-card.is-expanded .sc-evidence-details{gap:14px;max-height:300px;padding-top:12px;opacity:1;visibility:visible;transform:translateY(0);transition:max-height .34s cubic-bezier(.22,1,.36,1),padding-top .34s ease,gap .34s ease,opacity .24s ease .06s,transform .34s cubic-bezier(.22,1,.36,1),visibility 0s}
+  .sc-evidence-item{display:grid;grid-template-columns:20px minmax(0,1fr);gap:0 9px;align-items:start}
+  .sc-evidence-icon{display:grid;place-items:center;width:20px;height:20px;border-radius:0;background:none;color:#91a3ba}
   .sc-evidence-icon svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-  .sc-evidence-item strong{display:block;margin:0 0 2px;font-size:10px;font-weight:800;letter-spacing:.02em;color:#fff}
-  .sc-evidence-item p{margin:0;color:#d2deec;font-size:11px;line-height:1.35}
+  .sc-evidence-item strong{display:block;margin:0 0 3px;color:#91a3ba;font-size:9px;font-weight:750;letter-spacing:.06em;text-transform:uppercase}
+  .sc-evidence-item p{margin:0;color:#f4f7fb;font-size:12px;font-weight:620;line-height:1.42}
+  .sc-evidence-item-feedback{grid-column:2;display:flex;gap:8px;margin-top:7px}
+  .sc-evidence-item-feedback button{display:grid;place-items:center;width:24px;height:24px;padding:0;border:0;border-radius:0;background:none;color:#c8d3e1;cursor:pointer}
+  .sc-evidence-item-feedback button:hover{color:#fff}
+  .sc-evidence-item-feedback button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+  .sc-evidence-item-feedback svg{width:13px;height:13px;fill:currentColor}
   .sc-card.is-expanded .sc-actions .sc-feedback{z-index:6;right:20px;bottom:20px}
   @media(max-width:390px){.sc-evidence{right:72px}.sc-card.is-expanded,.sc-card.sc-hero.is-expanded{min-height:510px}.sc-card.is-expanded .sc-evidence{right:10px;bottom:10px;left:10px}}
 
@@ -6486,13 +6494,20 @@ const SMART_CARD_EVIDENCE_ICONS={
   video:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M8.5 15 11 7h2l2.5 8M4 14l3-8h3M20 14l-3-8h-3M9 17h6"/></svg>',
   memory:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 4.5A3.5 3.5 0 0 0 6 8v.3A3.6 3.6 0 0 0 4 14a3.5 3.5 0 0 0 3.5 5.5H10V5.8c0-.7-.2-1.3-.5-1.3ZM14.5 4.5A3.5 3.5 0 0 1 18 8v.3a3.6 3.6 0 0 1 2 5.7 3.5 3.5 0 0 1-3.5 5.5H14V5.8c0-.7.2-1.3.5-1.3Z"/><path d="M6 9.5h2M16 9.5h2M6.5 16H10M14 16h3.5"/></svg>'
 };
+const SMART_CARD_FEEDBACK_ICONS={
+  up:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg>',
+  down:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg>'
+};
+function evidenceFeedback(label){
+  return `<div class="sc-evidence-item-feedback" role="group" aria-label="Rate ${label}"><button type="button" aria-label="${label} was helpful">${SMART_CARD_FEEDBACK_ICONS.up}</button><button type="button" aria-label="${label} was not helpful">${SMART_CARD_FEEDBACK_ICONS.down}</button></div>`;
+}
 function initSmartCardEvidence(){
   document.querySelectorAll('.sc-card[data-scene]').forEach(card=>{
     const scene=card.dataset.scene;
     const evidence=document.createElement('section');
     evidence.className='sc-evidence';
     evidence.setAttribute('aria-label','AI supporting evidence');
-    evidence.innerHTML=`<button class="sc-evidence-trigger" type="button" aria-expanded="false" aria-controls="sc-evidence-${scene}"><span class="sc-evidence-time"></span><span class="sc-evidence-rule" aria-hidden="true"></span><span class="sc-evidence-preview"></span></button><div class="sc-evidence-details" id="sc-evidence-${scene}"><div class="sc-evidence-heading">Evidence behind this state</div><div class="sc-evidence-item"><span class="sc-evidence-icon">${SMART_CARD_EVIDENCE_ICONS.video}</span><div><strong>Video description</strong><p class="sc-evidence-video"></p></div></div><div class="sc-evidence-item"><span class="sc-evidence-icon">${SMART_CARD_EVIDENCE_ICONS.memory}</span><div><strong>Household memory</strong><p class="sc-evidence-memory"></p></div></div></div>`;
+    evidence.innerHTML=`<button class="sc-evidence-trigger" type="button" aria-expanded="false" aria-controls="sc-evidence-${scene}"><span class="sc-evidence-time"></span><span class="sc-evidence-heading">Supporting Evidence</span><span class="sc-evidence-rule" aria-hidden="true"></span><span class="sc-evidence-preview"></span></button><div class="sc-evidence-details" id="sc-evidence-${scene}"><div class="sc-evidence-item"><span class="sc-evidence-icon">${SMART_CARD_EVIDENCE_ICONS.video}</span><div><strong>Video description</strong><p class="sc-evidence-video"></p></div>${evidenceFeedback('video description')}</div><div class="sc-evidence-item"><span class="sc-evidence-icon">${SMART_CARD_EVIDENCE_ICONS.memory}</span><div><strong>Household memory</strong><p class="sc-evidence-memory"></p></div>${evidenceFeedback('household memory')}</div></div>`;
     card.append(evidence);
     evidence.querySelector('.sc-evidence-trigger').addEventListener('click',event=>{
       const expanded=!card.classList.contains('is-expanded');

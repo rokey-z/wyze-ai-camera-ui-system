@@ -51,11 +51,25 @@ test('supporting evidence progressively reveals video and household inputs', () 
   assert.match(html, /class="sc-evidence-time"/);
   assert.match(html, /class="sc-evidence-rule"/);
   assert.match(html, /class="sc-evidence-preview"/);
+  assert.match(html, /<span class="sc-evidence-heading">Supporting Evidence<\/span>/);
+  assert.doesNotMatch(html, /Evidence behind this state/);
   assert.match(html, /<strong>Video description<\/strong>/);
   assert.match(html, /<strong>Household memory<\/strong>/);
   assert.match(html, /card\.classList\.toggle\('is-expanded',expanded\)/);
   assert.match(html, /\.sc-evidence-preview\{[^}]*max-height:21px[^}]*mask-image:linear-gradient/);
+  assert.match(html, /\.sc-card\.is-expanded \.sc-evidence-preview\{display:none\}/);
+  assert.match(html, /\.sc-evidence-details\{display:grid;gap:0;max-height:0;[^}]*transition:max-height/);
+  assert.match(html, /\.sc-card\.is-expanded \.sc-evidence-details\{gap:14px;max-height:300px;[^}]*opacity:1/);
   assert.match(html, /\.sc-card\.is-expanded \.sc-actions \.sc-feedback\{z-index:6;right:20px;bottom:20px\}/);
+});
+
+test('each supporting-evidence row has unfilled feedback controls and content-first hierarchy', () => {
+  assert.match(html, /function evidenceFeedback\(label\)/);
+  assert.match(html, /Rate \$\{label\}/);
+  assert.match(html, /\.sc-evidence-icon\{[^}]*border-radius:0;background:none;color:#91a3ba\}/);
+  assert.match(html, /\.sc-evidence-item-feedback button\{[^}]*border:0;border-radius:0;background:none/);
+  assert.match(html, /\.sc-evidence-item strong\{[^}]*color:#91a3ba;font-size:9px/);
+  assert.match(html, /\.sc-evidence-item p\{[^}]*color:#f4f7fb;font-size:12px;font-weight:620/);
 });
 
 test('normal and alert states provide distinct personalized evidence for every scene', () => {
