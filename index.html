@@ -1727,6 +1727,10 @@
   .sc-evidence-title-icon svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
   .sc-evidence-section-more{margin-left:auto;color:#c8d3e1;font-size:9px;font-weight:750;letter-spacing:0;text-transform:none;white-space:nowrap}
   .sc-evidence-section-trigger:hover .sc-evidence-section-more{color:#fff}
+  .sc-camera-source-title{display:flex;align-items:center;gap:6px;color:#91a3ba;font:750 9px/1.3 var(--sans);letter-spacing:.06em;text-transform:uppercase}
+  .sc-camera-source-list{display:flex;flex-wrap:wrap;gap:6px;margin:7px 0 0;padding:0;list-style:none}
+  .sc-camera-source-list li{display:inline-flex;align-items:center;gap:5px;min-height:25px;padding:5px 8px;border:1px solid rgba(145,163,186,.24);border-radius:999px;background:rgba(145,163,186,.1);color:#e8eef7;font-size:10px;font-weight:650;line-height:1}
+  .sc-camera-source-list svg{width:12px;height:12px;fill:none;stroke:#91a3ba;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
   .sc-evidence-list-wrap{max-height:190px;overflow:hidden;opacity:1;transition:max-height .28s cubic-bezier(.22,1,.36,1),opacity .18s ease}
   .sc-evidence-item.is-collapsed .sc-evidence-list-wrap{max-height:0;opacity:0}
   .sc-evidence-list{display:grid;gap:9px;margin:7px 0 0;padding:0;list-style:none}
@@ -6513,7 +6517,15 @@ const SMART_CARD_EVIDENCE={
 };
 const SMART_CARD_EVIDENCE_ICONS={
   video:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M8.5 15 11 7h2l2.5 8M4 14l3-8h3M20 14l-3-8h-3M9 17h6"/></svg>',
-  memory:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 4.5A3.5 3.5 0 0 0 6 8v.3A3.6 3.6 0 0 0 4 14a3.5 3.5 0 0 0 3.5 5.5H10V5.8c0-.7-.2-1.3-.5-1.3ZM14.5 4.5A3.5 3.5 0 0 1 18 8v.3a3.6 3.6 0 0 1 2 5.7 3.5 3.5 0 0 1-3.5 5.5H14V5.8c0-.7.2-1.3.5-1.3Z"/><path d="M6 9.5h2M16 9.5h2M6.5 16H10M14 16h3.5"/></svg>'
+  memory:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 4.5A3.5 3.5 0 0 0 6 8v.3A3.6 3.6 0 0 0 4 14a3.5 3.5 0 0 0 3.5 5.5H10V5.8c0-.7-.2-1.3-.5-1.3ZM14.5 4.5A3.5 3.5 0 0 1 18 8v.3a3.6 3.6 0 0 1 2 5.7 3.5 3.5 0 0 1-3.5 5.5H14V5.8c0-.7.2-1.3.5-1.3Z"/><path d="M6 9.5h2M16 9.5h2M6.5 16H10M14 16h3.5"/></svg>',
+  camera:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="3"/><circle cx="12" cy="12.5" r="3.5"/><path d="m8 6 1.4-2h5.2L16 6"/></svg>'
+};
+const SMART_CARD_CAMERAS={
+  security:['Side Gate Cam','Garage Cam','Front Door Cam','Driveway Cam'],
+  garage:['Garage Cam'],
+  front:['Front Door Cam'],
+  bins:['Driveway Cam'],
+  birds:['Backyard Feeder Cam']
 };
 const SMART_CARD_FEEDBACK_ICONS={
   up:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg>',
@@ -6524,6 +6536,9 @@ function evidenceFeedback(label){
 }
 function evidenceList(items,label){
   return items.map((text,index)=>`<li><p>${text}</p>${evidenceFeedback(`${label} ${index+1}`)}</li>`).join('');
+}
+function cameraSourceList(cameras){
+  return cameras.map(camera=>`<li>${SMART_CARD_EVIDENCE_ICONS.camera}<span>${camera}</span></li>`).join('');
 }
 function focusExpandedEvidence(evidence){
   if(!isStandaloneSmartCards&&!window.matchMedia('(max-width:620px)').matches)return;
@@ -6547,8 +6562,9 @@ function initSmartCardEvidence(){
     evidence.className='sc-evidence';
     evidence.setAttribute('aria-label','AI supporting evidence');
     evidence.setAttribute('tabindex','-1');
-    evidence.innerHTML=`<button class="sc-evidence-trigger" type="button" aria-expanded="false" aria-controls="sc-evidence-${scene}"><span class="sc-evidence-time"></span><span class="sc-evidence-heading">Supporting Evidence</span><span class="sc-evidence-rule" aria-hidden="true"></span><span class="sc-evidence-preview"></span></button><div class="sc-evidence-details" id="sc-evidence-${scene}"><div class="sc-evidence-item"><button class="sc-evidence-section-trigger" type="button" data-evidence-section="video" aria-expanded="true" aria-controls="sc-evidence-video-${scene}"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.video}</span><span>Video description</span><span class="sc-evidence-section-more">+ more</span></button><div class="sc-evidence-list-wrap" id="sc-evidence-video-${scene}"><ul class="sc-evidence-list sc-evidence-video"></ul></div></div><div class="sc-evidence-item"><button class="sc-evidence-section-trigger" type="button" data-evidence-section="memory" aria-expanded="true" aria-controls="sc-evidence-memory-${scene}"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.memory}</span><span>Household memory</span><span class="sc-evidence-section-more">+ more</span></button><div class="sc-evidence-list-wrap" id="sc-evidence-memory-${scene}"><ul class="sc-evidence-list sc-evidence-memory"></ul></div></div></div>`;
+    evidence.innerHTML=`<button class="sc-evidence-trigger" type="button" aria-expanded="false" aria-controls="sc-evidence-${scene}"><span class="sc-evidence-time"></span><span class="sc-evidence-heading">Supporting Evidence</span><span class="sc-evidence-rule" aria-hidden="true"></span><span class="sc-evidence-preview"></span></button><div class="sc-evidence-details" id="sc-evidence-${scene}"><div class="sc-evidence-item"><button class="sc-evidence-section-trigger" type="button" data-evidence-section="video" aria-expanded="true" aria-controls="sc-evidence-video-${scene}"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.video}</span><span>Video description</span><span class="sc-evidence-section-more">+ more</span></button><div class="sc-evidence-list-wrap" id="sc-evidence-video-${scene}"><ul class="sc-evidence-list sc-evidence-video"></ul></div></div><div class="sc-evidence-item"><button class="sc-evidence-section-trigger" type="button" data-evidence-section="memory" aria-expanded="true" aria-controls="sc-evidence-memory-${scene}"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.memory}</span><span>Household memory</span><span class="sc-evidence-section-more">+ more</span></button><div class="sc-evidence-list-wrap" id="sc-evidence-memory-${scene}"><ul class="sc-evidence-list sc-evidence-memory"></ul></div></div><div class="sc-evidence-item sc-camera-source-section"><div class="sc-camera-source-title"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.camera}</span><span>Cameras involved</span></div><ul class="sc-camera-source-list" aria-label="Cameras involved in this state"></ul></div></div>`;
     card.append(evidence);
+    evidence.querySelector('.sc-camera-source-list').innerHTML=cameraSourceList(SMART_CARD_CAMERAS[scene]);
     evidence.querySelector('.sc-evidence-trigger').addEventListener('click',event=>{
       const expanded=!card.classList.contains('is-expanded');
       card.classList.toggle('is-expanded',expanded);
