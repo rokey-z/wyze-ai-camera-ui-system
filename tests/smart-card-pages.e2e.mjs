@@ -62,15 +62,18 @@ const inspect=()=>{
     const expandedSceneBounds=expandedCard.querySelector('.sc-scene').getBoundingClientRect();
     const expandedStateBounds=expandedCard.querySelector('.sc-card-top').getBoundingClientRect();
     const expandedEvidenceBounds=expandedCard.querySelector('.sc-evidence').getBoundingClientRect();
-    const cameraSourceBounds=[...expandedCard.querySelectorAll('.sc-camera-source-list li')].map(item=>item.getBoundingClientRect());
+    const evidenceHeadingBounds=expandedCard.querySelector('.sc-evidence-heading').getBoundingClientRect();
+    const cameraSummaryBounds=expandedCard.querySelector('.sc-evidence-camera-summary').getBoundingClientRect();
+    const evidenceHeadingRowBounds=expandedCard.querySelector('.sc-evidence-heading-row').getBoundingClientRect();
     const expanded={
       card:expandedCard.classList.contains('is-expanded'),
       aria:evidenceButton.getAttribute('aria-expanded'),
       details:getComputedStyle(expandedCard.querySelector('.sc-evidence-details')).display,
       icons:expandedCard.querySelectorAll('.sc-evidence-title-icon svg').length,
       feedbackButtons:expandedCard.querySelectorAll('.sc-evidence-item-feedback button').length,
-      cameraSources:expandedCard.querySelectorAll('.sc-camera-source-list li').length,
-      cameraSourcesHorizontal:cameraSourceBounds.every((bounds,index)=>index===0||(Math.abs(bounds.top-cameraSourceBounds[0].top)<=1&&bounds.left>cameraSourceBounds[index-1].left)),
+      cameraSummary:expandedCard.querySelector('.sc-evidence-camera-summary').textContent,
+      cameraSummaryRightAligned:cameraSummaryBounds.left>evidenceHeadingBounds.right&&Math.abs(cameraSummaryBounds.right-evidenceHeadingRowBounds.right)<=1&&Math.abs((cameraSummaryBounds.top+cameraSummaryBounds.height/2)-(evidenceHeadingBounds.top+evidenceHeadingBounds.height/2))<=1,
+      cameraSourceSection:!!expandedCard.querySelector('.sc-camera-source-section'),
       videoItems:expandedCard.querySelectorAll('.sc-evidence-video li').length,
       memoryItems:expandedCard.querySelectorAll('.sc-evidence-memory li').length,
       cardFeedback:getComputedStyle(expandedCard.querySelector('.sc-actions .sc-feedback')).display,
@@ -186,7 +189,7 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     assert.equal(result.error,undefined);
     assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:6,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:247,goalFeedbackButtons:12,goalFeedbackAligned:true});
     assert.deepEqual(result.alertStates,['PERSON','OPEN','NEEDS CHARGING','Package left','NOT OUT','CARDINAL']);
-    assert.deepEqual(result.expanded,{card:true,aria:'true',details:'grid',icons:3,feedbackButtons:10,cameraSources:4,cameraSourcesHorizontal:true,videoItems:3,memoryItems:2,cardFeedback:'flex',cardFeedbackVisibility:'hidden',heading:'Supporting Evidence',preview:'none',cardHeight:617,sceneHeight:247,stateOffset:0,stateLeftOffset:0,stateShift:[0,0],sceneShift:[0,0,0,0],evidenceOverlap:82,evidenceOverlapRatio:.33,evidenceWidth:366,cardWidth:366,goalVisibility:'hidden',hasVideo:true,hasMemory:true});
+    assert.deepEqual(result.expanded,{card:true,aria:'true',details:'grid',icons:2,feedbackButtons:10,cameraSummary:'4 cameras',cameraSummaryRightAligned:true,cameraSourceSection:false,videoItems:3,memoryItems:2,cardFeedback:'flex',cardFeedbackVisibility:'hidden',heading:'Supporting Evidence',preview:'none',cardHeight:521,sceneHeight:247,stateOffset:0,stateLeftOffset:0,stateShift:[0,0],sceneShift:[0,0,0,0],evidenceOverlap:82,evidenceOverlapRatio:.33,evidenceWidth:366,cardWidth:366,goalVisibility:'hidden',hasVideo:true,hasMemory:true});
     assert.deepEqual(result.collapsed,{card:false,aria:'false'});
     assert.deepEqual(result.dark,{section:true,lightPage:false});
   }finally{
