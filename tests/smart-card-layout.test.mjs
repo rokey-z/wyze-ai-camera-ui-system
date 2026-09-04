@@ -158,12 +158,14 @@ test('expanded evidence identifies the cameras involved in each card state', () 
   assert.doesNotMatch(html, /sc-camera-source-section/);
   assert.doesNotMatch(html, /sc-camera-source-list/);
   assert.match(html, /function cameraSourceSummary\(cameras\)/);
-  assert.match(html, /cameras\.length===1\?cameras\[0\]:`\$\{cameras\.length\} cameras`/);
+  assert.match(html, /cameras\.map\(camera=>`<span class="sc-evidence-camera-item">/);
+  assert.match(html, /camera\.replace\(\/ Cam\$\/,''\)/);
   assert.match(html, /class="sc-evidence-heading-row"><span class="sc-evidence-heading">Supporting Evidence<\/span><span class="sc-evidence-camera-summary"><\/span>/);
   assert.match(html, /\.sc-evidence-heading-row\{display:none;align-items:center;justify-content:space-between/);
   assert.match(html, /\.sc-card\.is-expanded \.sc-evidence-heading-row\{display:flex\}/);
-  assert.match(html, /\.sc-evidence-camera-summary\{display:inline-flex;min-width:64px;flex-direction:column;align-items:center;justify-content:center/);
-  assert.match(html, /\.sc-evidence-camera-summary svg\{width:24px;height:24px;flex:0 0 24px;fill:none;stroke:none\}/);
+  assert.match(html, /\.sc-evidence-camera-summary\{display:inline-flex;align-items:flex-start;justify-content:flex-end;gap:3px/);
+  assert.match(html, /\.sc-evidence-camera-item\{display:inline-flex;width:46px;min-width:0;flex-direction:column;align-items:center/);
+  assert.match(html, /\.sc-evidence-camera-summary svg\{width:22px;height:22px;flex:0 0 22px;fill:none;stroke:none\}/);
   assert.match(html, /\.sc-card\.is-expanded \.sc-evidence-trigger:after\{top:25px;transform:rotate\(-90deg\)\}/);
   assert.match(html, /cameraSummary\.innerHTML=cameraSourceSummary\(SMART_CARD_CAMERAS\[scene\]\)/);
   assert.match(html, /cameraSummary\.setAttribute\('aria-label',`Cameras involved: \$\{SMART_CARD_CAMERAS\[scene\]\.join\(', '\)\}`\)/);
