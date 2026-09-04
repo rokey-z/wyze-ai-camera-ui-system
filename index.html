@@ -1710,7 +1710,7 @@
   .sc-card.is-expanded>.sc-label{opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .18s ease,transform .18s ease,visibility 0s linear .18s}
   .sc-card.is-expanded .sc-actions .sc-feedback{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .18s ease,visibility 0s linear .18s}
   .sc-card.is-expanded .sc-card-top{z-index:7;top:0;left:0}
-  .sc-card.is-expanded .sc-scene{inset:0 0 auto;height:auto;aspect-ratio:16/11;box-shadow:0 14px 28px #0309144d}
+  .sc-card.is-expanded .sc-scene{inset:0 0 auto;height:auto;aspect-ratio:16/11;cursor:pointer;box-shadow:0 14px 28px #0309144d}
   .sc-card.is-expanded:before,.sc-card.is-expanded[data-tone]:before{height:82px;opacity:0}
   .sc-card.is-expanded .sc-evidence{position:relative;right:auto;bottom:auto;left:auto;width:100%;padding:12px;border:1px solid rgba(255,255,255,.16);border-radius:16px;background:rgba(7,15,27,.98);box-shadow:0 12px 30px rgba(0,0,0,.28);backdrop-filter:blur(14px)}
   .sc-card.is-expanded .sc-evidence-trigger{padding:0 24px 10px 0;border-bottom:1px solid rgba(255,255,255,.16)}
@@ -6562,11 +6562,15 @@ function initSmartCardEvidence(){
     evidence.innerHTML=`<button class="sc-evidence-trigger" type="button" aria-expanded="false" aria-controls="sc-evidence-${scene}"><span class="sc-evidence-time"></span><span class="sc-evidence-heading">Supporting Evidence</span><span class="sc-evidence-rule" aria-hidden="true"></span><span class="sc-evidence-preview"></span></button><div class="sc-evidence-details" id="sc-evidence-${scene}"><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.video}</span><span>Video description</span><span class="sc-evidence-section-more">+ more</span></div><div class="sc-evidence-list-wrap"><ul class="sc-evidence-list sc-evidence-video"></ul></div></div><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.memory}</span><span>Household memory</span><span class="sc-evidence-section-more">+ more</span></div><div class="sc-evidence-list-wrap"><ul class="sc-evidence-list sc-evidence-memory"></ul></div></div><div class="sc-evidence-item sc-camera-source-section"><div class="sc-camera-source-title"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.camera}</span><span>Cameras involved</span></div><ul class="sc-camera-source-list" aria-label="Cameras involved in this state"></ul></div></div>`;
     card.append(evidence);
     evidence.querySelector('.sc-camera-source-list').innerHTML=cameraSourceList(SMART_CARD_CAMERAS[scene]);
-    evidence.querySelector('.sc-evidence-trigger').addEventListener('click',event=>{
-      const expanded=!card.classList.contains('is-expanded');
+    const evidenceTrigger=evidence.querySelector('.sc-evidence-trigger');
+    const setEvidenceExpanded=expanded=>{
       card.classList.toggle('is-expanded',expanded);
-      event.currentTarget.setAttribute('aria-expanded',String(expanded));
+      evidenceTrigger.setAttribute('aria-expanded',String(expanded));
       if(expanded)focusExpandedEvidence(evidence);
+    };
+    evidenceTrigger.addEventListener('click',()=>setEvidenceExpanded(!card.classList.contains('is-expanded')));
+    card.querySelector('.sc-scene').addEventListener('click',()=>{
+      if(card.classList.contains('is-expanded'))setEvidenceExpanded(false);
     });
   });
 }
