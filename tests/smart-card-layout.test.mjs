@@ -162,8 +162,9 @@ test('expanded evidence identifies the cameras involved in each card state', () 
   assert.match(html, /class="sc-evidence-heading-row"><span class="sc-evidence-heading">Supporting Evidence<\/span><span class="sc-evidence-camera-summary"><\/span>/);
   assert.match(html, /\.sc-evidence-heading-row\{display:none;align-items:center;justify-content:space-between/);
   assert.match(html, /\.sc-card\.is-expanded \.sc-evidence-heading-row\{display:flex\}/);
-  assert.match(html, /\.sc-evidence-camera-summary\{display:inline-flex;[^}]*justify-content:flex-end/);
-  assert.match(html, /\.sc-evidence-camera-summary svg\{width:14px;height:14px;flex:0 0 14px;fill:none;stroke:none\}/);
+  assert.match(html, /\.sc-evidence-camera-summary\{display:inline-flex;min-width:64px;flex-direction:column;align-items:center;justify-content:center/);
+  assert.match(html, /\.sc-evidence-camera-summary svg\{width:24px;height:24px;flex:0 0 24px;fill:none;stroke:none\}/);
+  assert.match(html, /\.sc-card\.is-expanded \.sc-evidence-trigger:after\{top:25px;transform:rotate\(-90deg\)\}/);
   assert.match(html, /cameraSummary\.innerHTML=cameraSourceSummary\(SMART_CARD_CAMERAS\[scene\]\)/);
   assert.match(html, /cameraSummary\.setAttribute\('aria-label',`Cameras involved: \$\{SMART_CARD_CAMERAS\[scene\]\.join\(', '\)\}`\)/);
 });
