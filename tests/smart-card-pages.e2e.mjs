@@ -62,6 +62,7 @@ const inspect=()=>{
     const expandedSceneBounds=expandedCard.querySelector('.sc-scene').getBoundingClientRect();
     const expandedStateBounds=expandedCard.querySelector('.sc-card-top').getBoundingClientRect();
     const expandedEvidenceBounds=expandedCard.querySelector('.sc-evidence').getBoundingClientRect();
+    const expandedDetectionBounds=expandedCard.querySelector('.sc-detection-box').getBoundingClientRect();
     const evidenceHeadingBounds=expandedCard.querySelector('.sc-evidence-heading').getBoundingClientRect();
     const cameraSummaryBounds=expandedCard.querySelector('.sc-evidence-camera-summary').getBoundingClientRect();
     const evidenceHeadingRowBounds=expandedCard.querySelector('.sc-evidence-heading-row').getBoundingClientRect();
@@ -90,14 +91,18 @@ const inspect=()=>{
       evidenceOverlapRatio:Number(((expandedSceneBounds.bottom-expandedEvidenceBounds.top)/expandedSceneBounds.height).toFixed(2)),
       evidenceWidth:Math.round(expandedEvidenceBounds.width),
       cardWidth:Math.round(expandedCardBounds.width),
+      focusCentered:Math.abs((expandedDetectionBounds.left+expandedDetectionBounds.width/2)-(expandedSceneBounds.left+expandedSceneBounds.width/2))<=2&&Math.abs((expandedDetectionBounds.top+expandedDetectionBounds.height/2)-(expandedSceneBounds.top+expandedSceneBounds.height/2))<=2,
+      focusZoomed:getComputedStyle(expandedCard.querySelector('.sc-focus-layer')).transform!=='none'&&getComputedStyle(expandedCard.querySelector('.sc-focus-layer')).transform!=='matrix(1, 0, 0, 1, 0, 0)',
       goalVisibility:getComputedStyle(expandedCard.querySelector(':scope>.sc-label')).visibility,
       hasVideo:expandedCard.querySelector('.sc-evidence-video').textContent.length>20,
       hasMemory:expandedCard.querySelector('.sc-evidence-memory').textContent.length>20,
     };
     expandedCard.querySelector('.sc-scene').click();
+    doc.getAnimations().forEach(animation=>animation.finish());
     const collapsed={
       card:doc.querySelector('.sc-card').classList.contains('is-expanded'),
       aria:evidenceButton.getAttribute('aria-expanded'),
+      focusZoomReset:getComputedStyle(expandedCard.querySelector('.sc-focus-layer')).transform==='matrix(1, 0, 0, 1, 0, 0)',
     };
     doc.querySelector('[data-sc-theme="dark"]').click();
     const dark={
@@ -189,8 +194,8 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     assert.equal(result.error,undefined);
     assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:6,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:247,goalFeedbackButtons:12,goalFeedbackAligned:true});
     assert.deepEqual(result.alertStates,['PERSON','OPEN','NEEDS CHARGING','Package left','NOT OUT','CARDINAL']);
-    assert.deepEqual(result.expanded,{card:true,aria:'true',details:'grid',icons:2,feedbackButtons:10,cameraSummary:'4 cameras',cameraSummaryRightAligned:true,cameraSourceSection:false,videoItems:3,memoryItems:2,cardFeedback:'flex',cardFeedbackVisibility:'hidden',heading:'Supporting Evidence',preview:'none',cardHeight:521,sceneHeight:247,stateOffset:0,stateLeftOffset:0,stateShift:[0,0],sceneShift:[0,0,0,0],evidenceOverlap:82,evidenceOverlapRatio:.33,evidenceWidth:366,cardWidth:366,goalVisibility:'hidden',hasVideo:true,hasMemory:true});
-    assert.deepEqual(result.collapsed,{card:false,aria:'false'});
+    assert.deepEqual(result.expanded,{card:true,aria:'true',details:'grid',icons:2,feedbackButtons:10,cameraSummary:'4 cameras',cameraSummaryRightAligned:true,cameraSourceSection:false,videoItems:3,memoryItems:2,cardFeedback:'flex',cardFeedbackVisibility:'hidden',heading:'Supporting Evidence',preview:'none',cardHeight:521,sceneHeight:247,stateOffset:0,stateLeftOffset:0,stateShift:[0,0],sceneShift:[0,0,0,0],evidenceOverlap:82,evidenceOverlapRatio:.33,evidenceWidth:366,cardWidth:366,focusCentered:true,focusZoomed:true,goalVisibility:'hidden',hasVideo:true,hasMemory:true});
+    assert.deepEqual(result.collapsed,{card:false,aria:'false',focusZoomReset:true});
     assert.deepEqual(result.dark,{section:true,lightPage:false});
   }finally{
     await new Promise(resolve=>server.close(resolve));
