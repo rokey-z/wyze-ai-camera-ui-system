@@ -91,8 +91,8 @@ test('supporting evidence progressively reveals video and household inputs', () 
   assert.match(html, /class="sc-evidence-preview"/);
   assert.match(html, /<span class="sc-evidence-heading">Supporting Evidence<\/span>/);
   assert.doesNotMatch(html, /Evidence behind this state/);
-  assert.match(html, /<span>Video description<\/span><span class="sc-evidence-section-chevron"/);
-  assert.match(html, /<span>Household memory<\/span><span class="sc-evidence-section-chevron"/);
+  assert.match(html, /<span>Video description<\/span><span class="sc-evidence-section-more">\+ more<\/span>/);
+  assert.match(html, /<span>Household memory<\/span><span class="sc-evidence-section-more">\+ more<\/span>/);
   assert.match(html, /card\.classList\.toggle\('is-expanded',expanded\)/);
   assert.match(html, /\.sc-evidence-preview\{[^}]*max-height:21px[^}]*mask-image:linear-gradient/);
   assert.match(html, /\.sc-card\.is-expanded \.sc-evidence-preview\{display:none\}/);
@@ -118,8 +118,9 @@ test('video and household evidence titles independently disclose their lists', (
   assert.match(html, /class="sc-evidence-title-icon">\$\{SMART_CARD_EVIDENCE_ICONS\.video\}<\/span><span>Video description/);
   assert.match(html, /class="sc-evidence-title-icon">\$\{SMART_CARD_EVIDENCE_ICONS\.memory\}<\/span><span>Household memory/);
   assert.match(html, /\.sc-evidence-title-icon svg\{width:15px;height:15px;fill:none;stroke:currentColor/);
-  assert.match(html, /\.sc-evidence-section-chevron\{[^}]*transform:rotate\(90deg\)[^}]*transition:transform/);
-  assert.match(html, /\.sc-evidence-item\.is-collapsed \.sc-evidence-section-chevron\{transform:rotate\(0\)\}/);
+  assert.doesNotMatch(html, /sc-evidence-section-chevron/);
+  assert.match(html, /\.sc-evidence-section-trigger\{[^}]*width:100%/);
+  assert.match(html, /\.sc-evidence-section-more\{margin-left:auto;[^}]*text-transform:none;white-space:nowrap\}/);
   assert.match(html, /\.sc-evidence-list-wrap\{max-height:190px;overflow:hidden;opacity:1;transition:max-height/);
   assert.match(html, /\.sc-evidence-item\.is-collapsed \.sc-evidence-list-wrap\{max-height:0;opacity:0\}/);
   assert.match(html, /evidence\.querySelectorAll\('\.sc-evidence-section-trigger'\)/);
