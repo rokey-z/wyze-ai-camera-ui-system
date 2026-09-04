@@ -1700,7 +1700,7 @@
   .sc-actions .sc-feedback button:hover,.sc-actions .sc-feedback button:active{background:none;color:#fff;box-shadow:none;opacity:1}
   .sc-actions .sc-feedback svg{width:13px;height:13px}
   body.sc-light-page .sc-actions .sc-feedback button{color:#42536b}
-  .sc-evidence{position:absolute;z-index:5;right:12px;bottom:10px;left:12px;scroll-margin-top:76px;outline:none;color:#fff;font-family:var(--sans);transition:right .3s ease,left .3s ease,bottom .3s ease,padding .3s ease,background .3s ease,border-color .3s ease}
+  .sc-evidence{position:absolute;z-index:5;right:12px;bottom:10px;left:12px;color:#fff;font-family:var(--sans);transition:right .3s ease,left .3s ease,bottom .3s ease,padding .3s ease,background .3s ease,border-color .3s ease}
   .sc-evidence-trigger{position:relative;display:block;width:100%;margin:0;padding:0;border:0;background:none;color:inherit;text-align:left;font:inherit;cursor:pointer}
   .sc-evidence-time{display:block;font-size:11px;font-weight:700;line-height:1.2;text-shadow:0 1px 5px #020914}
   .sc-evidence-heading-row{display:none;align-items:center;justify-content:space-between;gap:10px;margin-top:3px}
@@ -6545,15 +6545,6 @@ function cameraSourceSummary(cameras){
   const label=cameras.length===1?cameras[0]:`${cameras.length} cameras`;
   return `${SMART_CARD_EVIDENCE_ICONS.camera}<span>${label}</span>`;
 }
-function focusExpandedEvidence(evidence){
-  if(!isStandaloneSmartCards&&!window.matchMedia('(max-width:620px)').matches)return;
-  const reducedMotion=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-  window.setTimeout(()=>{
-    if(!evidence.closest('.sc-card')?.classList.contains('is-expanded'))return;
-    evidence.focus({preventScroll:true});
-    evidence.scrollIntoView({behavior:reducedMotion?'auto':'smooth',block:'center'});
-  },reducedMotion?0:360);
-}
 function initSmartCardEvidence(){
   document.querySelectorAll('.sc-card[data-scene]').forEach(card=>{
     const scene=card.dataset.scene;
@@ -6566,7 +6557,6 @@ function initSmartCardEvidence(){
     const evidence=document.createElement('section');
     evidence.className='sc-evidence';
     evidence.setAttribute('aria-label','AI supporting evidence');
-    evidence.setAttribute('tabindex','-1');
     evidence.innerHTML=`<button class="sc-evidence-trigger" type="button" aria-expanded="false" aria-controls="sc-evidence-${scene}"><span class="sc-evidence-time"></span><span class="sc-evidence-heading-row"><span class="sc-evidence-heading">Supporting Evidence</span><span class="sc-evidence-camera-summary"></span></span><span class="sc-evidence-rule" aria-hidden="true"></span><span class="sc-evidence-preview"></span></button><div class="sc-evidence-details" id="sc-evidence-${scene}"><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.video}</span><span>Video description</span><span class="sc-evidence-section-more">+ more</span></div><div class="sc-evidence-list-wrap"><ul class="sc-evidence-list sc-evidence-video"></ul></div></div><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.memory}</span><span>Household memory</span><span class="sc-evidence-section-more">+ more</span></div><div class="sc-evidence-list-wrap"><ul class="sc-evidence-list sc-evidence-memory"></ul></div></div></div>`;
     card.append(evidence);
     const cameraSummary=evidence.querySelector('.sc-evidence-camera-summary');
@@ -6576,7 +6566,6 @@ function initSmartCardEvidence(){
     const setEvidenceExpanded=expanded=>{
       card.classList.toggle('is-expanded',expanded);
       evidenceTrigger.setAttribute('aria-expanded',String(expanded));
-      if(expanded)focusExpandedEvidence(evidence);
     };
     evidenceTrigger.addEventListener('click',()=>setEvidenceExpanded(!card.classList.contains('is-expanded')));
     card.querySelector('.sc-scene').addEventListener('click',()=>{
