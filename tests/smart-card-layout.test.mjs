@@ -20,6 +20,16 @@ test('live action is top-right and evidence cluster is bottom-left', () => {
   assert.match(html, /\.sc-card:after\{display:none\}/);
 });
 
+test('every card has compact goal feedback aligned to the goal line right edge', () => {
+  assert.match(html, /\.sc-card>\.sc-label\{max-width:calc\(100% - 62px\);overflow:hidden;text-overflow:ellipsis\}/);
+  assert.match(html, /\.sc-actions \.sc-feedback\{display:flex;position:absolute;z-index:6;top:-27px;right:0;bottom:auto/);
+  assert.match(html, /\.sc-actions \.sc-feedback button,\.sc-actions \.sc-feedback button:last-child\{width:24px;height:24px/);
+  assert.match(html, /body\.sc-light-page \.sc-actions \.sc-feedback button\{color:#42536b\}/);
+  assert.match(html, /\.sc-card\.is-expanded \.sc-actions \.sc-feedback\{opacity:0;visibility:hidden;pointer-events:none/);
+  assert.match(html, /goalFeedback\.setAttribute\('aria-label',`Rate \$\{goal\} goal`\)/);
+  assert.match(html, /goalFeedbackButtons\[0\]\.setAttribute\('aria-label',`\$\{goal\} goal was helpful`\)/);
+});
+
 test('theme and state toggles share one control row', () => {
   assert.match(html, /<div class="sc-mode-row">\s*<div class="sc-theme-mode"[\s\S]*?<div class="sc-state-mode"/);
   assert.match(html, /class="active" type="button" data-sc-theme="light" aria-pressed="true">Light<\/button>/);
@@ -72,7 +82,7 @@ test('supporting evidence progressively reveals video and household inputs', () 
   assert.match(html, /\.sc-card\.is-expanded \.sc-evidence-preview\{display:none\}/);
   assert.match(html, /\.sc-evidence-details\{display:grid;gap:0;max-height:0;[^}]*transition:max-height/);
   assert.match(html, /\.sc-card\.is-expanded \.sc-evidence-details\{gap:18px;max-height:480px;[^}]*opacity:1/);
-  assert.match(html, /\.sc-actions \.sc-feedback\{display:none\}/);
+  assert.match(html, /\.sc-actions \.sc-feedback\{display:flex;position:absolute/);
 });
 
 test('each supporting-evidence row has unfilled feedback controls and content-first hierarchy', () => {

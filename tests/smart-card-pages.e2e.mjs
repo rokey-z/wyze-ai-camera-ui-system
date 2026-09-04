@@ -42,6 +42,12 @@ const inspect=()=>{
       brokenImages:images.filter(image=>!image.complete||image.naturalWidth===0).map(image=>image.getAttribute('src')),
       cardWidth:Math.round(doc.querySelector('.sc-card').getBoundingClientRect().width),
       sceneHeight:Math.round(doc.querySelector('.sc-card .sc-scene').getBoundingClientRect().height),
+      goalFeedbackButtons:doc.querySelectorAll('.sc-actions .sc-feedback button').length,
+      goalFeedbackAligned:[...doc.querySelectorAll('.sc-card')].every(card=>{
+        const feedback=card.querySelector('.sc-actions .sc-feedback').getBoundingClientRect();
+        const bounds=card.getBoundingClientRect();
+        return Math.abs(feedback.right-bounds.right)<=1&&feedback.top<bounds.top;
+      }),
     };
     doc.querySelector('[data-sc-state="alert"]').click();
     const alertStates=[...doc.querySelectorAll('.sc-state')].map(node=>node.textContent);
@@ -58,6 +64,7 @@ const inspect=()=>{
       videoItems:expandedCard.querySelectorAll('.sc-evidence-video li').length,
       memoryItems:expandedCard.querySelectorAll('.sc-evidence-memory li').length,
       cardFeedback:getComputedStyle(expandedCard.querySelector('.sc-actions .sc-feedback')).display,
+      cardFeedbackVisibility:getComputedStyle(expandedCard.querySelector('.sc-actions .sc-feedback')).visibility,
       heading:expandedCard.querySelector('.sc-evidence-heading').textContent,
       preview:getComputedStyle(expandedCard.querySelector('.sc-evidence-preview')).display,
       cardHeight:Math.round(expandedCard.getBoundingClientRect().height),
@@ -160,9 +167,9 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     assert.ok(encoded,'browser harness did not return results');
     const result=JSON.parse(Buffer.from(encoded,'base64').toString('utf8'));
     assert.equal(result.error,undefined);
-    assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:5,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:275});
+    assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:5,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:275,goalFeedbackButtons:10,goalFeedbackAligned:true});
     assert.deepEqual(result.alertStates,['PERSON','OPEN','Package left','NOT OUT','CARDINAL']);
-    assert.deepEqual(result.expanded,{card:true,aria:'true',details:'grid',icons:5,feedbackButtons:10,videoItems:3,memoryItems:2,cardFeedback:'none',heading:'Supporting Evidence',preview:'none',cardHeight:640,sceneHeight:275,stateOffset:-12,goalVisibility:'hidden',hasVideo:true,hasMemory:true});
+    assert.deepEqual(result.expanded,{card:true,aria:'true',details:'grid',icons:5,feedbackButtons:10,videoItems:3,memoryItems:2,cardFeedback:'flex',cardFeedbackVisibility:'hidden',heading:'Supporting Evidence',preview:'none',cardHeight:640,sceneHeight:275,stateOffset:-12,goalVisibility:'hidden',hasVideo:true,hasMemory:true});
     assert.deepEqual(result.collapsed,{card:false,aria:'false'});
     assert.deepEqual(result.dark,{section:true,lightPage:false});
   }finally{
