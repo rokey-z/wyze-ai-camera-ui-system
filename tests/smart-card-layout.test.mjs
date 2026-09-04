@@ -139,7 +139,8 @@ test('video and household evidence stay open with hover-only more labels', () =>
 });
 
 test('expanded evidence identifies the cameras involved in each card state', () => {
-  assert.match(html, /camera:'<svg viewBox="0 0 24 24" aria-hidden="true">/);
+  assert.match(html, /camera:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http:\/\/www\.w3\.org\/2000\/svg" aria-hidden="true">/);
+  assert.match(html, /M6 18H11V20H7V22H17V20H13V18H18/);
   assert.match(html, /security:\['Side Gate Cam','Garage Cam','Front Door Cam','Driveway Cam'\]/);
   assert.match(html, /garage:\['Garage Cam'\]/);
   assert.match(html, /front:\['Front Door Cam'\]/);
@@ -149,7 +150,8 @@ test('expanded evidence identifies the cameras involved in each card state', () 
   assert.match(html, /function cameraSourceList\(cameras\)/);
   assert.match(html, /\.sc-camera-source-list\{display:flex;flex-wrap:nowrap;align-items:flex-start;gap:10px;[^}]*overflow-x:auto/);
   assert.match(html, /\.sc-camera-source-list li\{display:flex;flex:0 0 68px;[^}]*flex-direction:column;align-items:center;[^}]*background:transparent/);
-  assert.match(html, /\.sc-camera-source-list svg\{width:25px;height:25px/);
+  assert.match(html, /\.sc-camera-source-list svg\{width:24px;height:24px;flex:0 0 24px;fill:none;stroke:none\}/);
+  assert.match(html, /\.sc-camera-source-title \.sc-evidence-title-icon svg\{stroke:none\}/);
   assert.match(html, /\.sc-camera-source-list li span\{max-width:68px;font-size:8\.5px/);
   assert.match(html, /evidence\.querySelector\('\.sc-camera-source-list'\)\.innerHTML=cameraSourceList\(SMART_CARD_CAMERAS\[scene\]\)/);
 });
