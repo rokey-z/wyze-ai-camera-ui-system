@@ -52,7 +52,7 @@ test('every card scene clips all four corners to the same radius', () => {
 });
 
 test('expanded evidence extends below a fixed-size camera scene', () => {
-  assert.match(html, /\.sc-card\.is-expanded,\.sc-card\.sc-hero\.is-expanded\{--sc-evidence-overlap-start:45\.833%;aspect-ratio:auto;min-height:0;padding-top:var\(--sc-evidence-overlap-start\);background:transparent;box-shadow:none\}/);
+  assert.match(html, /\.sc-card\.is-expanded,\.sc-card\.sc-hero\.is-expanded\{--sc-evidence-overlap-start:57\.292%;aspect-ratio:auto;min-height:0;padding-top:var\(--sc-evidence-overlap-start\);background:transparent;box-shadow:none\}/);
   assert.match(html, /\.sc-card\.is-expanded \.sc-scene\{inset:0 0 auto;height:auto;aspect-ratio:16\/11/);
   assert.match(html, /\.sc-card\.is-expanded:before,\.sc-card\.is-expanded\[data-tone\]:before\{height:82px;opacity:0\}/);
 });
@@ -76,7 +76,7 @@ test('expanded state and duration stay fixed while the goal label clears', () =>
 
 test('expansion keeps the image fixed and makes evidence match the card width', () => {
   assert.match(html, /\.sc-card\.is-expanded \.sc-scene\{inset:0 0 auto;height:auto;aspect-ratio:16\/11;cursor:pointer/);
-  assert.match(html, /@media\(max-width:620px\)\{\.sc-card\.is-expanded,\.sc-card\.sc-hero\.is-expanded\{--sc-evidence-overlap-start:45%\}\.sc-card\.is-expanded \.sc-scene\{aspect-ratio:40\/27\}\}/);
+  assert.match(html, /@media\(max-width:620px\)\{\.sc-card\.is-expanded,\.sc-card\.sc-hero\.is-expanded\{--sc-evidence-overlap-start:56\.25%\}\.sc-card\.is-expanded \.sc-scene\{aspect-ratio:40\/27\}\}/);
   assert.match(html, /\.sc-card\.is-expanded \.sc-evidence\{position:relative;right:auto;bottom:auto;left:auto;width:100%;padding:12px;[^}]*border-radius:16px/);
 });
 
