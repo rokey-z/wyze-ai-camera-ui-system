@@ -40,6 +40,12 @@ test('every card scene clips all four corners to the same radius', () => {
   assert.match(html, /\.sc-scene\{overflow:hidden;border-radius:16px;clip-path:inset\(0 round 16px\)\}/);
 });
 
+test('expanded evidence extends below a fixed-size camera scene', () => {
+  assert.match(html, /\.sc-card\.is-expanded,\.sc-card\.sc-hero\.is-expanded\{aspect-ratio:auto;min-height:620px;background:transparent;box-shadow:none\}/);
+  assert.match(html, /\.sc-card\.is-expanded \.sc-scene\{inset:0 0 auto;height:auto;aspect-ratio:4\/3/);
+  assert.match(html, /\.sc-card\.is-expanded:before,\.sc-card\.is-expanded\[data-tone\]:before\{height:82px;opacity:0\}/);
+});
+
 test('footer readability gradient follows the rounded card corners', () => {
   assert.match(
     html,
