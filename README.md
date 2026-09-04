@@ -7,7 +7,9 @@ crew stayed an hour").
 
 ### ▶ Live mockup
 
-**https://rokey-z.github.io/Wyze-AI-camera-UI-system/**
+**Smart Cards:** https://rokey-z.github.io/wyze-ai-camera-ui-system/smart-cards.html
+
+**Full UI system:** https://rokey-z.github.io/wyze-ai-camera-ui-system/
 
 Pick a camera goal and watch the agent decompose it, resolve an archetype, select UI
 modules, and compose a customized interface. Three tabs:
@@ -22,6 +24,7 @@ modules, and compose a customized interface. Three tabs:
 | File | What it is |
 |------|-----------|
 | `index.html` | The interactive mockup (self-contained — open it directly or via the live link) |
+| `smart-cards.html` | Dedicated GitHub Pages entry for the mobile Smart Cards experience |
 | `Camera-UI-Complete-Spec-v3.docx` | Complete design & engineering specification (v3) |
 | `AI-Camera-Builder-Reference.md` | Machine-actionable build reference for the camera-builder agent |
 
