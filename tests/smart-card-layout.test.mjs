@@ -76,14 +76,12 @@ test('clicking the image closes expanded supporting evidence', () => {
   assert.match(html, /if\(card\.classList\.contains\('is-expanded'\)\)setEvidenceExpanded\(false\)/);
 });
 
-test('mobile expansion focuses and scrolls to the supporting evidence panel', () => {
-  assert.match(html, /\.sc-evidence\{[^}]*scroll-margin-top:76px;outline:none/);
-  assert.match(html, /function focusExpandedEvidence\(evidence\)\{/);
-  assert.match(html, /if\(!isStandaloneSmartCards&&!window\.matchMedia\('\(max-width:620px\)'\)\.matches\)return/);
-  assert.match(html, /evidence\.focus\(\{preventScroll:true\}\)/);
-  assert.match(html, /evidence\.scrollIntoView\(\{behavior:reducedMotion\?'auto':'smooth',block:'center'\}\)/);
-  assert.match(html, /evidence\.setAttribute\('tabindex','-1'\)/);
-  assert.match(html, /if\(expanded\)focusExpandedEvidence\(evidence\)/);
+test('folding evidence preserves the feed position without forced focus or scrolling', () => {
+  assert.doesNotMatch(html, /function focusExpandedEvidence\(evidence\)/);
+  assert.doesNotMatch(html, /evidence\.focus\(\{preventScroll:true\}\)/);
+  assert.doesNotMatch(html, /if\(expanded\)focusExpandedEvidence\(evidence\)/);
+  assert.doesNotMatch(html, /evidence\.setAttribute\('tabindex','-1'\)/);
+  assert.match(html, /const setEvidenceExpanded=expanded=>\{\s*card\.classList\.toggle\('is-expanded',expanded\);\s*evidenceTrigger\.setAttribute\('aria-expanded',String\(expanded\)\);\s*\}/);
 });
 
 test('footer readability gradient follows the rounded card corners', () => {
