@@ -1688,6 +1688,8 @@
   /* Progressive disclosure: reveal the AI observation and household memory behind each state. */
   .sc-card:after{display:none}
   .sc-card,.sc-card.sc-hero{transition:min-height .34s cubic-bezier(.22,1,.36,1),background-color .24s ease,box-shadow .24s ease}
+  .sc-card>.sc-label{opacity:1;visibility:visible;transform:translateY(0);transition:opacity .18s ease,transform .18s ease,visibility 0s}
+  .sc-card-top{transition:top .3s cubic-bezier(.22,1,.36,1),left .3s cubic-bezier(.22,1,.36,1)}
   .sc-card:before,.sc-card[data-tone]:before{height:82px;opacity:1;transition:height .34s cubic-bezier(.22,1,.36,1),background .24s ease,opacity .18s ease}
   .sc-actions .sc-feedback{display:none}
   .sc-evidence{position:absolute;z-index:5;right:12px;bottom:10px;left:12px;color:#fff;font-family:var(--sans);transition:right .3s ease,left .3s ease,bottom .3s ease,padding .3s ease,background .3s ease,border-color .3s ease}
@@ -1699,6 +1701,8 @@
   .sc-evidence-trigger:after{content:'›';position:absolute;top:12px;right:0;font-size:18px;font-weight:500;line-height:1;transform:rotate(90deg);transform-origin:center;opacity:.8;transition:transform .18s ease}
   .sc-evidence-details{display:grid;gap:0;max-height:0;padding-top:0;overflow:hidden;opacity:0;visibility:hidden;transform:translateY(-6px);transition:max-height .34s cubic-bezier(.22,1,.36,1),padding-top .34s ease,gap .34s ease,opacity .2s ease,transform .34s cubic-bezier(.22,1,.36,1),visibility 0s linear .34s}
   .sc-card.is-expanded,.sc-card.sc-hero.is-expanded{aspect-ratio:auto;min-height:620px;background:transparent;box-shadow:none}
+  .sc-card.is-expanded>.sc-label{opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .18s ease,transform .18s ease,visibility 0s linear .18s}
+  .sc-card.is-expanded .sc-card-top{z-index:7;top:-12px;left:12px}
   .sc-card.is-expanded .sc-scene{inset:0 0 auto;height:auto;aspect-ratio:4/3;box-shadow:0 14px 28px #0309144d}
   .sc-card.is-expanded:before,.sc-card.is-expanded[data-tone]:before{height:82px;opacity:0}
   .sc-card.is-expanded .sc-evidence{right:12px;bottom:12px;left:12px;padding:12px;border:1px solid rgba(255,255,255,.16);border-radius:14px;background:rgba(7,15,27,.98);box-shadow:0 12px 30px rgba(0,0,0,.28);backdrop-filter:blur(14px)}
