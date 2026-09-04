@@ -203,7 +203,8 @@ test('EV charging reminder has paired visual states and personalized evidence', 
 
 test('bird watcher card has paired normal and alert evidence', () => {
   assert.match(html, /data-scene="birds" data-checked="20 secs ago"/);
-  assert.match(html, /birds:\{state:'NO BIRDS'.*smart-bird-feeder-clear\.webp/);
+  assert.match(html, /birds:\{state:'NO BIRDS',sub:'3 bird visits today'.*smart-bird-feeder-clear\.webp/);
+  assert.doesNotMatch(html, /for 18 mins/);
   assert.match(html, /birds:\{state:'CARDINAL'.*smart-bird-cardinal\.webp/);
   assert.match(html, /\.sc-card\[data-scene="birds"\] \.sc-detection-box/);
 });
