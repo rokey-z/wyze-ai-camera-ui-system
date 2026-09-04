@@ -57,6 +57,17 @@ test('expanded evidence extends below a fixed-size camera scene', () => {
   assert.match(html, /\.sc-card\.is-expanded:before,\.sc-card\.is-expanded\[data-tone\]:before\{height:82px;opacity:0\}/);
 });
 
+test('expanded camera imagery zooms around the detection focus', () => {
+  assert.match(html, /\.sc-focus-layer\{position:absolute;inset:0;transform:translate3d\(0,0,0\) scale\(1\);transform-origin:var\(--sc-focus-x,50%\) var\(--sc-focus-y,50%\)/);
+  assert.match(html, /\.sc-card\.is-expanded \.sc-focus-layer\{transform:translate\(calc\(50% - var\(--sc-focus-x,50%\)\),calc\(50% - var\(--sc-focus-y,50%\)\)\) scale\(1\.45\)\}/);
+  assert.match(html, /\.sc-card\[data-scene="ev"\]\{--sc-focus-x:40\.5%;--sc-focus-y:43\.5%\}/);
+  assert.match(html, /\.smartcards\.is-alert \.sc-card\[data-scene="security"\]\{--sc-focus-x:57%;--sc-focus-y:42%\}/);
+  assert.match(html, /\.sc-security-cameras \.sc-focus-layer\{display:grid;grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
+  assert.match(html, /const focusLayer=document\.createElement\('div'\)/);
+  assert.match(html, /focusLayer\.append\(\.\.\.sceneElement\.children\)/);
+  assert.match(html, /sceneElement\.append\(focusLayer\)/);
+});
+
 test('expanded state and duration stay fixed while the goal label clears', () => {
   assert.match(html, /\.sc-card\.is-expanded>\.sc-label\{opacity:0;visibility:hidden;transform:translateY\(-4px\)/);
   assert.match(html, /\.sc-card\.is-expanded \.sc-card-top\{z-index:7;top:0;left:0\}/);
@@ -72,7 +83,7 @@ test('expansion keeps the image fixed and makes evidence match the card width', 
 test('clicking the image closes expanded supporting evidence', () => {
   assert.match(html, /const setEvidenceExpanded=expanded=>\{/);
   assert.match(html, /evidenceTrigger\.addEventListener\('click',\(\)=>setEvidenceExpanded\(!card\.classList\.contains\('is-expanded'\)\)\)/);
-  assert.match(html, /card\.querySelector\('\.sc-scene'\)\.addEventListener\('click',\(\)=>\{/);
+  assert.match(html, /sceneElement\.addEventListener\('click',\(\)=>\{/);
   assert.match(html, /if\(card\.classList\.contains\('is-expanded'\)\)setEvidenceExpanded\(false\)/);
 });
 
