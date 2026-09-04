@@ -31,6 +31,9 @@ const inspect=()=>{
     if(!doc?.querySelector('.sc-card')||!win.location.search.includes('view=smart-cards'))throw new Error('waiting');
     const images=[...doc.images];
     const hiddenSelectors=['.wrap>header','.tabs','.wrap>footer'];
+    const initialCardBounds=doc.querySelector('.sc-card').getBoundingClientRect();
+    const initialSceneBounds=doc.querySelector('.sc-card .sc-scene').getBoundingClientRect();
+    const initialStateBounds=doc.querySelector('.sc-card .sc-card-top').getBoundingClientRect();
     const initial={
       path:win.location.pathname,
       search:win.location.search,
@@ -55,6 +58,10 @@ const inspect=()=>{
     evidenceButton.click();
     doc.getAnimations().forEach(animation=>animation.finish());
     const expandedCard=evidenceButton.closest('.sc-card');
+    const expandedCardBounds=expandedCard.getBoundingClientRect();
+    const expandedSceneBounds=expandedCard.querySelector('.sc-scene').getBoundingClientRect();
+    const expandedStateBounds=expandedCard.querySelector('.sc-card-top').getBoundingClientRect();
+    const expandedEvidenceBounds=expandedCard.querySelector('.sc-evidence').getBoundingClientRect();
     const expanded={
       card:expandedCard.classList.contains('is-expanded'),
       aria:evidenceButton.getAttribute('aria-expanded'),
@@ -70,6 +77,11 @@ const inspect=()=>{
       cardHeight:Math.round(expandedCard.getBoundingClientRect().height),
       sceneHeight:Math.round(expandedCard.querySelector('.sc-scene').getBoundingClientRect().height),
       stateOffset:Math.round(expandedCard.querySelector('.sc-card-top').getBoundingClientRect().top-expandedCard.getBoundingClientRect().top),
+      stateLeftOffset:Math.round(expandedStateBounds.left-expandedCardBounds.left),
+      stateShift:[Math.round((expandedStateBounds.left-expandedCardBounds.left)-(initialStateBounds.left-initialCardBounds.left)),Math.round((expandedStateBounds.top-expandedCardBounds.top)-(initialStateBounds.top-initialCardBounds.top))],
+      sceneShift:[Math.round((expandedSceneBounds.left-expandedCardBounds.left)-(initialSceneBounds.left-initialCardBounds.left)),Math.round((expandedSceneBounds.top-expandedCardBounds.top)-(initialSceneBounds.top-initialCardBounds.top)),Math.round(expandedSceneBounds.width-initialSceneBounds.width),Math.round(expandedSceneBounds.height-initialSceneBounds.height)],
+      evidenceWidth:Math.round(expandedEvidenceBounds.width),
+      cardWidth:Math.round(expandedCardBounds.width),
       goalVisibility:getComputedStyle(expandedCard.querySelector(':scope>.sc-label')).visibility,
       hasVideo:expandedCard.querySelector('.sc-evidence-video').textContent.length>20,
       hasMemory:expandedCard.querySelector('.sc-evidence-memory').textContent.length>20,
@@ -179,7 +191,7 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     assert.equal(result.error,undefined);
     assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:5,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:275,goalFeedbackButtons:10,goalFeedbackAligned:true});
     assert.deepEqual(result.alertStates,['PERSON','OPEN','Package left','NOT OUT','CARDINAL']);
-    assert.deepEqual(result.expanded,{card:true,aria:'true',details:'grid',icons:5,feedbackButtons:10,videoItems:3,memoryItems:2,cardFeedback:'flex',cardFeedbackVisibility:'hidden',heading:'Supporting Evidence',preview:'none',cardHeight:640,sceneHeight:275,stateOffset:-12,goalVisibility:'hidden',hasVideo:true,hasMemory:true,videoDisclosure:{aria:'false',collapsed:true,listHeight:0,inert:true,cardHeight:504}});
+    assert.deepEqual(result.expanded,{card:true,aria:'true',details:'grid',icons:5,feedbackButtons:10,videoItems:3,memoryItems:2,cardFeedback:'flex',cardFeedbackVisibility:'hidden',heading:'Supporting Evidence',preview:'none',cardHeight:640,sceneHeight:275,stateOffset:0,stateLeftOffset:0,stateShift:[0,0],sceneShift:[0,0,0,0],evidenceWidth:366,cardWidth:366,goalVisibility:'hidden',hasVideo:true,hasMemory:true,videoDisclosure:{aria:'false',collapsed:true,listHeight:0,inert:true,cardHeight:504}});
     assert.deepEqual(result.collapsed,{card:false,aria:'false'});
     assert.deepEqual(result.dark,{section:true,lightPage:false});
   }finally{
