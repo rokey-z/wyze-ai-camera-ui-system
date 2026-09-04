@@ -169,9 +169,9 @@ test('normal and alert states provide three observations and two memories for ev
 test('EV charging reminder has paired visual states and personalized evidence', () => {
   assert.match(html, /data-scene="ev"[^>]*><span class="sc-label">EV charging reminder<\/span>/);
   assert.match(html, /ev:\{state:'CHARGING',sub:'for 45 mins',checked:'15 secs ago',src:'assets\/smart-ev-charging\.webp\?v=1'/);
-  assert.match(html, /ev:\{state:'NOT PLUGGED IN',sub:'leaving in 8 hours',checked:'15 secs ago',src:'assets\/smart-ev-unplugged\.webp\?v=1'/);
+  assert.match(html, /ev:\{state:'NEEDS CHARGING',sub:'not charging for 8 hours',checked:'15 secs ago',src:'assets\/smart-ev-unplugged\.webp\?v=1'/);
   assert.match(html, /The charging connector is visibly seated in the vehicle charge port/);
-  assert.match(html, /You asked to be reminded when the car is home overnight but not connected/);
+  assert.match(html, /The car has remained home and unplugged for 8 hours, outside your usual charging routine/);
   assert.match(html, /ev:\['EV Garage Cam'\]/);
   assert.match(html, /\.sc-card\[data-scene="ev"\] \.sc-detection-box\{/);
 });
