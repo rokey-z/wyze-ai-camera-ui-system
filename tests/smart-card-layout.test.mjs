@@ -146,7 +146,10 @@ test('expanded evidence identifies the cameras involved in each card state', () 
   assert.match(html, /birds:\['Backyard Feeder Cam'\]/);
   assert.match(html, /<span>Cameras involved<\/span><\/div><ul class="sc-camera-source-list" aria-label="Cameras involved in this state">/);
   assert.match(html, /function cameraSourceList\(cameras\)/);
-  assert.match(html, /\.sc-camera-source-list li\{display:inline-flex;align-items:center;gap:5px;[^}]*border-radius:999px/);
+  assert.match(html, /\.sc-camera-source-list\{display:flex;flex-wrap:nowrap;align-items:flex-start;gap:10px;[^}]*overflow-x:auto/);
+  assert.match(html, /\.sc-camera-source-list li\{display:flex;flex:0 0 68px;[^}]*flex-direction:column;align-items:center;[^}]*background:transparent/);
+  assert.match(html, /\.sc-camera-source-list svg\{width:25px;height:25px/);
+  assert.match(html, /\.sc-camera-source-list li span\{max-width:68px;font-size:8\.5px/);
   assert.match(html, /evidence\.querySelector\('\.sc-camera-source-list'\)\.innerHTML=cameraSourceList\(SMART_CARD_CAMERAS\[scene\]\)/);
 });
 
