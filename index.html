@@ -1698,7 +1698,7 @@
   .sc-actions .sc-feedback button:hover,.sc-actions .sc-feedback button:active{background:none;color:#fff;box-shadow:none;opacity:1}
   .sc-actions .sc-feedback svg{width:13px;height:13px}
   body.sc-light-page .sc-actions .sc-feedback button{color:#42536b}
-  .sc-evidence{position:absolute;z-index:5;right:12px;bottom:10px;left:12px;color:#fff;font-family:var(--sans);transition:right .3s ease,left .3s ease,bottom .3s ease,padding .3s ease,background .3s ease,border-color .3s ease}
+  .sc-evidence{position:absolute;z-index:5;right:12px;bottom:10px;left:12px;scroll-margin-top:76px;outline:none;color:#fff;font-family:var(--sans);transition:right .3s ease,left .3s ease,bottom .3s ease,padding .3s ease,background .3s ease,border-color .3s ease}
   .sc-evidence-trigger{position:relative;display:block;width:100%;margin:0;padding:0;border:0;background:none;color:inherit;text-align:left;font:inherit;cursor:pointer}
   .sc-evidence-time{display:block;font-size:11px;font-weight:700;line-height:1.2;text-shadow:0 1px 5px #020914}
   .sc-evidence-heading{display:none;margin-top:3px;color:#a9b9ce;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
@@ -6528,6 +6528,15 @@ function evidenceFeedback(label){
 function evidenceList(items,label,icon){
   return items.map((text,index)=>`<li><span class="sc-evidence-bullet">${icon}</span><p>${text}</p>${evidenceFeedback(`${label} ${index+1}`)}</li>`).join('');
 }
+function focusExpandedEvidence(evidence){
+  if(!isStandaloneSmartCards&&!window.matchMedia('(max-width:620px)').matches)return;
+  const reducedMotion=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  window.setTimeout(()=>{
+    if(!evidence.closest('.sc-card')?.classList.contains('is-expanded'))return;
+    evidence.focus({preventScroll:true});
+    evidence.scrollIntoView({behavior:reducedMotion?'auto':'smooth',block:'start'});
+  },reducedMotion?0:360);
+}
 function initSmartCardEvidence(){
   document.querySelectorAll('.sc-card[data-scene]').forEach(card=>{
     const scene=card.dataset.scene;
@@ -6540,12 +6549,14 @@ function initSmartCardEvidence(){
     const evidence=document.createElement('section');
     evidence.className='sc-evidence';
     evidence.setAttribute('aria-label','AI supporting evidence');
+    evidence.setAttribute('tabindex','-1');
     evidence.innerHTML=`<button class="sc-evidence-trigger" type="button" aria-expanded="false" aria-controls="sc-evidence-${scene}"><span class="sc-evidence-time"></span><span class="sc-evidence-heading">Supporting Evidence</span><span class="sc-evidence-rule" aria-hidden="true"></span><span class="sc-evidence-preview"></span></button><div class="sc-evidence-details" id="sc-evidence-${scene}"><div class="sc-evidence-item"><button class="sc-evidence-section-trigger" type="button" data-evidence-section="video" aria-expanded="true" aria-controls="sc-evidence-video-${scene}"><span>Video description</span><span class="sc-evidence-section-chevron" aria-hidden="true">›</span></button><div class="sc-evidence-list-wrap" id="sc-evidence-video-${scene}"><ul class="sc-evidence-list sc-evidence-video"></ul></div></div><div class="sc-evidence-item"><button class="sc-evidence-section-trigger" type="button" data-evidence-section="memory" aria-expanded="true" aria-controls="sc-evidence-memory-${scene}"><span>Household memory</span><span class="sc-evidence-section-chevron" aria-hidden="true">›</span></button><div class="sc-evidence-list-wrap" id="sc-evidence-memory-${scene}"><ul class="sc-evidence-list sc-evidence-memory"></ul></div></div></div>`;
     card.append(evidence);
     evidence.querySelector('.sc-evidence-trigger').addEventListener('click',event=>{
       const expanded=!card.classList.contains('is-expanded');
       card.classList.toggle('is-expanded',expanded);
       event.currentTarget.setAttribute('aria-expanded',String(expanded));
+      if(expanded)focusExpandedEvidence(evidence);
     });
     evidence.querySelectorAll('.sc-evidence-section-trigger').forEach(trigger=>trigger.addEventListener('click',event=>{
       const item=event.currentTarget.closest('.sc-evidence-item');
