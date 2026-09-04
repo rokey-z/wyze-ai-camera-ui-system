@@ -1567,6 +1567,19 @@
   /* Mobile type scale: legible at arm's length without covering the camera frame. */
   @media(max-width:620px){.sc-card-top{max-width:66%;padding:10px 12px}.sc-card-top .sc-label{font-size:10px;line-height:1.2;letter-spacing:.9px}.sc-state{font-size:clamp(22px,7vw,28px);line-height:1.02;letter-spacing:-.75px;overflow-wrap:anywhere}.sc-sub{font-size:13px;line-height:1.25;white-space:normal}.sc-card:after{font-size:12px;line-height:1.2}.sc-actions > .primary{font-size:14px;padding:0 15px}.sc-feedback svg{width:19px;height:19px}}
   @media(max-width:390px){.sc-card-top{max-width:70%;padding:9px 10px}.sc-card-top .sc-label{font-size:9px}.sc-state{font-size:22px}.sc-sub{font-size:12px}.sc-card:after{font-size:11px}.sc-actions > .primary{font-size:13px;padding:0 13px}}
+
+  /* Design review F001: the phone view is a focused camera feed, not documentation chrome. */
+  .smartcards{width:min(100%,420px)}
+  @media(max-width:620px){
+    body{background:#0d1726}
+    .wrap{max-width:420px;padding:max(12px,env(safe-area-inset-top)) 12px max(28px,env(safe-area-inset-bottom))}
+    .wrap>header,.wrap>footer{display:none}
+    .tabs{position:sticky;top:0;margin:0 -12px 12px;padding:8px 16px 9px;border-bottom:1px solid #263650;background:#0d1726e8;backdrop-filter:blur(16px)}
+    .tab:not(.on){display:none}
+    .tab.on{width:100%;margin:0;padding:3px 0;border:0;color:#f3f7ff;font-size:20px;font-weight:750;letter-spacing:-.3px;pointer-events:none}
+    .tab.on .tn{margin-left:auto;color:#8fa4c4;font-size:10px;letter-spacing:.04em;text-transform:uppercase}
+    .smartcards{margin:0 auto}
+  }
 </style>
 </head>
 <body>
