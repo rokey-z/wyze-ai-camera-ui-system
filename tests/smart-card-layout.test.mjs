@@ -151,13 +151,23 @@ test('expanded evidence identifies the cameras involved in each card state', () 
 });
 
 test('normal and alert states provide three observations and two memories for every scene', () => {
-  for (const scene of ['security', 'garage', 'front', 'bins', 'birds']) {
+  for (const scene of ['security', 'garage', 'ev', 'front', 'bins', 'birds']) {
     const occurrences = html.match(new RegExp(`${scene}:\\{video:\\[`, 'g')) ?? [];
     assert.equal(occurrences.length, 2, `${scene} needs normal and alert evidence`);
   }
   assert.match(html, /card\.querySelector\('\.sc-evidence-preview'\)\.textContent=evidence\.video\[0\]/);
   assert.match(html, /card\.querySelector\('\.sc-evidence-video'\)\.innerHTML=evidenceList\(evidence\.video,'video description'\)/);
   assert.match(html, /card\.querySelector\('\.sc-evidence-memory'\)\.innerHTML=evidenceList\(evidence\.memory,'household memory'\)/);
+});
+
+test('EV charging reminder has paired visual states and personalized evidence', () => {
+  assert.match(html, /data-scene="ev"[^>]*><span class="sc-label">EV charging reminder<\/span>/);
+  assert.match(html, /ev:\{state:'CHARGING',sub:'for 45 mins',checked:'15 secs ago',src:'assets\/smart-ev-charging\.webp\?v=1'/);
+  assert.match(html, /ev:\{state:'NOT PLUGGED IN',sub:'leaving in 8 hours',checked:'15 secs ago',src:'assets\/smart-ev-unplugged\.webp\?v=1'/);
+  assert.match(html, /The charging connector is visibly seated in the vehicle charge port/);
+  assert.match(html, /You asked to be reminded when the car is home overnight but not connected/);
+  assert.match(html, /ev:\['EV Garage Cam'\]/);
+  assert.match(html, /\.sc-card\[data-scene="ev"\] \.sc-detection-box\{/);
 });
 
 test('bird watcher card has paired normal and alert evidence', () => {
