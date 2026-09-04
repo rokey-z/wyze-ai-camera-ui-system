@@ -57,9 +57,10 @@ test('expanded evidence extends below a fixed-size camera scene', () => {
   assert.match(html, /\.sc-card\.is-expanded:before,\.sc-card\.is-expanded\[data-tone\]:before\{height:82px;opacity:0\}/);
 });
 
-test('expanded camera imagery zooms around the detection focus', () => {
+test('expanded camera imagery zooms around the detection focus without exposing card edges', () => {
   assert.match(html, /\.sc-focus-layer\{position:absolute;inset:0;transform:translate3d\(0,0,0\) scale\(1\);transform-origin:var\(--sc-focus-x,50%\) var\(--sc-focus-y,50%\)/);
-  assert.match(html, /\.sc-card\.is-expanded \.sc-focus-layer\{transform:translate\(calc\(50% - var\(--sc-focus-x,50%\)\),calc\(50% - var\(--sc-focus-y,50%\)\)\) scale\(1\.45\)\}/);
+  assert.match(html, /\.sc-card\.is-expanded \.sc-focus-layer\{transform:scale\(1\.45\)\}/);
+  assert.doesNotMatch(html, /\.sc-card\.is-expanded \.sc-focus-layer\{[^}]*translate/);
   assert.match(html, /\.sc-card\[data-scene="ev"\]\{--sc-focus-x:40\.5%;--sc-focus-y:43\.5%\}/);
   assert.match(html, /\.smartcards\.is-alert \.sc-card\[data-scene="security"\]\{--sc-focus-x:57%;--sc-focus-y:42%\}/);
   assert.match(html, /\.sc-security-cameras \.sc-focus-layer\{display:grid;grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
