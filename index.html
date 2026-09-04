@@ -6531,7 +6531,7 @@ function focusExpandedEvidence(evidence){
   window.setTimeout(()=>{
     if(!evidence.closest('.sc-card')?.classList.contains('is-expanded'))return;
     evidence.focus({preventScroll:true});
-    evidence.scrollIntoView({behavior:reducedMotion?'auto':'smooth',block:'start'});
+    evidence.scrollIntoView({behavior:reducedMotion?'auto':'smooth',block:'center'});
   },reducedMotion?0:360);
 }
 function initSmartCardEvidence(){

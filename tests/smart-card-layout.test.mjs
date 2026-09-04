@@ -74,7 +74,7 @@ test('mobile expansion focuses and scrolls to the supporting evidence panel', ()
   assert.match(html, /function focusExpandedEvidence\(evidence\)\{/);
   assert.match(html, /if\(!isStandaloneSmartCards&&!window\.matchMedia\('\(max-width:620px\)'\)\.matches\)return/);
   assert.match(html, /evidence\.focus\(\{preventScroll:true\}\)/);
-  assert.match(html, /evidence\.scrollIntoView\(\{behavior:reducedMotion\?'auto':'smooth',block:'start'\}\)/);
+  assert.match(html, /evidence\.scrollIntoView\(\{behavior:reducedMotion\?'auto':'smooth',block:'center'\}\)/);
   assert.match(html, /evidence\.setAttribute\('tabindex','-1'\)/);
   assert.match(html, /if\(expanded\)focusExpandedEvidence\(evidence\)/);
 });
