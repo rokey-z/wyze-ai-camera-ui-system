@@ -132,6 +132,19 @@ test('video and household evidence titles independently disclose their lists', (
   assert.doesNotMatch(html, /--sc-expanded-height/);
 });
 
+test('expanded evidence identifies the cameras involved in each card state', () => {
+  assert.match(html, /camera:'<svg viewBox="0 0 24 24" aria-hidden="true">/);
+  assert.match(html, /security:\['Side Gate Cam','Garage Cam','Front Door Cam','Driveway Cam'\]/);
+  assert.match(html, /garage:\['Garage Cam'\]/);
+  assert.match(html, /front:\['Front Door Cam'\]/);
+  assert.match(html, /bins:\['Driveway Cam'\]/);
+  assert.match(html, /birds:\['Backyard Feeder Cam'\]/);
+  assert.match(html, /<span>Cameras involved<\/span><\/div><ul class="sc-camera-source-list" aria-label="Cameras involved in this state">/);
+  assert.match(html, /function cameraSourceList\(cameras\)/);
+  assert.match(html, /\.sc-camera-source-list li\{display:inline-flex;align-items:center;gap:5px;[^}]*border-radius:999px/);
+  assert.match(html, /evidence\.querySelector\('\.sc-camera-source-list'\)\.innerHTML=cameraSourceList\(SMART_CARD_CAMERAS\[scene\]\)/);
+});
+
 test('normal and alert states provide three observations and two memories for every scene', () => {
   for (const scene of ['security', 'garage', 'front', 'bins', 'birds']) {
     const occurrences = html.match(new RegExp(`${scene}:\\{video:\\[`, 'g')) ?? [];
