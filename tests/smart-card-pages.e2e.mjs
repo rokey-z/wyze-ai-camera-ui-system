@@ -191,9 +191,9 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     assert.ok(encoded,'browser harness did not return results');
     const result=JSON.parse(Buffer.from(encoded,'base64').toString('utf8'));
     assert.equal(result.error,undefined);
-    assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:5,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:275,goalFeedbackButtons:10,goalFeedbackAligned:true});
+    assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:5,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:247,goalFeedbackButtons:10,goalFeedbackAligned:true});
     assert.deepEqual(result.alertStates,['PERSON','OPEN','Package left','NOT OUT','CARDINAL']);
-    assert.deepEqual(result.expanded,{card:true,aria:'true',details:'grid',icons:2,feedbackButtons:10,videoItems:3,memoryItems:2,cardFeedback:'flex',cardFeedbackVisibility:'hidden',heading:'Supporting Evidence',preview:'none',cardHeight:537,sceneHeight:275,stateOffset:0,stateLeftOffset:0,stateShift:[0,0],sceneShift:[0,0,0,0],evidenceOverlap:92,evidenceOverlapRatio:.33,evidenceWidth:366,cardWidth:366,goalVisibility:'hidden',hasVideo:true,hasMemory:true,videoDisclosure:{aria:'false',collapsed:true,listHeight:0,inert:true,cardHeight:401}});
+    assert.deepEqual(result.expanded,{card:true,aria:'true',details:'grid',icons:2,feedbackButtons:10,videoItems:3,memoryItems:2,cardFeedback:'flex',cardFeedbackVisibility:'hidden',heading:'Supporting Evidence',preview:'none',cardHeight:518,sceneHeight:247,stateOffset:0,stateLeftOffset:0,stateShift:[0,0],sceneShift:[0,0,0,0],evidenceOverlap:82,evidenceOverlapRatio:.33,evidenceWidth:366,cardWidth:366,goalVisibility:'hidden',hasVideo:true,hasMemory:true,videoDisclosure:{aria:'false',collapsed:true,listHeight:0,inert:true,cardHeight:382}});
     assert.deepEqual(result.collapsed,{card:false,aria:'false'});
     assert.deepEqual(result.dark,{section:true,lightPage:false});
   }finally{
