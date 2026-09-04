@@ -78,12 +78,13 @@ test('supporting evidence progressively reveals video and household inputs', () 
 test('each supporting-evidence row has unfilled feedback controls and content-first hierarchy', () => {
   assert.match(html, /function evidenceFeedback\(label\)/);
   assert.match(html, /Rate \$\{label\}/);
-  assert.match(html, /\.sc-evidence-icon\{[^}]*border-radius:0;background:none;color:#91a3ba\}/);
+  assert.doesNotMatch(html, /class="sc-evidence-icon"/);
+  assert.match(html, /\.sc-evidence-bullet\{display:grid;place-items:center;width:20px;height:20px;color:#91a3ba\}/);
   assert.match(html, /\.sc-evidence-item-feedback button\{[^}]*border:0;border-radius:0;background:none/);
-  assert.match(html, /\.sc-evidence-list li\{display:grid;grid-template-columns:minmax\(0,1fr\) auto/);
+  assert.match(html, /\.sc-evidence-list li\{display:grid;grid-template-columns:20px minmax\(0,1fr\) auto/);
   assert.match(html, /\.sc-evidence-item strong\{[^}]*color:#91a3ba;font-size:9px/);
   assert.match(html, /\.sc-evidence-item p\{[^}]*color:#f4f7fb;font-size:11\.5px;font-weight:620/);
-  assert.match(html, /function evidenceList\(items,label\)/);
+  assert.match(html, /function evidenceList\(items,label,icon\)/);
 });
 
 test('normal and alert states provide three observations and two memories for every scene', () => {
@@ -92,8 +93,8 @@ test('normal and alert states provide three observations and two memories for ev
     assert.equal(occurrences.length, 2, `${scene} needs normal and alert evidence`);
   }
   assert.match(html, /card\.querySelector\('\.sc-evidence-preview'\)\.textContent=evidence\.video\[0\]/);
-  assert.match(html, /card\.querySelector\('\.sc-evidence-video'\)\.innerHTML=evidenceList\(evidence\.video,'video description'\)/);
-  assert.match(html, /card\.querySelector\('\.sc-evidence-memory'\)\.innerHTML=evidenceList\(evidence\.memory,'household memory'\)/);
+  assert.match(html, /card\.querySelector\('\.sc-evidence-video'\)\.innerHTML=evidenceList\(evidence\.video,'video description',SMART_CARD_EVIDENCE_ICONS\.video\)/);
+  assert.match(html, /card\.querySelector\('\.sc-evidence-memory'\)\.innerHTML=evidenceList\(evidence\.memory,'household memory',SMART_CARD_EVIDENCE_ICONS\.memory\)/);
 });
 
 test('bird watcher card has paired normal and alert evidence', () => {
