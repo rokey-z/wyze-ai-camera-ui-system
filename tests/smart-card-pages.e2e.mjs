@@ -32,6 +32,7 @@ const inspect=()=>{
     const images=[...doc.images];
     const hiddenSelectors=['.wrap>header','.tabs','.wrap>footer'];
     const initialCardBounds=doc.querySelector('.sc-card').getBoundingClientRect();
+    const initialScrollY=win.scrollY;
     const initialSceneBounds=doc.querySelector('.sc-card .sc-scene').getBoundingClientRect();
     const initialStateBounds=doc.querySelector('.sc-card .sc-card-top').getBoundingClientRect();
     const initial={
@@ -98,6 +99,8 @@ const inspect=()=>{
       evidenceOverlapRatio:Number(((expandedSceneBounds.bottom-expandedEvidenceBounds.top)/expandedSceneBounds.height).toFixed(2)),
       evidenceWidth:Math.round(expandedEvidenceBounds.width),
       cardWidth:Math.round(expandedCardBounds.width),
+      cardTopShift:Math.round(expandedCardBounds.top-initialCardBounds.top),
+      viewportScrollShift:Math.round(win.scrollY-initialScrollY),
       focusLayerCoversScene:expandedFocusLayerBounds.left<=expandedSceneBounds.left&&expandedFocusLayerBounds.top<=expandedSceneBounds.top&&expandedFocusLayerBounds.right>=expandedSceneBounds.right&&expandedFocusLayerBounds.bottom>=expandedSceneBounds.bottom,
       focusZoomed:getComputedStyle(expandedCard.querySelector('.sc-focus-layer')).transform!=='none'&&getComputedStyle(expandedCard.querySelector('.sc-focus-layer')).transform!=='matrix(1, 0, 0, 1, 0, 0)',
       goalVisibility:getComputedStyle(expandedCard.querySelector(':scope>.sc-label')).visibility,
@@ -202,7 +205,7 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     assert.equal(result.error,undefined);
     assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:6,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:247,goalFeedbackButtons:12,goalFeedbackAligned:true});
     assert.deepEqual(result.alertStates,['PERSON','OPEN','NEEDS CHARGING','Package left','NOT OUT','CARDINAL']);
-    assert.deepEqual(result.expanded,{card:true,aria:'true',details:'grid',icons:2,feedbackButtons:10,cameraSummary:'Side GateGarageFront DoorDriveway',cameraItems:4,cameraNames:['Side Gate','Garage','Front Door','Driveway'],cameraSummaryRightAligned:true,cameraSourceSection:false,videoItems:3,memoryItems:2,cardFeedback:'flex',cardFeedbackVisibility:'hidden',heading:'Supporting Evidence',preview:'none',cardHeight:580,sceneHeight:247,stateOffset:0,stateLeftOffset:0,stateShift:[0,0],sceneShift:[0,0,0,0],evidenceOverlap:41,evidenceOverlapRatio:.17,evidenceWidth:366,cardWidth:366,focusLayerCoversScene:true,focusZoomed:true,goalVisibility:'hidden',hasVideo:true,hasMemory:true,openingTransition:{resizing:true,explicitHeight:true}});
+    assert.deepEqual(result.expanded,{card:true,aria:'true',details:'grid',icons:2,feedbackButtons:10,cameraSummary:'Side GateGarageFront DoorDriveway',cameraItems:4,cameraNames:['Side Gate','Garage','Front Door','Driveway'],cameraSummaryRightAligned:true,cameraSourceSection:false,videoItems:3,memoryItems:2,cardFeedback:'flex',cardFeedbackVisibility:'hidden',heading:'Supporting Evidence',preview:'none',cardHeight:580,sceneHeight:247,stateOffset:0,stateLeftOffset:0,stateShift:[0,0],sceneShift:[0,0,0,0],evidenceOverlap:41,evidenceOverlapRatio:.17,evidenceWidth:366,cardWidth:366,cardTopShift:0,viewportScrollShift:0,focusLayerCoversScene:true,focusZoomed:true,goalVisibility:'hidden',hasVideo:true,hasMemory:true,openingTransition:{resizing:true,explicitHeight:true}});
     assert.deepEqual(result.collapsed,{card:false,aria:'false',focusZoomReset:true});
     assert.deepEqual(result.dark,{section:true,lightPage:false});
   }finally{
