@@ -46,6 +46,8 @@ const inspect=()=>{
       brokenImages:images.filter(image=>!image.complete||image.naturalWidth===0).map(image=>image.getAttribute('src')),
       cardWidth:Math.round(doc.querySelector('.sc-card').getBoundingClientRect().width),
       sceneHeight:Math.round(doc.querySelector('.sc-card .sc-scene').getBoundingClientRect().height),
+      refreshButtons:doc.querySelectorAll('.sc-evidence-refresh').length,
+      checkedTimeInsideTrigger:!!doc.querySelector('.sc-evidence-trigger .sc-evidence-time'),
       goalFeedbackButtons:doc.querySelectorAll('.sc-actions .sc-feedback button').length,
       goalFeedbackAligned:[...doc.querySelectorAll('.sc-card')].every(card=>{
         const feedback=card.querySelector('.sc-actions .sc-feedback').getBoundingClientRect();
@@ -55,6 +57,8 @@ const inspect=()=>{
     };
     doc.querySelector('[data-sc-state="alert"]').click();
     const alertStates=[...doc.querySelectorAll('.sc-state')].map(node=>node.textContent);
+    doc.querySelector('.sc-evidence-refresh').click();
+    const refreshedTime=doc.querySelector('.sc-evidence-time').textContent;
     const evidenceButton=doc.querySelector('.sc-evidence-trigger');
     evidenceButton.click();
     const openingTransition={
@@ -120,7 +124,7 @@ const inspect=()=>{
       section:doc.querySelector('#smartCards').classList.contains('dark'),
       lightPage:doc.body.classList.contains('sc-light-page'),
     };
-    finish({initial,alertStates,expanded,collapsed,dark});
+    finish({initial,alertStates,refreshedTime,expanded,collapsed,dark});
   }catch(error){
     if(attempts<20)setTimeout(inspect,150);
     else finish({error:String(error)});
@@ -203,9 +207,10 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     assert.ok(encoded,'browser harness did not return results');
     const result=JSON.parse(Buffer.from(encoded,'base64').toString('utf8'));
     assert.equal(result.error,undefined);
-    assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:6,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:247,goalFeedbackButtons:12,goalFeedbackAligned:true});
+    assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:6,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:247,refreshButtons:6,checkedTimeInsideTrigger:false,goalFeedbackButtons:12,goalFeedbackAligned:true});
     assert.deepEqual(result.alertStates,['PERSON','OPEN','NEEDS CHARGING','Package left','NOT OUT','CARDINAL']);
-    assert.deepEqual(result.expanded,{card:true,aria:'true',details:'grid',icons:2,feedbackButtons:10,cameraSummary:'Side GateGarageFront DoorDriveway',cameraItems:4,cameraNames:['Side Gate','Garage','Front Door','Driveway'],cameraSummaryRightAligned:true,cameraSourceSection:false,videoItems:3,memoryItems:2,cardFeedback:'flex',cardFeedbackVisibility:'hidden',heading:'Supporting Evidence',preview:'none',cardHeight:580,sceneHeight:247,stateOffset:0,stateLeftOffset:0,stateShift:[0,0],sceneShift:[0,0,0,0],evidenceOverlap:41,evidenceOverlapRatio:.17,evidenceWidth:366,cardWidth:366,cardTopShift:0,viewportScrollShift:0,focusLayerCoversScene:true,focusZoomed:true,goalVisibility:'hidden',hasVideo:true,hasMemory:true,openingTransition:{resizing:true,explicitHeight:true}});
+    assert.equal(result.refreshedTime,'just now');
+    assert.deepEqual(result.expanded,{card:true,aria:'true',details:'grid',icons:2,feedbackButtons:10,cameraSummary:'Side GateGarageFront DoorDriveway',cameraItems:4,cameraNames:['Side Gate','Garage','Front Door','Driveway'],cameraSummaryRightAligned:true,cameraSourceSection:false,videoItems:3,memoryItems:2,cardFeedback:'flex',cardFeedbackVisibility:'hidden',heading:'Supporting Evidence',preview:'none',cardHeight:581,sceneHeight:247,stateOffset:0,stateLeftOffset:0,stateShift:[0,0],sceneShift:[0,0,0,0],evidenceOverlap:41,evidenceOverlapRatio:.17,evidenceWidth:366,cardWidth:366,cardTopShift:0,viewportScrollShift:0,focusLayerCoversScene:true,focusZoomed:true,goalVisibility:'hidden',hasVideo:true,hasMemory:true,openingTransition:{resizing:true,explicitHeight:true}});
     assert.deepEqual(result.collapsed,{card:false,aria:'false',focusZoomReset:true});
     assert.deepEqual(result.dark,{section:true,lightPage:false});
   }finally{

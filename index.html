@@ -1704,8 +1704,14 @@
   .sc-actions .sc-feedback svg{width:13px;height:13px}
   body.sc-light-page .sc-actions .sc-feedback button{color:#42536b}
   .sc-evidence{position:absolute;z-index:5;right:12px;bottom:10px;left:12px;color:#fff;font-family:var(--sans);transform-origin:top center;transition:right .3s ease,left .3s ease,bottom .3s ease,padding .3s ease,background .3s ease,border-color .3s ease}
-  .sc-evidence-trigger{position:relative;display:block;width:100%;margin:0;padding:0;border:0;background:none;color:inherit;text-align:left;font:inherit;cursor:pointer}
+  .sc-evidence-meta{display:flex;align-items:center;gap:5px;width:max-content;cursor:default}
   .sc-evidence-time{display:block;font-size:11px;font-weight:700;line-height:1.2;text-shadow:0 1px 5px #020914}
+  .sc-evidence-refresh{display:grid;place-items:center;width:22px;height:22px;margin:-4px 0;padding:0;border:0;border-radius:50%;background:none;color:#fff;cursor:pointer;opacity:.8;transition:opacity .16s ease,transform .2s ease}
+  .sc-evidence-refresh:hover{opacity:1}
+  .sc-evidence-refresh:active{transform:rotate(45deg)}
+  .sc-evidence-refresh:focus-visible{outline:2px solid #fff;outline-offset:1px}
+  .sc-evidence-refresh svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .sc-evidence-trigger{position:relative;display:block;width:100%;margin:0;padding:0;border:0;background:none;color:inherit;text-align:left;font:inherit;cursor:pointer}
   .sc-evidence-heading-row{display:none;align-items:center;justify-content:space-between;gap:10px;margin-top:3px}
   .sc-evidence-heading{display:block;color:#a9b9ce;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
   .sc-evidence-camera-summary{display:inline-flex;align-items:flex-start;justify-content:flex-end;gap:3px;color:#91a3ba;font-size:8px;font-weight:650;line-height:1.05;white-space:nowrap;text-align:center}
@@ -1713,7 +1719,7 @@
   .sc-evidence-camera-summary svg{width:22px;height:22px;flex:0 0 22px;fill:none;stroke:none}
   .sc-evidence-rule{display:block;width:30px;height:1px;margin:5px 0 4px;background:rgba(255,255,255,.72)}
   .sc-evidence-preview{display:block;max-height:21px;overflow:hidden;font-size:10.5px;font-weight:520;line-height:14px;text-shadow:0 1px 5px #020914;-webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 54%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0%,#000 54%,transparent 100%)}
-  .sc-evidence-trigger:after{content:'›';position:absolute;top:12px;right:0;font-size:18px;font-weight:500;line-height:1;transform:rotate(90deg);transform-origin:center;opacity:.8;transition:transform .18s ease}
+  .sc-evidence-trigger:after{content:'›';position:absolute;top:3px;right:0;font-size:18px;font-weight:500;line-height:1;transform:rotate(90deg);transform-origin:center;opacity:.8;transition:transform .18s ease}
   .sc-evidence-details{display:grid;gap:0;max-height:0;padding-top:0;overflow:hidden;opacity:0;visibility:hidden;clip-path:inset(0 0 100% 0);transition:max-height .46s cubic-bezier(.22,1,.36,1),padding-top .46s cubic-bezier(.22,1,.36,1),gap .46s cubic-bezier(.22,1,.36,1),opacity .24s ease,clip-path .46s cubic-bezier(.22,1,.36,1),visibility 0s linear .46s}
   .sc-card.is-expanded,.sc-card.sc-hero.is-expanded{--sc-evidence-overlap-start:57.292%;aspect-ratio:auto;min-height:0;padding-top:var(--sc-evidence-overlap-start);background:transparent;box-shadow:none}
   .sc-card.is-expanded>.sc-label{opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .18s ease,transform .18s ease,visibility 0s linear .18s}
@@ -1726,7 +1732,7 @@
   .sc-card.is-expanded .sc-evidence-heading-row{display:flex}
   .sc-card.is-expanded .sc-evidence-preview{display:none}
   .sc-card.is-expanded .sc-evidence-rule{width:30px;margin:7px 0 0}
-  .sc-card.is-expanded .sc-evidence-trigger:after{top:25px;transform:rotate(-90deg)}
+  .sc-card.is-expanded .sc-evidence-trigger:after{top:5px;transform:rotate(-90deg)}
   .sc-card.is-expanded .sc-evidence-details{gap:18px;max-height:var(--sc-evidence-details-height,480px);padding-top:12px;opacity:1;visibility:visible;clip-path:inset(0);transition:max-height .46s cubic-bezier(.22,1,.36,1),padding-top .46s cubic-bezier(.22,1,.36,1),gap .46s cubic-bezier(.22,1,.36,1),opacity .28s ease .08s,clip-path .46s cubic-bezier(.22,1,.36,1),visibility 0s}
   .sc-evidence-item{display:block}
   .sc-evidence-section-header{display:flex;align-items:center;gap:6px;width:100%;color:#91a3ba;font:750 9px/1.3 var(--sans);letter-spacing:.06em;text-transform:uppercase}
@@ -6565,12 +6571,13 @@ function initSmartCardEvidence(){
     const evidence=document.createElement('section');
     evidence.className='sc-evidence';
     evidence.setAttribute('aria-label','AI supporting evidence');
-    evidence.innerHTML=`<button class="sc-evidence-trigger" type="button" aria-expanded="false" aria-controls="sc-evidence-${scene}"><span class="sc-evidence-time"></span><span class="sc-evidence-heading-row"><span class="sc-evidence-heading">Supporting Evidence</span><span class="sc-evidence-camera-summary"></span></span><span class="sc-evidence-rule" aria-hidden="true"></span><span class="sc-evidence-preview"></span></button><div class="sc-evidence-details" id="sc-evidence-${scene}"><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.video}</span><span>Video description</span><span class="sc-evidence-section-more">+ more</span></div><div class="sc-evidence-list-wrap"><ul class="sc-evidence-list sc-evidence-video"></ul></div></div><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.memory}</span><span>Household memory</span><span class="sc-evidence-section-more">+ more</span></div><div class="sc-evidence-list-wrap"><ul class="sc-evidence-list sc-evidence-memory"></ul></div></div></div>`;
+    evidence.innerHTML=`<div class="sc-evidence-meta"><span class="sc-evidence-time"></span><button class="sc-evidence-refresh" type="button" aria-label="Refresh ${goal} state" title="Refresh state"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6v5h-5"/><path d="M18.2 15a7 7 0 1 1 .3-7.5L20 11"/></svg></button></div><button class="sc-evidence-trigger" type="button" aria-expanded="false" aria-controls="sc-evidence-${scene}" aria-label="Toggle supporting evidence for ${goal}"><span class="sc-evidence-heading-row"><span class="sc-evidence-heading">Supporting Evidence</span><span class="sc-evidence-camera-summary"></span></span><span class="sc-evidence-rule" aria-hidden="true"></span><span class="sc-evidence-preview"></span></button><div class="sc-evidence-details" id="sc-evidence-${scene}"><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.video}</span><span>Video description</span><span class="sc-evidence-section-more">+ more</span></div><div class="sc-evidence-list-wrap"><ul class="sc-evidence-list sc-evidence-video"></ul></div></div><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.memory}</span><span>Household memory</span><span class="sc-evidence-section-more">+ more</span></div><div class="sc-evidence-list-wrap"><ul class="sc-evidence-list sc-evidence-memory"></ul></div></div></div>`;
     card.append(evidence);
     const cameraSummary=evidence.querySelector('.sc-evidence-camera-summary');
     cameraSummary.innerHTML=cameraSourceSummary(SMART_CARD_CAMERAS[scene]);
     cameraSummary.setAttribute('aria-label',`Cameras involved: ${SMART_CARD_CAMERAS[scene].join(', ')}`);
     const evidenceTrigger=evidence.querySelector('.sc-evidence-trigger');
+    const refreshButton=evidence.querySelector('.sc-evidence-refresh');
     const evidenceDetails=evidence.querySelector('.sc-evidence-details');
     const setEvidenceExpanded=expanded=>{
       if(card._scEvidenceResizeCleanup)card._scEvidenceResizeCleanup();
@@ -6610,6 +6617,10 @@ function initSmartCardEvidence(){
       card.addEventListener('transitionend',handleResizeEnd);
       resizeTimer=setTimeout(finishResize,560);
     };
+    refreshButton.addEventListener('click',()=>{
+      card.dataset.checked='just now';
+      evidence.querySelector('.sc-evidence-time').textContent='just now';
+    });
     evidenceTrigger.addEventListener('click',()=>setEvidenceExpanded(!card.classList.contains('is-expanded')));
     sceneElement.addEventListener('click',()=>{
       if(card.classList.contains('is-expanded'))setEvidenceExpanded(false);
