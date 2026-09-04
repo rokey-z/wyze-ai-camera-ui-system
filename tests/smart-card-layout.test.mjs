@@ -93,7 +93,14 @@ test('folding evidence preserves the feed position without forced focus or scrol
   assert.doesNotMatch(html, /evidence\.focus\(\{preventScroll:true\}\)/);
   assert.doesNotMatch(html, /if\(expanded\)focusExpandedEvidence\(evidence\)/);
   assert.doesNotMatch(html, /evidence\.setAttribute\('tabindex','-1'\)/);
-  assert.match(html, /const setEvidenceExpanded=expanded=>\{\s*card\.classList\.toggle\('is-expanded',expanded\);\s*evidenceTrigger\.setAttribute\('aria-expanded',String\(expanded\)\);\s*\}/);
+  assert.match(html, /\.sc-card,\.sc-card\.sc-hero\{transition:height \.46s cubic-bezier\(\.22,1,\.36,1\),padding-top \.46s/);
+  assert.match(html, /\.sc-card\.sc-is-measuring,\.sc-card\.sc-is-measuring \*\{transition:none!important;animation:none!important\}/);
+  assert.match(html, /const startHeight=card\.getBoundingClientRect\(\)\.height/);
+  assert.match(html, /const endHeight=card\.getBoundingClientRect\(\)\.height/);
+  assert.match(html, /card\.style\.height=`\$\{endHeight\}px`/);
+  assert.match(html, /if\(event\.target===card&&event\.propertyName==='height'\)finishResize\(\)/);
+  assert.match(html, /window\.matchMedia\('\(prefers-reduced-motion: reduce\)'\)\.matches/);
+  assert.match(html, /--sc-evidence-details-height/);
 });
 
 test('footer readability gradient follows the rounded card corners', () => {
@@ -115,7 +122,7 @@ test('supporting evidence progressively reveals video and household inputs', () 
   assert.match(html, /\.sc-evidence-preview\{[^}]*max-height:21px[^}]*mask-image:linear-gradient/);
   assert.match(html, /\.sc-card\.is-expanded \.sc-evidence-preview\{display:none\}/);
   assert.match(html, /\.sc-evidence-details\{display:grid;gap:0;max-height:0;[^}]*transition:max-height/);
-  assert.match(html, /\.sc-card\.is-expanded \.sc-evidence-details\{gap:18px;max-height:480px;[^}]*opacity:1/);
+  assert.match(html, /\.sc-card\.is-expanded \.sc-evidence-details\{gap:18px;max-height:var\(--sc-evidence-details-height,480px\);[^}]*opacity:1/);
   assert.match(html, /\.sc-actions \.sc-feedback\{display:flex;position:absolute/);
 });
 

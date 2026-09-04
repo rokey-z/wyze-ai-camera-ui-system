@@ -1690,7 +1690,8 @@
 
   /* Progressive disclosure: reveal the AI observation and household memory behind each state. */
   .sc-card:after{display:none}
-  .sc-card,.sc-card.sc-hero{transition:min-height .34s cubic-bezier(.22,1,.36,1),padding-top .34s cubic-bezier(.22,1,.36,1),background-color .24s ease,box-shadow .24s ease}
+  .sc-card,.sc-card.sc-hero{transition:height .46s cubic-bezier(.22,1,.36,1),padding-top .46s cubic-bezier(.22,1,.36,1),background-color .24s ease,box-shadow .24s ease}
+  .sc-card.sc-is-measuring,.sc-card.sc-is-measuring *{transition:none!important;animation:none!important}
   .sc-card>.sc-label{opacity:1;visibility:visible;transform:translateY(0);transition:opacity .18s ease,transform .18s ease,visibility 0s}
   .sc-card-top{transition:top .3s cubic-bezier(.22,1,.36,1),left .3s cubic-bezier(.22,1,.36,1)}
   .sc-card:before,.sc-card[data-tone]:before{height:82px;opacity:1;transition:height .34s cubic-bezier(.22,1,.36,1),background .24s ease,opacity .18s ease}
@@ -1712,7 +1713,7 @@
   .sc-evidence-rule{display:block;width:30px;height:1px;margin:5px 0 4px;background:rgba(255,255,255,.72)}
   .sc-evidence-preview{display:block;max-height:21px;overflow:hidden;font-size:10.5px;font-weight:520;line-height:14px;text-shadow:0 1px 5px #020914;-webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 54%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0%,#000 54%,transparent 100%)}
   .sc-evidence-trigger:after{content:'›';position:absolute;top:12px;right:0;font-size:18px;font-weight:500;line-height:1;transform:rotate(90deg);transform-origin:center;opacity:.8;transition:transform .18s ease}
-  .sc-evidence-details{display:grid;gap:0;max-height:0;padding-top:0;overflow:hidden;opacity:0;visibility:hidden;transform:translateY(-6px);transition:max-height .34s cubic-bezier(.22,1,.36,1),padding-top .34s ease,gap .34s ease,opacity .2s ease,transform .34s cubic-bezier(.22,1,.36,1),visibility 0s linear .34s}
+  .sc-evidence-details{display:grid;gap:0;max-height:0;padding-top:0;overflow:hidden;opacity:0;visibility:hidden;transform:translateY(-6px);transition:max-height .46s cubic-bezier(.22,1,.36,1),padding-top .46s cubic-bezier(.22,1,.36,1),gap .46s cubic-bezier(.22,1,.36,1),opacity .24s ease,transform .46s cubic-bezier(.22,1,.36,1),visibility 0s linear .46s}
   .sc-card.is-expanded,.sc-card.sc-hero.is-expanded{--sc-evidence-overlap-start:57.292%;aspect-ratio:auto;min-height:0;padding-top:var(--sc-evidence-overlap-start);background:transparent;box-shadow:none}
   .sc-card.is-expanded>.sc-label{opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .18s ease,transform .18s ease,visibility 0s linear .18s}
   .sc-card.is-expanded .sc-actions .sc-feedback{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .18s ease,visibility 0s linear .18s}
@@ -1725,7 +1726,7 @@
   .sc-card.is-expanded .sc-evidence-preview{display:none}
   .sc-card.is-expanded .sc-evidence-rule{width:30px;margin:7px 0 0}
   .sc-card.is-expanded .sc-evidence-trigger:after{top:25px;transform:rotate(-90deg)}
-  .sc-card.is-expanded .sc-evidence-details{gap:18px;max-height:480px;padding-top:12px;opacity:1;visibility:visible;transform:translateY(0);transition:max-height .34s cubic-bezier(.22,1,.36,1),padding-top .34s ease,gap .34s ease,opacity .24s ease .06s,transform .34s cubic-bezier(.22,1,.36,1),visibility 0s}
+  .sc-card.is-expanded .sc-evidence-details{gap:18px;max-height:var(--sc-evidence-details-height,480px);padding-top:12px;opacity:1;visibility:visible;transform:translateY(0);transition:max-height .46s cubic-bezier(.22,1,.36,1),padding-top .46s cubic-bezier(.22,1,.36,1),gap .46s cubic-bezier(.22,1,.36,1),opacity .28s ease .08s,transform .46s cubic-bezier(.22,1,.36,1),visibility 0s}
   .sc-evidence-item{display:block}
   .sc-evidence-section-header{display:flex;align-items:center;gap:6px;width:100%;color:#91a3ba;font:750 9px/1.3 var(--sans);letter-spacing:.06em;text-transform:uppercase}
   .sc-evidence-title-icon{display:grid;place-items:center;width:18px;height:18px;color:#91a3ba}
@@ -6569,9 +6570,44 @@ function initSmartCardEvidence(){
     cameraSummary.innerHTML=cameraSourceSummary(SMART_CARD_CAMERAS[scene]);
     cameraSummary.setAttribute('aria-label',`Cameras involved: ${SMART_CARD_CAMERAS[scene].join(', ')}`);
     const evidenceTrigger=evidence.querySelector('.sc-evidence-trigger');
+    const evidenceDetails=evidence.querySelector('.sc-evidence-details');
     const setEvidenceExpanded=expanded=>{
+      if(card._scEvidenceResizeCleanup)card._scEvidenceResizeCleanup();
+      if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+        card.classList.toggle('is-expanded',expanded);
+        evidenceTrigger.setAttribute('aria-expanded',String(expanded));
+        return;
+      }
+      const wasExpanded=card.classList.contains('is-expanded');
+      const startHeight=card.getBoundingClientRect().height;
+      card.classList.add('sc-is-measuring');
+      card.style.height='auto';
+      card.classList.toggle('is-expanded',expanded);
+      if(expanded)evidenceDetails.style.setProperty('--sc-evidence-details-height',`${evidenceDetails.scrollHeight}px`);
+      const endHeight=card.getBoundingClientRect().height;
+      card.classList.toggle('is-expanded',wasExpanded);
+      card.style.height=`${startHeight}px`;
+      void card.offsetHeight;
+      card.classList.remove('sc-is-measuring');
       card.classList.toggle('is-expanded',expanded);
       evidenceTrigger.setAttribute('aria-expanded',String(expanded));
+      card.classList.add('sc-is-resizing');
+      card.style.height=`${endHeight}px`;
+      void card.offsetHeight;
+      let resizeTimer;
+      const finishResize=()=>{
+        card.removeEventListener('transitionend',handleResizeEnd);
+        clearTimeout(resizeTimer);
+        card.classList.remove('sc-is-resizing');
+        card.style.height='';
+        card._scEvidenceResizeCleanup=null;
+      };
+      const handleResizeEnd=event=>{
+        if(event.target===card&&event.propertyName==='height')finishResize();
+      };
+      card._scEvidenceResizeCleanup=finishResize;
+      card.addEventListener('transitionend',handleResizeEnd);
+      resizeTimer=setTimeout(finishResize,560);
     };
     evidenceTrigger.addEventListener('click',()=>setEvidenceExpanded(!card.classList.contains('is-expanded')));
     sceneElement.addEventListener('click',()=>{
