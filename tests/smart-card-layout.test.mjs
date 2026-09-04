@@ -48,6 +48,7 @@ test('normal-state duration uses a translucent pill without changing alert copy'
 test('every card scene clips all four corners to the same radius', () => {
   assert.match(html, /\.sc-card,\.sc-card\.sc-hero\{overflow:visible;border:0;outline:0;border-radius:16px\}/);
   assert.match(html, /\.sc-scene\{overflow:hidden;border-radius:16px;clip-path:inset\(0 round 16px\)\}/);
+  assert.match(html, /\.sc-card,\.sc-card\.sc-hero\{aspect-ratio:40\/27;border-radius:16px/);
 });
 
 test('expanded evidence extends below a fixed-size camera scene', () => {
@@ -64,7 +65,7 @@ test('expanded state and duration stay fixed while the goal label clears', () =>
 
 test('expansion keeps the image fixed and makes evidence match the card width', () => {
   assert.match(html, /\.sc-card\.is-expanded \.sc-scene\{inset:0 0 auto;height:auto;aspect-ratio:16\/11/);
-  assert.match(html, /@media\(max-width:620px\)\{\.sc-card\.is-expanded,\.sc-card\.sc-hero\.is-expanded\{--sc-evidence-overlap-start:50%\}\.sc-card\.is-expanded \.sc-scene\{aspect-ratio:4\/3\}\}/);
+  assert.match(html, /@media\(max-width:620px\)\{\.sc-card\.is-expanded,\.sc-card\.sc-hero\.is-expanded\{--sc-evidence-overlap-start:45%\}\.sc-card\.is-expanded \.sc-scene\{aspect-ratio:40\/27\}\}/);
   assert.match(html, /\.sc-card\.is-expanded \.sc-evidence\{position:relative;right:auto;bottom:auto;left:auto;width:100%;padding:12px;[^}]*border-radius:16px/);
 });
 
