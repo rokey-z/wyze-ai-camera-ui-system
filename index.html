@@ -1691,7 +1691,13 @@
   .sc-card>.sc-label{opacity:1;visibility:visible;transform:translateY(0);transition:opacity .18s ease,transform .18s ease,visibility 0s}
   .sc-card-top{transition:top .3s cubic-bezier(.22,1,.36,1),left .3s cubic-bezier(.22,1,.36,1)}
   .sc-card:before,.sc-card[data-tone]:before{height:82px;opacity:1;transition:height .34s cubic-bezier(.22,1,.36,1),background .24s ease,opacity .18s ease}
-  .sc-actions .sc-feedback{display:none}
+  /* Goal-level feedback sits on the same line as the goal, aligned to the card's right edge. */
+  .sc-card>.sc-label{max-width:calc(100% - 62px);overflow:hidden;text-overflow:ellipsis}
+  .sc-actions .sc-feedback{display:flex;position:absolute;z-index:6;top:-27px;right:0;bottom:auto;gap:2px;margin:0;padding:0;border:0;border-radius:0;background:none;box-shadow:none;backdrop-filter:none;transition:opacity .18s ease,visibility 0s}
+  .sc-actions .sc-feedback button,.sc-actions .sc-feedback button:last-child{width:24px;height:24px;min-width:0;min-height:0;margin:0;padding:0;border:0;border-radius:0;background:none;color:#f4f7fb;box-shadow:none;opacity:.82}
+  .sc-actions .sc-feedback button:hover,.sc-actions .sc-feedback button:active{background:none;color:#fff;box-shadow:none;opacity:1}
+  .sc-actions .sc-feedback svg{width:13px;height:13px}
+  body.sc-light-page .sc-actions .sc-feedback button{color:#42536b}
   .sc-evidence{position:absolute;z-index:5;right:12px;bottom:10px;left:12px;color:#fff;font-family:var(--sans);transition:right .3s ease,left .3s ease,bottom .3s ease,padding .3s ease,background .3s ease,border-color .3s ease}
   .sc-evidence-trigger{position:relative;display:block;width:100%;margin:0;padding:0;border:0;background:none;color:inherit;text-align:left;font:inherit;cursor:pointer}
   .sc-evidence-time{display:block;font-size:11px;font-weight:700;line-height:1.2;text-shadow:0 1px 5px #020914}
@@ -1702,6 +1708,7 @@
   .sc-evidence-details{display:grid;gap:0;max-height:0;padding-top:0;overflow:hidden;opacity:0;visibility:hidden;transform:translateY(-6px);transition:max-height .34s cubic-bezier(.22,1,.36,1),padding-top .34s ease,gap .34s ease,opacity .2s ease,transform .34s cubic-bezier(.22,1,.36,1),visibility 0s linear .34s}
   .sc-card.is-expanded,.sc-card.sc-hero.is-expanded{aspect-ratio:auto;min-height:620px;background:transparent;box-shadow:none}
   .sc-card.is-expanded>.sc-label{opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .18s ease,transform .18s ease,visibility 0s linear .18s}
+  .sc-card.is-expanded .sc-actions .sc-feedback{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .18s ease,visibility 0s linear .18s}
   .sc-card.is-expanded .sc-card-top{z-index:7;top:-12px;left:12px}
   .sc-card.is-expanded .sc-scene{inset:0 0 auto;height:auto;aspect-ratio:4/3;box-shadow:0 14px 28px #0309144d}
   .sc-card.is-expanded:before,.sc-card.is-expanded[data-tone]:before{height:82px;opacity:0}
@@ -6514,6 +6521,12 @@ function evidenceList(items,label,icon){
 function initSmartCardEvidence(){
   document.querySelectorAll('.sc-card[data-scene]').forEach(card=>{
     const scene=card.dataset.scene;
+    const goal=card.querySelector(':scope>.sc-label').textContent.trim();
+    const goalFeedback=card.querySelector('.sc-actions .sc-feedback');
+    const goalFeedbackButtons=goalFeedback.querySelectorAll('button');
+    goalFeedback.setAttribute('aria-label',`Rate ${goal} goal`);
+    goalFeedbackButtons[0].setAttribute('aria-label',`${goal} goal was helpful`);
+    goalFeedbackButtons[1].setAttribute('aria-label',`${goal} goal was not helpful`);
     const evidence=document.createElement('section');
     evidence.className='sc-evidence';
     evidence.setAttribute('aria-label','AI supporting evidence');
