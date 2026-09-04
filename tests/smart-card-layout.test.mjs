@@ -146,14 +146,17 @@ test('expanded evidence identifies the cameras involved in each card state', () 
   assert.match(html, /front:\['Front Door Cam'\]/);
   assert.match(html, /bins:\['Driveway Cam'\]/);
   assert.match(html, /birds:\['Backyard Feeder Cam'\]/);
-  assert.match(html, /<span>Cameras involved<\/span><\/div><ul class="sc-camera-source-list" aria-label="Cameras involved in this state">/);
-  assert.match(html, /function cameraSourceList\(cameras\)/);
-  assert.match(html, /\.sc-camera-source-list\{display:flex;flex-wrap:nowrap;align-items:flex-start;gap:10px;[^}]*overflow-x:auto/);
-  assert.match(html, /\.sc-camera-source-list li\{display:flex;flex:0 0 68px;[^}]*flex-direction:column;align-items:center;[^}]*background:transparent/);
-  assert.match(html, /\.sc-camera-source-list svg\{width:24px;height:24px;flex:0 0 24px;fill:none;stroke:none\}/);
-  assert.match(html, /\.sc-camera-source-title \.sc-evidence-title-icon svg\{stroke:none\}/);
-  assert.match(html, /\.sc-camera-source-list li span\{max-width:68px;font-size:8\.5px/);
-  assert.match(html, /evidence\.querySelector\('\.sc-camera-source-list'\)\.innerHTML=cameraSourceList\(SMART_CARD_CAMERAS\[scene\]\)/);
+  assert.doesNotMatch(html, /sc-camera-source-section/);
+  assert.doesNotMatch(html, /sc-camera-source-list/);
+  assert.match(html, /function cameraSourceSummary\(cameras\)/);
+  assert.match(html, /cameras\.length===1\?cameras\[0\]:`\$\{cameras\.length\} cameras`/);
+  assert.match(html, /class="sc-evidence-heading-row"><span class="sc-evidence-heading">Supporting Evidence<\/span><span class="sc-evidence-camera-summary"><\/span>/);
+  assert.match(html, /\.sc-evidence-heading-row\{display:none;align-items:center;justify-content:space-between/);
+  assert.match(html, /\.sc-card\.is-expanded \.sc-evidence-heading-row\{display:flex\}/);
+  assert.match(html, /\.sc-evidence-camera-summary\{display:inline-flex;[^}]*justify-content:flex-end/);
+  assert.match(html, /\.sc-evidence-camera-summary svg\{width:14px;height:14px;flex:0 0 14px;fill:none;stroke:none\}/);
+  assert.match(html, /cameraSummary\.innerHTML=cameraSourceSummary\(SMART_CARD_CAMERAS\[scene\]\)/);
+  assert.match(html, /cameraSummary\.setAttribute\('aria-label',`Cameras involved: \$\{SMART_CARD_CAMERAS\[scene\]\.join\(', '\)\}`\)/);
 });
 
 test('normal and alert states provide three observations and two memories for every scene', () => {
