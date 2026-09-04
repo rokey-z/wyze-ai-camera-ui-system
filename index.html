@@ -6501,7 +6501,7 @@ const SMART_CARD_STATES={
     bins:{state:'NOT OUT',sub:'trash pickup tomorrow',checked:'4 mins ago',src:'assets/smart-trash-bins-not-out.webp?v=1',alt:'Trash and recycling bins stored beside the garage while the curb remains empty'},
     security:{state:'PERSON',sub:'for 2 mins',checked:'6 secs ago',src:'assets/smart-security-motion.webp?v=1',alt:'Person detected standing near the closed side gate'},
     birds:{state:'CARDINAL',sub:'for 30 secs',checked:'6 secs ago',src:'assets/smart-bird-cardinal.webp?v=1',alt:'Northern cardinal detected on the backyard bird feeder'},
-    ev:{state:'NOT PLUGGED IN',sub:'leaving in 8 hours',checked:'15 secs ago',src:'assets/smart-ev-unplugged.webp?v=1',alt:'Electric car parked in the garage without a charging cable connected'}
+    ev:{state:'NEEDS CHARGING',sub:'not charging for 8 hours',checked:'15 secs ago',src:'assets/smart-ev-unplugged.webp?v=1',alt:'Electric car parked in the garage without a charging cable connected'}
   }
 };
 const SMART_CARD_EVIDENCE={
@@ -6519,7 +6519,7 @@ const SMART_CARD_EVIDENCE={
     front:{video:['One parcel is resting on the porch beside the entry mat; no courier remains.','The package first appeared after a delivery person approached the front door.','The parcel has not moved during the latest hour of snapshots.'],memory:['You asked to monitor deliveries and usually bring packages inside within 20 minutes.','No household member has arrived home since this package was delivered.']},
     bins:{video:['The curb zone is empty; both bins remain next to the garage.','Neither bin has moved toward the pickup area in recent snapshots.','The driveway is clear, so the stored bins remain easy to reach.'],memory:['Pickup is tomorrow morning and your household usually moves bins out the evening before.','Bins are normally at the curb by this point on the night before pickup.']},
     birds:{video:['One adult male northern cardinal is perched on the feeder tray.','The bird remains fully visible inside the feeder detection box.','Red plumage, a black face mask, and a crested head support the identification.'],memory:['You follow cardinal visits and asked to surface clear feeder sightings.','This matches the species you most often save from backyard camera events.']},
-    ev:{video:['The car is parked in its charging bay with no connector attached.','The vehicle charge-port door is closed and the connector remains docked on the wall.','The garage scene has remained unchanged across the latest snapshots.'],memory:['You asked to be reminded when the car is home overnight but not connected.','A weekday departure is planned in 8 hours, and you usually charge before leaving.']}
+    ev:{video:['The car is parked in its charging bay with no connector attached.','The vehicle charge-port door is closed and the connector remains docked on the wall.','The garage scene has remained unchanged across the latest snapshots.'],memory:['You asked to be reminded when the car is home overnight but not charging.','The car has remained home and unplugged for 8 hours, outside your usual charging routine.']}
   }
 };
 const SMART_CARD_EVIDENCE_ICONS={
