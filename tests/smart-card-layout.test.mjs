@@ -20,6 +20,16 @@ test('live action is top-right and evidence cluster is bottom-left', () => {
   assert.match(html, /\.sc-card:after\{display:none\}/);
 });
 
+test('checked time is static and followed by an icon-only refresh action', () => {
+  assert.match(html, /<div class="sc-evidence-meta"><span class="sc-evidence-time"><\/span><button class="sc-evidence-refresh"/);
+  assert.doesNotMatch(html, /<button class="sc-evidence-trigger"[^>]*><span class="sc-evidence-time"/);
+  assert.match(html, /\.sc-evidence-meta\{display:flex;align-items:center;gap:5px;width:max-content;cursor:default\}/);
+  assert.match(html, /\.sc-evidence-refresh\{display:grid;place-items:center;width:22px;height:22px;[^}]*background:none/);
+  assert.match(html, /aria-label="Refresh \$\{goal\} state" title="Refresh state"><svg/);
+  assert.match(html, /refreshButton\.addEventListener\('click',\(\)=>\{/);
+  assert.match(html, /evidence\.querySelector\('\.sc-evidence-time'\)\.textContent='just now'/);
+});
+
 test('every card has compact goal feedback aligned to the goal line right edge', () => {
   assert.match(html, /\.sc-card>\.sc-label\{max-width:calc\(100% - 62px\);overflow:hidden;text-overflow:ellipsis\}/);
   assert.match(html, /\.sc-actions \.sc-feedback\{display:flex;position:absolute;z-index:6;top:-27px;right:0;bottom:auto/);
@@ -182,7 +192,7 @@ test('expanded evidence identifies the cameras involved in each card state', () 
   assert.match(html, /\.sc-evidence-camera-summary\{display:inline-flex;align-items:flex-start;justify-content:flex-end;gap:3px/);
   assert.match(html, /\.sc-evidence-camera-item\{display:inline-flex;width:46px;min-width:0;flex-direction:column;align-items:center/);
   assert.match(html, /\.sc-evidence-camera-summary svg\{width:22px;height:22px;flex:0 0 22px;fill:none;stroke:none\}/);
-  assert.match(html, /\.sc-card\.is-expanded \.sc-evidence-trigger:after\{top:25px;transform:rotate\(-90deg\)\}/);
+  assert.match(html, /\.sc-card\.is-expanded \.sc-evidence-trigger:after\{top:5px;transform:rotate\(-90deg\)\}/);
   assert.match(html, /cameraSummary\.innerHTML=cameraSourceSummary\(SMART_CARD_CAMERAS\[scene\]\)/);
   assert.match(html, /cameraSummary\.setAttribute\('aria-label',`Cameras involved: \$\{SMART_CARD_CAMERAS\[scene\]\.join\(', '\)\}`\)/);
 });
