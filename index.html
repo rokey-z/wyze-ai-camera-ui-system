@@ -1746,18 +1746,37 @@
   .sc-detail-preview-card .sc-scene{position:absolute;inset:0;width:100%;height:100%;min-height:0;margin:0;border-radius:0;clip-path:none;filter:none;cursor:default}
   .sc-detail-preview-card .sc-focus-layer{transform:none}
   .sc-detail-content{padding:18px 18px max(30px,env(safe-area-inset-bottom))}
-  .sc-detail-state{display:flex;align-items:baseline;flex-wrap:wrap;gap:7px;margin:0 0 16px;color:#fff}
-  .sc-detail-state strong{font-size:23px;font-weight:850;line-height:1.05}
-  .sc-detail-state span{color:#bac9dc;font-size:13px;font-weight:650}
+  .sc-detail-state{display:flex;flex-direction:column;align-items:flex-start;gap:5px;width:max-content;max-width:100%;margin:0 0 16px;padding:8px 12px 10px;border-radius:12px;background:linear-gradient(90deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,.25) 42%,rgba(0,0,0,0) 78%);color:#fff}
+  .sc-detail-state strong{color:inherit;font-size:23px;font-weight:850;line-height:1.05}
+  .sc-detail-state span{padding:3px 8px;border-radius:999px;background:rgba(255,255,255,.18);color:inherit;font-size:13px;font-weight:650}
+  .smartcards.is-alert .sc-detail-state{background:rgba(113,237,190,.82);color:#09271e}
+  .smartcards.is-alert .sc-detail-state span{padding:0;border-radius:0;background:none}
+  .smartcards.is-alert .sc-detail-dialog[data-scene="security"] .sc-detail-state{background:rgba(255,75,85,.82);color:#fff}
   .sc-detail-evidence-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:0 0 10px;border-bottom:1px solid #ffffff2b}
   .sc-detail-evidence-label{display:block;color:#b5c6db;font-size:10px;font-weight:800;letter-spacing:.11em;text-transform:uppercase}
   .sc-detail-checked{display:block;margin-top:5px;color:#e7edf5;font-size:11px;font-weight:650}
   .sc-detail-dialog .sc-evidence-camera-summary{max-width:60%;flex-wrap:wrap;row-gap:6px}
-  .sc-detail-sections{display:grid;gap:21px;padding-top:18px}
+  .sc-detail-sections{display:grid;min-width:0;gap:21px;padding-top:18px}
+  .sc-detail-sections>.sc-evidence-item{min-width:0}
   .sc-detail-dialog .sc-evidence-section-header{font-size:10px}
   .sc-detail-dialog .sc-evidence-item p{font-size:13px;line-height:1.4}
   .sc-detail-dialog .sc-evidence-list{gap:13px;margin-top:11px}
   .sc-detail-dialog .sc-evidence-item-feedback button{width:30px;height:30px}
+  .sc-video-strip{display:flex;max-width:calc(100% + 36px);gap:11px;margin:11px -18px 0;padding:2px 18px 10px;overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:x mandatory;scroll-padding-inline-start:18px;scrollbar-width:none;list-style:none}
+  .sc-video-strip::-webkit-scrollbar{display:none}
+  .sc-video-item{display:flex;flex:0 0 min(70vw,215px);flex-direction:column;min-width:0;scroll-snap-align:start;overflow:hidden;border:1px solid #ffffff25;border-radius:13px;background:#1a2636}
+  .sc-video-item.is-featured{border-color:#71edbeaa;box-shadow:0 0 0 1px #71edbe5c}
+  .sc-video-thumb{position:relative;height:105px;overflow:hidden;background:#263549}
+  .sc-video-thumb img{display:block;width:100%;height:100%;object-fit:cover}
+  .sc-video-item:nth-child(2) .sc-video-thumb img{object-position:62% center}
+  .sc-video-item:nth-child(3) .sc-video-thumb img{object-position:35% center}
+  .sc-video-score{position:absolute;top:7px;right:7px;display:grid;place-items:center;min-width:25px;height:25px;padding:0 6px;border-radius:7px;background:#101925d9;color:#fff;font-size:13px;font-weight:800;box-shadow:0 2px 8px #0008}
+  .sc-video-item.is-featured .sc-video-score{background:#71edbe;color:#09271e}
+  .sc-video-copy{display:flex;flex:1;flex-direction:column;gap:8px;padding:10px}
+  .sc-detail-dialog .sc-video-copy p{margin:0;color:#f4f7fb;font-size:11px;font-weight:680;line-height:1.35}
+  .sc-video-footer{display:flex;align-items:center;justify-content:space-between;gap:4px;margin-top:auto;color:#9fb0c7;font-size:10px;font-weight:650}
+  .sc-video-footer .sc-evidence-item-feedback button{width:22px;height:22px}
+  .sc-video-footer .sc-evidence-item-feedback svg{width:12px;height:12px}
   @media(max-width:620px){.sc-detail-dialog{width:100%;max-height:94dvh}.sc-detail-preview-card.sc-card{aspect-ratio:40/27}}
   @media(prefers-reduced-motion:reduce){.sc-detail-dialog{animation:none}}
 
@@ -6537,6 +6556,10 @@ const SMART_CARD_EVIDENCE={
     ev:{video:['The car is parked in its charging bay with no connector attached.','The vehicle charge-port door is closed and the connector remains docked on the wall.','The garage scene has remained unchanged across the latest snapshots.'],memory:['You asked to be reminded when the car misses its usual overnight charging routine.','The car was last seen connected 2 days ago and has remained home through two overnight charging windows.']}
   }
 };
+const SMART_CARD_VIDEO_RATINGS={
+  normal:{security:[5,4,4],garage:[5,4,3],ev:[5,4,3],front:[5,4,3],bins:[5,4,4],birds:[5,4,3]},
+  alert:{security:[5,5,3],garage:[5,4,4],ev:[5,4,3],front:[5,4,3],bins:[5,4,4],birds:[5,5,4]}
+};
 const SMART_CARD_EVIDENCE_ICONS={
   video:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M8.5 15 11 7h2l2.5 8M4 14l3-8h3M20 14l-3-8h-3M9 17h6"/></svg>',
   memory:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 4.5A3.5 3.5 0 0 0 6 8v.3A3.6 3.6 0 0 0 4 14a3.5 3.5 0 0 0 3.5 5.5H10V5.8c0-.7-.2-1.3-.5-1.3ZM14.5 4.5A3.5 3.5 0 0 1 18 8v.3a3.6 3.6 0 0 1 2 5.7 3.5 3.5 0 0 1-3.5 5.5H14V5.8c0-.7.2-1.3.5-1.3Z"/><path d="M6 9.5h2M16 9.5h2M6.5 16H10M14 16h3.5"/></svg>',
@@ -6560,6 +6583,21 @@ function evidenceFeedback(label){
 function evidenceList(items,label){
   return items.map((text,index)=>`<li><p>${text}</p>${evidenceFeedback(`${label} ${index+1}`)}</li>`).join('');
 }
+function videoEvidenceTime(state,index){
+  if(index===0)return state.checked;
+  const duration=/^for (\d+) (secs|mins|hours)/.exec(state.sub);
+  if(!duration)return index===1?'8 mins ago':'15 mins ago';
+  const total=Number(duration[1])*({secs:1,mins:60,hours:3600}[duration[2]]);
+  const age=Math.round(total*index/2);
+  if(age<60)return `${age} secs ago`;
+  if(age<3600){const minutes=Math.round(age/60);return `${minutes} ${minutes===1?'min':'mins'} ago`}
+  const hours=Math.round(age/3600);
+  return `${hours} ${hours===1?'hour':'hours'} ago`;
+}
+function videoEvidenceStrip(items,state,ratings){
+  const highlightAt=[...ratings].sort((a,b)=>b-a)[1];
+  return items.map((description,index)=>`<li class="sc-video-item${ratings[index]>=highlightAt?' is-featured':''}"><div class="sc-video-thumb"><img src="${state.src}" alt="${state.alt}" loading="lazy"><span class="sc-video-score" aria-label="Evidence rating ${ratings[index]}">${ratings[index]}</span></div><div class="sc-video-copy"><p>${description}</p><div class="sc-video-footer"><time>${videoEvidenceTime(state,index)}</time>${evidenceFeedback(`video evidence ${index+1}`)}</div></div></li>`).join('');
+}
 function cameraSourceSummary(cameras){
   return cameras.map(camera=>`<span class="sc-evidence-camera-item">${SMART_CARD_EVIDENCE_ICONS.camera}<span>${camera.replace(/ Cam$/,'')}</span></span>`).join('');
 }
@@ -6567,7 +6605,7 @@ function initSmartCardEvidence(){
   const smartCards=$('smartCards');
   const detailDialog=document.createElement('dialog');
   detailDialog.className='sc-detail-dialog';
-  detailDialog.innerHTML=`<div class="sc-detail-handle" aria-hidden="true"></div><header class="sc-detail-header"><h2 class="sc-detail-title" id="sc-detail-title"></h2><button class="sc-detail-close" type="button" aria-label="Close details">&times;</button></header><div class="sc-detail-preview-card sc-card"></div><div class="sc-detail-content"><p class="sc-detail-state"><strong></strong><span></span></p><div class="sc-detail-evidence-head"><div><span class="sc-detail-evidence-label">Supporting Evidence</span><span class="sc-detail-checked"></span></div><div class="sc-evidence-camera-summary"></div></div><div class="sc-detail-sections"><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.video}</span><span>Video description</span><span class="sc-evidence-section-more">+ more</span></div><ul class="sc-evidence-list sc-evidence-video"></ul></div><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.memory}</span><span>Household memory</span><span class="sc-evidence-section-more">+ more</span></div><ul class="sc-evidence-list sc-evidence-memory"></ul></div></div></div>`;
+  detailDialog.innerHTML=`<div class="sc-detail-handle" aria-hidden="true"></div><header class="sc-detail-header"><h2 class="sc-detail-title" id="sc-detail-title"></h2><button class="sc-detail-close" type="button" aria-label="Close details">&times;</button></header><div class="sc-detail-preview-card sc-card"></div><div class="sc-detail-content"><p class="sc-detail-state"><strong></strong><span></span></p><div class="sc-detail-evidence-head"><div><span class="sc-detail-evidence-label">Supporting Evidence</span><span class="sc-detail-checked"></span></div><div class="sc-evidence-camera-summary"></div></div><div class="sc-detail-sections"><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.video}</span><span>Video Evidences</span><span class="sc-evidence-section-more">+ more</span></div><ul class="sc-video-strip sc-evidence-video" aria-label="Video evidences; swipe horizontally"></ul></div><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.memory}</span><span>Household memory</span><span class="sc-evidence-section-more">+ more</span></div><ul class="sc-evidence-list sc-evidence-memory"></ul></div></div></div>`;
   detailDialog.setAttribute('aria-labelledby','sc-detail-title');
   smartCards.append(detailDialog);
   let lastDetailCard=null;
@@ -6588,6 +6626,7 @@ function initSmartCardEvidence(){
     const state=SMART_CARD_STATES[mode][scene];
     const evidence=SMART_CARD_EVIDENCE[mode][scene];
     const preview=detailDialog.querySelector('.sc-detail-preview-card');
+    detailDialog.dataset.scene=scene;
     preview.dataset.scene=scene;
     preview.replaceChildren(card.querySelector('.sc-scene').cloneNode(true));
     preview.querySelectorAll('img').forEach(image=>image.loading='eager');
@@ -6598,12 +6637,14 @@ function initSmartCardEvidence(){
     const cameraSummary=detailDialog.querySelector('.sc-evidence-camera-summary');
     cameraSummary.innerHTML=cameraSourceSummary(SMART_CARD_CAMERAS[scene]);
     cameraSummary.setAttribute('aria-label',`Cameras involved: ${SMART_CARD_CAMERAS[scene].join(', ')}`);
-    detailDialog.querySelector('.sc-evidence-video').innerHTML=evidenceList(evidence.video,'video description');
+    const videoStrip=detailDialog.querySelector('.sc-evidence-video');
+    videoStrip.innerHTML=videoEvidenceStrip(evidence.video,state,SMART_CARD_VIDEO_RATINGS[mode][scene]);
     detailDialog.querySelector('.sc-evidence-memory').innerHTML=evidenceList(evidence.memory,'household memory');
     lastDetailCard=card;
-    detailDialog.scrollTop=0;
     document.body.classList.add('sc-detail-open');
     detailDialog.showModal();
+    detailDialog.scrollTop=0;
+    videoStrip.scrollLeft=0;
   };
   document.querySelectorAll('.sc-grid>.sc-card[data-scene]').forEach(card=>{
     const scene=card.dataset.scene;

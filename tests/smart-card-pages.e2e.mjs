@@ -61,6 +61,9 @@ const inspect=()=>{
     const alertStates=[...doc.querySelectorAll('.sc-grid .sc-state')].map(node=>node.textContent);
     const cardSource=firstCard.querySelector('.sc-photo').getAttribute('src');
     firstCard.querySelector('.sc-scene').click();
+    const videoStrip=dialog.querySelector('.sc-video-strip');
+    const firstThumb=videoStrip.querySelector('.sc-video-thumb').getBoundingClientRect();
+    const firstScore=videoStrip.querySelector('.sc-video-score').getBoundingClientRect();
     const sheet={
       open:dialog.open,
       modal:dialog.matches(':modal'),
@@ -71,6 +74,13 @@ const inspect=()=>{
       largerPreview:dialog.querySelector('.sc-detail-preview-card').getBoundingClientRect().width>=firstCard.getBoundingClientRect().width,
       cameraItems:dialog.querySelectorAll('.sc-evidence-camera-item').length,
       videoItems:dialog.querySelectorAll('.sc-evidence-video li').length,
+      videoTitle:dialog.querySelector('.sc-detail-sections .sc-evidence-section-header').textContent.trim().replace('+ more','').trim(),
+      videoScrolls:videoStrip.scrollWidth>videoStrip.clientWidth,
+      ratings:[...videoStrip.querySelectorAll('.sc-video-score')].map(node=>node.textContent),
+      highlighted:videoStrip.querySelectorAll('.sc-video-item.is-featured').length,
+      scoreTopRight:firstScore.right<=firstThumb.right&&firstScore.top>=firstThumb.top&&firstScore.left>firstThumb.left+firstThumb.width/2,
+      videoTimes:[...videoStrip.querySelectorAll('time')].map(node=>node.textContent),
+      thumbsMatchImage:[...videoStrip.querySelectorAll('img')].every(image=>image.getAttribute('src')===cardSource),
       memoryItems:dialog.querySelectorAll('.sc-evidence-memory li').length,
       checked:dialog.querySelector('.sc-detail-checked').textContent,
       cardHeightUnchanged:Math.round(firstCard.getBoundingClientRect().height)===Math.round(initialCardBounds.height),
@@ -78,7 +88,10 @@ const inspect=()=>{
       scrollUnchanged:Math.round(win.scrollY)===Math.round(initialScrollY),
       bodyLocked:doc.body.classList.contains('sc-detail-open'),
       detectionBox:!!dialog.querySelector('.sc-detection-box'),
+      stateColorMatchesCard:getComputedStyle(dialog.querySelector('.sc-detail-state')).backgroundColor===getComputedStyle(firstCard.querySelector('.sc-card-top')).backgroundColor,
+      durationColorMatchesCard:getComputedStyle(dialog.querySelector('.sc-detail-state span')).color===getComputedStyle(firstCard.querySelector('.sc-sub')).color,
     };
+    videoStrip.scrollLeft=200;
     dialog.querySelector('.sc-detail-close').click();
     const closed={open:dialog.open,bodyLocked:doc.body.classList.contains('sc-detail-open')};
     firstCard.querySelector('.sc-evidence-trigger').click();
@@ -87,13 +100,21 @@ const inspect=()=>{
     const secondCard=doc.querySelectorAll('.sc-grid>.sc-card')[1];
     secondCard.click();
     const cardBodyOpens=dialog.open&&dialog.querySelector('.sc-detail-title').textContent==='Garage monitor';
+    const newCardScrollLeft=dialog.querySelector('.sc-video-strip').scrollLeft;
     dialog.close();
+    doc.querySelector('[data-sc-state="normal"]').click();
+    firstCard.click();
+    const normalTreatment={
+      stateGradientMatchesCard:getComputedStyle(dialog.querySelector('.sc-detail-state')).backgroundImage===getComputedStyle(firstCard.querySelector('.sc-card-top')).backgroundImage,
+      durationBackgroundMatchesCard:getComputedStyle(dialog.querySelector('.sc-detail-state span')).backgroundColor===getComputedStyle(firstCard.querySelector('.sc-sub')).backgroundColor,
+    };
+    dialog.querySelector('.sc-detail-close').click();
     doc.querySelector('[data-sc-theme="dark"]').click();
     const dark={
       section:doc.querySelector('#smartCards').classList.contains('dark'),
       lightPage:doc.body.classList.contains('sc-light-page'),
     };
-    finish({initial,refreshed,alertStates,sheet,closed,previewOpens,cardBodyOpens,dark});
+    finish({initial,refreshed,alertStates,sheet,closed,previewOpens,cardBodyOpens,newCardScrollLeft,normalTreatment,dark});
   }catch(error){
     if(attempts<20)setTimeout(inspect,150);
     else finish({error:String(error)});
@@ -179,10 +200,12 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:6,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:247,refreshButtons:6,checkedTimeInsideTrigger:false,goalFeedbackButtons:12,goalFeedbackAligned:true});
     assert.deepEqual(result.refreshed,{time:'just now',dialogOpen:false});
     assert.deepEqual(result.alertStates,['PERSON','OPEN','NEEDS CHARGING','Package left','NOT OUT','CARDINAL']);
-    assert.deepEqual(result.sheet,{open:true,modal:true,title:'Home security',state:'PERSON',image:'assets/smart-security-motion.webp?v=1',sameImage:true,largerPreview:true,cameraItems:4,videoItems:3,memoryItems:2,checked:'6 secs ago',cardHeightUnchanged:true,cardTopUnchanged:true,scrollUnchanged:true,bodyLocked:true,detectionBox:true});
+    assert.deepEqual(result.sheet,{open:true,modal:true,title:'Home security',state:'PERSON',image:'assets/smart-security-motion.webp?v=1',sameImage:true,largerPreview:true,cameraItems:4,videoItems:3,videoTitle:'Video Evidences',videoScrolls:true,ratings:['5','5','3'],highlighted:2,scoreTopRight:true,videoTimes:['6 secs ago','1 min ago','2 mins ago'],thumbsMatchImage:true,memoryItems:2,checked:'6 secs ago',cardHeightUnchanged:true,cardTopUnchanged:true,scrollUnchanged:true,bodyLocked:true,detectionBox:true,stateColorMatchesCard:true,durationColorMatchesCard:true});
     assert.deepEqual(result.closed,{open:false,bodyLocked:false});
     assert.equal(result.previewOpens,true);
     assert.equal(result.cardBodyOpens,true);
+    assert.equal(result.newCardScrollLeft,0);
+    assert.deepEqual(result.normalTreatment,{stateGradientMatchesCard:true,durationBackgroundMatchesCard:true});
     assert.deepEqual(result.dark,{section:true,lightPage:false});
   }finally{
     await new Promise(resolve=>server.close(resolve));
