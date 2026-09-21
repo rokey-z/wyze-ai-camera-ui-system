@@ -68,7 +68,7 @@ test('the detail sheet opens above a fixed feed with a large copy of the camera 
   assert.match(html, /const detailDialog=document\.createElement\('dialog'\)/);
   assert.match(html, /detailDialog\.className='sc-detail-dialog'/);
   assert.match(html, /detailDialog\.setAttribute\('aria-labelledby','sc-detail-title'\)/);
-  assert.match(html, /preview\.replaceChildren\(card\.querySelector\('\.sc-scene'\)\.cloneNode\(true\),caption\)/);
+  assert.match(html, /preview\.replaceChildren\(card\.querySelector\('\.sc-scene'\)\.cloneNode\(true\),previewScore,caption\)/);
   assert.match(html, /\.sc-detail-preview-card\.sc-card\{[^}]*aspect-ratio:4\/3/);
   assert.match(html, /\.sc-detail-dialog\{position:fixed;inset:auto 0 0/);
   assert.doesNotMatch(html, /card\.classList\.toggle\('is-expanded'/);
@@ -127,6 +127,8 @@ test('video evidences scroll horizontally with thumbnail ratings and top evidenc
   assert.match(html, /featuredIndexes\.has\(index\)\?' is-featured':''/);
   assert.match(html, /class="sc-video-thumb" type="button" data-video-index="\$\{index\}" aria-pressed="\$\{index===selectedIndex\}"/);
   assert.match(html, /class="sc-video-score" aria-hidden="true">\$\{score\}<\/span>/);
+  assert.match(html, /class="sc-detail-preview-score" role="img" hidden/);
+  assert.match(html, /previewScore\.textContent=thumb\.querySelector\('\.sc-video-score'\)\.textContent/);
   assert.doesNotMatch(html, /class="sc-video-score"[^>]*>\$\{ratings\[index\]\}\/5/);
   assert.match(html, /\.sc-video-copy\{display:none\}/);
   assert.match(html, /\.sc-video-strip\.is-expanded\{display:grid;max-width:none/);

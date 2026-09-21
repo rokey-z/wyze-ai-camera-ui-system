@@ -1747,6 +1747,9 @@
   .sc-detail-preview-card:before,.sc-detail-preview-card:after{display:none!important}
   .sc-detail-preview-card .sc-scene{position:absolute;inset:0;width:100%;height:100%;min-height:0;margin:0;border-radius:0;clip-path:none;filter:none;cursor:default}
   .sc-detail-preview-card .sc-focus-layer{transform:none}
+  .sc-detail-preview-score{position:absolute;z-index:5;top:12px;right:12px;display:grid;place-items:center;min-width:32px;height:32px;padding:0 8px;border-radius:8px;background:#101925d9;color:#fff;font-size:14px;font-weight:800;box-shadow:0 2px 8px #0008}
+  .sc-detail-preview-score.is-featured{background:#71edbe;color:#09271e}
+  .sc-detail-preview-score[hidden]{display:none}
   .sc-detail-preview-caption{position:absolute;z-index:4;right:0;bottom:0;left:0;display:grid;gap:5px;padding:46px 18px 16px;background:linear-gradient(0deg,rgba(5,12,22,.94),rgba(5,12,22,.76) 55%,transparent);color:#fff}
   .sc-detail-preview-caption[hidden]{display:none}
   .sc-detail-preview-caption time{font-size:11px;font-weight:700;color:#c7d5e5}
@@ -6822,7 +6825,7 @@ function initSmartCardEvidence(){
   const smartCards=$('smartCards');
   const detailDialog=document.createElement('dialog');
   detailDialog.className='sc-detail-dialog';
-  detailDialog.innerHTML=`<div class="sc-detail-handle" aria-hidden="true"></div><header class="sc-detail-header"><h2 class="sc-detail-title" id="sc-detail-title"></h2><button class="sc-detail-close" type="button" aria-label="Close details">&times;</button></header><div class="sc-detail-preview-card sc-card"><div class="sc-detail-preview-caption" hidden><time></time><p></p><div class="sc-detail-preview-feedback"></div></div></div><div class="sc-detail-content"><p class="sc-detail-state"><strong></strong><span></span></p><div class="sc-detail-evidence-head"><div><span class="sc-detail-checked"></span></div><div class="sc-evidence-camera-summary"></div></div><div class="sc-detail-sections"><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.video}</span><span>Video Evidences</span><div class="sc-video-actions"><div class="sc-video-sort" role="group" aria-label="Sort video evidence" hidden><button type="button" data-video-sort="newest" aria-pressed="true" aria-label="Sort by time, newest first">Time</button><button type="button" data-video-sort="rating-high" aria-pressed="false" aria-label="Sort by rating, highest first">Rating</button></div><button class="sc-evidence-section-more sc-video-more" type="button" aria-expanded="false" aria-controls="sc-video-evidence-list">+ more</button></div></div><ul class="sc-video-strip sc-evidence-video" id="sc-video-evidence-list" aria-label="Video evidences; swipe horizontally"></ul></div><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.memory}</span><span>Household memory</span><span class="sc-evidence-section-more">+ more</span></div><ul class="sc-evidence-list sc-evidence-memory"></ul></div></div></div>`;
+  detailDialog.innerHTML=`<div class="sc-detail-handle" aria-hidden="true"></div><header class="sc-detail-header"><h2 class="sc-detail-title" id="sc-detail-title"></h2><button class="sc-detail-close" type="button" aria-label="Close details">&times;</button></header><div class="sc-detail-preview-card sc-card"><span class="sc-detail-preview-score" role="img" hidden></span><div class="sc-detail-preview-caption" hidden><time></time><p></p><div class="sc-detail-preview-feedback"></div></div></div><div class="sc-detail-content"><p class="sc-detail-state"><strong></strong><span></span></p><div class="sc-detail-evidence-head"><div><span class="sc-detail-checked"></span></div><div class="sc-evidence-camera-summary"></div></div><div class="sc-detail-sections"><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.video}</span><span>Video Evidences</span><div class="sc-video-actions"><div class="sc-video-sort" role="group" aria-label="Sort video evidence" hidden><button type="button" data-video-sort="newest" aria-pressed="true" aria-label="Sort by time, newest first">Time</button><button type="button" data-video-sort="rating-high" aria-pressed="false" aria-label="Sort by rating, highest first">Rating</button></div><button class="sc-evidence-section-more sc-video-more" type="button" aria-expanded="false" aria-controls="sc-video-evidence-list">+ more</button></div></div><ul class="sc-video-strip sc-evidence-video" id="sc-video-evidence-list" aria-label="Video evidences; swipe horizontally"></ul></div><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.memory}</span><span>Household memory</span><span class="sc-evidence-section-more">+ more</span></div><ul class="sc-evidence-list sc-evidence-memory"></ul></div></div></div>`;
   detailDialog.setAttribute('aria-labelledby','sc-detail-title');
   smartCards.append(detailDialog);
   let lastDetailCard=null;
@@ -6858,14 +6861,18 @@ function initSmartCardEvidence(){
     const evidence=SMART_CARD_EVIDENCE[mode][scene];
     const preview=detailDialog.querySelector('.sc-detail-preview-card');
     const caption=preview.querySelector('.sc-detail-preview-caption');
+    const previewScore=preview.querySelector('.sc-detail-preview-score');
     detailDialog.dataset.scene=scene;
     detailDialog.dataset.mode=mode;
     detailDialog.dataset.videoExpanded='false';
     detailDialog.dataset.videoSort='newest';
     detailDialog.dataset.selectedVideoIndex='-1';
     preview.dataset.scene=scene;
-    preview.replaceChildren(card.querySelector('.sc-scene').cloneNode(true),caption);
+    preview.replaceChildren(card.querySelector('.sc-scene').cloneNode(true),previewScore,caption);
     caption.hidden=true;
+    previewScore.hidden=true;
+    previewScore.textContent='';
+    previewScore.classList.remove('is-featured');
     preview.querySelectorAll('img').forEach(image=>image.loading='eager');
     detailDialog.querySelector('.sc-detail-title').textContent=card.querySelector(':scope>.sc-label').textContent;
     detailDialog.querySelector('.sc-detail-state strong').textContent=state.state;
@@ -6900,6 +6907,7 @@ function initSmartCardEvidence(){
     const state=SMART_CARD_STATES[mode][scene];
     const preview=detailDialog.querySelector('.sc-detail-preview-card');
     const caption=preview.querySelector('.sc-detail-preview-caption');
+    const previewScore=preview.querySelector('.sc-detail-preview-score');
     const image=thumb.querySelector('img').cloneNode(true);
     image.className='sc-photo';
     image.alt=state.alt;
@@ -6908,7 +6916,11 @@ function initSmartCardEvidence(){
     const selectedScene=document.createElement('div');
     selectedScene.className='sc-scene';
     selectedScene.append(image);
-    preview.replaceChildren(selectedScene,caption);
+    preview.replaceChildren(selectedScene,previewScore,caption);
+    previewScore.textContent=thumb.querySelector('.sc-video-score').textContent;
+    previewScore.setAttribute('aria-label',`Evidence rating ${previewScore.textContent}`);
+    previewScore.classList.toggle('is-featured',thumb.closest('.sc-video-item').classList.contains('is-featured'));
+    previewScore.hidden=false;
     caption.querySelector('time').textContent=videoEvidenceTime(state,index);
     caption.querySelector('p').textContent=SMART_CARD_EVIDENCE[mode][scene].video[index];
     caption.querySelector('.sc-detail-preview-feedback').innerHTML=evidenceFeedback(`video evidence ${index+1}`);

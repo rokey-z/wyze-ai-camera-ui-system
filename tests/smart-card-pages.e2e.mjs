@@ -79,6 +79,7 @@ const inspect=()=>{
       ratings:[...videoStrip.querySelectorAll('.sc-video-score')].map(node=>node.textContent),
       highlighted:videoStrip.querySelectorAll('.sc-video-item.is-featured').length,
       scoreTopRight:firstScore.right<=firstThumb.right&&firstScore.top>=firstThumb.top&&firstScore.left>firstThumb.left+firstThumb.width/2,
+      previewRatingHidden:getComputedStyle(dialog.querySelector('.sc-detail-preview-score')).display==='none',
       compactThumb:firstThumb.width<=100&&firstThumb.height<=70,
       imageOnly:[...videoStrip.querySelectorAll('.sc-video-copy')].every(node=>getComputedStyle(node).display==='none'),
       thumbsMatchImage:[...videoStrip.querySelectorAll('img')].every(image=>image.getAttribute('src')===cardSource),
@@ -99,6 +100,7 @@ const inspect=()=>{
       visible:!dialog.querySelector('.sc-detail-preview-caption').hidden,
       selected:videoStrip.querySelectorAll('.sc-video-thumb[aria-pressed="true"]').length===1&&videoStrip.querySelectorAll('.sc-video-thumb')[1].getAttribute('aria-pressed')==='true',
       highlightedOutline:(()=>{const style=getComputedStyle(videoStrip.querySelector('.sc-video-thumb[aria-pressed="true"]'));return style.borderColor==='rgb(255, 255, 255)'&&style.boxShadow!=='none'})(),
+      previewRating:(()=>{const score=dialog.querySelector('.sc-detail-preview-score');const preview=dialog.querySelector('.sc-detail-preview-card').getBoundingClientRect();const bounds=score.getBoundingClientRect();return {text:score.textContent,visible:getComputedStyle(score).display!=='none',topRight:bounds.top>=preview.top&&bounds.right<=preview.right&&bounds.left>preview.left+preview.width/2,featured:score.classList.contains('is-featured'),label:score.getAttribute('aria-label')}})(),
       feedback:dialog.querySelectorAll('.sc-detail-preview-feedback button').length===2,
       previewFilled:getComputedStyle(dialog.querySelector('.sc-detail-preview-card .sc-photo')).objectFit==='cover',
       atTop:dialog.scrollTop===0,
@@ -108,6 +110,8 @@ const inspect=()=>{
       selected:videoStrip.querySelectorAll('.sc-video-thumb')[8].getAttribute('aria-pressed')==='true',
       caption:videoStrip.querySelectorAll('.sc-video-thumb')[8].getAttribute('aria-label').endsWith(dialog.querySelector('.sc-detail-preview-caption p').textContent),
       time:dialog.querySelector('.sc-detail-preview-caption time').textContent,
+      previewRating:dialog.querySelector('.sc-detail-preview-score').textContent,
+      ratingNotFeatured:!dialog.querySelector('.sc-detail-preview-score').classList.contains('is-featured'),
     };
     const more=dialog.querySelector('.sc-video-more');
     const timeSort=dialog.querySelector('[data-video-sort="newest"]');
@@ -255,9 +259,9 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:6,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:247,refreshButtons:6,checkedTimeInsideTrigger:false,goalFeedbackButtons:12,goalFeedbackAligned:true});
     assert.deepEqual(result.refreshed,{time:'just now',dialogOpen:false});
     assert.deepEqual(result.alertStates,['PERSON','OPEN','NEEDS CHARGING','Package left','NOT OUT','CARDINAL']);
-    assert.deepEqual(result.sheet,{open:true,modal:true,title:'Home security',state:'PERSON',image:'assets/smart-security-motion.webp?v=1',sameImage:true,largerPreview:true,cameraItems:4,videoItems:9,videoTitle:'Video Evidences',videoScrolls:true,ratings:['5','5','3','3','2','2','2','1','1'],highlighted:2,scoreTopRight:true,compactThumb:true,imageOnly:true,thumbsMatchImage:true,memoryItems:2,checked:'6 secs ago',evidenceRightOfState:true,cardHeightUnchanged:true,cardTopUnchanged:true,scrollUnchanged:true,bodyLocked:true,detectionBox:true,stateColorMatchesCard:true,durationColorMatchesCard:true});
-    assert.deepEqual(result.selectedVideo,{caption:true,visible:true,selected:true,highlightedOutline:true,feedback:true,previewFilled:true,atTop:true});
-    assert.deepEqual(result.lastVideo,{selected:true,caption:true,time:'54 secs ago'});
+    assert.deepEqual(result.sheet,{open:true,modal:true,title:'Home security',state:'PERSON',image:'assets/smart-security-motion.webp?v=1',sameImage:true,largerPreview:true,cameraItems:4,videoItems:9,videoTitle:'Video Evidences',videoScrolls:true,ratings:['5','5','3','3','2','2','2','1','1'],highlighted:2,scoreTopRight:true,previewRatingHidden:true,compactThumb:true,imageOnly:true,thumbsMatchImage:true,memoryItems:2,checked:'6 secs ago',evidenceRightOfState:true,cardHeightUnchanged:true,cardTopUnchanged:true,scrollUnchanged:true,bodyLocked:true,detectionBox:true,stateColorMatchesCard:true,durationColorMatchesCard:true});
+    assert.deepEqual(result.selectedVideo,{caption:true,visible:true,selected:true,highlightedOutline:true,previewRating:{text:'5',visible:true,topRight:true,featured:true,label:'Evidence rating 5'},feedback:true,previewFilled:true,atTop:true});
+    assert.deepEqual(result.lastVideo,{selected:true,caption:true,time:'54 secs ago',previewRating:'1',ratingNotFeatured:true});
     assert.deepEqual(result.expanded,{items:20,vertical:true,sortVisible:true,sortLeftOfMore:true,timeActive:true,expanded:'true',firstIndex:'0',selectedStillVisible:true});
     assert.equal(result.expandedHighlightOutline,true);
     assert.deepEqual(result.ratingOrder,['0','1','2','3','9','10']);
