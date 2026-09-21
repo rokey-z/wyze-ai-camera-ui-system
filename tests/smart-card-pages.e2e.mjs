@@ -28,103 +28,72 @@ const inspect=()=>{
   try{
     const win=frame.contentWindow;
     const doc=frame.contentDocument;
-    if(!doc?.querySelector('.sc-card')||!win.location.search.includes('view=smart-cards'))throw new Error('waiting');
+    if(!doc?.querySelector('.sc-grid>.sc-card')||!win.location.search.includes('view=smart-cards'))throw new Error('waiting');
     const images=[...doc.images];
     const hiddenSelectors=['.wrap>header','.tabs','.wrap>footer'];
-    const initialCardBounds=doc.querySelector('.sc-card').getBoundingClientRect();
+    const initialCardBounds=doc.querySelector('.sc-grid>.sc-card').getBoundingClientRect();
     const initialScrollY=win.scrollY;
-    const initialSceneBounds=doc.querySelector('.sc-card .sc-scene').getBoundingClientRect();
-    const initialStateBounds=doc.querySelector('.sc-card .sc-card-top').getBoundingClientRect();
     const initial={
       path:win.location.pathname,
       search:win.location.search,
       title:doc.title,
       standalone:doc.body.classList.contains('sc-standalone'),
       light:doc.body.classList.contains('sc-light-page'),
-      cards:doc.querySelectorAll('.sc-card').length,
+      cards:doc.querySelectorAll('.sc-grid>.sc-card').length,
       hiddenChrome:hiddenSelectors.every(selector=>getComputedStyle(doc.querySelector(selector)).display==='none'),
       brokenImages:images.filter(image=>!image.complete||image.naturalWidth===0).map(image=>image.getAttribute('src')),
-      cardWidth:Math.round(doc.querySelector('.sc-card').getBoundingClientRect().width),
-      sceneHeight:Math.round(doc.querySelector('.sc-card .sc-scene').getBoundingClientRect().height),
+      cardWidth:Math.round(doc.querySelector('.sc-grid>.sc-card').getBoundingClientRect().width),
+      sceneHeight:Math.round(doc.querySelector('.sc-grid>.sc-card .sc-scene').getBoundingClientRect().height),
       refreshButtons:doc.querySelectorAll('.sc-evidence-refresh').length,
       checkedTimeInsideTrigger:!!doc.querySelector('.sc-evidence-trigger .sc-evidence-time'),
       goalFeedbackButtons:doc.querySelectorAll('.sc-actions .sc-feedback button').length,
-      goalFeedbackAligned:[...doc.querySelectorAll('.sc-card')].every(card=>{
+      goalFeedbackAligned:[...doc.querySelectorAll('.sc-grid>.sc-card')].every(card=>{
         const feedback=card.querySelector('.sc-actions .sc-feedback').getBoundingClientRect();
         const bounds=card.getBoundingClientRect();
         return Math.abs(feedback.right-bounds.right)<=1&&feedback.top<bounds.top;
       }),
     };
+    const firstCard=doc.querySelector('.sc-grid>.sc-card');
+    const dialog=doc.querySelector('.sc-detail-dialog');
+    firstCard.querySelector('.sc-evidence-refresh').click();
+    const refreshed={time:firstCard.querySelector('.sc-evidence-time').textContent,dialogOpen:dialog.open};
     doc.querySelector('[data-sc-state="alert"]').click();
-    const alertStates=[...doc.querySelectorAll('.sc-state')].map(node=>node.textContent);
-    doc.querySelector('.sc-evidence-refresh').click();
-    const refreshedTime=doc.querySelector('.sc-evidence-time').textContent;
-    const evidenceButton=doc.querySelector('.sc-evidence-trigger');
-    evidenceButton.click();
-    const openingTransition={
-      resizing:evidenceButton.closest('.sc-card').classList.contains('sc-is-resizing'),
-      explicitHeight:/px$/.test(evidenceButton.closest('.sc-card').style.height),
+    const alertStates=[...doc.querySelectorAll('.sc-grid .sc-state')].map(node=>node.textContent);
+    const cardSource=firstCard.querySelector('.sc-photo').getAttribute('src');
+    firstCard.querySelector('.sc-scene').click();
+    const sheet={
+      open:dialog.open,
+      modal:dialog.matches(':modal'),
+      title:dialog.querySelector('.sc-detail-title').textContent,
+      state:dialog.querySelector('.sc-detail-state strong').textContent,
+      image:dialog.querySelector('.sc-detail-preview-card .sc-photo').getAttribute('src'),
+      sameImage:dialog.querySelector('.sc-detail-preview-card .sc-photo').getAttribute('src')===cardSource,
+      largerPreview:dialog.querySelector('.sc-detail-preview-card').getBoundingClientRect().width>=firstCard.getBoundingClientRect().width,
+      cameraItems:dialog.querySelectorAll('.sc-evidence-camera-item').length,
+      videoItems:dialog.querySelectorAll('.sc-evidence-video li').length,
+      memoryItems:dialog.querySelectorAll('.sc-evidence-memory li').length,
+      checked:dialog.querySelector('.sc-detail-checked').textContent,
+      cardHeightUnchanged:Math.round(firstCard.getBoundingClientRect().height)===Math.round(initialCardBounds.height),
+      cardTopUnchanged:Math.round(firstCard.getBoundingClientRect().top)===Math.round(initialCardBounds.top),
+      scrollUnchanged:Math.round(win.scrollY)===Math.round(initialScrollY),
+      bodyLocked:doc.body.classList.contains('sc-detail-open'),
+      detectionBox:!!dialog.querySelector('.sc-detection-box'),
     };
-    doc.getAnimations().forEach(animation=>animation.finish());
-    const expandedCard=evidenceButton.closest('.sc-card');
-    const expandedCardBounds=expandedCard.getBoundingClientRect();
-    const expandedSceneBounds=expandedCard.querySelector('.sc-scene').getBoundingClientRect();
-    const expandedStateBounds=expandedCard.querySelector('.sc-card-top').getBoundingClientRect();
-    const expandedEvidenceBounds=expandedCard.querySelector('.sc-evidence').getBoundingClientRect();
-    const expandedDetectionBounds=expandedCard.querySelector('.sc-detection-box').getBoundingClientRect();
-    const expandedFocusLayerBounds=expandedCard.querySelector('.sc-focus-layer').getBoundingClientRect();
-    const evidenceHeadingBounds=expandedCard.querySelector('.sc-evidence-heading').getBoundingClientRect();
-    const cameraSummaryBounds=expandedCard.querySelector('.sc-evidence-camera-summary').getBoundingClientRect();
-    const evidenceHeadingRowBounds=expandedCard.querySelector('.sc-evidence-heading-row').getBoundingClientRect();
-    const expanded={
-      card:expandedCard.classList.contains('is-expanded'),
-      aria:evidenceButton.getAttribute('aria-expanded'),
-      details:getComputedStyle(expandedCard.querySelector('.sc-evidence-details')).display,
-      icons:expandedCard.querySelectorAll('.sc-evidence-title-icon svg').length,
-      feedbackButtons:expandedCard.querySelectorAll('.sc-evidence-item-feedback button').length,
-      cameraSummary:expandedCard.querySelector('.sc-evidence-camera-summary').textContent,
-      cameraItems:expandedCard.querySelectorAll('.sc-evidence-camera-item').length,
-      cameraNames:[...expandedCard.querySelectorAll('.sc-evidence-camera-item span')].map(node=>node.textContent),
-      cameraSummaryRightAligned:cameraSummaryBounds.left>evidenceHeadingBounds.right&&Math.abs(cameraSummaryBounds.right-evidenceHeadingRowBounds.right)<=1&&Math.abs((cameraSummaryBounds.top+cameraSummaryBounds.height/2)-(evidenceHeadingBounds.top+evidenceHeadingBounds.height/2))<=1,
-      cameraSourceSection:!!expandedCard.querySelector('.sc-camera-source-section'),
-      videoItems:expandedCard.querySelectorAll('.sc-evidence-video li').length,
-      memoryItems:expandedCard.querySelectorAll('.sc-evidence-memory li').length,
-      cardFeedback:getComputedStyle(expandedCard.querySelector('.sc-actions .sc-feedback')).display,
-      cardFeedbackVisibility:getComputedStyle(expandedCard.querySelector('.sc-actions .sc-feedback')).visibility,
-      heading:expandedCard.querySelector('.sc-evidence-heading').textContent,
-      preview:getComputedStyle(expandedCard.querySelector('.sc-evidence-preview')).display,
-      cardHeight:Math.round(expandedCard.getBoundingClientRect().height),
-      sceneHeight:Math.round(expandedCard.querySelector('.sc-scene').getBoundingClientRect().height),
-      stateOffset:Math.round(expandedCard.querySelector('.sc-card-top').getBoundingClientRect().top-expandedCard.getBoundingClientRect().top),
-      stateLeftOffset:Math.round(expandedStateBounds.left-expandedCardBounds.left),
-      stateShift:[Math.round((expandedStateBounds.left-expandedCardBounds.left)-(initialStateBounds.left-initialCardBounds.left)),Math.round((expandedStateBounds.top-expandedCardBounds.top)-(initialStateBounds.top-initialCardBounds.top))],
-      sceneShift:[Math.round((expandedSceneBounds.left-expandedCardBounds.left)-(initialSceneBounds.left-initialCardBounds.left)),Math.round((expandedSceneBounds.top-expandedCardBounds.top)-(initialSceneBounds.top-initialCardBounds.top)),Math.round(expandedSceneBounds.width-initialSceneBounds.width),Math.round(expandedSceneBounds.height-initialSceneBounds.height)],
-      evidenceOverlap:Math.round(expandedSceneBounds.bottom-expandedEvidenceBounds.top),
-      evidenceOverlapRatio:Number(((expandedSceneBounds.bottom-expandedEvidenceBounds.top)/expandedSceneBounds.height).toFixed(2)),
-      evidenceWidth:Math.round(expandedEvidenceBounds.width),
-      cardWidth:Math.round(expandedCardBounds.width),
-      cardTopShift:Math.round(expandedCardBounds.top-initialCardBounds.top),
-      viewportScrollShift:Math.round(win.scrollY-initialScrollY),
-      focusLayerCoversScene:expandedFocusLayerBounds.left<=expandedSceneBounds.left&&expandedFocusLayerBounds.top<=expandedSceneBounds.top&&expandedFocusLayerBounds.right>=expandedSceneBounds.right&&expandedFocusLayerBounds.bottom>=expandedSceneBounds.bottom,
-      focusZoomed:getComputedStyle(expandedCard.querySelector('.sc-focus-layer')).transform!=='none'&&getComputedStyle(expandedCard.querySelector('.sc-focus-layer')).transform!=='matrix(1, 0, 0, 1, 0, 0)',
-      goalVisibility:getComputedStyle(expandedCard.querySelector(':scope>.sc-label')).visibility,
-      hasVideo:expandedCard.querySelector('.sc-evidence-video').textContent.length>20,
-      hasMemory:expandedCard.querySelector('.sc-evidence-memory').textContent.length>20,
-      openingTransition,
-    };
-    expandedCard.querySelector('.sc-scene').click();
-    doc.getAnimations().forEach(animation=>animation.finish());
-    const collapsed={
-      card:doc.querySelector('.sc-card').classList.contains('is-expanded'),
-      aria:evidenceButton.getAttribute('aria-expanded'),
-      focusZoomReset:getComputedStyle(expandedCard.querySelector('.sc-focus-layer')).transform==='matrix(1, 0, 0, 1, 0, 0)',
-    };
+    dialog.querySelector('.sc-detail-close').click();
+    const closed={open:dialog.open,bodyLocked:doc.body.classList.contains('sc-detail-open')};
+    firstCard.querySelector('.sc-evidence-trigger').click();
+    const previewOpens=dialog.open;
+    dialog.close();
+    const secondCard=doc.querySelectorAll('.sc-grid>.sc-card')[1];
+    secondCard.click();
+    const cardBodyOpens=dialog.open&&dialog.querySelector('.sc-detail-title').textContent==='Garage monitor';
+    dialog.close();
     doc.querySelector('[data-sc-theme="dark"]').click();
     const dark={
       section:doc.querySelector('#smartCards').classList.contains('dark'),
       lightPage:doc.body.classList.contains('sc-light-page'),
     };
-    finish({initial,alertStates,refreshedTime,expanded,collapsed,dark});
+    finish({initial,refreshed,alertStates,sheet,closed,previewOpens,cardBodyOpens,dark});
   }catch(error){
     if(attempts<20)setTimeout(inspect,150);
     else finish({error:String(error)});
@@ -208,10 +177,12 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     const result=JSON.parse(Buffer.from(encoded,'base64').toString('utf8'));
     assert.equal(result.error,undefined);
     assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:6,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:247,refreshButtons:6,checkedTimeInsideTrigger:false,goalFeedbackButtons:12,goalFeedbackAligned:true});
+    assert.deepEqual(result.refreshed,{time:'just now',dialogOpen:false});
     assert.deepEqual(result.alertStates,['PERSON','OPEN','NEEDS CHARGING','Package left','NOT OUT','CARDINAL']);
-    assert.equal(result.refreshedTime,'just now');
-    assert.deepEqual(result.expanded,{card:true,aria:'true',details:'grid',icons:2,feedbackButtons:10,cameraSummary:'Side GateGarageFront DoorDriveway',cameraItems:4,cameraNames:['Side Gate','Garage','Front Door','Driveway'],cameraSummaryRightAligned:true,cameraSourceSection:false,videoItems:3,memoryItems:2,cardFeedback:'flex',cardFeedbackVisibility:'hidden',heading:'Supporting Evidence',preview:'none',cardHeight:581,sceneHeight:247,stateOffset:0,stateLeftOffset:0,stateShift:[0,0],sceneShift:[0,0,0,0],evidenceOverlap:41,evidenceOverlapRatio:.17,evidenceWidth:366,cardWidth:366,cardTopShift:0,viewportScrollShift:0,focusLayerCoversScene:true,focusZoomed:true,goalVisibility:'hidden',hasVideo:true,hasMemory:true,openingTransition:{resizing:true,explicitHeight:true}});
-    assert.deepEqual(result.collapsed,{card:false,aria:'false',focusZoomReset:true});
+    assert.deepEqual(result.sheet,{open:true,modal:true,title:'Home security',state:'PERSON',image:'assets/smart-security-motion.webp?v=1',sameImage:true,largerPreview:true,cameraItems:4,videoItems:3,memoryItems:2,checked:'6 secs ago',cardHeightUnchanged:true,cardTopUnchanged:true,scrollUnchanged:true,bodyLocked:true,detectionBox:true});
+    assert.deepEqual(result.closed,{open:false,bodyLocked:false});
+    assert.equal(result.previewOpens,true);
+    assert.equal(result.cardBodyOpens,true);
     assert.deepEqual(result.dark,{section:true,lightPage:false});
   }finally{
     await new Promise(resolve=>server.close(resolve));
