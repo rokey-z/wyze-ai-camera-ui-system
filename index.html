@@ -1633,7 +1633,6 @@
   .smartcards.is-alert .sc-card[data-scene="security"] .sc-card-top{background:rgba(255,75,85,.82);color:#fff}
   .smartcards.is-alert .sc-card[data-scene="security"] .sc-card-top .sc-state,.smartcards.is-alert .sc-card[data-scene="security"] .sc-card-top .sc-sub{color:#fff}
   .sc-focus-layer{position:absolute;inset:0;transform:translate3d(0,0,0) scale(1);transform-origin:var(--sc-focus-x,50%) var(--sc-focus-y,50%);transition:transform .42s cubic-bezier(.22,1,.36,1);will-change:transform}
-  .sc-card.is-expanded .sc-focus-layer{transform:scale(1.45)}
   .sc-detection-box{position:absolute;z-index:2;border:2px solid #f7fbff;border-radius:4px;opacity:.9;box-shadow:0 0 0 1px #02091473,0 0 12px #02091452;pointer-events:none;transition:left .18s ease,top .18s ease,width .18s ease,height .18s ease,border-color .18s ease}
   .sc-card[data-scene="garage"]{--sc-focus-x:62%;--sc-focus-y:34%}.sc-card[data-scene="garage"] .sc-detection-box{left:34%;top:11%;width:56%;height:46%}
   .sc-card[data-scene="front"]{--sc-focus-x:60.5%;--sc-focus-y:74%}.sc-card[data-scene="front"] .sc-detection-box{left:42%;top:62%;width:37%;height:24%}
@@ -1688,14 +1687,10 @@
   body.sc-light-page .sc-state-mode button.active{background:#fff;color:#172235;box-shadow:0 1px 4px #1b2c4418}
   @media(max-width:390px){.sc-card>.sc-label{right:auto;left:0;top:-20px;font-size:10px}.sc-card-top{top:0;right:auto;left:0;padding-top:6px}.sc-actions>.primary{top:10px;right:12px;bottom:auto;left:auto}.sc-card:after{top:auto;right:auto;bottom:12px;left:12px}}
 
-  /* Progressive disclosure: reveal the AI observation and household memory behind each state. */
-  .sc-grid{overflow-anchor:none}
+  /* The feed stays fixed while a separate detail sheet reveals each card's evidence. */
   .sc-card:after{display:none}
-  .sc-card,.sc-card.sc-hero{transform-origin:top center;transition:height .46s cubic-bezier(.22,1,.36,1),padding-top .46s cubic-bezier(.22,1,.36,1),background-color .24s ease,box-shadow .24s ease}
-  .sc-card.sc-is-measuring,.sc-card.sc-is-measuring *{transition:none!important;animation:none!important}
-  .sc-card>.sc-label{opacity:1;visibility:visible;transform:translateY(0);transition:opacity .18s ease,transform .18s ease,visibility 0s}
-  .sc-card-top{transition:top .3s cubic-bezier(.22,1,.36,1),left .3s cubic-bezier(.22,1,.36,1)}
-  .sc-card:before,.sc-card[data-tone]:before{height:82px;opacity:1;transition:height .34s cubic-bezier(.22,1,.36,1),background .24s ease,opacity .18s ease}
+  .sc-grid>.sc-card{cursor:pointer}
+  .sc-grid>.sc-card:focus-visible{outline:2px solid #78a5ff;outline-offset:4px}
   /* Goal-level feedback sits on the same line as the goal, aligned to the card's right edge. */
   .sc-card>.sc-label{max-width:calc(100% - 62px);overflow:hidden;text-overflow:ellipsis}
   .sc-actions .sc-feedback{display:flex;position:absolute;z-index:6;top:-27px;right:0;bottom:auto;gap:2px;margin:0;padding:0;border:0;border-radius:0;background:none;box-shadow:none;backdrop-filter:none;transition:opacity .18s ease,visibility 0s}
@@ -1719,21 +1714,7 @@
   .sc-evidence-camera-summary svg{width:22px;height:22px;flex:0 0 22px;fill:none;stroke:none}
   .sc-evidence-rule{display:block;width:30px;height:1px;margin:5px 0 4px;background:rgba(255,255,255,.72)}
   .sc-evidence-preview{display:block;max-height:21px;overflow:hidden;font-size:10.5px;font-weight:520;line-height:14px;text-shadow:0 1px 5px #020914;-webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 54%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0%,#000 54%,transparent 100%)}
-  .sc-evidence-trigger:after{content:'›';position:absolute;top:3px;right:0;font-size:18px;font-weight:500;line-height:1;transform:rotate(90deg);transform-origin:center;opacity:.8;transition:transform .18s ease}
-  .sc-evidence-details{display:grid;gap:0;max-height:0;padding-top:0;overflow:hidden;opacity:0;visibility:hidden;clip-path:inset(0 0 100% 0);transition:max-height .46s cubic-bezier(.22,1,.36,1),padding-top .46s cubic-bezier(.22,1,.36,1),gap .46s cubic-bezier(.22,1,.36,1),opacity .24s ease,clip-path .46s cubic-bezier(.22,1,.36,1),visibility 0s linear .46s}
-  .sc-card.is-expanded,.sc-card.sc-hero.is-expanded{--sc-evidence-overlap-start:57.292%;aspect-ratio:auto;min-height:0;padding-top:var(--sc-evidence-overlap-start);background:transparent;box-shadow:none}
-  .sc-card.is-expanded>.sc-label{opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .18s ease,transform .18s ease,visibility 0s linear .18s}
-  .sc-card.is-expanded .sc-actions .sc-feedback{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .18s ease,visibility 0s linear .18s}
-  .sc-card.is-expanded .sc-card-top{z-index:7;top:0;left:0}
-  .sc-card.is-expanded .sc-scene{inset:0 0 auto;height:auto;aspect-ratio:16/11;cursor:pointer;box-shadow:0 14px 28px #0309144d}
-  .sc-card.is-expanded:before,.sc-card.is-expanded[data-tone]:before{height:82px;opacity:0}
-  .sc-card.is-expanded .sc-evidence{position:relative;right:auto;bottom:auto;left:auto;width:100%;padding:12px;border:1px solid rgba(255,255,255,.16);border-radius:16px;background:rgba(7,15,27,.98);box-shadow:0 12px 30px rgba(0,0,0,.28);backdrop-filter:blur(14px)}
-  .sc-card.is-expanded .sc-evidence-trigger{padding:0 24px 10px 0;border-bottom:1px solid rgba(255,255,255,.16)}
-  .sc-card.is-expanded .sc-evidence-heading-row{display:flex}
-  .sc-card.is-expanded .sc-evidence-preview{display:none}
-  .sc-card.is-expanded .sc-evidence-rule{width:30px;margin:7px 0 0}
-  .sc-card.is-expanded .sc-evidence-trigger:after{top:5px;transform:rotate(-90deg)}
-  .sc-card.is-expanded .sc-evidence-details{gap:18px;max-height:var(--sc-evidence-details-height,480px);padding-top:12px;opacity:1;visibility:visible;clip-path:inset(0);transition:max-height .46s cubic-bezier(.22,1,.36,1),padding-top .46s cubic-bezier(.22,1,.36,1),gap .46s cubic-bezier(.22,1,.36,1),opacity .28s ease .08s,clip-path .46s cubic-bezier(.22,1,.36,1),visibility 0s}
+  .sc-evidence-trigger:after{content:'›';position:absolute;top:3px;right:0;font-size:18px;font-weight:500;line-height:1;transform:rotate(90deg);transform-origin:center;opacity:.8}
   .sc-evidence-item{display:block}
   .sc-evidence-section-header{display:flex;align-items:center;gap:6px;width:100%;color:#91a3ba;font:750 9px/1.3 var(--sans);letter-spacing:.06em;text-transform:uppercase}
   .sc-evidence-title-icon{display:grid;place-items:center;width:18px;height:18px;color:#91a3ba}
@@ -1750,7 +1731,35 @@
   .sc-evidence-item-feedback button:hover{color:#fff}
   .sc-evidence-item-feedback button:focus-visible{outline:2px solid #fff;outline-offset:2px}
   .sc-evidence-item-feedback svg{width:13px;height:13px;fill:currentColor}
-  @media(max-width:620px){.sc-card.is-expanded,.sc-card.sc-hero.is-expanded{--sc-evidence-overlap-start:56.25%}.sc-card.is-expanded .sc-scene{aspect-ratio:40/27}}
+  body.sc-detail-open{overflow:hidden}
+  .sc-detail-dialog{position:fixed;inset:auto 0 0;width:min(100%,480px);max-width:none;max-height:min(92dvh,900px);margin:auto auto 0;padding:0;overflow-y:auto;overscroll-behavior:contain;border:1px solid #ffffff26;border-bottom:0;border-radius:24px 24px 0 0;background:#101925;color:#f4f7fb;box-shadow:0 -16px 52px #02081480;font-family:var(--sans);animation:sc-sheet-in .3s cubic-bezier(.22,1,.36,1)}
+  .sc-detail-dialog::backdrop{background:#030b17ad;backdrop-filter:blur(5px)}
+  @keyframes sc-sheet-in{from{transform:translateY(32px);opacity:.5}to{transform:translateY(0);opacity:1}}
+  .sc-detail-handle{width:36px;height:4px;margin:9px auto 0;border-radius:99px;background:#7f8ea2}
+  .sc-detail-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 18px 14px}
+  .sc-detail-title{margin:0;color:#fff;font-size:16px;font-weight:800;line-height:1.2}
+  .sc-detail-close{display:grid;place-items:center;flex:none;width:36px;height:36px;padding:0;border:0;border-radius:50%;background:#ffffff14;color:#fff;font-size:24px;line-height:1;cursor:pointer}
+  .sc-detail-close:hover{background:#ffffff2b}
+  .sc-detail-close:focus-visible{outline:2px solid #fff;outline-offset:2px}
+  .sc-detail-preview-card.sc-card{display:block;position:relative;width:100%;min-height:0;aspect-ratio:4/3;padding:0;border:0;border-radius:0;background:#172435;box-shadow:none;overflow:hidden;cursor:default}
+  .sc-detail-preview-card:before,.sc-detail-preview-card:after{display:none!important}
+  .sc-detail-preview-card .sc-scene{position:absolute;inset:0;width:100%;height:100%;min-height:0;margin:0;border-radius:0;clip-path:none;filter:none;cursor:default}
+  .sc-detail-preview-card .sc-focus-layer{transform:none}
+  .sc-detail-content{padding:18px 18px max(30px,env(safe-area-inset-bottom))}
+  .sc-detail-state{display:flex;align-items:baseline;flex-wrap:wrap;gap:7px;margin:0 0 16px;color:#fff}
+  .sc-detail-state strong{font-size:23px;font-weight:850;line-height:1.05}
+  .sc-detail-state span{color:#bac9dc;font-size:13px;font-weight:650}
+  .sc-detail-evidence-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:0 0 10px;border-bottom:1px solid #ffffff2b}
+  .sc-detail-evidence-label{display:block;color:#b5c6db;font-size:10px;font-weight:800;letter-spacing:.11em;text-transform:uppercase}
+  .sc-detail-checked{display:block;margin-top:5px;color:#e7edf5;font-size:11px;font-weight:650}
+  .sc-detail-dialog .sc-evidence-camera-summary{max-width:60%;flex-wrap:wrap;row-gap:6px}
+  .sc-detail-sections{display:grid;gap:21px;padding-top:18px}
+  .sc-detail-dialog .sc-evidence-section-header{font-size:10px}
+  .sc-detail-dialog .sc-evidence-item p{font-size:13px;line-height:1.4}
+  .sc-detail-dialog .sc-evidence-list{gap:13px;margin-top:11px}
+  .sc-detail-dialog .sc-evidence-item-feedback button{width:30px;height:30px}
+  @media(max-width:620px){.sc-detail-dialog{width:100%;max-height:94dvh}.sc-detail-preview-card.sc-card{aspect-ratio:40/27}}
+  @media(prefers-reduced-motion:reduce){.sc-detail-dialog{animation:none}}
 
   /* Dedicated GitHub Pages view: keep only the mobile Smart Cards experience. */
   body.sc-standalone{min-height:100vh;background:#0d1726}
@@ -6555,7 +6564,48 @@ function cameraSourceSummary(cameras){
   return cameras.map(camera=>`<span class="sc-evidence-camera-item">${SMART_CARD_EVIDENCE_ICONS.camera}<span>${camera.replace(/ Cam$/,'')}</span></span>`).join('');
 }
 function initSmartCardEvidence(){
-  document.querySelectorAll('.sc-card[data-scene]').forEach(card=>{
+  const smartCards=$('smartCards');
+  const detailDialog=document.createElement('dialog');
+  detailDialog.className='sc-detail-dialog';
+  detailDialog.innerHTML=`<div class="sc-detail-handle" aria-hidden="true"></div><header class="sc-detail-header"><h2 class="sc-detail-title" id="sc-detail-title"></h2><button class="sc-detail-close" type="button" aria-label="Close details">&times;</button></header><div class="sc-detail-preview-card sc-card"></div><div class="sc-detail-content"><p class="sc-detail-state"><strong></strong><span></span></p><div class="sc-detail-evidence-head"><div><span class="sc-detail-evidence-label">Supporting Evidence</span><span class="sc-detail-checked"></span></div><div class="sc-evidence-camera-summary"></div></div><div class="sc-detail-sections"><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.video}</span><span>Video description</span><span class="sc-evidence-section-more">+ more</span></div><ul class="sc-evidence-list sc-evidence-video"></ul></div><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.memory}</span><span>Household memory</span><span class="sc-evidence-section-more">+ more</span></div><ul class="sc-evidence-list sc-evidence-memory"></ul></div></div></div>`;
+  detailDialog.setAttribute('aria-labelledby','sc-detail-title');
+  smartCards.append(detailDialog);
+  let lastDetailCard=null;
+  const closeDetail=()=>{
+    detailDialog.close();
+    document.body.classList.remove('sc-detail-open');
+  };
+  detailDialog.querySelector('.sc-detail-close').addEventListener('click',closeDetail);
+  detailDialog.addEventListener('click',event=>{if(event.target===detailDialog)closeDetail()});
+  detailDialog.addEventListener('close',()=>{
+    if(detailDialog.open)return;
+    document.body.classList.remove('sc-detail-open');
+    lastDetailCard?.focus({preventScroll:true});
+  });
+  const openDetail=card=>{
+    const scene=card.dataset.scene;
+    const mode=smartCards.classList.contains('is-alert')?'alert':'normal';
+    const state=SMART_CARD_STATES[mode][scene];
+    const evidence=SMART_CARD_EVIDENCE[mode][scene];
+    const preview=detailDialog.querySelector('.sc-detail-preview-card');
+    preview.dataset.scene=scene;
+    preview.replaceChildren(card.querySelector('.sc-scene').cloneNode(true));
+    preview.querySelectorAll('img').forEach(image=>image.loading='eager');
+    detailDialog.querySelector('.sc-detail-title').textContent=card.querySelector(':scope>.sc-label').textContent;
+    detailDialog.querySelector('.sc-detail-state strong').textContent=state.state;
+    detailDialog.querySelector('.sc-detail-state span').textContent=state.sub;
+    detailDialog.querySelector('.sc-detail-checked').textContent=card.querySelector('.sc-evidence-time').textContent;
+    const cameraSummary=detailDialog.querySelector('.sc-evidence-camera-summary');
+    cameraSummary.innerHTML=cameraSourceSummary(SMART_CARD_CAMERAS[scene]);
+    cameraSummary.setAttribute('aria-label',`Cameras involved: ${SMART_CARD_CAMERAS[scene].join(', ')}`);
+    detailDialog.querySelector('.sc-evidence-video').innerHTML=evidenceList(evidence.video,'video description');
+    detailDialog.querySelector('.sc-evidence-memory').innerHTML=evidenceList(evidence.memory,'household memory');
+    lastDetailCard=card;
+    detailDialog.scrollTop=0;
+    document.body.classList.add('sc-detail-open');
+    detailDialog.showModal();
+  };
+  document.querySelectorAll('.sc-grid>.sc-card[data-scene]').forEach(card=>{
     const scene=card.dataset.scene;
     const goal=card.querySelector(':scope>.sc-label').textContent.trim();
     const goalFeedback=card.querySelector('.sc-actions .sc-feedback');
@@ -6571,59 +6621,25 @@ function initSmartCardEvidence(){
     const evidence=document.createElement('section');
     evidence.className='sc-evidence';
     evidence.setAttribute('aria-label','AI supporting evidence');
-    evidence.innerHTML=`<div class="sc-evidence-meta"><span class="sc-evidence-time"></span><button class="sc-evidence-refresh" type="button" aria-label="Refresh ${goal} state" title="Refresh state"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6v5h-5"/><path d="M18.2 15a7 7 0 1 1 .3-7.5L20 11"/></svg></button></div><button class="sc-evidence-trigger" type="button" aria-expanded="false" aria-controls="sc-evidence-${scene}" aria-label="Toggle supporting evidence for ${goal}"><span class="sc-evidence-heading-row"><span class="sc-evidence-heading">Supporting Evidence</span><span class="sc-evidence-camera-summary"></span></span><span class="sc-evidence-rule" aria-hidden="true"></span><span class="sc-evidence-preview"></span></button><div class="sc-evidence-details" id="sc-evidence-${scene}"><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.video}</span><span>Video description</span><span class="sc-evidence-section-more">+ more</span></div><div class="sc-evidence-list-wrap"><ul class="sc-evidence-list sc-evidence-video"></ul></div></div><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.memory}</span><span>Household memory</span><span class="sc-evidence-section-more">+ more</span></div><div class="sc-evidence-list-wrap"><ul class="sc-evidence-list sc-evidence-memory"></ul></div></div></div>`;
+    evidence.innerHTML=`<div class="sc-evidence-meta"><span class="sc-evidence-time"></span><button class="sc-evidence-refresh" type="button" aria-label="Refresh ${goal} state" title="Refresh state"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6v5h-5"/><path d="M18.2 15a7 7 0 1 1 .3-7.5L20 11"/></svg></button></div><button class="sc-evidence-trigger" type="button" aria-label="Open ${goal} details"><span class="sc-evidence-rule" aria-hidden="true"></span><span class="sc-evidence-preview"></span></button>`;
     card.append(evidence);
-    const cameraSummary=evidence.querySelector('.sc-evidence-camera-summary');
-    cameraSummary.innerHTML=cameraSourceSummary(SMART_CARD_CAMERAS[scene]);
-    cameraSummary.setAttribute('aria-label',`Cameras involved: ${SMART_CARD_CAMERAS[scene].join(', ')}`);
     const evidenceTrigger=evidence.querySelector('.sc-evidence-trigger');
     const refreshButton=evidence.querySelector('.sc-evidence-refresh');
-    const evidenceDetails=evidence.querySelector('.sc-evidence-details');
-    const setEvidenceExpanded=expanded=>{
-      if(card._scEvidenceResizeCleanup)card._scEvidenceResizeCleanup();
-      if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-        card.classList.toggle('is-expanded',expanded);
-        evidenceTrigger.setAttribute('aria-expanded',String(expanded));
-        return;
-      }
-      const wasExpanded=card.classList.contains('is-expanded');
-      const startHeight=card.getBoundingClientRect().height;
-      card.classList.add('sc-is-measuring');
-      card.style.height='auto';
-      card.classList.toggle('is-expanded',expanded);
-      if(expanded)evidenceDetails.style.setProperty('--sc-evidence-details-height',`${evidenceDetails.scrollHeight}px`);
-      const endHeight=card.getBoundingClientRect().height;
-      card.classList.toggle('is-expanded',wasExpanded);
-      card.style.height=`${startHeight}px`;
-      void card.offsetHeight;
-      card.classList.remove('sc-is-measuring');
-      card.classList.toggle('is-expanded',expanded);
-      evidenceTrigger.setAttribute('aria-expanded',String(expanded));
-      card.classList.add('sc-is-resizing');
-      card.style.height=`${endHeight}px`;
-      void card.offsetHeight;
-      let resizeTimer;
-      const finishResize=()=>{
-        card.removeEventListener('transitionend',handleResizeEnd);
-        clearTimeout(resizeTimer);
-        card.classList.remove('sc-is-resizing');
-        card.style.height='';
-        card._scEvidenceResizeCleanup=null;
-      };
-      const handleResizeEnd=event=>{
-        if(event.target===card&&event.propertyName==='height')finishResize();
-      };
-      card._scEvidenceResizeCleanup=finishResize;
-      card.addEventListener('transitionend',handleResizeEnd);
-      resizeTimer=setTimeout(finishResize,560);
-    };
+    card.tabIndex=0;
+    card.setAttribute('aria-label',`Open details for ${goal}`);
     refreshButton.addEventListener('click',()=>{
       card.dataset.checked='just now';
       evidence.querySelector('.sc-evidence-time').textContent='just now';
     });
-    evidenceTrigger.addEventListener('click',()=>setEvidenceExpanded(!card.classList.contains('is-expanded')));
-    sceneElement.addEventListener('click',()=>{
-      if(card.classList.contains('is-expanded'))setEvidenceExpanded(false);
+    evidenceTrigger.addEventListener('click',()=>openDetail(card));
+    card.addEventListener('click',event=>{
+      if(event.target.closest('button,.sc-evidence-meta'))return;
+      openDetail(card);
+    });
+    card.addEventListener('keydown',event=>{
+      if(event.target!==card||!['Enter',' '].includes(event.key))return;
+      event.preventDefault();
+      openDetail(card);
     });
   });
 }
@@ -6631,7 +6647,9 @@ function setSmartCardState(mode){
   const states=SMART_CARD_STATES[mode]||SMART_CARD_STATES.normal;
   const evidenceStates=SMART_CARD_EVIDENCE[mode]||SMART_CARD_EVIDENCE.normal;
   $('smartCards').classList.toggle('is-alert',mode==='alert');
-  document.querySelectorAll('.sc-card[data-scene]').forEach(card=>{
+  const detailDialog=document.querySelector('.sc-detail-dialog');
+  if(detailDialog?.open)detailDialog.close();
+  document.querySelectorAll('.sc-grid>.sc-card[data-scene]').forEach(card=>{
     const state=states[card.dataset.scene];
     const evidence=evidenceStates[card.dataset.scene];
     if(!state)return;
@@ -6644,8 +6662,6 @@ function setSmartCardState(mode){
     if(evidence){
       card.querySelector('.sc-evidence-time').textContent=state.checked;
       card.querySelector('.sc-evidence-preview').textContent=evidence.video[0];
-      card.querySelector('.sc-evidence-video').innerHTML=evidenceList(evidence.video,'video description');
-      card.querySelector('.sc-evidence-memory').innerHTML=evidenceList(evidence.memory,'household memory');
     }
   });
   document.querySelectorAll('[data-sc-state]').forEach(btn=>{
