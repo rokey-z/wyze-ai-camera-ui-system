@@ -74,7 +74,7 @@ const inspect=()=>{
       largerPreview:dialog.querySelector('.sc-detail-preview-card').getBoundingClientRect().width>=firstCard.getBoundingClientRect().width,
       cameraItems:dialog.querySelectorAll('.sc-evidence-camera-item').length,
       videoItems:dialog.querySelectorAll('.sc-evidence-video li').length,
-      videoTitle:dialog.querySelector('.sc-detail-sections .sc-evidence-section-header').textContent.trim().replace('+ more','').trim(),
+      videoTitle:dialog.querySelector('.sc-detail-sections .sc-evidence-section-header > span:nth-child(2)').textContent.trim(),
       videoScrolls:videoStrip.scrollWidth>videoStrip.clientWidth,
       ratings:[...videoStrip.querySelectorAll('.sc-video-score')].map(node=>node.textContent),
       highlighted:videoStrip.querySelectorAll('.sc-video-item.is-featured').length,
@@ -109,22 +109,25 @@ const inspect=()=>{
       time:dialog.querySelector('.sc-detail-preview-caption time').textContent,
     };
     const more=dialog.querySelector('.sc-video-more');
-    const sort=dialog.querySelector('#sc-video-sort-select');
+    const timeSort=dialog.querySelector('[data-video-sort="newest"]');
+    const ratingSort=dialog.querySelector('[data-video-sort="rating-high"]');
     more.click();
     const expanded={
       items:videoStrip.querySelectorAll('.sc-video-item').length,
       vertical:getComputedStyle(videoStrip).display==='grid',
       sortVisible:!dialog.querySelector('.sc-video-sort').hidden,
+      sortLeftOfMore:ratingSort.getBoundingClientRect().right<=more.getBoundingClientRect().left,
+      timeActive:timeSort.getAttribute('aria-pressed')==='true',
       expanded:more.getAttribute('aria-expanded'),
       firstIndex:videoStrip.querySelector('.sc-video-thumb').dataset.videoIndex,
       selectedStillVisible:videoStrip.querySelector('.sc-video-thumb[data-video-index="8"]').getAttribute('aria-pressed')==='true',
     };
-    sort.value='rating-high';sort.dispatchEvent(new Event('change',{bubbles:true}));
-    const highest=videoStrip.querySelector('.sc-video-score').textContent;
-    sort.value='rating-low';sort.dispatchEvent(new Event('change',{bubbles:true}));
-    const lowest=videoStrip.querySelector('.sc-video-score').textContent;
-    sort.value='oldest';sort.dispatchEvent(new Event('change',{bubbles:true}));
-    const oldest=videoStrip.querySelector('.sc-video-thumb').dataset.videoIndex;
+    ratingSort.click();
+    const ratingOrder=[...videoStrip.querySelectorAll('.sc-video-thumb')].slice(0,6).map(button=>button.dataset.videoIndex);
+    const ratingActive=ratingSort.getAttribute('aria-pressed')==='true'&&timeSort.getAttribute('aria-pressed')==='false';
+    timeSort.click();
+    const timeOrder=[...videoStrip.querySelectorAll('.sc-video-thumb')].slice(0,6).map(button=>button.dataset.videoIndex);
+    const timeActive=timeSort.getAttribute('aria-pressed')==='true'&&ratingSort.getAttribute('aria-pressed')==='false';
     more.click();
     const collapsed={items:videoStrip.querySelectorAll('.sc-video-item').length,horizontal:getComputedStyle(videoStrip).display==='flex',sortHidden:dialog.querySelector('.sc-video-sort').hidden,expanded:more.getAttribute('aria-expanded')};
     videoStrip.scrollLeft=200;
@@ -161,7 +164,7 @@ const inspect=()=>{
         dialog.close();
       }
     }
-    finish({initial,refreshed,alertStates,sheet,selectedVideo,lastVideo,expanded,highest,lowest,oldest,collapsed,closed,previewOpens,cardBodyOpens,newCardScrollLeft,normalTreatment,dark,evidenceCoverage});
+    finish({initial,refreshed,alertStates,sheet,selectedVideo,lastVideo,expanded,ratingOrder,ratingActive,timeOrder,timeActive,collapsed,closed,previewOpens,cardBodyOpens,newCardScrollLeft,normalTreatment,dark,evidenceCoverage});
   }catch(error){
     if(attempts<20)setTimeout(inspect,150);
     else finish({error:String(error)});
@@ -250,10 +253,11 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     assert.deepEqual(result.sheet,{open:true,modal:true,title:'Home security',state:'PERSON',image:'assets/smart-security-motion.webp?v=1',sameImage:true,largerPreview:true,cameraItems:4,videoItems:9,videoTitle:'Video Evidences',videoScrolls:true,ratings:['5','5','3','3','2','2','2','1','1'],highlighted:2,scoreTopRight:true,compactThumb:true,imageOnly:true,thumbsMatchImage:true,memoryItems:2,checked:'6 secs ago',evidenceRightOfState:true,cardHeightUnchanged:true,cardTopUnchanged:true,scrollUnchanged:true,bodyLocked:true,detectionBox:true,stateColorMatchesCard:true,durationColorMatchesCard:true});
     assert.deepEqual(result.selectedVideo,{caption:true,visible:true,selected:true,feedback:true,previewFilled:true,atTop:true});
     assert.deepEqual(result.lastVideo,{selected:true,caption:true,time:'54 secs ago'});
-    assert.deepEqual(result.expanded,{items:20,vertical:true,sortVisible:true,expanded:'true',firstIndex:'0',selectedStillVisible:true});
-    assert.equal(result.highest,'5');
-    assert.equal(result.lowest,'1');
-    assert.equal(result.oldest,'19');
+    assert.deepEqual(result.expanded,{items:20,vertical:true,sortVisible:true,sortLeftOfMore:true,timeActive:true,expanded:'true',firstIndex:'0',selectedStillVisible:true});
+    assert.deepEqual(result.ratingOrder,['0','1','2','3','9','10']);
+    assert.equal(result.ratingActive,true);
+    assert.deepEqual(result.timeOrder,['0','1','2','3','4','5']);
+    assert.equal(result.timeActive,true);
     assert.deepEqual(result.collapsed,{items:9,horizontal:true,sortHidden:true,expanded:'false'});
     assert.deepEqual(result.closed,{open:false,bodyLocked:false});
     assert.equal(result.previewOpens,true);
