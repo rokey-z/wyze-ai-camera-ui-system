@@ -1769,17 +1769,15 @@
   .sc-detail-dialog .sc-evidence-item p{font-size:13px;line-height:1.4}
   .sc-detail-dialog .sc-evidence-list{gap:13px;margin-top:11px}
   .sc-detail-dialog .sc-evidence-item-feedback button{width:30px;height:30px}
-  .sc-video-strip{display:flex;max-width:calc(100% + 36px);gap:11px;margin:11px -18px 0;padding:2px 18px 10px;overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:x mandatory;scroll-padding-inline-start:18px;scrollbar-width:none;list-style:none}
+  .sc-video-strip{display:flex;max-width:calc(100% + 36px);gap:8px;margin:11px -18px 0;padding:2px 18px 10px;overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:x mandatory;scroll-padding-inline-start:18px;scrollbar-width:none;list-style:none}
   .sc-video-strip::-webkit-scrollbar{display:none}
-  .sc-video-item{flex:0 0 132px;min-width:0;scroll-snap-align:start}
-  .sc-video-thumb{position:relative;display:block;width:100%;height:80px;padding:0;overflow:hidden;border:1px solid #ffffff35;border-radius:10px;background:#263549;cursor:pointer}
+  .sc-video-item{flex:0 0 94px;min-width:0;scroll-snap-align:start}
+  .sc-video-thumb{position:relative;display:block;width:100%;height:64px;padding:0;overflow:hidden;border:1px solid #ffffff35;border-radius:8px;background:#263549;cursor:pointer}
   .sc-video-item.is-featured .sc-video-thumb{border-color:#71edbeaa;box-shadow:0 0 0 1px #71edbe5c}
   .sc-video-thumb[aria-pressed="true"]{border-color:#fff;box-shadow:0 0 0 2px #fff}
   .sc-video-thumb:focus-visible{outline:2px solid #fff;outline-offset:3px}
   .sc-video-thumb img{display:block;width:100%;height:100%;object-fit:cover}
-  .sc-video-item:nth-child(2) .sc-video-thumb img{object-position:62% center}
-  .sc-video-item:nth-child(3) .sc-video-thumb img{object-position:35% center}
-  .sc-video-score{position:absolute;top:7px;right:7px;display:grid;place-items:center;min-width:25px;height:25px;padding:0 6px;border-radius:7px;background:#101925d9;color:#fff;font-size:13px;font-weight:800;box-shadow:0 2px 8px #0008}
+  .sc-video-score{position:absolute;top:5px;right:5px;display:grid;place-items:center;min-width:21px;height:21px;padding:0 5px;border-radius:6px;background:#101925d9;color:#fff;font-size:11px;font-weight:800;box-shadow:0 2px 8px #0008}
   .sc-video-item.is-featured .sc-video-score{background:#71edbe;color:#09271e}
   @media(max-width:620px){.sc-detail-dialog{width:100%;max-height:94dvh}.sc-detail-preview-card.sc-card{aspect-ratio:40/27}}
   @media(prefers-reduced-motion:reduce){.sc-detail-dialog{animation:none}}
@@ -6560,6 +6558,114 @@ const SMART_CARD_EVIDENCE={
     ev:{video:['The car is parked in its charging bay with no connector attached.','The vehicle charge-port door is closed and the connector remains docked on the wall.','The garage scene has remained unchanged across the latest snapshots.'],memory:['You asked to be reminded when the car misses its usual overnight charging routine.','The car was last seen connected 2 days ago and has remained home through two overnight charging windows.']}
   }
 };
+/* Additional recent frames keep each card's video history specific to its current state. */
+const SMART_CARD_VIDEO_HISTORY={
+  normal:{
+    security:[
+      'The side-gate latch is visible and the gate has not shifted.',
+      'The garage camera shows the door down with no vehicle at the threshold.',
+      'The front-door camera shows an empty porch and entry path.',
+      'The driveway camera shows no arriving vehicle or pedestrian.',
+      'The side path remains clear in another recent frame.',
+      'All four camera views remain consistent with a quiet home perimeter.'
+    ],
+    garage:[
+      'The garage-door panels remain aligned with the closed frame.',
+      'No gap is visible along the bottom seal of the door.',
+      'The driveway directly in front of the garage is empty.',
+      'No vehicle approaches the garage in this frame.',
+      'The door position is unchanged from the previous view.',
+      'The tracked doorway remains fully covered by the garage door.'
+    ],
+    front:[
+      'The doormat remains visible with nothing resting on it.',
+      'No parcel is visible along the porch wall or near the door.',
+      'The entry path remains clear of visitors.',
+      'No delivery vehicle appears in the camera view.',
+      'The threshold looks unchanged from the prior frame.',
+      'The porch remains empty in the oldest recent snapshot.'
+    ],
+    bins:[
+      'The trash bin remains beside the recycling bin at the curb.',
+      'Both bins are still inside the usual pickup area.',
+      'The curbside placement is visible from the driveway camera.',
+      'No bin has been pulled back toward the garage.',
+      'The path from the driveway to the street remains open.',
+      'An earlier frame also shows both bins ready for pickup.'
+    ],
+    birds:[
+      'The feeder tray is empty in this frame.',
+      'No bird is perched on either side of the feeder.',
+      'The branch nearest the feeder is clear.',
+      'No bird appears on the ground below the tray.',
+      'The feeder remains visible without a new visitor.',
+      'The earlier view also shows no bird at the feeder.'
+    ],
+    ev:[
+      'The cable remains connected at the vehicle charge port.',
+      'The charger indicator is visible beside the parked car.',
+      'The charging connector has not been removed.',
+      'The cable follows the same unobstructed route to the car.',
+      'The vehicle remains parked in its charging position.',
+      'An earlier frame also shows the connector attached.'
+    ]
+  },
+  alert:{
+    security:[
+      'The person is still visible beside the closed side gate.',
+      'The person has paused near the gate rather than passing through.',
+      'The adjacent garage camera shows no second person.',
+      'The front-door camera shows no arrival at the main entrance.',
+      'The driveway camera shows no vehicle associated with this arrival.',
+      'The first recent frame shows the person entering the side path.'
+    ],
+    garage:[
+      'The garage door remains raised above the tracked opening.',
+      'Daylight is visible through the full width of the open doorway.',
+      'No closing movement appears between these frames.',
+      'The driveway in front of the opening remains clear.',
+      'No vehicle crosses the garage threshold in this frame.',
+      'The earliest recent frame already shows the door open.'
+    ],
+    front:[
+      'The parcel is still visible beside the entry mat.',
+      'No person is standing at the front door now.',
+      'The parcel stays in the same position in this frame.',
+      'The porch path remains clear around the delivery.',
+      'The camera still sees the package near the threshold.',
+      'An earlier frame shows the parcel placed on the porch.'
+    ],
+    bins:[
+      'The trash bin is still stored beside the garage.',
+      'The recycling bin remains beside it, away from the curb.',
+      'The pickup zone at the street is still empty.',
+      'No bin is visible along the driveway path to the curb.',
+      'Both stored bins remain in the same positions.',
+      'The earlier driveway view also shows an empty curb.'
+    ],
+    birds:[
+      'The cardinal is still perched on the feeder tray.',
+      'Its red body remains visible beside the seed opening.',
+      'The bird turns while staying inside the detection box.',
+      'The crested head is visible in this camera frame.',
+      'No second bird is visible on the other perch.',
+      'The earliest recent frame shows the cardinal arriving.'
+    ],
+    ev:[
+      'The vehicle remains parked without a cable attached.',
+      'The charge port is not connected to the wall charger.',
+      'The charging connector is still in its wall dock.',
+      'No person approaches the car to plug it in.',
+      'The garage view shows the same unplugged position.',
+      'An earlier frame also shows the car parked and unplugged.'
+    ]
+  }
+};
+for(const mode of ['normal','alert']){
+  for(const scene of Object.keys(SMART_CARD_EVIDENCE[mode])){
+    SMART_CARD_EVIDENCE[mode][scene].video.push(...SMART_CARD_VIDEO_HISTORY[mode][scene]);
+  }
+}
 const SMART_CARD_VIDEO_RATINGS={
   normal:{security:[5,4,4],garage:[5,4,3],ev:[5,4,3],front:[5,4,3],bins:[5,4,4],birds:[5,4,3]},
   alert:{security:[5,5,3],garage:[5,4,4],ev:[5,4,3],front:[5,4,3],bins:[5,4,4],birds:[5,5,4]}
@@ -6590,17 +6696,21 @@ function evidenceList(items,label){
 function videoEvidenceTime(state,index){
   if(index===0)return state.checked;
   const duration=/^for (\d+) (secs|mins|hours)/.exec(state.sub);
-  if(!duration)return index===1?'8 mins ago':'15 mins ago';
-  const total=Number(duration[1])*({secs:1,mins:60,hours:3600}[duration[2]]);
-  const age=Math.round(total*index/2);
+  const checked=/(\d+) (secs|mins|hours) ago/.exec(state.checked);
+  const checkedSeconds=checked?Number(checked[1])*({secs:1,mins:60,hours:3600}[checked[2]]):0;
+  const total=duration?Number(duration[1])*({secs:1,mins:60,hours:3600}[duration[2]]):0;
+  const offsets=[0,20,45,90,150,240,360,600,900];
+  const age=total&&total<=900?Math.round(checkedSeconds+(total-checkedSeconds)*index/8):checkedSeconds+offsets[index];
   if(age<60)return `${age} secs ago`;
   if(age<3600){const minutes=Math.round(age/60);return `${minutes} ${minutes===1?'min':'mins'} ago`}
   const hours=Math.round(age/3600);
   return `${hours} ${hours===1?'hour':'hours'} ago`;
 }
 function videoEvidenceStrip(items,state,ratings){
-  const highlightAt=[...ratings].sort((a,b)=>b-a)[1];
-  return items.map((description,index)=>`<li class="sc-video-item${ratings[index]>=highlightAt?' is-featured':''}"><button class="sc-video-thumb" type="button" data-video-index="${index}" aria-pressed="false" aria-label="Preview video evidence ${index+1}, rating ${ratings[index]}: ${description}"><img src="${state.src}" alt="" loading="lazy"><span class="sc-video-score" aria-hidden="true">${ratings[index]}</span></button></li>`).join('');
+  const scores=items.map((_,index)=>ratings[index]??[3,2,2,2,1,1][index-ratings.length]);
+  const featuredIndexes=new Set(scores.map((score,index)=>({score,index})).filter(item=>item.score>=4).sort((a,b)=>b.score-a.score||a.index-b.index).slice(0,3).map(item=>item.index));
+  const positions=['50% 50%','62% 50%','35% 50%','72% 45%','25% 55%','50% 35%','60% 70%','80% 50%','15% 50%'];
+  return items.map((description,index)=>`<li class="sc-video-item${featuredIndexes.has(index)?' is-featured':''}"><button class="sc-video-thumb" type="button" data-video-index="${index}" aria-pressed="false" aria-label="Preview video evidence ${index+1}, rating ${scores[index]}: ${description}"><img src="${state.src}" alt="" loading="lazy" style="object-position:${positions[index]}"><span class="sc-video-score" aria-hidden="true">${scores[index]}</span></button></li>`).join('');
 }
 function cameraSourceSummary(cameras){
   return cameras.map(camera=>`<span class="sc-evidence-camera-item">${SMART_CARD_EVIDENCE_ICONS.camera}<span>${camera.replace(/ Cam$/,'')}</span></span>`).join('');
