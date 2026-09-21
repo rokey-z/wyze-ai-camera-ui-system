@@ -1782,10 +1782,14 @@
   .sc-video-score{position:absolute;top:5px;right:5px;display:grid;place-items:center;min-width:21px;height:21px;padding:0 5px;border-radius:6px;background:#101925d9;color:#fff;font-size:11px;font-weight:800;box-shadow:0 2px 8px #0008}
   .sc-video-item.is-featured .sc-video-score{background:#71edbe;color:#09271e}
   .sc-video-copy{display:none}
-  .sc-video-sort{display:flex;align-items:center;justify-content:flex-end;gap:7px;margin-top:10px;color:#9fb0c7;font-size:10px;font-weight:700}
+  .sc-video-actions{display:flex;align-items:center;gap:4px;margin-left:auto}
+  .sc-video-actions .sc-evidence-section-more{margin-left:0}
+  .sc-video-sort{display:flex;align-items:center;gap:2px;padding:2px;border-radius:8px;background:#ffffff12}
   .sc-video-sort[hidden]{display:none}
-  .sc-video-sort select{max-width:170px;padding:6px 24px 6px 9px;border:1px solid #ffffff3a;border-radius:8px;background:#1b2939;color:#f4f7fb;font:inherit;cursor:pointer}
-  .sc-video-sort select:focus-visible{outline:2px solid #fff;outline-offset:2px}
+  .sc-video-sort button{min-height:28px;padding:0 7px;border:0;border-radius:6px;background:transparent;color:#9fb0c7;font:700 10px/1 var(--sans);cursor:pointer}
+  .sc-video-sort button[aria-pressed="true"]{background:#ffffff29;color:#fff}
+  .sc-video-sort button:hover{color:#fff}
+  .sc-video-sort button:focus-visible{outline:2px solid #fff;outline-offset:2px}
   .sc-video-strip.is-expanded{display:grid;max-width:none;gap:0;margin:10px 0 0;padding:0;overflow:visible;scroll-snap-type:none}
   .sc-video-strip.is-expanded .sc-video-item{min-width:0;border-bottom:1px solid #ffffff1c;scroll-snap-align:none}
   .sc-video-strip.is-expanded .sc-video-item:last-child{border-bottom:0}
@@ -6808,11 +6812,7 @@ function videoEvidenceStrip(items,state,ratings,expanded=false,sort='newest',sel
   const featuredIndexes=new Set(scores.map((score,index)=>({score,index})).filter(item=>item.score>=4).sort((a,b)=>b.score-a.score||a.index-b.index).slice(0,3).map(item=>item.index));
   const positions=['50% 50%','62% 50%','35% 50%','72% 45%','25% 55%','50% 35%','60% 70%','80% 50%','15% 50%'];
   const entries=items.map((description,index)=>({description,index,score:scores[index]}));
-  if(expanded){
-    if(sort==='oldest')entries.sort((a,b)=>b.index-a.index);
-    if(sort==='rating-high')entries.sort((a,b)=>b.score-a.score||a.index-b.index);
-    if(sort==='rating-low')entries.sort((a,b)=>a.score-b.score||a.index-b.index);
-  }
+  if(expanded&&sort==='rating-high')entries.sort((a,b)=>b.score-a.score||a.index-b.index);
   return (expanded?entries:entries.slice(0,9)).map(({description,index,score})=>`<li class="sc-video-item${featuredIndexes.has(index)?' is-featured':''}"><button class="sc-video-thumb" type="button" data-video-index="${index}" aria-pressed="${index===selectedIndex}" aria-label="Preview video evidence ${index+1}, ${videoEvidenceTime(state,index)}, rating ${score}: ${description}"><img src="${state.src}" alt="" loading="lazy" style="object-position:${positions[index%positions.length]}"><span class="sc-video-copy"><span>${description}</span><time>${videoEvidenceTime(state,index)}</time></span><span class="sc-video-score" aria-hidden="true">${score}</span></button></li>`).join('');
 }
 function cameraSourceSummary(cameras){
@@ -6822,7 +6822,7 @@ function initSmartCardEvidence(){
   const smartCards=$('smartCards');
   const detailDialog=document.createElement('dialog');
   detailDialog.className='sc-detail-dialog';
-  detailDialog.innerHTML=`<div class="sc-detail-handle" aria-hidden="true"></div><header class="sc-detail-header"><h2 class="sc-detail-title" id="sc-detail-title"></h2><button class="sc-detail-close" type="button" aria-label="Close details">&times;</button></header><div class="sc-detail-preview-card sc-card"><div class="sc-detail-preview-caption" hidden><time></time><p></p><div class="sc-detail-preview-feedback"></div></div></div><div class="sc-detail-content"><p class="sc-detail-state"><strong></strong><span></span></p><div class="sc-detail-evidence-head"><div><span class="sc-detail-evidence-label">Supporting Evidence</span><span class="sc-detail-checked"></span></div><div class="sc-evidence-camera-summary"></div></div><div class="sc-detail-sections"><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.video}</span><span>Video Evidences</span><button class="sc-evidence-section-more sc-video-more" type="button" aria-expanded="false" aria-controls="sc-video-evidence-list">+ more</button></div><div class="sc-video-sort" hidden><label for="sc-video-sort-select">Sort by</label><select id="sc-video-sort-select" aria-label="Sort video evidence"><option value="newest">Time: newest</option><option value="oldest">Time: oldest</option><option value="rating-high">Rating: highest</option><option value="rating-low">Rating: lowest</option></select></div><ul class="sc-video-strip sc-evidence-video" id="sc-video-evidence-list" aria-label="Video evidences; swipe horizontally"></ul></div><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.memory}</span><span>Household memory</span><span class="sc-evidence-section-more">+ more</span></div><ul class="sc-evidence-list sc-evidence-memory"></ul></div></div></div>`;
+  detailDialog.innerHTML=`<div class="sc-detail-handle" aria-hidden="true"></div><header class="sc-detail-header"><h2 class="sc-detail-title" id="sc-detail-title"></h2><button class="sc-detail-close" type="button" aria-label="Close details">&times;</button></header><div class="sc-detail-preview-card sc-card"><div class="sc-detail-preview-caption" hidden><time></time><p></p><div class="sc-detail-preview-feedback"></div></div></div><div class="sc-detail-content"><p class="sc-detail-state"><strong></strong><span></span></p><div class="sc-detail-evidence-head"><div><span class="sc-detail-evidence-label">Supporting Evidence</span><span class="sc-detail-checked"></span></div><div class="sc-evidence-camera-summary"></div></div><div class="sc-detail-sections"><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.video}</span><span>Video Evidences</span><div class="sc-video-actions"><div class="sc-video-sort" role="group" aria-label="Sort video evidence" hidden><button type="button" data-video-sort="newest" aria-pressed="true" aria-label="Sort by time, newest first">Time</button><button type="button" data-video-sort="rating-high" aria-pressed="false" aria-label="Sort by rating, highest first">Rating</button></div><button class="sc-evidence-section-more sc-video-more" type="button" aria-expanded="false" aria-controls="sc-video-evidence-list">+ more</button></div></div><ul class="sc-video-strip sc-evidence-video" id="sc-video-evidence-list" aria-label="Video evidences; swipe horizontally"></ul></div><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.memory}</span><span>Household memory</span><span class="sc-evidence-section-more">+ more</span></div><ul class="sc-evidence-list sc-evidence-memory"></ul></div></div></div>`;
   detailDialog.setAttribute('aria-labelledby','sc-detail-title');
   smartCards.append(detailDialog);
   let lastDetailCard=null;
@@ -6840,16 +6840,16 @@ function initSmartCardEvidence(){
   const videoStrip=detailDialog.querySelector('.sc-evidence-video');
   const videoMore=detailDialog.querySelector('.sc-video-more');
   const videoSort=detailDialog.querySelector('.sc-video-sort');
-  const videoSortSelect=detailDialog.querySelector('#sc-video-sort-select');
   const renderVideoEvidence=()=>{
     const {mode,scene}=detailDialog.dataset;
     const expanded=detailDialog.dataset.videoExpanded==='true';
     videoStrip.classList.toggle('is-expanded',expanded);
     videoStrip.setAttribute('aria-label',expanded?'Video evidences; vertical list':'Video evidences; swipe horizontally');
-    videoStrip.innerHTML=videoEvidenceStrip(SMART_CARD_EVIDENCE[mode][scene].video,SMART_CARD_STATES[mode][scene],SMART_CARD_VIDEO_RATINGS[mode][scene],expanded,videoSortSelect.value,Number(detailDialog.dataset.selectedVideoIndex));
+    videoStrip.innerHTML=videoEvidenceStrip(SMART_CARD_EVIDENCE[mode][scene].video,SMART_CARD_STATES[mode][scene],SMART_CARD_VIDEO_RATINGS[mode][scene],expanded,detailDialog.dataset.videoSort,Number(detailDialog.dataset.selectedVideoIndex));
     videoMore.textContent=expanded?'− less':'+ more';
     videoMore.setAttribute('aria-expanded',String(expanded));
     videoSort.hidden=!expanded;
+    videoSort.querySelectorAll('[data-video-sort]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.videoSort===detailDialog.dataset.videoSort)));
   };
   const openDetail=card=>{
     const scene=card.dataset.scene;
@@ -6861,8 +6861,8 @@ function initSmartCardEvidence(){
     detailDialog.dataset.scene=scene;
     detailDialog.dataset.mode=mode;
     detailDialog.dataset.videoExpanded='false';
+    detailDialog.dataset.videoSort='newest';
     detailDialog.dataset.selectedVideoIndex='-1';
-    videoSortSelect.value='newest';
     preview.dataset.scene=scene;
     preview.replaceChildren(card.querySelector('.sc-scene').cloneNode(true),caption);
     caption.hidden=true;
@@ -6886,7 +6886,12 @@ function initSmartCardEvidence(){
     detailDialog.dataset.videoExpanded=String(detailDialog.dataset.videoExpanded!=='true');
     renderVideoEvidence();
   });
-  videoSortSelect.addEventListener('change',renderVideoEvidence);
+  videoSort.addEventListener('click',event=>{
+    const button=event.target.closest('[data-video-sort]');
+    if(!button)return;
+    detailDialog.dataset.videoSort=button.dataset.videoSort;
+    renderVideoEvidence();
+  });
   videoStrip.addEventListener('click',event=>{
     const thumb=event.target.closest('.sc-video-thumb');
     if(!thumb)return;
