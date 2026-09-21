@@ -138,6 +138,12 @@ test('detail state and duration reuse each card color treatment', () => {
   assert.match(html, /detailDialog\.dataset\.scene=scene/);
 });
 
+test('detail evidence summary and cameras sit to the right of state on mobile', () => {
+  assert.match(html, /\.sc-detail-content\{display:grid;grid-template-columns:minmax\(0,1fr\) minmax\(0,1\.45fr\)/);
+  assert.match(html, /\.sc-detail-evidence-head\{display:flex;min-width:0;flex-direction:column;align-items:flex-end/);
+  assert.match(html, /\.sc-detail-sections\{display:grid;grid-column:1\/-1/);
+});
+
 test('each supporting-evidence row has unfilled feedback controls and content-first hierarchy', () => {
   assert.match(html, /function evidenceFeedback\(label\)/);
   assert.match(html, /Rate \$\{label\}/);
@@ -181,7 +187,7 @@ test('detail sheet identifies the cameras involved in each card state', () => {
   assert.match(html, /cameras\.map\(camera=>`<span class="sc-evidence-camera-item">/);
   assert.match(html, /camera\.replace\(\/ Cam\$\/,''\)/);
   assert.match(html, /<div class="sc-detail-evidence-head"><div><span class="sc-detail-evidence-label">Supporting Evidence<\/span>/);
-  assert.match(html, /\.sc-detail-evidence-head\{display:flex;align-items:flex-start;justify-content:space-between/);
+  assert.match(html, /\.sc-detail-evidence-head\{display:flex;min-width:0;flex-direction:column;align-items:flex-end/);
   assert.match(html, /\.sc-evidence-camera-summary\{display:inline-flex;align-items:flex-start;justify-content:flex-end;gap:3px/);
   assert.match(html, /\.sc-evidence-camera-item\{display:inline-flex;width:46px;min-width:0;flex-direction:column;align-items:center/);
   assert.match(html, /\.sc-evidence-camera-summary svg\{width:22px;height:22px;flex:0 0 22px;fill:none;stroke:none\}/);
