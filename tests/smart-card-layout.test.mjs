@@ -68,7 +68,7 @@ test('the detail sheet opens above a fixed feed with a large copy of the camera 
   assert.match(html, /const detailDialog=document\.createElement\('dialog'\)/);
   assert.match(html, /detailDialog\.className='sc-detail-dialog'/);
   assert.match(html, /detailDialog\.setAttribute\('aria-labelledby','sc-detail-title'\)/);
-  assert.match(html, /preview\.replaceChildren\(card\.querySelector\('\.sc-scene'\)\.cloneNode\(true\)\)/);
+  assert.match(html, /preview\.replaceChildren\(card\.querySelector\('\.sc-scene'\)\.cloneNode\(true\),caption\)/);
   assert.match(html, /\.sc-detail-preview-card\.sc-card\{[^}]*aspect-ratio:4\/3/);
   assert.match(html, /\.sc-detail-dialog\{position:fixed;inset:auto 0 0/);
   assert.doesNotMatch(html, /card\.classList\.toggle\('is-expanded'/);
@@ -117,13 +117,17 @@ test('detail sheet contains the same video and household evidence', () => {
 test('video evidences scroll horizontally with thumbnail ratings and top evidence highlights', () => {
   assert.match(html, /class="sc-video-strip sc-evidence-video" aria-label="Video evidences; swipe horizontally"/);
   assert.match(html, /\.sc-video-strip\{display:flex;max-width:calc\(100% \+ 36px\);gap:11px;[^}]*overflow-x:auto;[^}]*scroll-snap-type:x mandatory/);
-  assert.match(html, /\.sc-video-item\.is-featured\{border-color:#71edbeaa;box-shadow:0 0 0 1px #71edbe5c\}/);
+  assert.match(html, /\.sc-video-item\{flex:0 0 132px/);
+  assert.match(html, /\.sc-video-item\.is-featured \.sc-video-thumb\{border-color:#71edbeaa;box-shadow:0 0 0 1px #71edbe5c\}/);
   assert.match(html, /\.sc-video-score\{position:absolute;top:7px;right:7px/);
   assert.match(html, /const highlightAt=\[\.\.\.ratings\]\.sort\(\(a,b\)=>b-a\)\[1\]/);
   assert.match(html, /ratings\[index\]>=highlightAt\?' is-featured':''/);
-  assert.match(html, /class="sc-video-score" aria-label="Evidence rating \$\{ratings\[index\]\}">\$\{ratings\[index\]\}<\/span>/);
+  assert.match(html, /class="sc-video-thumb" type="button" data-video-index="\$\{index\}" aria-pressed="false"/);
+  assert.match(html, /class="sc-video-score" aria-hidden="true">\$\{ratings\[index\]\}<\/span>/);
   assert.doesNotMatch(html, /class="sc-video-score"[^>]*>\$\{ratings\[index\]\}\/5/);
-  assert.match(html, /<time>\$\{videoEvidenceTime\(state,index\)\}<\/time>\$\{evidenceFeedback\(`video evidence \$\{index\+1\}`\)\}/);
+  assert.doesNotMatch(html, /class="sc-video-copy"/);
+  assert.match(html, /caption\.querySelector\('p'\)\.textContent=SMART_CARD_EVIDENCE\[mode\]\[scene\]\.video\[index\]/);
+  assert.match(html, /detailDialog\.scrollTop=0;\n  \}\);/);
 });
 
 test('detail state and duration reuse each card color treatment', () => {

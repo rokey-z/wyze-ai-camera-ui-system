@@ -1745,6 +1745,12 @@
   .sc-detail-preview-card:before,.sc-detail-preview-card:after{display:none!important}
   .sc-detail-preview-card .sc-scene{position:absolute;inset:0;width:100%;height:100%;min-height:0;margin:0;border-radius:0;clip-path:none;filter:none;cursor:default}
   .sc-detail-preview-card .sc-focus-layer{transform:none}
+  .sc-detail-preview-caption{position:absolute;z-index:4;right:0;bottom:0;left:0;display:grid;gap:5px;padding:46px 18px 16px;background:linear-gradient(0deg,rgba(5,12,22,.94),rgba(5,12,22,.76) 55%,transparent);color:#fff}
+  .sc-detail-preview-caption[hidden]{display:none}
+  .sc-detail-preview-caption time{font-size:11px;font-weight:700;color:#c7d5e5}
+  .sc-detail-preview-caption p{margin:0;font-size:13px;font-weight:700;line-height:1.35}
+  .sc-detail-preview-caption .sc-evidence-item-feedback{justify-self:end}
+  .sc-detail-preview-caption .sc-evidence-item-feedback button{width:28px;height:28px}
   .sc-detail-content{padding:18px 18px max(30px,env(safe-area-inset-bottom))}
   .sc-detail-state{display:flex;flex-direction:column;align-items:flex-start;gap:5px;width:max-content;max-width:100%;margin:0 0 16px;padding:8px 12px 10px;border-radius:12px;background:linear-gradient(90deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,.25) 42%,rgba(0,0,0,0) 78%);color:#fff}
   .sc-detail-state strong{color:inherit;font-size:23px;font-weight:850;line-height:1.05}
@@ -1764,19 +1770,16 @@
   .sc-detail-dialog .sc-evidence-item-feedback button{width:30px;height:30px}
   .sc-video-strip{display:flex;max-width:calc(100% + 36px);gap:11px;margin:11px -18px 0;padding:2px 18px 10px;overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:x mandatory;scroll-padding-inline-start:18px;scrollbar-width:none;list-style:none}
   .sc-video-strip::-webkit-scrollbar{display:none}
-  .sc-video-item{display:flex;flex:0 0 min(70vw,215px);flex-direction:column;min-width:0;scroll-snap-align:start;overflow:hidden;border:1px solid #ffffff25;border-radius:13px;background:#1a2636}
-  .sc-video-item.is-featured{border-color:#71edbeaa;box-shadow:0 0 0 1px #71edbe5c}
-  .sc-video-thumb{position:relative;height:105px;overflow:hidden;background:#263549}
+  .sc-video-item{flex:0 0 132px;min-width:0;scroll-snap-align:start}
+  .sc-video-thumb{position:relative;display:block;width:100%;height:80px;padding:0;overflow:hidden;border:1px solid #ffffff35;border-radius:10px;background:#263549;cursor:pointer}
+  .sc-video-item.is-featured .sc-video-thumb{border-color:#71edbeaa;box-shadow:0 0 0 1px #71edbe5c}
+  .sc-video-thumb[aria-pressed="true"]{border-color:#fff;box-shadow:0 0 0 2px #fff}
+  .sc-video-thumb:focus-visible{outline:2px solid #fff;outline-offset:3px}
   .sc-video-thumb img{display:block;width:100%;height:100%;object-fit:cover}
   .sc-video-item:nth-child(2) .sc-video-thumb img{object-position:62% center}
   .sc-video-item:nth-child(3) .sc-video-thumb img{object-position:35% center}
   .sc-video-score{position:absolute;top:7px;right:7px;display:grid;place-items:center;min-width:25px;height:25px;padding:0 6px;border-radius:7px;background:#101925d9;color:#fff;font-size:13px;font-weight:800;box-shadow:0 2px 8px #0008}
   .sc-video-item.is-featured .sc-video-score{background:#71edbe;color:#09271e}
-  .sc-video-copy{display:flex;flex:1;flex-direction:column;gap:8px;padding:10px}
-  .sc-detail-dialog .sc-video-copy p{margin:0;color:#f4f7fb;font-size:11px;font-weight:680;line-height:1.35}
-  .sc-video-footer{display:flex;align-items:center;justify-content:space-between;gap:4px;margin-top:auto;color:#9fb0c7;font-size:10px;font-weight:650}
-  .sc-video-footer .sc-evidence-item-feedback button{width:22px;height:22px}
-  .sc-video-footer .sc-evidence-item-feedback svg{width:12px;height:12px}
   @media(max-width:620px){.sc-detail-dialog{width:100%;max-height:94dvh}.sc-detail-preview-card.sc-card{aspect-ratio:40/27}}
   @media(prefers-reduced-motion:reduce){.sc-detail-dialog{animation:none}}
 
@@ -6596,7 +6599,7 @@ function videoEvidenceTime(state,index){
 }
 function videoEvidenceStrip(items,state,ratings){
   const highlightAt=[...ratings].sort((a,b)=>b-a)[1];
-  return items.map((description,index)=>`<li class="sc-video-item${ratings[index]>=highlightAt?' is-featured':''}"><div class="sc-video-thumb"><img src="${state.src}" alt="${state.alt}" loading="lazy"><span class="sc-video-score" aria-label="Evidence rating ${ratings[index]}">${ratings[index]}</span></div><div class="sc-video-copy"><p>${description}</p><div class="sc-video-footer"><time>${videoEvidenceTime(state,index)}</time>${evidenceFeedback(`video evidence ${index+1}`)}</div></div></li>`).join('');
+  return items.map((description,index)=>`<li class="sc-video-item${ratings[index]>=highlightAt?' is-featured':''}"><button class="sc-video-thumb" type="button" data-video-index="${index}" aria-pressed="false" aria-label="Preview video evidence ${index+1}, rating ${ratings[index]}: ${description}"><img src="${state.src}" alt="" loading="lazy"><span class="sc-video-score" aria-hidden="true">${ratings[index]}</span></button></li>`).join('');
 }
 function cameraSourceSummary(cameras){
   return cameras.map(camera=>`<span class="sc-evidence-camera-item">${SMART_CARD_EVIDENCE_ICONS.camera}<span>${camera.replace(/ Cam$/,'')}</span></span>`).join('');
@@ -6605,7 +6608,7 @@ function initSmartCardEvidence(){
   const smartCards=$('smartCards');
   const detailDialog=document.createElement('dialog');
   detailDialog.className='sc-detail-dialog';
-  detailDialog.innerHTML=`<div class="sc-detail-handle" aria-hidden="true"></div><header class="sc-detail-header"><h2 class="sc-detail-title" id="sc-detail-title"></h2><button class="sc-detail-close" type="button" aria-label="Close details">&times;</button></header><div class="sc-detail-preview-card sc-card"></div><div class="sc-detail-content"><p class="sc-detail-state"><strong></strong><span></span></p><div class="sc-detail-evidence-head"><div><span class="sc-detail-evidence-label">Supporting Evidence</span><span class="sc-detail-checked"></span></div><div class="sc-evidence-camera-summary"></div></div><div class="sc-detail-sections"><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.video}</span><span>Video Evidences</span><span class="sc-evidence-section-more">+ more</span></div><ul class="sc-video-strip sc-evidence-video" aria-label="Video evidences; swipe horizontally"></ul></div><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.memory}</span><span>Household memory</span><span class="sc-evidence-section-more">+ more</span></div><ul class="sc-evidence-list sc-evidence-memory"></ul></div></div></div>`;
+  detailDialog.innerHTML=`<div class="sc-detail-handle" aria-hidden="true"></div><header class="sc-detail-header"><h2 class="sc-detail-title" id="sc-detail-title"></h2><button class="sc-detail-close" type="button" aria-label="Close details">&times;</button></header><div class="sc-detail-preview-card sc-card"><div class="sc-detail-preview-caption" hidden><time></time><p></p><div class="sc-detail-preview-feedback"></div></div></div><div class="sc-detail-content"><p class="sc-detail-state"><strong></strong><span></span></p><div class="sc-detail-evidence-head"><div><span class="sc-detail-evidence-label">Supporting Evidence</span><span class="sc-detail-checked"></span></div><div class="sc-evidence-camera-summary"></div></div><div class="sc-detail-sections"><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.video}</span><span>Video Evidences</span><span class="sc-evidence-section-more">+ more</span></div><ul class="sc-video-strip sc-evidence-video" aria-label="Video evidences; swipe horizontally"></ul></div><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.memory}</span><span>Household memory</span><span class="sc-evidence-section-more">+ more</span></div><ul class="sc-evidence-list sc-evidence-memory"></ul></div></div></div>`;
   detailDialog.setAttribute('aria-labelledby','sc-detail-title');
   smartCards.append(detailDialog);
   let lastDetailCard=null;
@@ -6626,9 +6629,12 @@ function initSmartCardEvidence(){
     const state=SMART_CARD_STATES[mode][scene];
     const evidence=SMART_CARD_EVIDENCE[mode][scene];
     const preview=detailDialog.querySelector('.sc-detail-preview-card');
+    const caption=preview.querySelector('.sc-detail-preview-caption');
     detailDialog.dataset.scene=scene;
+    detailDialog.dataset.mode=mode;
     preview.dataset.scene=scene;
-    preview.replaceChildren(card.querySelector('.sc-scene').cloneNode(true));
+    preview.replaceChildren(card.querySelector('.sc-scene').cloneNode(true),caption);
+    caption.hidden=true;
     preview.querySelectorAll('img').forEach(image=>image.loading='eager');
     detailDialog.querySelector('.sc-detail-title').textContent=card.querySelector(':scope>.sc-label').textContent;
     detailDialog.querySelector('.sc-detail-state strong').textContent=state.state;
@@ -6646,6 +6652,30 @@ function initSmartCardEvidence(){
     detailDialog.scrollTop=0;
     videoStrip.scrollLeft=0;
   };
+  detailDialog.querySelector('.sc-evidence-video').addEventListener('click',event=>{
+    const thumb=event.target.closest('.sc-video-thumb');
+    if(!thumb)return;
+    const index=Number(thumb.dataset.videoIndex);
+    const {scene,mode}=detailDialog.dataset;
+    const state=SMART_CARD_STATES[mode][scene];
+    const preview=detailDialog.querySelector('.sc-detail-preview-card');
+    const caption=preview.querySelector('.sc-detail-preview-caption');
+    const image=thumb.querySelector('img').cloneNode(true);
+    image.className='sc-photo';
+    image.alt=state.alt;
+    image.loading='eager';
+    image.style.objectPosition=getComputedStyle(thumb.querySelector('img')).objectPosition;
+    const selectedScene=document.createElement('div');
+    selectedScene.className='sc-scene';
+    selectedScene.append(image);
+    preview.replaceChildren(selectedScene,caption);
+    caption.querySelector('time').textContent=videoEvidenceTime(state,index);
+    caption.querySelector('p').textContent=SMART_CARD_EVIDENCE[mode][scene].video[index];
+    caption.querySelector('.sc-detail-preview-feedback').innerHTML=evidenceFeedback(`video evidence ${index+1}`);
+    caption.hidden=false;
+    detailDialog.querySelectorAll('.sc-video-thumb').forEach(button=>button.setAttribute('aria-pressed',String(button===thumb)));
+    detailDialog.scrollTop=0;
+  });
   document.querySelectorAll('.sc-grid>.sc-card[data-scene]').forEach(card=>{
     const scene=card.dataset.scene;
     const goal=card.querySelector(':scope>.sc-label').textContent.trim();
