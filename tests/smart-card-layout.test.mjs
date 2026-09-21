@@ -105,12 +105,33 @@ test('detail sheet contains the same video and household evidence', () => {
   assert.match(html, /class="sc-evidence-preview"/);
   assert.match(html, /<span class="sc-detail-evidence-label">Supporting Evidence<\/span>/);
   assert.doesNotMatch(html, /Evidence behind this state/);
-  assert.match(html, /<span>Video description<\/span><span class="sc-evidence-section-more">\+ more<\/span>/);
+  assert.match(html, /<span>Video Evidences<\/span><span class="sc-evidence-section-more">\+ more<\/span>/);
   assert.match(html, /<span>Household memory<\/span><span class="sc-evidence-section-more">\+ more<\/span>/);
   assert.match(html, /\.sc-evidence-preview\{[^}]*max-height:21px[^}]*mask-image:linear-gradient/);
-  assert.match(html, /detailDialog\.querySelector\('\.sc-evidence-video'\)\.innerHTML=evidenceList\(evidence\.video,'video description'\)/);
+  assert.match(html, /videoStrip\.innerHTML=videoEvidenceStrip\(evidence\.video,state,SMART_CARD_VIDEO_RATINGS\[mode\]\[scene\]\)/);
+  assert.match(html, /videoStrip\.scrollLeft=0/);
   assert.match(html, /detailDialog\.querySelector\('\.sc-evidence-memory'\)\.innerHTML=evidenceList\(evidence\.memory,'household memory'\)/);
   assert.match(html, /\.sc-actions \.sc-feedback\{display:flex;position:absolute/);
+});
+
+test('video evidences scroll horizontally with thumbnail ratings and top evidence highlights', () => {
+  assert.match(html, /class="sc-video-strip sc-evidence-video" aria-label="Video evidences; swipe horizontally"/);
+  assert.match(html, /\.sc-video-strip\{display:flex;max-width:calc\(100% \+ 36px\);gap:11px;[^}]*overflow-x:auto;[^}]*scroll-snap-type:x mandatory/);
+  assert.match(html, /\.sc-video-item\.is-featured\{border-color:#71edbeaa;box-shadow:0 0 0 1px #71edbe5c\}/);
+  assert.match(html, /\.sc-video-score\{position:absolute;top:7px;right:7px/);
+  assert.match(html, /const highlightAt=\[\.\.\.ratings\]\.sort\(\(a,b\)=>b-a\)\[1\]/);
+  assert.match(html, /ratings\[index\]>=highlightAt\?' is-featured':''/);
+  assert.match(html, /class="sc-video-score" aria-label="Evidence rating \$\{ratings\[index\]\}">\$\{ratings\[index\]\}<\/span>/);
+  assert.doesNotMatch(html, /class="sc-video-score"[^>]*>\$\{ratings\[index\]\}\/5/);
+  assert.match(html, /<time>\$\{videoEvidenceTime\(state,index\)\}<\/time>\$\{evidenceFeedback\(`video evidence \$\{index\+1\}`\)\}/);
+});
+
+test('detail state and duration reuse each card color treatment', () => {
+  assert.match(html, /\.sc-detail-state\{[^}]*background:linear-gradient\(90deg,rgba\(0,0,0,\.62\) 0%,rgba\(0,0,0,\.25\) 42%,rgba\(0,0,0,0\) 78%\)/);
+  assert.match(html, /\.sc-detail-state span\{[^}]*background:rgba\(255,255,255,\.18\);color:inherit/);
+  assert.match(html, /\.smartcards\.is-alert \.sc-detail-state\{background:rgba\(113,237,190,\.82\);color:#09271e\}/);
+  assert.match(html, /\.smartcards\.is-alert \.sc-detail-dialog\[data-scene="security"\] \.sc-detail-state\{background:rgba\(255,75,85,\.82\);color:#fff\}/);
+  assert.match(html, /detailDialog\.dataset\.scene=scene/);
 });
 
 test('each supporting-evidence row has unfilled feedback controls and content-first hierarchy', () => {
@@ -128,7 +149,7 @@ test('each supporting-evidence row has unfilled feedback controls and content-fi
 });
 
 test('video and household evidence stay open with hover-only more labels', () => {
-  assert.match(html, /class="sc-evidence-title-icon">\$\{SMART_CARD_EVIDENCE_ICONS\.video\}<\/span><span>Video description/);
+  assert.match(html, /class="sc-evidence-title-icon">\$\{SMART_CARD_EVIDENCE_ICONS\.video\}<\/span><span>Video Evidences/);
   assert.match(html, /class="sc-evidence-title-icon">\$\{SMART_CARD_EVIDENCE_ICONS\.memory\}<\/span><span>Household memory/);
   assert.match(html, /\.sc-evidence-title-icon svg\{width:15px;height:15px;fill:none;stroke:currentColor/);
   assert.doesNotMatch(html, /sc-evidence-section-chevron/);
@@ -170,7 +191,7 @@ test('normal and alert states provide three observations and two memories for ev
     assert.equal(occurrences.length, 2, `${scene} needs normal and alert evidence`);
   }
   assert.match(html, /card\.querySelector\('\.sc-evidence-preview'\)\.textContent=evidence\.video\[0\]/);
-  assert.match(html, /detailDialog\.querySelector\('\.sc-evidence-video'\)\.innerHTML=evidenceList\(evidence\.video,'video description'\)/);
+  assert.match(html, /videoStrip\.innerHTML=videoEvidenceStrip\(evidence\.video,state,SMART_CARD_VIDEO_RATINGS\[mode\]\[scene\]\)/);
   assert.match(html, /detailDialog\.querySelector\('\.sc-evidence-memory'\)\.innerHTML=evidenceList\(evidence\.memory,'household memory'\)/);
 });
 
