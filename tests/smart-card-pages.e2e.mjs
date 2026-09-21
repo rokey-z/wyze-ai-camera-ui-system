@@ -169,7 +169,7 @@ const inspect=()=>{
         card.querySelector('.sc-evidence-trigger').click();
         const compactItems=dialog.querySelectorAll('.sc-video-item').length;
         dialog.querySelector('.sc-video-more').click();
-        evidenceCoverage.push({mode,scene:card.dataset.scene,compactItems,fullItems:dialog.querySelectorAll('.sc-video-item').length,featured:dialog.querySelectorAll('.sc-video-item.is-featured').length});
+        evidenceCoverage.push({mode,scene:card.dataset.scene,state:dialog.querySelector('.sc-detail-state strong').textContent,duration:dialog.querySelector('.sc-detail-state span').textContent,image:dialog.querySelector('.sc-detail-preview-card .sc-photo').getAttribute('src'),focusBox:!!dialog.querySelector('.sc-detection-box'),cameraItems:dialog.querySelectorAll('.sc-evidence-camera-item').length,memoryItems:dialog.querySelectorAll('.sc-evidence-memory li').length,compactItems,fullItems:dialog.querySelectorAll('.sc-video-item').length,featured:dialog.querySelectorAll('.sc-video-item.is-featured').length});
         dialog.close();
       }
     }
@@ -256,9 +256,9 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     assert.ok(encoded,'browser harness did not return results');
     const result=JSON.parse(Buffer.from(encoded,'base64').toString('utf8'));
     assert.equal(result.error,undefined);
-    assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:6,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:247,refreshButtons:6,checkedTimeInsideTrigger:false,goalFeedbackButtons:12,goalFeedbackAligned:true});
+    assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:8,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:247,refreshButtons:8,checkedTimeInsideTrigger:false,goalFeedbackButtons:16,goalFeedbackAligned:true});
     assert.deepEqual(result.refreshed,{time:'just now',dialogOpen:false});
-    assert.deepEqual(result.alertStates,['PERSON','OPEN','NEEDS CHARGING','Package left','NOT OUT','CARDINAL']);
+    assert.deepEqual(result.alertStates,['PERSON','OPEN','NEEDS CHARGING','Package left','NOT OUT','CARDINAL','AT DOOR','RACCOON']);
     assert.deepEqual(result.sheet,{open:true,modal:true,title:'Home security',state:'PERSON',image:'assets/smart-security-motion.webp?v=1',sameImage:true,largerPreview:true,cameraItems:4,videoItems:9,videoTitle:'Video Evidences',videoScrolls:true,ratings:['5','5','3','3','2','2','2','1','1'],highlighted:2,scoreTopRight:true,previewRatingHidden:true,compactThumb:true,imageOnly:true,thumbsMatchImage:true,memoryItems:2,checked:'6 secs ago',evidenceRightOfState:true,cardHeightUnchanged:true,cardTopUnchanged:true,scrollUnchanged:true,bodyLocked:true,detectionBox:true,stateColorMatchesCard:true,durationColorMatchesCard:true});
     assert.deepEqual(result.selectedVideo,{caption:true,visible:true,selected:true,highlightedOutline:true,previewRating:{text:'5',visible:true,topRight:true,featured:true,label:'Evidence rating 5'},feedback:true,previewFilled:true,atTop:true});
     assert.deepEqual(result.lastVideo,{selected:true,caption:true,time:'54 secs ago',previewRating:'1',ratingNotFeatured:true});
@@ -275,8 +275,14 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     assert.equal(result.newCardScrollLeft,0);
     assert.deepEqual(result.normalTreatment,{stateGradientMatchesCard:true,durationBackgroundMatchesCard:true});
     assert.deepEqual(result.dark,{section:true,lightPage:false});
-    assert.equal(result.evidenceCoverage.length,12);
-    assert.ok(result.evidenceCoverage.every(item=>item.compactItems===9&&item.fullItems===20&&item.featured>=2&&item.featured<=3));
+    assert.equal(result.evidenceCoverage.length,16);
+    assert.ok(result.evidenceCoverage.every(item=>item.compactItems===9&&item.fullItems===20&&item.featured>=2&&item.featured<=3&&item.focusBox&&item.cameraItems>=1&&item.memoryItems===2));
+    assert.deepEqual(result.evidenceCoverage.filter(item=>['pets','wildlife'].includes(item.scene)).map(({mode,scene,state,duration,image})=>({mode,scene,state,duration,image})),[
+      {mode:'normal',scene:'pets',state:'RESTING',duration:'for 35 mins',image:'assets/smart-pet-resting.webp?v=1'},
+      {mode:'normal',scene:'wildlife',state:'NO WILDLIFE',duration:'for 2 hours',image:'assets/smart-wildlife-clear.webp?v=1'},
+      {mode:'alert',scene:'pets',state:'AT DOOR',duration:'for 8 mins',image:'assets/smart-pet-at-door.webp?v=1'},
+      {mode:'alert',scene:'wildlife',state:'RACCOON',duration:'for 4 mins',image:'assets/smart-wildlife-raccoon.webp?v=1'},
+    ]);
   }finally{
     await new Promise(resolve=>server.close(resolve));
     rmSync(userDataDir,{recursive:true,force:true,maxRetries:5,retryDelay:100});

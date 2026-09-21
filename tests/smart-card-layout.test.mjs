@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import test from 'node:test';
 
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
@@ -192,6 +192,8 @@ test('detail sheet identifies the cameras involved in each card state', () => {
   assert.match(html, /front:\['Front Door Cam'\]/);
   assert.match(html, /bins:\['Driveway Cam'\]/);
   assert.match(html, /birds:\['Backyard Feeder Cam'\]/);
+  assert.match(html, /pets:\['Living Room Cam'\]/);
+  assert.match(html, /wildlife:\['Backyard Cam'\]/);
   assert.doesNotMatch(html, /sc-camera-source-section/);
   assert.doesNotMatch(html, /sc-camera-source-list/);
   assert.match(html, /function cameraSourceSummary\(cameras\)/);
@@ -207,7 +209,7 @@ test('detail sheet identifies the cameras involved in each card state', () => {
 });
 
 test('normal and alert states provide twenty video observations and two memories for every scene', () => {
-  for (const scene of ['security', 'garage', 'ev', 'front', 'bins', 'birds']) {
+  for (const scene of ['security', 'garage', 'ev', 'front', 'bins', 'birds', 'pets', 'wildlife']) {
     const occurrences = html.match(new RegExp(`${scene}:\\{video:\\[`, 'g')) ?? [];
     assert.equal(occurrences.length, 2, `${scene} needs normal and alert evidence`);
   }
@@ -235,6 +237,20 @@ test('bird watcher card has paired normal and alert evidence', () => {
   assert.doesNotMatch(html, /for 18 mins/);
   assert.match(html, /birds:\{state:'CARDINAL'.*smart-bird-cardinal\.webp/);
   assert.match(html, /\.sc-card\[data-scene="birds"\] \.sc-detection-box/);
+});
+
+test('pet and wild animal watcher cards have paired camera states and evidence', () => {
+  assert.match(html, /data-scene="pets" data-checked="11 secs ago"[^>]*><span class="sc-label">Pet watcher<\/span>/);
+  assert.match(html, /pets:\{state:'RESTING',sub:'for 35 mins'.*smart-pet-resting\.webp/);
+  assert.match(html, /pets:\{state:'AT DOOR',sub:'for 8 mins'.*smart-pet-at-door\.webp/);
+  assert.match(html, /data-scene="wildlife" data-checked="22 secs ago"[^>]*><span class="sc-label">Wild animal watcher<\/span>/);
+  assert.match(html, /wildlife:\{state:'NO WILDLIFE',sub:'for 2 hours'.*smart-wildlife-clear\.webp/);
+  assert.match(html, /wildlife:\{state:'RACCOON',sub:'for 4 mins'.*smart-wildlife-raccoon\.webp/);
+  for (const name of ['smart-pet-resting.webp', 'smart-pet-at-door.webp', 'smart-wildlife-clear.webp', 'smart-wildlife-raccoon.webp']) {
+    assert.ok(existsSync(new URL(`../assets/${name}`, import.meta.url)), `${name} must be present`);
+  }
+  assert.match(html, /\.sc-card\[data-scene="pets"\] \.sc-detection-box\{/);
+  assert.match(html, /\.sc-card\[data-scene="wildlife"\] \.sc-detection-box\{/);
 });
 
 test('dedicated Pages entry opens the standalone Smart Cards view', () => {

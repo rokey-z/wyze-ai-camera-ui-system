@@ -10,6 +10,8 @@
 <link rel="preload" as="image" href="assets/smart-security-secure.webp?v=1" />
 <link rel="preload" as="image" href="assets/smart-bird-feeder-clear.webp?v=1" />
 <link rel="preload" as="image" href="assets/smart-ev-charging.webp?v=1" />
+<link rel="preload" as="image" href="assets/smart-pet-resting.webp?v=1" />
+<link rel="preload" as="image" href="assets/smart-wildlife-clear.webp?v=1" />
 <style>
   :root{
     --bg:#0e1726; --panel:#15203250; --card:#1b2940; --line:#2a3a55;
@@ -1638,11 +1640,15 @@
   .sc-card[data-scene="front"]{--sc-focus-x:60.5%;--sc-focus-y:74%}.sc-card[data-scene="front"] .sc-detection-box{left:42%;top:62%;width:37%;height:24%}
   .sc-card[data-scene="bins"]{--sc-focus-x:78%;--sc-focus-y:25%}.sc-card[data-scene="bins"] .sc-detection-box{left:70%;top:14%;width:16%;height:22%}
   .sc-card[data-scene="ev"]{--sc-focus-x:40.5%;--sc-focus-y:43.5%}.sc-card[data-scene="ev"] .sc-detection-box{left:32%;top:28%;width:17%;height:31%}
+  .sc-card[data-scene="pets"]{--sc-focus-x:61.5%;--sc-focus-y:47%}.sc-card[data-scene="pets"] .sc-detection-box{left:47%;top:31%;width:29%;height:32%}
+  .sc-card[data-scene="wildlife"]{--sc-focus-x:68%;--sc-focus-y:42%}.sc-card[data-scene="wildlife"] .sc-detection-box{left:57%;top:29%;width:22%;height:26%}
   .smartcards.is-alert .sc-detection-box{border-color:#71edbe;box-shadow:0 0 0 1px #061c1673,0 0 12px #71edbe4d}
   .smartcards.is-alert .sc-card[data-scene="garage"]{--sc-focus-x:48%;--sc-focus-y:36%}.smartcards.is-alert .sc-card[data-scene="garage"] .sc-detection-box{left:10%;top:7%;width:76%;height:58%}
   .smartcards.is-alert .sc-card[data-scene="front"]{--sc-focus-x:58%;--sc-focus-y:75%}.smartcards.is-alert .sc-card[data-scene="front"] .sc-detection-box{left:48%;top:66%;width:20%;height:18%}
   .smartcards.is-alert .sc-card[data-scene="bins"] .sc-photo{object-position:left center}
   .smartcards.is-alert .sc-card[data-scene="bins"]{--sc-focus-x:15.5%;--sc-focus-y:57%}.smartcards.is-alert .sc-card[data-scene="bins"] .sc-detection-box{left:8%;top:38%;width:15%;height:38%}
+  .smartcards.is-alert .sc-card[data-scene="pets"]{--sc-focus-x:85%;--sc-focus-y:24%}.smartcards.is-alert .sc-card[data-scene="pets"] .sc-detection-box{left:75%;top:11%;width:20%;height:30%}
+  .smartcards.is-alert .sc-card[data-scene="wildlife"]{--sc-focus-x:58%;--sc-focus-y:59%}.smartcards.is-alert .sc-card[data-scene="wildlife"] .sc-detection-box{left:47%;top:50%;width:23%;height:20%}
   .sc-security-cameras{background:#07111f}.sc-security-cameras .sc-focus-layer{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:2px}
   .sc-security-cameras .sc-photo,.sc-security-cameras .sc-camera-thumb{position:relative;inset:auto;display:block;width:100%;height:100%;object-fit:cover;min-width:0;min-height:0}
   .sc-card[data-scene="security"]{--sc-focus-x:28.5%;--sc-focus-y:20.5%}.sc-card[data-scene="security"] .sc-detection-box{left:24%;top:8%;width:9%;height:25%}
@@ -2768,6 +2774,8 @@ Goal: *"Did the bins go out — and come back?"*
           <article class="sc-card sc-hero" data-scene="front" data-tone="front" data-checked="2 mins ago"><span class="sc-label">Delivery monitor</span><div class="sc-card-top"><div class="sc-state">NO PACKAGE</div><p class="sc-sub">for 3 hours</p></div><div class="sc-scene"><img class="sc-photo" src="assets/smart-front-door-clear.webp?v=2" alt="Clear front porch with no packages or visitors" width="1672" height="941" loading="eager"><span class="sc-detection-box" aria-hidden="true"></span></div><div class="sc-actions"><button class="primary">Go live</button><div class="sc-feedback" aria-label="Was this result helpful?"><button aria-label="Correct result"><svg viewBox="0 0 24 24"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg></button><button aria-label="Incorrect result"><svg viewBox="0 0 24 24"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg></button></div></div></article>
           <article class="sc-card sc-hero" data-scene="bins" data-tone="bins" data-checked="5 mins ago"><span class="sc-label">Trash day reminder</span><div class="sc-card-top"><div class="sc-state">Bins OUT</div><p class="sc-sub">Ready for tomorrow's pickup</p></div><div class="sc-scene"><img class="sc-photo" src="assets/smart-trash-bins-out.webp?v=2" alt="Trash and recycling bins placed at the curb for pickup" width="1672" height="941" loading="eager"><span class="sc-detection-box" aria-hidden="true"></span></div><div class="sc-actions"><button class="primary">Go live</button><div class="sc-feedback" aria-label="Was this result helpful?"><button aria-label="Correct result"><svg viewBox="0 0 24 24"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg></button><button aria-label="Incorrect result"><svg viewBox="0 0 24 24"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg></button></div></div></article>
           <article class="sc-card sc-hero" data-scene="birds" data-checked="20 secs ago"><span class="sc-label">Bird watcher</span><div class="sc-card-top"><div class="sc-state">NO BIRDS</div><p class="sc-sub">3 bird visits today</p></div><div class="sc-scene"><img class="sc-photo" src="assets/smart-bird-feeder-clear.webp?v=1" alt="Backyard bird feeder is clear with no birds present" width="1672" height="941" loading="lazy"><span class="sc-detection-box" aria-hidden="true"></span></div><div class="sc-actions"><button class="primary">Go live</button><div class="sc-feedback" aria-label="Was this result helpful?"><button aria-label="Correct result"><svg viewBox="0 0 24 24"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg></button><button aria-label="Incorrect result"><svg viewBox="0 0 24 24"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg></button></div></div></article>
+          <article class="sc-card sc-hero" data-scene="pets" data-checked="11 secs ago"><span class="sc-label">Pet watcher</span><div class="sc-card-top"><div class="sc-state">RESTING</div><p class="sc-sub">for 35 mins</p></div><div class="sc-scene"><img class="sc-photo" src="assets/smart-pet-resting.webp?v=1" alt="Golden retriever resting on the living room rug" width="1672" height="941" loading="lazy"><span class="sc-detection-box" aria-hidden="true"></span></div><div class="sc-actions"><button class="primary">Go live</button><div class="sc-feedback" aria-label="Was this result helpful?"><button aria-label="Correct result"><svg viewBox="0 0 24 24"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg></button><button aria-label="Incorrect result"><svg viewBox="0 0 24 24"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg></button></div></div></article>
+          <article class="sc-card sc-hero" data-scene="wildlife" data-checked="22 secs ago"><span class="sc-label">Wild animal watcher</span><div class="sc-card-top"><div class="sc-state">NO WILDLIFE</div><p class="sc-sub">for 2 hours</p></div><div class="sc-scene"><img class="sc-photo" src="assets/smart-wildlife-clear.webp?v=1" alt="Fenced backyard is clear of wild animals near the bins" width="1672" height="941" loading="lazy"><span class="sc-detection-box" aria-hidden="true"></span></div><div class="sc-actions"><button class="primary">Go live</button><div class="sc-feedback" aria-label="Was this result helpful?"><button aria-label="Correct result"><svg viewBox="0 0 24 24"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg></button><button aria-label="Incorrect result"><svg viewBox="0 0 24 24"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg></button></div></div></article>
         </div>
       </div>
     </section>
@@ -6554,7 +6562,9 @@ const SMART_CARD_STATES={
     bins:{state:'Bins OUT',sub:"Ready for tomorrow's pickup",checked:'5 mins ago',src:'assets/smart-trash-bins-out.webp?v=2',alt:'Trash and recycling bins placed at the curb for pickup'},
     security:{state:'SAFE',sub:'for 2 hours',checked:'8 secs ago',src:'assets/smart-security-secure.webp?v=1',alt:'Closed side gate with the secured path clear'},
     birds:{state:'NO BIRDS',sub:'3 bird visits today',checked:'20 secs ago',src:'assets/smart-bird-feeder-clear.webp?v=1',alt:'Backyard bird feeder is clear with no birds present'},
-    ev:{state:'CHARGING',sub:'for 45 mins',checked:'15 secs ago',src:'assets/smart-ev-charging.webp?v=1',alt:'Electric car connected to a wall charger in the garage'}
+    ev:{state:'CHARGING',sub:'for 45 mins',checked:'15 secs ago',src:'assets/smart-ev-charging.webp?v=1',alt:'Electric car connected to a wall charger in the garage'},
+    pets:{state:'RESTING',sub:'for 35 mins',checked:'11 secs ago',src:'assets/smart-pet-resting.webp?v=1',alt:'Golden retriever resting on the living room rug'},
+    wildlife:{state:'NO WILDLIFE',sub:'for 2 hours',checked:'22 secs ago',src:'assets/smart-wildlife-clear.webp?v=1',alt:'Fenced backyard is clear of wild animals near the bins'}
   },
   alert:{
     garage:{state:'OPEN',sub:'for 15 mins',checked:'18 secs ago',src:'assets/smart-garage.webp?v=2',alt:'Open garage door shown in the latest camera snapshot'},
@@ -6562,7 +6572,9 @@ const SMART_CARD_STATES={
     bins:{state:'NOT OUT',sub:'trash pickup tomorrow',checked:'4 mins ago',src:'assets/smart-trash-bins-not-out.webp?v=1',alt:'Trash and recycling bins stored beside the garage while the curb remains empty'},
     security:{state:'PERSON',sub:'for 2 mins',checked:'6 secs ago',src:'assets/smart-security-motion.webp?v=1',alt:'Person detected standing near the closed side gate'},
     birds:{state:'CARDINAL',sub:'for 30 secs',checked:'6 secs ago',src:'assets/smart-bird-cardinal.webp?v=1',alt:'Northern cardinal detected on the backyard bird feeder'},
-    ev:{state:'NEEDS CHARGING',sub:'last charged 2 days ago',checked:'15 secs ago',src:'assets/smart-ev-unplugged.webp?v=1',alt:'Electric car parked in the garage without a charging cable connected'}
+    ev:{state:'NEEDS CHARGING',sub:'last charged 2 days ago',checked:'15 secs ago',src:'assets/smart-ev-unplugged.webp?v=1',alt:'Electric car parked in the garage without a charging cable connected'},
+    pets:{state:'AT DOOR',sub:'for 8 mins',checked:'7 secs ago',src:'assets/smart-pet-at-door.webp?v=1',alt:'Golden retriever waiting beside the closed patio door'},
+    wildlife:{state:'RACCOON',sub:'for 4 mins',checked:'9 secs ago',src:'assets/smart-wildlife-raccoon.webp?v=1',alt:'Raccoon visible on the backyard lawn near the bins'}
   }
 };
 const SMART_CARD_EVIDENCE={
@@ -6572,7 +6584,9 @@ const SMART_CARD_EVIDENCE={
     front:{video:['The front porch and doormat are clear; no package-shaped object or person is visible.','The entry path and doorstep have remained unchanged across recent snapshots.','No motion is present inside the delivery detection zone.'],memory:['You asked to monitor deliveries, and no delivery is currently expected at the door.','Packages are normally brought inside within 20 minutes of arrival.']},
     bins:{video:['Trash and recycling bins are visible at the curb inside the pickup zone.','Both bin lids appear closed and the driveway path remains clear.','The bins have stayed at the curb across the latest snapshots.'],memory:['Pickup is tomorrow morning; your household normally moves bins out the evening before.','The current placement matches the curb position used on previous pickup days.']},
     birds:{video:['The feeder tray and perches are visible with no bird detected in the current snapshot.','No wing movement or perched shape appears around the feeder.','The surrounding branches and ground beneath the feeder are clear.'],memory:['You follow cardinal visits and prefer alerts only when a bird is clearly perched.','Short fly-bys are usually ignored unless the bird settles at the feeder.']},
-    ev:{video:['The charging connector is visibly seated in the vehicle charge port.','The cable runs from the wall charger to the parked car without an obstruction.','A green charger indicator is visible and the vehicle remains stationary.'],memory:['You usually plug in after the evening arrival so the car is ready by 7:30 AM.','Tonight’s charging session matches your normal weekday routine.']}
+    ev:{video:['The charging connector is visibly seated in the vehicle charge port.','The cable runs from the wall charger to the parked car without an obstruction.','A green charger indicator is visible and the vehicle remains stationary.'],memory:['You usually plug in after the evening arrival so the car is ready by 7:30 AM.','Tonight’s charging session matches your normal weekday routine.']},
+    pets:{video:['The golden retriever is lying on the living room rug with its head down.','The dog has stayed in the same resting area across recent snapshots.','The patio door is closed and the dog is not waiting beside it.'],memory:['Your household prefers quiet updates while the dog is resting indoors.','The living room rug is a usual resting spot during the afternoon.']},
+    wildlife:{video:['The backyard lawn and closed bins are clear; no wild animal is visible.','The garden beds and fence line show no animal movement.','The space around the bins remains clear in recent snapshots.'],memory:['You asked to watch for wild animals near the backyard bins after dusk.','Your household typically ignores ordinary leaf and shadow movement in this camera view.']}
   },
   alert:{
     security:{video:['One person is standing inside the side-gate detection zone and has remained there for two minutes.','The person entered from the rear path and stopped beside the closed gate.','No matching household face or expected-visitor signal is available for this event.'],memory:['No household member or expected visitor is scheduled at the side gate tonight.','Activity in this zone after Home mode is armed is unusual for this household.']},
@@ -6580,7 +6594,9 @@ const SMART_CARD_EVIDENCE={
     front:{video:['One parcel is resting on the porch beside the entry mat; no courier remains.','The package first appeared after a delivery person approached the front door.','The parcel has not moved during the latest hour of snapshots.'],memory:['You asked to monitor deliveries and usually bring packages inside within 20 minutes.','No household member has arrived home since this package was delivered.']},
     bins:{video:['The curb zone is empty; both bins remain next to the garage.','Neither bin has moved toward the pickup area in recent snapshots.','The driveway is clear, so the stored bins remain easy to reach.'],memory:['Pickup is tomorrow morning and your household usually moves bins out the evening before.','Bins are normally at the curb by this point on the night before pickup.']},
     birds:{video:['One adult male northern cardinal is perched on the feeder tray.','The bird remains fully visible inside the feeder detection box.','Red plumage, a black face mask, and a crested head support the identification.'],memory:['You follow cardinal visits and asked to surface clear feeder sightings.','This matches the species you most often save from backyard camera events.']},
-    ev:{video:['The car is parked in its charging bay with no connector attached.','The vehicle charge-port door is closed and the connector remains docked on the wall.','The garage scene has remained unchanged across the latest snapshots.'],memory:['You asked to be reminded when the car misses its usual overnight charging routine.','The car was last seen connected 2 days ago and has remained home through two overnight charging windows.']}
+    ev:{video:['The car is parked in its charging bay with no connector attached.','The vehicle charge-port door is closed and the connector remains docked on the wall.','The garage scene has remained unchanged across the latest snapshots.'],memory:['You asked to be reminded when the car misses its usual overnight charging routine.','The car was last seen connected 2 days ago and has remained home through two overnight charging windows.']},
+    pets:{video:['The dog is standing beside the closed patio door and looking outside.','The dog remains at the door in successive living room snapshots.','No person is visible opening the door or approaching the dog.'],memory:['Your household asked for a heads-up when the dog waits at the patio door longer than five minutes.','The dog normally leaves this spot once someone opens the door.']},
+    wildlife:{video:['One raccoon is visible on the lawn in front of the closed bins.','Its dark facial mask and ringed tail are visible in the backyard camera view.','The raccoon remains inside the tracked yard area; no second animal is visible.'],memory:['You asked to be notified when wild animals appear near the backyard bins after dusk.','Raccoon visits near the bins are unusual in this household’s recent camera history.']}
   }
 };
 /* Additional recent frames keep each card's video history specific to its current state. */
@@ -6633,6 +6649,22 @@ const SMART_CARD_VIDEO_HISTORY={
       'The cable follows the same unobstructed route to the car.',
       'The vehicle remains parked in its charging position.',
       'An earlier frame also shows the connector attached.'
+    ],
+    pets:[
+      'The dog remains stretched out on the living room rug.',
+      'Its head is down and no pacing is visible.',
+      'The dog bed and patio doorway remain undisturbed.',
+      'The dog has not moved toward the patio door.',
+      'The same resting posture appears in another frame.',
+      'An earlier view also shows the dog resting indoors.'
+    ],
+    wildlife:[
+      'The lawn between the porch and bins is empty.',
+      'No animal shape is visible by the closed trash bins.',
+      'The garden bed remains still in this frame.',
+      'The fence line shows no animal entering the yard.',
+      'The porch light illuminates a clear patch of grass.',
+      'An earlier view also shows the backyard clear.'
     ]
   },
   alert:{
@@ -6683,6 +6715,22 @@ const SMART_CARD_VIDEO_HISTORY={
       'No person approaches the car to plug it in.',
       'The garage view shows the same unplugged position.',
       'An earlier frame also shows the car parked and unplugged.'
+    ],
+    pets:[
+      'The dog remains beside the closed patio door.',
+      'Its body is upright and facing the backyard.',
+      'The living room rug is empty in this frame.',
+      'No person enters the room to open the door.',
+      'The dog stays in the doorway area without moving away.',
+      'An earlier frame shows the dog approaching the patio door.'
+    ],
+    wildlife:[
+      'The raccoon remains visible on the backyard lawn.',
+      'Its ringed tail is clear against the grass.',
+      'The animal is in front of the bins, not inside them.',
+      'Both bin lids remain shut as the animal passes.',
+      'No other wild animal appears along the fence.',
+      'An earlier frame shows the raccoon entering the lit yard.'
     ]
   }
 };
@@ -6723,6 +6771,18 @@ const SMART_CARD_VIDEO_ARCHIVE={
       'The car has not shifted from its parking spot.', 'No person approaches the charging cable.', 'The connector stays in the same position.',
       'The wall charger remains connected to the car.', 'The charge-port area is visible and unchanged.', 'The garage floor around the cable is clear.',
       'A previous frame shows the same connected setup.', 'The oldest recent frame also shows the car plugged in.'
+    ],
+    pets:[
+      'The dog stays on the rug near the center of the room.', 'No paw movement is visible at the patio door.', 'The dog keeps a relaxed lying posture.',
+      'The couch and doorway remain unchanged around the dog.', 'No other pet enters the camera view.', 'The dog has not approached the food bowl.',
+      'The patio door stays closed in this frame.', 'The dog remains away from the door mat.', 'The rug continues to support the resting dog.',
+      'A previous view shows the dog settling on the rug.', 'The oldest recent frame shows the dog resting indoors.'
+    ],
+    wildlife:[
+      'The closed bins stand against the backyard fence.', 'No animal crosses the open grass.', 'The garden edge remains clear.',
+      'The fence gap shows no movement.', 'No animal appears under the porch light.', 'The bin area is unchanged from the prior frame.',
+      'The lawn remains clear in another view.', 'No animal approaches the garden bed.', 'The patio edge remains empty.',
+      'A previous view shows the same clear yard.', 'The oldest recent frame shows no wild animal.'
     ]
   },
   alert:{
@@ -6761,6 +6821,18 @@ const SMART_CARD_VIDEO_ARCHIVE={
       'The charging bay remains occupied by the same car.', 'No person approaches the plug in this frame.', 'The charge-port area is still uncovered by a cable.',
       'The garage camera sees no charging activity.', 'The connector position is unchanged.', 'The parked vehicle remains stationary.',
       'An earlier view also shows the car unplugged.', 'The oldest recent frame shows no cable attached.'
+    ],
+    pets:[
+      'The dog is still positioned by the patio door.', 'Its nose points toward the glass.', 'The dog does not return to the rug.',
+      'The door remains closed while the dog waits.', 'No household member enters the camera frame.', 'The dog stays on the door mat.',
+      'The dog remains visible beside the handle side of the door.', 'The living room stays otherwise quiet.', 'The dog is upright in another frame.',
+      'A prior view shows the dog leaving the rug.', 'The first recent frame shows it walking to the door.'
+    ],
+    wildlife:[
+      'The raccoon moves across the lit grass.', 'Its dark mask remains visible in this frame.', 'The ringed tail is visible behind the animal.',
+      'The bins remain shut as the raccoon passes.', 'No second animal follows from the fence.', 'The raccoon stays within the backyard camera view.',
+      'The porch edge remains clear of animals.', 'The animal is visible before reaching the garden bed.', 'The raccoon remains on the lawn.',
+      'An earlier frame shows it beside the fence.', 'The first recent frame catches it entering the yard.'
     ]
   }
 };
@@ -6770,8 +6842,8 @@ for(const mode of ['normal','alert']){
   }
 }
 const SMART_CARD_VIDEO_RATINGS={
-  normal:{security:[5,4,4],garage:[5,4,3],ev:[5,4,3],front:[5,4,3],bins:[5,4,4],birds:[5,4,3]},
-  alert:{security:[5,5,3],garage:[5,4,4],ev:[5,4,3],front:[5,4,3],bins:[5,4,4],birds:[5,5,4]}
+  normal:{security:[5,4,4],garage:[5,4,3],ev:[5,4,3],front:[5,4,3],bins:[5,4,4],birds:[5,4,3],pets:[5,4,3],wildlife:[5,4,3]},
+  alert:{security:[5,5,3],garage:[5,4,4],ev:[5,4,3],front:[5,4,3],bins:[5,4,4],birds:[5,5,4],pets:[5,4,4],wildlife:[5,5,4]}
 };
 const SMART_CARD_EVIDENCE_ICONS={
   video:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M8.5 15 11 7h2l2.5 8M4 14l3-8h3M20 14l-3-8h-3M9 17h6"/></svg>',
@@ -6784,7 +6856,9 @@ const SMART_CARD_CAMERAS={
   front:['Front Door Cam'],
   bins:['Driveway Cam'],
   birds:['Backyard Feeder Cam'],
-  ev:['EV Garage Cam']
+  ev:['EV Garage Cam'],
+  pets:['Living Room Cam'],
+  wildlife:['Backyard Cam']
 };
 const SMART_CARD_FEEDBACK_ICONS={
   up:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg>',
