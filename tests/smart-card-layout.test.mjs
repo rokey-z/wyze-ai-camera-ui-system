@@ -116,14 +116,15 @@ test('detail sheet contains the same video and household evidence', () => {
 
 test('video evidences scroll horizontally with thumbnail ratings and top evidence highlights', () => {
   assert.match(html, /class="sc-video-strip sc-evidence-video" aria-label="Video evidences; swipe horizontally"/);
-  assert.match(html, /\.sc-video-strip\{display:flex;max-width:calc\(100% \+ 36px\);gap:11px;[^}]*overflow-x:auto;[^}]*scroll-snap-type:x mandatory/);
-  assert.match(html, /\.sc-video-item\{flex:0 0 132px/);
+  assert.match(html, /\.sc-video-strip\{display:flex;max-width:calc\(100% \+ 36px\);gap:8px;[^}]*overflow-x:auto;[^}]*scroll-snap-type:x mandatory/);
+  assert.match(html, /\.sc-video-item\{flex:0 0 94px/);
+  assert.match(html, /\.sc-video-thumb\{[^}]*height:64px/);
   assert.match(html, /\.sc-video-item\.is-featured \.sc-video-thumb\{border-color:#71edbeaa;box-shadow:0 0 0 1px #71edbe5c\}/);
-  assert.match(html, /\.sc-video-score\{position:absolute;top:7px;right:7px/);
-  assert.match(html, /const highlightAt=\[\.\.\.ratings\]\.sort\(\(a,b\)=>b-a\)\[1\]/);
-  assert.match(html, /ratings\[index\]>=highlightAt\?' is-featured':''/);
+  assert.match(html, /\.sc-video-score\{position:absolute;top:5px;right:5px/);
+  assert.match(html, /\.filter\(item=>item\.score>=4\)\.sort\(\(a,b\)=>b\.score-a\.score\|\|a\.index-b\.index\)\.slice\(0,3\)/);
+  assert.match(html, /featuredIndexes\.has\(index\)\?' is-featured':''/);
   assert.match(html, /class="sc-video-thumb" type="button" data-video-index="\$\{index\}" aria-pressed="false"/);
-  assert.match(html, /class="sc-video-score" aria-hidden="true">\$\{ratings\[index\]\}<\/span>/);
+  assert.match(html, /class="sc-video-score" aria-hidden="true">\$\{scores\[index\]\}<\/span>/);
   assert.doesNotMatch(html, /class="sc-video-score"[^>]*>\$\{ratings\[index\]\}\/5/);
   assert.doesNotMatch(html, /class="sc-video-copy"/);
   assert.match(html, /caption\.querySelector\('p'\)\.textContent=SMART_CARD_EVIDENCE\[mode\]\[scene\]\.video\[index\]/);
@@ -195,11 +196,12 @@ test('detail sheet identifies the cameras involved in each card state', () => {
   assert.match(html, /cameraSummary\.setAttribute\('aria-label',`Cameras involved: \$\{SMART_CARD_CAMERAS\[scene\]\.join\(', '\)\}`\)/);
 });
 
-test('normal and alert states provide three observations and two memories for every scene', () => {
+test('normal and alert states provide nine video observations and two memories for every scene', () => {
   for (const scene of ['security', 'garage', 'ev', 'front', 'bins', 'birds']) {
     const occurrences = html.match(new RegExp(`${scene}:\\{video:\\[`, 'g')) ?? [];
     assert.equal(occurrences.length, 2, `${scene} needs normal and alert evidence`);
   }
+  assert.match(html, /SMART_CARD_EVIDENCE\[mode\]\[scene\]\.video\.push\(\.\.\.SMART_CARD_VIDEO_HISTORY\[mode\]\[scene\]\)/);
   assert.match(html, /card\.querySelector\('\.sc-evidence-preview'\)\.textContent=evidence\.video\[0\]/);
   assert.match(html, /videoStrip\.innerHTML=videoEvidenceStrip\(evidence\.video,state,SMART_CARD_VIDEO_RATINGS\[mode\]\[scene\]\)/);
   assert.match(html, /detailDialog\.querySelector\('\.sc-evidence-memory'\)\.innerHTML=evidenceList\(evidence\.memory,'household memory'\)/);

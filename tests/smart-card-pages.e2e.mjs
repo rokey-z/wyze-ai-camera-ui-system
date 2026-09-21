@@ -79,7 +79,7 @@ const inspect=()=>{
       ratings:[...videoStrip.querySelectorAll('.sc-video-score')].map(node=>node.textContent),
       highlighted:videoStrip.querySelectorAll('.sc-video-item.is-featured').length,
       scoreTopRight:firstScore.right<=firstThumb.right&&firstScore.top>=firstThumb.top&&firstScore.left>firstThumb.left+firstThumb.width/2,
-      compactThumb:firstThumb.width<=140&&firstThumb.height<=85,
+      compactThumb:firstThumb.width<=100&&firstThumb.height<=70,
       imageOnly:!videoStrip.querySelector('.sc-video-copy,.sc-video-footer'),
       thumbsMatchImage:[...videoStrip.querySelectorAll('img')].every(image=>image.getAttribute('src')===cardSource),
       memoryItems:dialog.querySelectorAll('.sc-evidence-memory li').length,
@@ -95,12 +95,18 @@ const inspect=()=>{
     };
     videoStrip.querySelectorAll('.sc-video-thumb')[1].click();
     const selectedVideo={
-      caption:dialog.querySelector('.sc-detail-preview-caption').textContent.includes('1 min ago')&&videoStrip.querySelectorAll('.sc-video-thumb')[1].getAttribute('aria-label').endsWith(dialog.querySelector('.sc-detail-preview-caption p').textContent),
+      caption:dialog.querySelector('.sc-detail-preview-caption').textContent.includes('20 secs ago')&&videoStrip.querySelectorAll('.sc-video-thumb')[1].getAttribute('aria-label').endsWith(dialog.querySelector('.sc-detail-preview-caption p').textContent),
       visible:!dialog.querySelector('.sc-detail-preview-caption').hidden,
       selected:videoStrip.querySelectorAll('.sc-video-thumb[aria-pressed="true"]').length===1&&videoStrip.querySelectorAll('.sc-video-thumb')[1].getAttribute('aria-pressed')==='true',
       feedback:dialog.querySelectorAll('.sc-detail-preview-feedback button').length===2,
       previewFilled:getComputedStyle(dialog.querySelector('.sc-detail-preview-card .sc-photo')).objectFit==='cover',
       atTop:dialog.scrollTop===0,
+    };
+    videoStrip.querySelectorAll('.sc-video-thumb')[8].click();
+    const lastVideo={
+      selected:videoStrip.querySelectorAll('.sc-video-thumb')[8].getAttribute('aria-pressed')==='true',
+      caption:videoStrip.querySelectorAll('.sc-video-thumb')[8].getAttribute('aria-label').endsWith(dialog.querySelector('.sc-detail-preview-caption p').textContent),
+      time:dialog.querySelector('.sc-detail-preview-caption time').textContent,
     };
     videoStrip.scrollLeft=200;
     dialog.querySelector('.sc-detail-close').click();
@@ -125,7 +131,16 @@ const inspect=()=>{
       section:doc.querySelector('#smartCards').classList.contains('dark'),
       lightPage:doc.body.classList.contains('sc-light-page'),
     };
-    finish({initial,refreshed,alertStates,sheet,selectedVideo,closed,previewOpens,cardBodyOpens,newCardScrollLeft,normalTreatment,dark});
+    const evidenceCoverage=[];
+    for(const mode of ['normal','alert']){
+      doc.querySelector('[data-sc-state="'+mode+'"]').click();
+      for(const card of doc.querySelectorAll('.sc-grid>.sc-card[data-scene]')){
+        card.querySelector('.sc-evidence-trigger').click();
+        evidenceCoverage.push({mode,scene:card.dataset.scene,items:dialog.querySelectorAll('.sc-video-item').length,featured:dialog.querySelectorAll('.sc-video-item.is-featured').length});
+        dialog.close();
+      }
+    }
+    finish({initial,refreshed,alertStates,sheet,selectedVideo,lastVideo,closed,previewOpens,cardBodyOpens,newCardScrollLeft,normalTreatment,dark,evidenceCoverage});
   }catch(error){
     if(attempts<20)setTimeout(inspect,150);
     else finish({error:String(error)});
@@ -211,14 +226,17 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:6,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:247,refreshButtons:6,checkedTimeInsideTrigger:false,goalFeedbackButtons:12,goalFeedbackAligned:true});
     assert.deepEqual(result.refreshed,{time:'just now',dialogOpen:false});
     assert.deepEqual(result.alertStates,['PERSON','OPEN','NEEDS CHARGING','Package left','NOT OUT','CARDINAL']);
-    assert.deepEqual(result.sheet,{open:true,modal:true,title:'Home security',state:'PERSON',image:'assets/smart-security-motion.webp?v=1',sameImage:true,largerPreview:true,cameraItems:4,videoItems:3,videoTitle:'Video Evidences',videoScrolls:true,ratings:['5','5','3'],highlighted:2,scoreTopRight:true,compactThumb:true,imageOnly:true,thumbsMatchImage:true,memoryItems:2,checked:'6 secs ago',evidenceRightOfState:true,cardHeightUnchanged:true,cardTopUnchanged:true,scrollUnchanged:true,bodyLocked:true,detectionBox:true,stateColorMatchesCard:true,durationColorMatchesCard:true});
+    assert.deepEqual(result.sheet,{open:true,modal:true,title:'Home security',state:'PERSON',image:'assets/smart-security-motion.webp?v=1',sameImage:true,largerPreview:true,cameraItems:4,videoItems:9,videoTitle:'Video Evidences',videoScrolls:true,ratings:['5','5','3','3','2','2','2','1','1'],highlighted:2,scoreTopRight:true,compactThumb:true,imageOnly:true,thumbsMatchImage:true,memoryItems:2,checked:'6 secs ago',evidenceRightOfState:true,cardHeightUnchanged:true,cardTopUnchanged:true,scrollUnchanged:true,bodyLocked:true,detectionBox:true,stateColorMatchesCard:true,durationColorMatchesCard:true});
     assert.deepEqual(result.selectedVideo,{caption:true,visible:true,selected:true,feedback:true,previewFilled:true,atTop:true});
+    assert.deepEqual(result.lastVideo,{selected:true,caption:true,time:'2 mins ago'});
     assert.deepEqual(result.closed,{open:false,bodyLocked:false});
     assert.equal(result.previewOpens,true);
     assert.equal(result.cardBodyOpens,true);
     assert.equal(result.newCardScrollLeft,0);
     assert.deepEqual(result.normalTreatment,{stateGradientMatchesCard:true,durationBackgroundMatchesCard:true});
     assert.deepEqual(result.dark,{section:true,lightPage:false});
+    assert.equal(result.evidenceCoverage.length,12);
+    assert.ok(result.evidenceCoverage.every(item=>item.items===9&&item.featured>=2&&item.featured<=3));
   }finally{
     await new Promise(resolve=>server.close(resolve));
     rmSync(userDataDir,{recursive:true,force:true,maxRetries:5,retryDelay:100});
