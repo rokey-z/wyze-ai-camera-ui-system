@@ -35,7 +35,7 @@ test('every card has compact goal feedback aligned to the goal line right edge',
   assert.match(html, /\.sc-actions \.sc-feedback\{display:flex;position:absolute;z-index:6;top:-27px;right:0;bottom:auto/);
   assert.match(html, /\.sc-actions \.sc-feedback button,\.sc-actions \.sc-feedback button:last-child\{width:24px;height:24px/);
   assert.match(html, /body\.sc-light-page \.sc-actions \.sc-feedback button\{color:#42536b\}/);
-  assert.match(html, /\.sc-card\.is-expanded \.sc-actions \.sc-feedback\{opacity:0;visibility:hidden;pointer-events:none/);
+  assert.doesNotMatch(html, /\.sc-card\.is-expanded \.sc-actions \.sc-feedback/);
   assert.match(html, /goalFeedback\.setAttribute\('aria-label',`Rate \$\{goal\} goal`\)/);
   assert.match(html, /goalFeedbackButtons\[0\]\.setAttribute\('aria-label',`\$\{goal\} goal was helpful`\)/);
 });
@@ -64,61 +64,32 @@ test('every card scene clips all four corners to the same radius', () => {
   assert.match(html, /\.sc-card,\.sc-card\.sc-hero\{aspect-ratio:40\/27;border-radius:16px/);
 });
 
-test('expanded evidence extends below a fixed-size camera scene', () => {
-  assert.match(html, /\.sc-card\.is-expanded,\.sc-card\.sc-hero\.is-expanded\{--sc-evidence-overlap-start:57\.292%;aspect-ratio:auto;min-height:0;padding-top:var\(--sc-evidence-overlap-start\);background:transparent;box-shadow:none\}/);
-  assert.match(html, /\.sc-card\.is-expanded \.sc-scene\{inset:0 0 auto;height:auto;aspect-ratio:16\/11/);
-  assert.match(html, /\.sc-card\.is-expanded:before,\.sc-card\.is-expanded\[data-tone\]:before\{height:82px;opacity:0\}/);
+test('the detail sheet opens above a fixed feed with a large copy of the camera scene', () => {
+  assert.match(html, /const detailDialog=document\.createElement\('dialog'\)/);
+  assert.match(html, /detailDialog\.className='sc-detail-dialog'/);
+  assert.match(html, /detailDialog\.setAttribute\('aria-labelledby','sc-detail-title'\)/);
+  assert.match(html, /preview\.replaceChildren\(card\.querySelector\('\.sc-scene'\)\.cloneNode\(true\)\)/);
+  assert.match(html, /\.sc-detail-preview-card\.sc-card\{[^}]*aspect-ratio:4\/3/);
+  assert.match(html, /\.sc-detail-dialog\{position:fixed;inset:auto 0 0/);
+  assert.doesNotMatch(html, /card\.classList\.toggle\('is-expanded'/);
 });
 
-test('expanded camera imagery zooms around the detection focus without exposing card edges', () => {
-  assert.match(html, /\.sc-focus-layer\{position:absolute;inset:0;transform:translate3d\(0,0,0\) scale\(1\);transform-origin:var\(--sc-focus-x,50%\) var\(--sc-focus-y,50%\)/);
-  assert.match(html, /\.sc-card\.is-expanded \.sc-focus-layer\{transform:scale\(1\.45\)\}/);
-  assert.doesNotMatch(html, /\.sc-card\.is-expanded \.sc-focus-layer\{[^}]*translate/);
-  assert.match(html, /\.sc-card\[data-scene="ev"\]\{--sc-focus-x:40\.5%;--sc-focus-y:43\.5%\}/);
-  assert.match(html, /\.smartcards\.is-alert \.sc-card\[data-scene="security"\]\{--sc-focus-x:57%;--sc-focus-y:42%\}/);
-  assert.match(html, /\.sc-security-cameras \.sc-focus-layer\{display:grid;grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
-  assert.match(html, /const focusLayer=document\.createElement\('div'\)/);
-  assert.match(html, /focusLayer\.append\(\.\.\.sceneElement\.children\)/);
-  assert.match(html, /sceneElement\.append\(focusLayer\)/);
+test('card body and evidence preview open details without hijacking other controls', () => {
+  assert.match(html, /evidenceTrigger\.addEventListener\('click',\(\)=>openDetail\(card\)\)/);
+  assert.match(html, /card\.addEventListener\('click',event=>\{/);
+  assert.match(html, /if\(event\.target\.closest\('button,\.sc-evidence-meta'\)\)return/);
+  assert.match(html, /card\.addEventListener\('keydown',event=>\{/);
+  assert.match(html, /event\.target!==card\|\|!\['Enter',' '\]\.includes\(event\.key\)/);
+  assert.match(html, /detailDialog\.querySelector\('\.sc-detail-close'\)\.addEventListener\('click',closeDetail\)/);
+  assert.match(html, /detailDialog\.addEventListener\('click',event=>\{if\(event\.target===detailDialog\)closeDetail\(\)\}\)/);
 });
 
-test('expanded state and duration stay fixed while the goal label clears', () => {
-  assert.match(html, /\.sc-card\.is-expanded>\.sc-label\{opacity:0;visibility:hidden;transform:translateY\(-4px\)/);
-  assert.match(html, /\.sc-card\.is-expanded \.sc-card-top\{z-index:7;top:0;left:0\}/);
-  assert.match(html, /\.sc-card-top\{transition:top \.3s cubic-bezier/);
-});
-
-test('expansion keeps the image fixed and makes evidence match the card width', () => {
-  assert.match(html, /\.sc-card\.is-expanded \.sc-scene\{inset:0 0 auto;height:auto;aspect-ratio:16\/11;cursor:pointer/);
-  assert.match(html, /@media\(max-width:620px\)\{\.sc-card\.is-expanded,\.sc-card\.sc-hero\.is-expanded\{--sc-evidence-overlap-start:56\.25%\}\.sc-card\.is-expanded \.sc-scene\{aspect-ratio:40\/27\}\}/);
-  assert.match(html, /\.sc-card\.is-expanded \.sc-evidence\{position:relative;right:auto;bottom:auto;left:auto;width:100%;padding:12px;[^}]*border-radius:16px/);
-});
-
-test('clicking the image closes expanded supporting evidence', () => {
-  assert.match(html, /const setEvidenceExpanded=expanded=>\{/);
-  assert.match(html, /evidenceTrigger\.addEventListener\('click',\(\)=>setEvidenceExpanded\(!card\.classList\.contains\('is-expanded'\)\)\)/);
-  assert.match(html, /sceneElement\.addEventListener\('click',\(\)=>\{/);
-  assert.match(html, /if\(card\.classList\.contains\('is-expanded'\)\)setEvidenceExpanded\(false\)/);
-});
-
-test('folding evidence preserves the feed position without forced focus or scrolling', () => {
-  assert.doesNotMatch(html, /function focusExpandedEvidence\(evidence\)/);
-  assert.doesNotMatch(html, /evidence\.focus\(\{preventScroll:true\}\)/);
-  assert.doesNotMatch(html, /if\(expanded\)focusExpandedEvidence\(evidence\)/);
-  assert.doesNotMatch(html, /evidence\.setAttribute\('tabindex','-1'\)/);
-  assert.match(html, /\.sc-card,\.sc-card\.sc-hero\{transform-origin:top center;transition:height \.46s cubic-bezier\(\.22,1,\.36,1\),padding-top \.46s/);
-  assert.match(html, /\.sc-card\.sc-is-measuring,\.sc-card\.sc-is-measuring \*\{transition:none!important;animation:none!important\}/);
-  assert.match(html, /const startHeight=card\.getBoundingClientRect\(\)\.height/);
-  assert.match(html, /const endHeight=card\.getBoundingClientRect\(\)\.height/);
-  assert.match(html, /card\.style\.height=`\$\{endHeight\}px`/);
-  assert.match(html, /if\(event\.target===card&&event\.propertyName==='height'\)finishResize\(\)/);
-  assert.match(html, /window\.matchMedia\('\(prefers-reduced-motion: reduce\)'\)\.matches/);
-  assert.match(html, /--sc-evidence-details-height/);
-  assert.match(html, /\.sc-grid\{overflow-anchor:none\}/);
-  assert.match(html, /\.sc-card,\.sc-card\.sc-hero\{transform-origin:top center;transition:height/);
-  assert.match(html, /\.sc-evidence-details\{[^}]*clip-path:inset\(0 0 100% 0\)/);
-  assert.match(html, /\.sc-card\.is-expanded \.sc-evidence-details\{[^}]*clip-path:inset\(0\)/);
-  assert.doesNotMatch(html, /\.sc-evidence-details\{[^}]*translateY\(-6px\)/);
+test('detail sheet is mobile-scrollable and does not move the feed', () => {
+  assert.match(html, /body\.sc-detail-open\{overflow:hidden\}/);
+  assert.match(html, /\.sc-detail-dialog\{[^}]*max-height:min\(92dvh,900px\)[^}]*overflow-y:auto/);
+  assert.match(html, /detailDialog\.addEventListener\('close',\(\)=>\{/);
+  assert.match(html, /lastDetailCard\?\.focus\(\{preventScroll:true\}\)/);
+  assert.match(html, /@media\(prefers-reduced-motion:reduce\)\{\.sc-detail-dialog\{animation:none\}\}/);
 });
 
 test('footer readability gradient follows the rounded card corners', () => {
@@ -128,19 +99,17 @@ test('footer readability gradient follows the rounded card corners', () => {
   );
 });
 
-test('supporting evidence progressively reveals video and household inputs', () => {
+test('detail sheet contains the same video and household evidence', () => {
   assert.match(html, /class="sc-evidence-time"/);
   assert.match(html, /class="sc-evidence-rule"/);
   assert.match(html, /class="sc-evidence-preview"/);
-  assert.match(html, /<span class="sc-evidence-heading">Supporting Evidence<\/span>/);
+  assert.match(html, /<span class="sc-detail-evidence-label">Supporting Evidence<\/span>/);
   assert.doesNotMatch(html, /Evidence behind this state/);
   assert.match(html, /<span>Video description<\/span><span class="sc-evidence-section-more">\+ more<\/span>/);
   assert.match(html, /<span>Household memory<\/span><span class="sc-evidence-section-more">\+ more<\/span>/);
-  assert.match(html, /card\.classList\.toggle\('is-expanded',expanded\)/);
   assert.match(html, /\.sc-evidence-preview\{[^}]*max-height:21px[^}]*mask-image:linear-gradient/);
-  assert.match(html, /\.sc-card\.is-expanded \.sc-evidence-preview\{display:none\}/);
-  assert.match(html, /\.sc-evidence-details\{display:grid;gap:0;max-height:0;[^}]*transition:max-height/);
-  assert.match(html, /\.sc-card\.is-expanded \.sc-evidence-details\{gap:18px;max-height:var\(--sc-evidence-details-height,480px\);[^}]*opacity:1/);
+  assert.match(html, /detailDialog\.querySelector\('\.sc-evidence-video'\)\.innerHTML=evidenceList\(evidence\.video,'video description'\)/);
+  assert.match(html, /detailDialog\.querySelector\('\.sc-evidence-memory'\)\.innerHTML=evidenceList\(evidence\.memory,'household memory'\)/);
   assert.match(html, /\.sc-actions \.sc-feedback\{display:flex;position:absolute/);
 });
 
@@ -173,7 +142,7 @@ test('video and household evidence stay open with hover-only more labels', () =>
   assert.doesNotMatch(html, /--sc-expanded-height/);
 });
 
-test('expanded evidence identifies the cameras involved in each card state', () => {
+test('detail sheet identifies the cameras involved in each card state', () => {
   assert.match(html, /camera:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http:\/\/www\.w3\.org\/2000\/svg" aria-hidden="true">/);
   assert.match(html, /M6 18H11V20H7V22H17V20H13V18H18/);
   assert.match(html, /security:\['Side Gate Cam','Garage Cam','Front Door Cam','Driveway Cam'\]/);
@@ -186,13 +155,11 @@ test('expanded evidence identifies the cameras involved in each card state', () 
   assert.match(html, /function cameraSourceSummary\(cameras\)/);
   assert.match(html, /cameras\.map\(camera=>`<span class="sc-evidence-camera-item">/);
   assert.match(html, /camera\.replace\(\/ Cam\$\/,''\)/);
-  assert.match(html, /class="sc-evidence-heading-row"><span class="sc-evidence-heading">Supporting Evidence<\/span><span class="sc-evidence-camera-summary"><\/span>/);
-  assert.match(html, /\.sc-evidence-heading-row\{display:none;align-items:center;justify-content:space-between/);
-  assert.match(html, /\.sc-card\.is-expanded \.sc-evidence-heading-row\{display:flex\}/);
+  assert.match(html, /<div class="sc-detail-evidence-head"><div><span class="sc-detail-evidence-label">Supporting Evidence<\/span>/);
+  assert.match(html, /\.sc-detail-evidence-head\{display:flex;align-items:flex-start;justify-content:space-between/);
   assert.match(html, /\.sc-evidence-camera-summary\{display:inline-flex;align-items:flex-start;justify-content:flex-end;gap:3px/);
   assert.match(html, /\.sc-evidence-camera-item\{display:inline-flex;width:46px;min-width:0;flex-direction:column;align-items:center/);
   assert.match(html, /\.sc-evidence-camera-summary svg\{width:22px;height:22px;flex:0 0 22px;fill:none;stroke:none\}/);
-  assert.match(html, /\.sc-card\.is-expanded \.sc-evidence-trigger:after\{top:5px;transform:rotate\(-90deg\)\}/);
   assert.match(html, /cameraSummary\.innerHTML=cameraSourceSummary\(SMART_CARD_CAMERAS\[scene\]\)/);
   assert.match(html, /cameraSummary\.setAttribute\('aria-label',`Cameras involved: \$\{SMART_CARD_CAMERAS\[scene\]\.join\(', '\)\}`\)/);
 });
@@ -203,8 +170,8 @@ test('normal and alert states provide three observations and two memories for ev
     assert.equal(occurrences.length, 2, `${scene} needs normal and alert evidence`);
   }
   assert.match(html, /card\.querySelector\('\.sc-evidence-preview'\)\.textContent=evidence\.video\[0\]/);
-  assert.match(html, /card\.querySelector\('\.sc-evidence-video'\)\.innerHTML=evidenceList\(evidence\.video,'video description'\)/);
-  assert.match(html, /card\.querySelector\('\.sc-evidence-memory'\)\.innerHTML=evidenceList\(evidence\.memory,'household memory'\)/);
+  assert.match(html, /detailDialog\.querySelector\('\.sc-evidence-video'\)\.innerHTML=evidenceList\(evidence\.video,'video description'\)/);
+  assert.match(html, /detailDialog\.querySelector\('\.sc-evidence-memory'\)\.innerHTML=evidenceList\(evidence\.memory,'household memory'\)/);
 });
 
 test('EV charging reminder has paired visual states and personalized evidence', () => {
