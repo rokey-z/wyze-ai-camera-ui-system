@@ -105,10 +105,11 @@ test('detail sheet contains the same video and household evidence', () => {
   assert.match(html, /class="sc-evidence-preview"/);
   assert.match(html, /<span class="sc-detail-evidence-label">Supporting Evidence<\/span>/);
   assert.doesNotMatch(html, /Evidence behind this state/);
-  assert.match(html, /<span>Video Evidences<\/span><button class="sc-evidence-section-more sc-video-more" type="button" aria-expanded="false"/);
+  assert.match(html, /<span>Video Evidences<\/span><div class="sc-video-actions"><div class="sc-video-sort" role="group" aria-label="Sort video evidence" hidden>/);
+  assert.match(html, /<button class="sc-evidence-section-more sc-video-more" type="button" aria-expanded="false"/);
   assert.match(html, /<span>Household memory<\/span><span class="sc-evidence-section-more">\+ more<\/span>/);
   assert.match(html, /\.sc-evidence-preview\{[^}]*max-height:21px[^}]*mask-image:linear-gradient/);
-  assert.match(html, /videoStrip\.innerHTML=videoEvidenceStrip\(SMART_CARD_EVIDENCE\[mode\]\[scene\]\.video,SMART_CARD_STATES\[mode\]\[scene\],SMART_CARD_VIDEO_RATINGS\[mode\]\[scene\],expanded,videoSortSelect\.value,Number\(detailDialog\.dataset\.selectedVideoIndex\)\)/);
+  assert.match(html, /videoStrip\.innerHTML=videoEvidenceStrip\(SMART_CARD_EVIDENCE\[mode\]\[scene\]\.video,SMART_CARD_STATES\[mode\]\[scene\],SMART_CARD_VIDEO_RATINGS\[mode\]\[scene\],expanded,detailDialog\.dataset\.videoSort,Number\(detailDialog\.dataset\.selectedVideoIndex\)\)/);
   assert.match(html, /videoStrip\.scrollLeft=0/);
   assert.match(html, /detailDialog\.querySelector\('\.sc-evidence-memory'\)\.innerHTML=evidenceList\(evidence\.memory,'household memory'\)/);
   assert.match(html, /\.sc-actions \.sc-feedback\{display:flex;position:absolute/);
@@ -128,8 +129,9 @@ test('video evidences scroll horizontally with thumbnail ratings and top evidenc
   assert.doesNotMatch(html, /class="sc-video-score"[^>]*>\$\{ratings\[index\]\}\/5/);
   assert.match(html, /\.sc-video-copy\{display:none\}/);
   assert.match(html, /\.sc-video-strip\.is-expanded\{display:grid;max-width:none/);
-  assert.match(html, /<option value="rating-high">Rating: highest<\/option>/);
-  assert.match(html, /<option value="oldest">Time: oldest<\/option>/);
+  assert.match(html, /data-video-sort="newest" aria-pressed="true" aria-label="Sort by time, newest first">Time<\/button>/);
+  assert.match(html, /data-video-sort="rating-high" aria-pressed="false" aria-label="Sort by rating, highest first">Rating<\/button>/);
+  assert.doesNotMatch(html, /sc-video-sort-select/);
   assert.match(html, /caption\.querySelector\('p'\)\.textContent=SMART_CARD_EVIDENCE\[mode\]\[scene\]\.video\[index\]/);
   assert.match(html, /detailDialog\.scrollTop=0;\n  \}\);/);
 });
@@ -171,7 +173,7 @@ test('video more expands while household memory keeps its hover-only label', () 
   assert.match(html, /\.sc-evidence-section-more\{margin-left:auto;padding:3px 5px;[^}]*transition:color \.16s ease,background-color \.16s ease\}/);
   assert.match(html, /\.sc-evidence-section-more:hover\{background:rgba\(255,255,255,\.1\);color:#fff\}/);
   assert.match(html, /videoMore\.addEventListener\('click',\(\)=>\{/);
-  assert.match(html, /videoSortSelect\.addEventListener\('change',renderVideoEvidence\)/);
+  assert.match(html, /videoSort\.addEventListener\('click',event=>\{/);
   assert.match(html, /\.sc-evidence-list-wrap\{overflow:visible\}/);
   assert.doesNotMatch(html, /sc-evidence-section-trigger/);
   assert.doesNotMatch(html, /data-evidence-section/);
@@ -208,7 +210,7 @@ test('normal and alert states provide twenty video observations and two memories
   }
   assert.match(html, /SMART_CARD_EVIDENCE\[mode\]\[scene\]\.video\.push\(\.\.\.SMART_CARD_VIDEO_HISTORY\[mode\]\[scene\],\.\.\.SMART_CARD_VIDEO_ARCHIVE\[mode\]\[scene\]\)/);
   assert.match(html, /card\.querySelector\('\.sc-evidence-preview'\)\.textContent=evidence\.video\[0\]/);
-  assert.match(html, /videoStrip\.innerHTML=videoEvidenceStrip\(SMART_CARD_EVIDENCE\[mode\]\[scene\]\.video,SMART_CARD_STATES\[mode\]\[scene\],SMART_CARD_VIDEO_RATINGS\[mode\]\[scene\],expanded,videoSortSelect\.value,Number\(detailDialog\.dataset\.selectedVideoIndex\)\)/);
+  assert.match(html, /videoStrip\.innerHTML=videoEvidenceStrip\(SMART_CARD_EVIDENCE\[mode\]\[scene\]\.video,SMART_CARD_STATES\[mode\]\[scene\],SMART_CARD_VIDEO_RATINGS\[mode\]\[scene\],expanded,detailDialog\.dataset\.videoSort,Number\(detailDialog\.dataset\.selectedVideoIndex\)\)/);
   assert.match(html, /detailDialog\.querySelector\('\.sc-evidence-memory'\)\.innerHTML=evidenceList\(evidence\.memory,'household memory'\)/);
 });
 
