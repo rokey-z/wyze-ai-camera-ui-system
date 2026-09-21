@@ -98,6 +98,7 @@ const inspect=()=>{
       caption:dialog.querySelector('.sc-detail-preview-caption').textContent.includes('12 secs ago')&&videoStrip.querySelectorAll('.sc-video-thumb')[1].getAttribute('aria-label').endsWith(dialog.querySelector('.sc-detail-preview-caption p').textContent),
       visible:!dialog.querySelector('.sc-detail-preview-caption').hidden,
       selected:videoStrip.querySelectorAll('.sc-video-thumb[aria-pressed="true"]').length===1&&videoStrip.querySelectorAll('.sc-video-thumb')[1].getAttribute('aria-pressed')==='true',
+      highlightedOutline:(()=>{const style=getComputedStyle(videoStrip.querySelector('.sc-video-thumb[aria-pressed="true"]'));return style.borderColor==='rgb(255, 255, 255)'&&style.boxShadow!=='none'})(),
       feedback:dialog.querySelectorAll('.sc-detail-preview-feedback button').length===2,
       previewFilled:getComputedStyle(dialog.querySelector('.sc-detail-preview-card .sc-photo')).objectFit==='cover',
       atTop:dialog.scrollTop===0,
@@ -122,6 +123,10 @@ const inspect=()=>{
       firstIndex:videoStrip.querySelector('.sc-video-thumb').dataset.videoIndex,
       selectedStillVisible:videoStrip.querySelector('.sc-video-thumb[data-video-index="8"]').getAttribute('aria-pressed')==='true',
     };
+    const expandedHighlight=videoStrip.querySelector('.sc-video-thumb[data-video-index="1"]');
+    expandedHighlight.click();
+    const expandedHighlightStyle=getComputedStyle(expandedHighlight.querySelector('img'));
+    const expandedHighlightOutline=expandedHighlightStyle.borderColor==='rgb(255, 255, 255)'&&expandedHighlightStyle.outlineStyle==='solid'&&expandedHighlightStyle.outlineWidth==='2px';
     ratingSort.click();
     const ratingOrder=[...videoStrip.querySelectorAll('.sc-video-thumb')].slice(0,6).map(button=>button.dataset.videoIndex);
     const ratingActive=ratingSort.getAttribute('aria-pressed')==='true'&&timeSort.getAttribute('aria-pressed')==='false';
@@ -164,7 +169,7 @@ const inspect=()=>{
         dialog.close();
       }
     }
-    finish({initial,refreshed,alertStates,sheet,selectedVideo,lastVideo,expanded,ratingOrder,ratingActive,timeOrder,timeActive,collapsed,closed,previewOpens,cardBodyOpens,newCardScrollLeft,normalTreatment,dark,evidenceCoverage});
+    finish({initial,refreshed,alertStates,sheet,selectedVideo,lastVideo,expanded,expandedHighlightOutline,ratingOrder,ratingActive,timeOrder,timeActive,collapsed,closed,previewOpens,cardBodyOpens,newCardScrollLeft,normalTreatment,dark,evidenceCoverage});
   }catch(error){
     if(attempts<20)setTimeout(inspect,150);
     else finish({error:String(error)});
@@ -251,9 +256,10 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     assert.deepEqual(result.refreshed,{time:'just now',dialogOpen:false});
     assert.deepEqual(result.alertStates,['PERSON','OPEN','NEEDS CHARGING','Package left','NOT OUT','CARDINAL']);
     assert.deepEqual(result.sheet,{open:true,modal:true,title:'Home security',state:'PERSON',image:'assets/smart-security-motion.webp?v=1',sameImage:true,largerPreview:true,cameraItems:4,videoItems:9,videoTitle:'Video Evidences',videoScrolls:true,ratings:['5','5','3','3','2','2','2','1','1'],highlighted:2,scoreTopRight:true,compactThumb:true,imageOnly:true,thumbsMatchImage:true,memoryItems:2,checked:'6 secs ago',evidenceRightOfState:true,cardHeightUnchanged:true,cardTopUnchanged:true,scrollUnchanged:true,bodyLocked:true,detectionBox:true,stateColorMatchesCard:true,durationColorMatchesCard:true});
-    assert.deepEqual(result.selectedVideo,{caption:true,visible:true,selected:true,feedback:true,previewFilled:true,atTop:true});
+    assert.deepEqual(result.selectedVideo,{caption:true,visible:true,selected:true,highlightedOutline:true,feedback:true,previewFilled:true,atTop:true});
     assert.deepEqual(result.lastVideo,{selected:true,caption:true,time:'54 secs ago'});
     assert.deepEqual(result.expanded,{items:20,vertical:true,sortVisible:true,sortLeftOfMore:true,timeActive:true,expanded:'true',firstIndex:'0',selectedStillVisible:true});
+    assert.equal(result.expandedHighlightOutline,true);
     assert.deepEqual(result.ratingOrder,['0','1','2','3','9','10']);
     assert.equal(result.ratingActive,true);
     assert.deepEqual(result.timeOrder,['0','1','2','3','4','5']);
