@@ -84,6 +84,7 @@ const inspect=()=>{
       thumbsMatchImage:[...videoStrip.querySelectorAll('img')].every(image=>image.getAttribute('src')===cardSource),
       memoryItems:dialog.querySelectorAll('.sc-evidence-memory li').length,
       checked:dialog.querySelector('.sc-detail-checked').textContent,
+      evidenceRightOfState:(()=>{const state=dialog.querySelector('.sc-detail-state').getBoundingClientRect();const evidence=dialog.querySelector('.sc-detail-evidence-head').getBoundingClientRect();return evidence.left>=state.right-1&&evidence.top<state.bottom})(),
       cardHeightUnchanged:Math.round(firstCard.getBoundingClientRect().height)===Math.round(initialCardBounds.height),
       cardTopUnchanged:Math.round(firstCard.getBoundingClientRect().top)===Math.round(initialCardBounds.top),
       scrollUnchanged:Math.round(win.scrollY)===Math.round(initialScrollY),
@@ -210,7 +211,7 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:6,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:247,refreshButtons:6,checkedTimeInsideTrigger:false,goalFeedbackButtons:12,goalFeedbackAligned:true});
     assert.deepEqual(result.refreshed,{time:'just now',dialogOpen:false});
     assert.deepEqual(result.alertStates,['PERSON','OPEN','NEEDS CHARGING','Package left','NOT OUT','CARDINAL']);
-    assert.deepEqual(result.sheet,{open:true,modal:true,title:'Home security',state:'PERSON',image:'assets/smart-security-motion.webp?v=1',sameImage:true,largerPreview:true,cameraItems:4,videoItems:3,videoTitle:'Video Evidences',videoScrolls:true,ratings:['5','5','3'],highlighted:2,scoreTopRight:true,compactThumb:true,imageOnly:true,thumbsMatchImage:true,memoryItems:2,checked:'6 secs ago',cardHeightUnchanged:true,cardTopUnchanged:true,scrollUnchanged:true,bodyLocked:true,detectionBox:true,stateColorMatchesCard:true,durationColorMatchesCard:true});
+    assert.deepEqual(result.sheet,{open:true,modal:true,title:'Home security',state:'PERSON',image:'assets/smart-security-motion.webp?v=1',sameImage:true,largerPreview:true,cameraItems:4,videoItems:3,videoTitle:'Video Evidences',videoScrolls:true,ratings:['5','5','3'],highlighted:2,scoreTopRight:true,compactThumb:true,imageOnly:true,thumbsMatchImage:true,memoryItems:2,checked:'6 secs ago',evidenceRightOfState:true,cardHeightUnchanged:true,cardTopUnchanged:true,scrollUnchanged:true,bodyLocked:true,detectionBox:true,stateColorMatchesCard:true,durationColorMatchesCard:true});
     assert.deepEqual(result.selectedVideo,{caption:true,visible:true,selected:true,feedback:true,previewFilled:true,atTop:true});
     assert.deepEqual(result.closed,{open:false,bodyLocked:false});
     assert.equal(result.previewOpens,true);
