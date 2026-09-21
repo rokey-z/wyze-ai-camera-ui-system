@@ -103,7 +103,8 @@ test('detail sheet contains the same video and household evidence', () => {
   assert.match(html, /class="sc-evidence-time"/);
   assert.match(html, /class="sc-evidence-rule"/);
   assert.match(html, /class="sc-evidence-preview"/);
-  assert.match(html, /<span class="sc-detail-evidence-label">Supporting Evidence<\/span>/);
+  assert.doesNotMatch(html, /Supporting Evidence/);
+  assert.match(html, /<span class="sc-detail-checked"><\/span>/);
   assert.doesNotMatch(html, /Evidence behind this state/);
   assert.match(html, /<span>Video Evidences<\/span><div class="sc-video-actions"><div class="sc-video-sort" role="group" aria-label="Sort video evidence" hidden>/);
   assert.match(html, /<button class="sc-evidence-section-more sc-video-more" type="button" aria-expanded="false"/);
@@ -194,7 +195,7 @@ test('detail sheet identifies the cameras involved in each card state', () => {
   assert.match(html, /function cameraSourceSummary\(cameras\)/);
   assert.match(html, /cameras\.map\(camera=>`<span class="sc-evidence-camera-item">/);
   assert.match(html, /camera\.replace\(\/ Cam\$\/,''\)/);
-  assert.match(html, /<div class="sc-detail-evidence-head"><div><span class="sc-detail-evidence-label">Supporting Evidence<\/span>/);
+  assert.match(html, /<div class="sc-detail-evidence-head"><div><span class="sc-detail-checked"><\/span>/);
   assert.match(html, /\.sc-detail-evidence-head\{display:flex;min-width:0;flex-direction:column;align-items:flex-end/);
   assert.match(html, /\.sc-evidence-camera-summary\{display:inline-flex;align-items:flex-start;justify-content:flex-end;gap:3px/);
   assert.match(html, /\.sc-evidence-camera-item\{display:inline-flex;width:46px;min-width:0;flex-direction:column;align-items:center/);
