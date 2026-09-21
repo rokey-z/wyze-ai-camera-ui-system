@@ -1721,6 +1721,8 @@
   .sc-evidence-title-icon svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
   .sc-evidence-section-more{margin-left:auto;padding:3px 5px;border-radius:5px;color:#c8d3e1;font-size:9px;font-weight:750;letter-spacing:0;text-transform:none;white-space:nowrap;transition:color .16s ease,background-color .16s ease}
   .sc-evidence-section-more:hover{background:rgba(255,255,255,.1);color:#fff}
+  button.sc-evidence-section-more{border:0;background:none;font-family:inherit;cursor:pointer}
+  button.sc-evidence-section-more:focus-visible{outline:2px solid #fff;outline-offset:2px}
   .sc-evidence-list-wrap{overflow:visible}
   .sc-evidence-list{display:grid;gap:9px;margin:7px 0 0;padding:0;list-style:none}
   .sc-evidence-list li{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px;align-items:start;padding-left:24px}
@@ -1779,6 +1781,22 @@
   .sc-video-thumb img{display:block;width:100%;height:100%;object-fit:cover}
   .sc-video-score{position:absolute;top:5px;right:5px;display:grid;place-items:center;min-width:21px;height:21px;padding:0 5px;border-radius:6px;background:#101925d9;color:#fff;font-size:11px;font-weight:800;box-shadow:0 2px 8px #0008}
   .sc-video-item.is-featured .sc-video-score{background:#71edbe;color:#09271e}
+  .sc-video-copy{display:none}
+  .sc-video-sort{display:flex;align-items:center;justify-content:flex-end;gap:7px;margin-top:10px;color:#9fb0c7;font-size:10px;font-weight:700}
+  .sc-video-sort[hidden]{display:none}
+  .sc-video-sort select{max-width:170px;padding:6px 24px 6px 9px;border:1px solid #ffffff3a;border-radius:8px;background:#1b2939;color:#f4f7fb;font:inherit;cursor:pointer}
+  .sc-video-sort select:focus-visible{outline:2px solid #fff;outline-offset:2px}
+  .sc-video-strip.is-expanded{display:grid;max-width:none;gap:0;margin:10px 0 0;padding:0;overflow:visible;scroll-snap-type:none}
+  .sc-video-strip.is-expanded .sc-video-item{min-width:0;border-bottom:1px solid #ffffff1c;scroll-snap-align:none}
+  .sc-video-strip.is-expanded .sc-video-item:last-child{border-bottom:0}
+  .sc-video-strip.is-expanded .sc-video-thumb{display:flex;align-items:center;gap:11px;height:auto;min-height:72px;padding:8px 0;border:0;border-radius:0;background:none;text-align:left}
+  .sc-video-strip.is-expanded .sc-video-thumb:hover{background:#ffffff0d}
+  .sc-video-strip.is-expanded .sc-video-item.is-featured .sc-video-thumb,.sc-video-strip.is-expanded .sc-video-thumb[aria-pressed="true"]{box-shadow:none}
+  .sc-video-strip.is-expanded .sc-video-thumb img{width:76px;height:54px;flex:none;border:1px solid #ffffff30;border-radius:7px}
+  .sc-video-strip.is-expanded .sc-video-item.is-featured img{border-color:#71edbeaa}
+  .sc-video-strip.is-expanded .sc-video-copy{display:flex;min-width:0;flex:1;flex-direction:column;gap:4px;color:#f4f7fb;font-size:11px;font-weight:670;line-height:1.3}
+  .sc-video-strip.is-expanded .sc-video-copy time{color:#9fb0c7;font-size:10px;font-weight:600}
+  .sc-video-strip.is-expanded .sc-video-score{position:static;flex:none;margin-left:auto;box-shadow:none}
   @media(max-width:620px){.sc-detail-dialog{width:100%;max-height:94dvh}.sc-detail-preview-card.sc-card{aspect-ratio:40/27}}
   @media(prefers-reduced-motion:reduce){.sc-detail-dialog{animation:none}}
 
@@ -6661,9 +6679,87 @@ const SMART_CARD_VIDEO_HISTORY={
     ]
   }
 };
+const SMART_CARD_VIDEO_ARCHIVE={
+  normal:{
+    security:[
+      'The side-gate camera shows the latch seated.', 'No person enters the narrow path by the fence.', 'The gate panel stays aligned with the fence.',
+      'The garage opening remains covered by the closed door.', 'No headlights appear in the driveway view.', 'The porch light illuminates an empty entry.',
+      'The front-door mat is clear in this frame.', 'No movement is visible along the side wall.', 'The driveway remains empty near the street.',
+      'All monitored doors appear closed in this earlier view.', 'The perimeter cameras show no new activity.'
+    ],
+    garage:[
+      'The garage door rests at the same closed height.', 'The center seam is visible across the door.', 'No light is visible beneath the bottom seal.',
+      'The garage approach is clear of pedestrians.', 'A previous frame shows no door movement.', 'No car passes through the tracked opening.',
+      'The driveway surface remains unobstructed.', 'The door panels cover the entire garage opening.', 'The side edge remains aligned with the door track.',
+      'No arrival is visible on the driveway.', 'The garage remains closed in the oldest recent frame.'
+    ],
+    front:[
+      'The porch floor remains clear beside the mat.', 'No box appears near the door hinge.', 'The walkway to the front door is empty.',
+      'The entry mat is unobstructed in this frame.', 'No person approaches the porch steps.', 'The door threshold remains clear.',
+      'No delivery bag is visible near the planter.', 'The porch wall has no item leaning against it.', 'The camera sees no parcel on the step.',
+      'The front door area is unchanged.', 'An earlier frame also shows an empty porch.'
+    ],
+    bins:[
+      'The trash bin remains at the curb edge.', 'The recycling bin is still beside the trash bin.', 'Both containers face the pickup lane.',
+      'The bins are clear of the driveway entrance.', 'Neither bin appears tipped over.', 'The lids remain closed in this view.',
+      'The curbside pair has not moved.', 'The sidewalk remains passable beside the bins.', 'The garage-side storage area is empty.',
+      'Both bins were already out in an earlier frame.', 'The oldest recent view shows pickup-ready placement.'
+    ],
+    birds:[
+      'The left feeder perch is empty.', 'The right feeder perch is empty.', 'No bird lands on the tray in this frame.',
+      'The nearby branch remains clear.', 'The seed opening is visible without a visitor.', 'No movement appears at the feeder base.',
+      'The top of the feeder is unobstructed.', 'No bird crosses the camera view.', 'The tray remains empty in another frame.',
+      'The previous view shows no perched bird.', 'The oldest recent feeder view is clear.'
+    ],
+    ev:[
+      'The plug remains seated at the charge port.', 'The cable hangs without strain or obstruction.', 'The charger indicator remains illuminated.',
+      'The car has not shifted from its parking spot.', 'No person approaches the charging cable.', 'The connector stays in the same position.',
+      'The wall charger remains connected to the car.', 'The charge-port area is visible and unchanged.', 'The garage floor around the cable is clear.',
+      'A previous frame shows the same connected setup.', 'The oldest recent frame also shows the car plugged in.'
+    ]
+  },
+  alert:{
+    security:[
+      'The person remains inside the side-path camera view.', 'The gate remains closed while the person stands nearby.', 'No second person follows into the path.',
+      'The person pauses next to the fence line.', 'The driveway camera shows no arriving vehicle.', 'The garage camera shows no accompanying activity.',
+      'The front porch remains clear during this event.', 'The person is visible near the gate latch.', 'The side path behind the person is clear.',
+      'An earlier frame shows the person approaching the gate.', 'The first event frame shows entry into the tracked zone.'
+    ],
+    garage:[
+      'The raised door leaves the garage interior visible.', 'The bottom edge of the door remains above the opening.', 'The door has not started closing.',
+      'No person stands beneath the raised door.', 'The garage threshold remains open.', 'No vehicle moves through the doorway.',
+      'The driveway approach remains clear.', 'The door position matches the previous frame.', 'The side track still shows the door raised.',
+      'An earlier view already shows the opening exposed.', 'The first recent frame captures the open garage.'
+    ],
+    front:[
+      'The delivered parcel remains beside the mat.', 'The front door stays closed behind the package.', 'No person returns to collect the parcel.',
+      'The porch camera still sees the box near the threshold.', 'The delivery path is clear of people.', 'The package has not shifted toward the step.',
+      'The parcel remains separate from the planter.', 'The box is visible in the center of the porch view.', 'An earlier frame shows the courier leaving.',
+      'The package first appears after the courier bends down.', 'The oldest event frame shows the drop-off beginning.'
+    ],
+    bins:[
+      'The curb remains empty in the driveway view.', 'The trash bin is still against the garage wall.', 'The recycling bin has not moved toward the street.',
+      'No bin appears at the pickup position.', 'The driveway route to the curb remains clear.', 'Both stored bins are visible beside each other.',
+      'The curb zone is unobstructed but unused.', 'The bins stay behind the garage-side boundary.', 'A prior frame also shows no curbside bin.',
+      'Neither bin is being moved in this view.', 'The oldest recent frame shows both bins stored.'
+    ],
+    birds:[
+      'The cardinal stays on the feeder tray.', 'The red bird is visible against the feeder post.', 'Its crest is raised in this frame.',
+      'The bird faces the seed opening.', 'The cardinal remains within the detection zone.', 'No second bird joins the feeder.',
+      'The red body is still visible on the perch.', 'The bird turns toward the camera.', 'The feeder tray supports the perched cardinal.',
+      'An earlier frame shows the bird landing.', 'The first event frame catches its approach to the feeder.'
+    ],
+    ev:[
+      'The car remains parked with the charge port disconnected.', 'The wall connector stays in its dock.', 'No cable runs from the charger to the vehicle.',
+      'The charging bay remains occupied by the same car.', 'No person approaches the plug in this frame.', 'The charge-port area is still uncovered by a cable.',
+      'The garage camera sees no charging activity.', 'The connector position is unchanged.', 'The parked vehicle remains stationary.',
+      'An earlier view also shows the car unplugged.', 'The oldest recent frame shows no cable attached.'
+    ]
+  }
+};
 for(const mode of ['normal','alert']){
   for(const scene of Object.keys(SMART_CARD_EVIDENCE[mode])){
-    SMART_CARD_EVIDENCE[mode][scene].video.push(...SMART_CARD_VIDEO_HISTORY[mode][scene]);
+    SMART_CARD_EVIDENCE[mode][scene].video.push(...SMART_CARD_VIDEO_HISTORY[mode][scene],...SMART_CARD_VIDEO_ARCHIVE[mode][scene]);
   }
 }
 const SMART_CARD_VIDEO_RATINGS={
@@ -6699,18 +6795,25 @@ function videoEvidenceTime(state,index){
   const checked=/(\d+) (secs|mins|hours) ago/.exec(state.checked);
   const checkedSeconds=checked?Number(checked[1])*({secs:1,mins:60,hours:3600}[checked[2]]):0;
   const total=duration?Number(duration[1])*({secs:1,mins:60,hours:3600}[duration[2]]):0;
-  const offsets=[0,20,45,90,150,240,360,600,900];
-  const age=total&&total<=900?Math.round(checkedSeconds+(total-checkedSeconds)*index/8):checkedSeconds+offsets[index];
+  const offsets=[0,20,45,90,150,240,360,600,900,1200,1500,1800,2400,3000,3600,4500,5400,7200,10800,14400];
+  const age=total?Math.round(checkedSeconds+(total-checkedSeconds)*index/19):checkedSeconds+offsets[index];
   if(age<60)return `${age} secs ago`;
   if(age<3600){const minutes=Math.round(age/60);return `${minutes} ${minutes===1?'min':'mins'} ago`}
   const hours=Math.round(age/3600);
   return `${hours} ${hours===1?'hour':'hours'} ago`;
 }
-function videoEvidenceStrip(items,state,ratings){
-  const scores=items.map((_,index)=>ratings[index]??[3,2,2,2,1,1][index-ratings.length]);
+function videoEvidenceStrip(items,state,ratings,expanded=false,sort='newest',selectedIndex=-1){
+  const fallbackScores=[3,2,2,2,1,1,3,3,2,2,2,2,1,1,1,1,1];
+  const scores=items.map((_,index)=>ratings[index]??fallbackScores[index-ratings.length]);
   const featuredIndexes=new Set(scores.map((score,index)=>({score,index})).filter(item=>item.score>=4).sort((a,b)=>b.score-a.score||a.index-b.index).slice(0,3).map(item=>item.index));
   const positions=['50% 50%','62% 50%','35% 50%','72% 45%','25% 55%','50% 35%','60% 70%','80% 50%','15% 50%'];
-  return items.map((description,index)=>`<li class="sc-video-item${featuredIndexes.has(index)?' is-featured':''}"><button class="sc-video-thumb" type="button" data-video-index="${index}" aria-pressed="false" aria-label="Preview video evidence ${index+1}, rating ${scores[index]}: ${description}"><img src="${state.src}" alt="" loading="lazy" style="object-position:${positions[index]}"><span class="sc-video-score" aria-hidden="true">${scores[index]}</span></button></li>`).join('');
+  const entries=items.map((description,index)=>({description,index,score:scores[index]}));
+  if(expanded){
+    if(sort==='oldest')entries.sort((a,b)=>b.index-a.index);
+    if(sort==='rating-high')entries.sort((a,b)=>b.score-a.score||a.index-b.index);
+    if(sort==='rating-low')entries.sort((a,b)=>a.score-b.score||a.index-b.index);
+  }
+  return (expanded?entries:entries.slice(0,9)).map(({description,index,score})=>`<li class="sc-video-item${featuredIndexes.has(index)?' is-featured':''}"><button class="sc-video-thumb" type="button" data-video-index="${index}" aria-pressed="${index===selectedIndex}" aria-label="Preview video evidence ${index+1}, ${videoEvidenceTime(state,index)}, rating ${score}: ${description}"><img src="${state.src}" alt="" loading="lazy" style="object-position:${positions[index%positions.length]}"><span class="sc-video-copy"><span>${description}</span><time>${videoEvidenceTime(state,index)}</time></span><span class="sc-video-score" aria-hidden="true">${score}</span></button></li>`).join('');
 }
 function cameraSourceSummary(cameras){
   return cameras.map(camera=>`<span class="sc-evidence-camera-item">${SMART_CARD_EVIDENCE_ICONS.camera}<span>${camera.replace(/ Cam$/,'')}</span></span>`).join('');
@@ -6719,7 +6822,7 @@ function initSmartCardEvidence(){
   const smartCards=$('smartCards');
   const detailDialog=document.createElement('dialog');
   detailDialog.className='sc-detail-dialog';
-  detailDialog.innerHTML=`<div class="sc-detail-handle" aria-hidden="true"></div><header class="sc-detail-header"><h2 class="sc-detail-title" id="sc-detail-title"></h2><button class="sc-detail-close" type="button" aria-label="Close details">&times;</button></header><div class="sc-detail-preview-card sc-card"><div class="sc-detail-preview-caption" hidden><time></time><p></p><div class="sc-detail-preview-feedback"></div></div></div><div class="sc-detail-content"><p class="sc-detail-state"><strong></strong><span></span></p><div class="sc-detail-evidence-head"><div><span class="sc-detail-evidence-label">Supporting Evidence</span><span class="sc-detail-checked"></span></div><div class="sc-evidence-camera-summary"></div></div><div class="sc-detail-sections"><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.video}</span><span>Video Evidences</span><span class="sc-evidence-section-more">+ more</span></div><ul class="sc-video-strip sc-evidence-video" aria-label="Video evidences; swipe horizontally"></ul></div><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.memory}</span><span>Household memory</span><span class="sc-evidence-section-more">+ more</span></div><ul class="sc-evidence-list sc-evidence-memory"></ul></div></div></div>`;
+  detailDialog.innerHTML=`<div class="sc-detail-handle" aria-hidden="true"></div><header class="sc-detail-header"><h2 class="sc-detail-title" id="sc-detail-title"></h2><button class="sc-detail-close" type="button" aria-label="Close details">&times;</button></header><div class="sc-detail-preview-card sc-card"><div class="sc-detail-preview-caption" hidden><time></time><p></p><div class="sc-detail-preview-feedback"></div></div></div><div class="sc-detail-content"><p class="sc-detail-state"><strong></strong><span></span></p><div class="sc-detail-evidence-head"><div><span class="sc-detail-evidence-label">Supporting Evidence</span><span class="sc-detail-checked"></span></div><div class="sc-evidence-camera-summary"></div></div><div class="sc-detail-sections"><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.video}</span><span>Video Evidences</span><button class="sc-evidence-section-more sc-video-more" type="button" aria-expanded="false" aria-controls="sc-video-evidence-list">+ more</button></div><div class="sc-video-sort" hidden><label for="sc-video-sort-select">Sort by</label><select id="sc-video-sort-select" aria-label="Sort video evidence"><option value="newest">Time: newest</option><option value="oldest">Time: oldest</option><option value="rating-high">Rating: highest</option><option value="rating-low">Rating: lowest</option></select></div><ul class="sc-video-strip sc-evidence-video" id="sc-video-evidence-list" aria-label="Video evidences; swipe horizontally"></ul></div><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.memory}</span><span>Household memory</span><span class="sc-evidence-section-more">+ more</span></div><ul class="sc-evidence-list sc-evidence-memory"></ul></div></div></div>`;
   detailDialog.setAttribute('aria-labelledby','sc-detail-title');
   smartCards.append(detailDialog);
   let lastDetailCard=null;
@@ -6734,6 +6837,20 @@ function initSmartCardEvidence(){
     document.body.classList.remove('sc-detail-open');
     lastDetailCard?.focus({preventScroll:true});
   });
+  const videoStrip=detailDialog.querySelector('.sc-evidence-video');
+  const videoMore=detailDialog.querySelector('.sc-video-more');
+  const videoSort=detailDialog.querySelector('.sc-video-sort');
+  const videoSortSelect=detailDialog.querySelector('#sc-video-sort-select');
+  const renderVideoEvidence=()=>{
+    const {mode,scene}=detailDialog.dataset;
+    const expanded=detailDialog.dataset.videoExpanded==='true';
+    videoStrip.classList.toggle('is-expanded',expanded);
+    videoStrip.setAttribute('aria-label',expanded?'Video evidences; vertical list':'Video evidences; swipe horizontally');
+    videoStrip.innerHTML=videoEvidenceStrip(SMART_CARD_EVIDENCE[mode][scene].video,SMART_CARD_STATES[mode][scene],SMART_CARD_VIDEO_RATINGS[mode][scene],expanded,videoSortSelect.value,Number(detailDialog.dataset.selectedVideoIndex));
+    videoMore.textContent=expanded?'− less':'+ more';
+    videoMore.setAttribute('aria-expanded',String(expanded));
+    videoSort.hidden=!expanded;
+  };
   const openDetail=card=>{
     const scene=card.dataset.scene;
     const mode=smartCards.classList.contains('is-alert')?'alert':'normal';
@@ -6743,6 +6860,9 @@ function initSmartCardEvidence(){
     const caption=preview.querySelector('.sc-detail-preview-caption');
     detailDialog.dataset.scene=scene;
     detailDialog.dataset.mode=mode;
+    detailDialog.dataset.videoExpanded='false';
+    detailDialog.dataset.selectedVideoIndex='-1';
+    videoSortSelect.value='newest';
     preview.dataset.scene=scene;
     preview.replaceChildren(card.querySelector('.sc-scene').cloneNode(true),caption);
     caption.hidden=true;
@@ -6754,8 +6874,7 @@ function initSmartCardEvidence(){
     const cameraSummary=detailDialog.querySelector('.sc-evidence-camera-summary');
     cameraSummary.innerHTML=cameraSourceSummary(SMART_CARD_CAMERAS[scene]);
     cameraSummary.setAttribute('aria-label',`Cameras involved: ${SMART_CARD_CAMERAS[scene].join(', ')}`);
-    const videoStrip=detailDialog.querySelector('.sc-evidence-video');
-    videoStrip.innerHTML=videoEvidenceStrip(evidence.video,state,SMART_CARD_VIDEO_RATINGS[mode][scene]);
+    renderVideoEvidence();
     detailDialog.querySelector('.sc-evidence-memory').innerHTML=evidenceList(evidence.memory,'household memory');
     lastDetailCard=card;
     document.body.classList.add('sc-detail-open');
@@ -6763,7 +6882,12 @@ function initSmartCardEvidence(){
     detailDialog.scrollTop=0;
     videoStrip.scrollLeft=0;
   };
-  detailDialog.querySelector('.sc-evidence-video').addEventListener('click',event=>{
+  videoMore.addEventListener('click',()=>{
+    detailDialog.dataset.videoExpanded=String(detailDialog.dataset.videoExpanded!=='true');
+    renderVideoEvidence();
+  });
+  videoSortSelect.addEventListener('change',renderVideoEvidence);
+  videoStrip.addEventListener('click',event=>{
     const thumb=event.target.closest('.sc-video-thumb');
     if(!thumb)return;
     const index=Number(thumb.dataset.videoIndex);
@@ -6784,6 +6908,7 @@ function initSmartCardEvidence(){
     caption.querySelector('p').textContent=SMART_CARD_EVIDENCE[mode][scene].video[index];
     caption.querySelector('.sc-detail-preview-feedback').innerHTML=evidenceFeedback(`video evidence ${index+1}`);
     caption.hidden=false;
+    detailDialog.dataset.selectedVideoIndex=String(index);
     detailDialog.querySelectorAll('.sc-video-thumb').forEach(button=>button.setAttribute('aria-pressed',String(button===thumb)));
     detailDialog.scrollTop=0;
   });
