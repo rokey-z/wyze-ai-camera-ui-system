@@ -202,6 +202,7 @@ test('detail state stays unfilled and duration retains its pill treatment', () =
 
 test('last-12-hours stories follow the card feed and open their rated video evidence', () => {
   assert.match(html, /<section class="sc-card-feed" aria-labelledby="sc-cards-heading">\s*<div class="sc-stories-head sc-cards-head"><h2 id="sc-cards-heading">Now · 8 updates across 8 goals<\/h2><\/div>\s*<div class="sc-shell">[\s\S]*?<div class="sc-grid">[\s\S]*?<\/div>\s*<span class="sc-flip-status" aria-live="polite"><\/span>\s*<\/div>\s*<\/section>\s*<section class="sc-stories" aria-labelledby="sc-stories-heading">[\s\S]*?<ol class="sc-story-list"><\/ol>/);
+  assert.match(html, /\.sc-stories-head h2\{[^}]*font-family:var\(--sans\)/);
   assert.match(html, /smartCards\.querySelector\('#sc-cards-heading'\)\.textContent=`Now · \$\{cards\.length\} \$\{cards\.length===1\?'update':'updates'\} across \$\{goals\} \$\{goals===1\?'goal':'goals'\}`/);
   assert.match(html, /\.sc-stories\{margin:65px 0 0;font-family:var\(--sans\)\}/);
   assert.match(html, /<h2 id="sc-stories-heading">6 key moments in last 12 hours<\/h2>/);

@@ -66,7 +66,7 @@ const inspect=()=>{
       landscapeCards:[...doc.querySelectorAll('.sc-grid>.sc-card')].every(card=>Math.abs(card.getBoundingClientRect().width/card.getBoundingClientRect().height-40/27)<.02),
       normalOrder:[...doc.querySelectorAll('.sc-grid>.sc-card')].map(card=>card.dataset.scene),
       controlsUniformSpaced:controlsAligned(),
-      cardHeading:(()=>{const heading=doc.querySelector('#sc-cards-heading');const storiesHeading=doc.querySelector('#sc-stories-heading');return {text:heading.textContent,aboveCards:heading.getBoundingClientRect().bottom<doc.querySelector('.sc-grid>.sc-card').getBoundingClientRect().top,sameStyle:getComputedStyle(heading).fontSize===getComputedStyle(storiesHeading).fontSize&&getComputedStyle(heading).fontWeight===getComputedStyle(storiesHeading).fontWeight}})(),
+      cardHeading:(()=>{const heading=doc.querySelector('#sc-cards-heading');const storiesHeading=doc.querySelector('#sc-stories-heading');const headingStyle=getComputedStyle(heading);const storiesStyle=getComputedStyle(storiesHeading);return {text:heading.textContent,aboveCards:heading.getBoundingClientRect().bottom<doc.querySelector('.sc-grid>.sc-card').getBoundingClientRect().top,sameStyle:headingStyle.fontFamily===storiesStyle.fontFamily&&headingStyle.fontSize===storiesStyle.fontSize&&headingStyle.fontWeight===storiesStyle.fontWeight&&headingStyle.letterSpacing===storiesStyle.letterSpacing}})(),
       refreshButtons:doc.querySelectorAll('.sc-evidence-refresh').length,
       checkedTimeInsideTrigger:!!doc.querySelector('.sc-evidence-trigger .sc-evidence-time'),
       goalFeedbackButtons:doc.querySelectorAll('.sc-actions .sc-feedback button').length,
