@@ -28,7 +28,17 @@ const inspect=()=>{
   try{
     const win=frame.contentWindow;
     const doc=frame.contentDocument;
-    if(!doc?.querySelector('.sc-grid>.sc-card')||!win.location.search.includes('view=smart-cards'))throw new Error('waiting');
+    if(!doc?.querySelector('.sc-grid>.sc-card[data-card-mode]')||!win.location.search.includes('view=smart-cards'))throw new Error('waiting');
+    const mixedCards=[...doc.querySelectorAll('.sc-grid>.sc-card')];
+    const mixedAlerts=mixedCards.filter(card=>card.dataset.cardMode==='alert');
+    const mixedPriority=['security','garage','wildlife','ev','bins','front','pets','birds'];
+    const mixedDefault={active:doc.querySelector('[data-sc-state="mixed"]').getAttribute('aria-pressed')==='true',alertCount:mixedAlerts.length,routineCount:mixedCards.length-mixedAlerts.length,highAlertFirst:['security','garage'].includes(mixedCards[0].dataset.scene),alertsFirst:mixedCards.slice(0,mixedAlerts.length).every(card=>card.dataset.cardMode==='alert')&&mixedCards.slice(mixedAlerts.length).every(card=>card.dataset.cardMode!=='alert'),alertPriority:mixedAlerts.map(card=>card.dataset.scene).join(',')===mixedPriority.filter(scene=>mixedAlerts.some(card=>card.dataset.scene===scene)).join(','),cardStyles:mixedCards.every(card=>{const alert=card.dataset.cardMode==='alert';const expected=alert?(card.dataset.scene==='security'?'rgb(255, 101, 112)':'rgb(113, 237, 190)'):'rgb(255, 255, 255)';return card.classList.contains('is-alert-card')===alert&&getComputedStyle(card.querySelector('.sc-state')).color===expected}),highlightsOnlyOnRoutine:mixedCards.filter(card=>['birds','pets','wildlife'].includes(card.dataset.scene)).every(card=>card.dataset.cardMode==='alert'||card.dataset.cardMode==='highlights')};
+    mixedDefault.criticalCue=doc.querySelectorAll('.sc-grid>.sc-card.is-critical-alert').length===1&&mixedCards[0].classList.contains('is-critical-alert')&&mixedCards[0].getAttribute('aria-label').startsWith('Urgent alert:')&&getComputedStyle(mixedCards[0],'::after').borderTopColor==='rgb(255, 75, 85)'&&getComputedStyle(mixedCards[0],'::after').borderTopWidth==='2px'&&getComputedStyle(mixedCards[0].querySelector('.sc-state'),'::before').backgroundColor==='rgb(255, 75, 85)'&&(win.matchMedia('(prefers-reduced-motion: reduce)').matches||getComputedStyle(mixedCards[0].querySelector('.sc-state'),'::before').animationName==='sc-critical-blink');
+    mixedCards[0].querySelector('.sc-scene').click();
+    const mixedDialog=doc.querySelector('.sc-detail-dialog');
+    mixedDefault.detailMatchesCard=mixedDialog.dataset.mode===mixedCards[0].dataset.cardMode&&mixedDialog.querySelector('.sc-detail-state strong').textContent===mixedCards[0].querySelector('.sc-state').textContent&&mixedDialog.querySelector('.sc-detail-preview-card .sc-photo').getAttribute('src')===mixedCards[0].querySelector('.sc-photo').getAttribute('src');
+    mixedDialog.close();
+    doc.querySelector('[data-sc-state="normal"]').click();
     const images=[...doc.images];
     const hiddenSelectors=['.wrap>header','.tabs','.wrap>footer'];
     const initialCardBounds=doc.querySelector('.sc-grid>.sc-card').getBoundingClientRect();
@@ -38,7 +48,9 @@ const inspect=()=>{
       const theme=doc.querySelector('.sc-theme-mode').getBoundingClientRect();
       const view=doc.querySelector('.sc-view-mode').getBoundingClientRect();
       const state=doc.querySelector('.sc-state-mode').getBoundingClientRect();
-      return Math.abs(theme.top-view.top)<=1&&Math.abs(view.top-state.top)<=1&&theme.right<=view.left&&view.right<=state.left&&Math.abs((view.left+view.right)/2-(row.left+row.right)/2)<=1&&theme.left>=row.left&&state.right<=row.right;
+      const buttons=[...doc.querySelectorAll('.sc-view-mode button,.sc-state-mode button')].map(button=>button.getBoundingClientRect());
+      const icon=doc.querySelector('#sc-theme-toggle').getBoundingClientRect();
+      return Math.abs(theme.top-view.top)<=1&&Math.abs(view.top-state.top)<=1&&[theme,view,state].every(group=>Math.abs(group.height-42)<=1)&&view.left-theme.right>=8&&state.left-view.right>=8&&theme.left>=row.left&&state.right<=row.right&&buttons.every(button=>Math.abs(button.width-buttons[0].width)<=1&&Math.abs(button.height-36)<=1)&&Math.abs(icon.height-36)<=1;
     };
     const initial={
       path:win.location.pathname,
@@ -53,14 +65,18 @@ const inspect=()=>{
       sceneHeight:Math.round(doc.querySelector('.sc-grid>.sc-card .sc-scene').getBoundingClientRect().height),
       landscapeCards:[...doc.querySelectorAll('.sc-grid>.sc-card')].every(card=>Math.abs(card.getBoundingClientRect().width/card.getBoundingClientRect().height-40/27)<.02),
       normalOrder:[...doc.querySelectorAll('.sc-grid>.sc-card')].map(card=>card.dataset.scene),
-      controlsOneLineCentered:controlsAligned(),
+      controlsUniformSpaced:controlsAligned(),
       cardHeading:(()=>{const heading=doc.querySelector('#sc-cards-heading');const storiesHeading=doc.querySelector('#sc-stories-heading');return {text:heading.textContent,aboveCards:heading.getBoundingClientRect().bottom<doc.querySelector('.sc-grid>.sc-card').getBoundingClientRect().top,sameStyle:getComputedStyle(heading).fontSize===getComputedStyle(storiesHeading).fontSize&&getComputedStyle(heading).fontWeight===getComputedStyle(storiesHeading).fontWeight}})(),
       refreshButtons:doc.querySelectorAll('.sc-evidence-refresh').length,
       checkedTimeInsideTrigger:!!doc.querySelector('.sc-evidence-trigger .sc-evidence-time'),
       goalFeedbackButtons:doc.querySelectorAll('.sc-actions .sc-feedback button').length,
+      goLiveButtons:doc.querySelectorAll('.sc-grid>.sc-card .sc-actions>.primary').length,
+      criticalCards:doc.querySelectorAll('.sc-grid>.sc-card.is-critical-alert').length,
       bottomEvidenceHidden:[...doc.querySelectorAll('.sc-grid>.sc-card .sc-evidence')].every(node=>getComputedStyle(node).display==='none'),
       stateBlocksClear:[...doc.querySelectorAll('.sc-grid>.sc-card .sc-card-top')].every(block=>getComputedStyle(block).backgroundImage==='none'&&getComputedStyle(block).backgroundColor==='rgba(0, 0, 0, 0)'),
+      goalTitlesClear:[...doc.querySelectorAll('.sc-grid>.sc-card>.sc-label')].every(title=>getComputedStyle(title).backgroundImage==='none'&&getComputedStyle(title).backgroundColor==='rgba(0, 0, 0, 0)'),
       imageGradient:[...doc.querySelectorAll('.sc-grid>.sc-card')].every(card=>getComputedStyle(card.querySelector('.sc-scene'),'::before').backgroundImage.includes('linear-gradient')&&getComputedStyle(card,'::before').display==='none'),
+      topOnlyGradient:[...doc.querySelectorAll('.sc-grid>.sc-card')].every(card=>{const gradient=getComputedStyle(card.querySelector('.sc-scene'),'::before').backgroundImage;return gradient.startsWith('linear-gradient(rgba(0, 0, 0, 0.76)')&&gradient.includes('rgba(0, 0, 0, 0) 72%')}),
       goalTitleInside:[...doc.querySelectorAll('.sc-grid>.sc-card')].every(card=>{
         const title=card.querySelector(':scope>.sc-label').getBoundingClientRect();
         const bounds=card.getBoundingClientRect();
@@ -119,6 +135,7 @@ const inspect=()=>{
     const refreshed={time:firstCard.querySelector('.sc-evidence-time').textContent,dialogOpen:dialog.open};
     doc.querySelector('[data-sc-state="alert"]').click();
     const alertStates=[...doc.querySelectorAll('.sc-grid .sc-state')].map(node=>node.textContent);
+    const alertCritical={count:doc.querySelectorAll('.sc-grid>.sc-card.is-critical-alert').length,scene:doc.querySelector('.sc-grid>.sc-card.is-critical-alert')?.dataset.scene};
     const alertBlocksClear=[...doc.querySelectorAll('.sc-grid>.sc-card .sc-card-top')].every(block=>getComputedStyle(block).backgroundImage==='none'&&getComputedStyle(block).backgroundColor==='rgba(0, 0, 0, 0)');
     const alertBlockAligned=[...doc.querySelectorAll('.sc-grid>.sc-card')].every(card=>{
       const title=card.querySelector(':scope>.sc-label').getBoundingClientRect();
@@ -228,11 +245,15 @@ const inspect=()=>{
       durationBackgroundMatchesCard:getComputedStyle(dialog.querySelector('.sc-detail-state span')).backgroundColor===getComputedStyle(firstCard.querySelector('.sc-sub')).backgroundColor,
     };
     dialog.querySelector('.sc-detail-close').click();
-    doc.querySelector('[data-sc-theme="dark"]').click();
+    doc.querySelector('#sc-theme-toggle').click();
+    doc.querySelectorAll('#sc-theme-toggle svg').forEach(icon=>icon.getAnimations().forEach(animation=>animation.finish()));
     const dark={
       section:doc.querySelector('#smartCards').classList.contains('dark'),
       lightPage:doc.body.classList.contains('sc-light-page'),
       storiesOneSurface:getComputedStyle(storyList).backgroundColor==='rgb(28, 42, 60)'&&getComputedStyle(firstStory).backgroundColor==='rgba(0, 0, 0, 0)',
+      pressed:doc.querySelector('#sc-theme-toggle').getAttribute('aria-pressed')==='true',
+      label:doc.querySelector('#sc-theme-toggle').getAttribute('aria-label'),
+      moonVisible:getComputedStyle(doc.querySelector('.sc-icon-moon')).opacity==='1'&&getComputedStyle(doc.querySelector('.sc-icon-sun')).opacity==='0',
     };
     const evidenceCoverage=[];
     for(const mode of ['normal','alert']){
@@ -247,6 +268,18 @@ const inspect=()=>{
     }
     doc.querySelector('[data-sc-state="normal"]').click();
     const storyBeforeFlip={heading:doc.querySelector('#sc-stories-heading').textContent,count:doc.querySelectorAll('.sc-story-list .sc-story').length,html:storyList.innerHTML};
+    doc.querySelector('[data-sc-view="grid"]').click();
+    const gridCards=[...doc.querySelectorAll('.sc-grid>.sc-card')];
+    const securityGridRow=()=>{const card=doc.querySelector('.sc-grid>.sc-card[data-scene="security"]');const scene=card.querySelector('.sc-security-cameras');const main=card.querySelector('.sc-security-main');const thumbs=[...card.querySelectorAll('.sc-camera-thumb')];const feedback=card.querySelector('.sc-feedback');return getComputedStyle(card.querySelector('.sc-focus-layer')).display==='block'&&Math.abs(main.offsetWidth-scene.offsetWidth)<=1&&Math.abs(main.offsetHeight-scene.offsetHeight)<=1&&thumbs.length===3&&thumbs.every((thumb,index)=>thumb.offsetWidth<scene.offsetWidth*.3&&Math.abs(thumb.offsetTop+thumb.offsetHeight-(scene.offsetHeight-8))<=1&&(index===0||thumb.offsetLeft>thumbs[index-1].offsetLeft+thumbs[index-1].offsetWidth))&&feedback.offsetTop+feedback.offsetHeight<thumbs[0].offsetTop};
+    const gridMode={active:doc.querySelector('[data-sc-view="grid"]').getAttribute('aria-pressed')==='true',listInactive:doc.querySelector('[data-sc-view="list"]').getAttribute('aria-pressed')==='false',flipInactive:doc.querySelector('[data-sc-view="flip"]').getAttribute('aria-pressed')==='false',twoPerRow:gridCards[0].offsetTop===gridCards[1].offsetTop&&gridCards[1].offsetLeft>gridCards[0].offsetLeft&&gridCards[2].offsetTop>gridCards[0].offsetTop,squareCards:gridCards.every(card=>Math.abs(card.offsetWidth-card.offsetHeight)<=1),allVisible:gridCards.every(card=>getComputedStyle(card).visibility==='visible'&&!card.inert),focusBoxesHidden:gridCards.every(card=>getComputedStyle(card.querySelector('.sc-detection-box')).display==='none'),stateTextLarger:parseFloat(getComputedStyle(gridCards[0].querySelector('.sc-state')).fontSize)>=20,nowBottomLeft:gridCards.filter(card=>card.dataset.cardMode==='highlights').every(card=>{const bounds=card.getBoundingClientRect();const now=card.querySelector('.sc-highlight-now').getBoundingClientRect();return Math.abs(now.left-(bounds.left+8))<=1&&Math.abs(now.bottom-(bounds.bottom-8))<=1}),securityNormalRow:securityGridRow()};
+    doc.querySelector('[data-sc-state="alert"]').click();
+    gridMode.securityAlertRow=securityGridRow();
+    doc.querySelector('[data-sc-state="normal"]').click();
+    gridCards[0].click();
+    gridMode.detailOpens=dialog.open&&dialog.querySelector('.sc-detail-title').textContent==='Home security';
+    gridMode.detailFocusVisible=getComputedStyle(dialog.querySelector('.sc-detection-box')).display!=='none';
+    dialog.close();
+    doc.querySelector('[data-sc-view="list"]').click();
     doc.querySelector('[data-sc-view="flip"]').click();
     const flipStart={active:doc.querySelector('[data-sc-view="flip"]').getAttribute('aria-pressed')==='true',listInactive:doc.querySelector('[data-sc-view="list"]').getAttribute('aria-pressed')==='false',current:doc.querySelector('.sc-grid>.sc-card.is-current')?.dataset.scene,currentCount:doc.querySelectorAll('.sc-grid>.sc-card.is-current').length,inertCount:doc.querySelectorAll('.sc-grid>.sc-card[inert]').length,noNavigation:!doc.querySelector('.sc-flip-nav'),portrait:(()=>{const card=doc.querySelector('.sc-grid>.sc-card.is-current');return card.offsetHeight>card.offsetWidth})(),transitionActive:win.matchMedia('(prefers-reduced-motion: reduce)').matches||doc.querySelector('.sc-grid>.sc-card.is-current').getAnimations().length>0,announced:doc.querySelector('.sc-flip-status').textContent.includes('Home security')};
     const flipGrid=doc.querySelector('.sc-grid');
@@ -266,11 +299,13 @@ const inspect=()=>{
     flipGrid.dispatchEvent(new win.PointerEvent('pointerup',{bubbles:true,pointerId:18,button:0,clientX:260,clientY:220}));
     const flipRight={current:flipGrid.querySelector('.sc-card.is-current')?.dataset.scene,dragged:rightDragged};
     doc.querySelector('[data-sc-view="list"]').click();
-    const listRestored={active:doc.querySelector('[data-sc-view="list"]').getAttribute('aria-pressed')==='true',inertCount:doc.querySelectorAll('.sc-grid>.sc-card[inert]').length,allVisible:[...doc.querySelectorAll('.sc-grid>.sc-card')].every(card=>getComputedStyle(card).visibility==='visible'),landscapeCards:[...doc.querySelectorAll('.sc-grid>.sc-card')].every(card=>Math.abs(card.offsetWidth/card.offsetHeight-40/27)<.02),transitionActive:win.matchMedia('(prefers-reduced-motion: reduce)').matches||doc.querySelector('.sc-grid>.sc-card[data-scene="garage"]').getAnimations().length>0,noDragging:!flipGrid.classList.contains('is-dragging')};
+    const listRestored={active:doc.querySelector('[data-sc-view="list"]').getAttribute('aria-pressed')==='true',inertCount:doc.querySelectorAll('.sc-grid>.sc-card[inert]').length,allVisible:[...doc.querySelectorAll('.sc-grid>.sc-card')].every(card=>getComputedStyle(card).visibility==='visible'),landscapeCards:[...doc.querySelectorAll('.sc-grid>.sc-card')].every(card=>Math.abs(card.offsetWidth/card.offsetHeight-40/27)<.02),transitionActive:win.matchMedia('(prefers-reduced-motion: reduce)').matches||doc.querySelector('.sc-grid>.sc-card[data-scene="garage"]').getAnimations().length>0,noDragging:!flipGrid.classList.contains('is-dragging'),focusBoxVisible:getComputedStyle(flipGrid.querySelector('.sc-card .sc-detection-box')).display!=='none'};
     const storyAfterFlip={heading:doc.querySelector('#sc-stories-heading').textContent,count:doc.querySelectorAll('.sc-story-list .sc-story').length,html:storyList.innerHTML};
     frame.style.width='320px';
     const narrowControlsAligned=controlsAligned();
-    finish({initial,storySummary,storyRatingColors,storyTimeline,storyDetail,alertStoryTreatment,highlightCoverage,refreshed,alertStates,alertBlocksClear,alertBlockAligned,alertOrder,sheet,selectedVideo,lastVideo,expanded,expandedHighlightOutline,ratingOrder,ratingActive,timeOrder,timeActive,collapsed,closed,previewOpens,cardBodyOpens,newCardScrollLeft,normalTreatment,dark,evidenceCoverage,flipStart,flipNext,flipRight,listRestored,narrowControlsAligned,storiesUnchanged:JSON.stringify(storyBeforeFlip)===JSON.stringify(storyAfterFlip)});
+    doc.querySelector('[data-sc-view="grid"]').click();
+    const narrowGrid={square:[...doc.querySelectorAll('.sc-grid>.sc-card')].every(card=>Math.abs(card.offsetWidth-card.offsetHeight)<=1),stateFont:parseFloat(getComputedStyle(doc.querySelector('.sc-grid>.sc-card .sc-state')).fontSize),nowClearOfFeedback:[...doc.querySelectorAll('.sc-grid>.sc-card[data-card-mode="highlights"]')].every(card=>{const now=card.querySelector('.sc-highlight-now').getBoundingClientRect();const feedback=card.querySelector('.sc-feedback').getBoundingClientRect();return now.right<=feedback.left||feedback.right<=now.left||now.bottom<=feedback.top||feedback.bottom<=now.top}),securityRow:securityGridRow()};
+    finish({mixedDefault,initial,storySummary,storyRatingColors,storyTimeline,storyDetail,alertStoryTreatment,highlightCoverage,refreshed,alertStates,alertCritical,alertBlocksClear,alertBlockAligned,alertOrder,sheet,selectedVideo,lastVideo,expanded,expandedHighlightOutline,ratingOrder,ratingActive,timeOrder,timeActive,collapsed,closed,previewOpens,cardBodyOpens,newCardScrollLeft,normalTreatment,dark,evidenceCoverage,gridMode,flipStart,flipNext,flipRight,listRestored,narrowControlsAligned,narrowGrid,storiesUnchanged:JSON.stringify(storyBeforeFlip)===JSON.stringify(storyAfterFlip)});
   }catch(error){
     if(attempts<20)setTimeout(inspect,150);
     else finish({error:String(error)});
@@ -353,7 +388,17 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     assert.ok(encoded,'browser harness did not return results');
     const result=JSON.parse(Buffer.from(encoded,'base64').toString('utf8'));
     assert.equal(result.error,undefined);
-    assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:8,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:247,landscapeCards:true,normalOrder:['security','garage','front','ev','bins','pets','wildlife','birds'],controlsOneLineCentered:true,cardHeading:{text:'Smart cards',aboveCards:true,sameStyle:true},refreshButtons:8,checkedTimeInsideTrigger:false,goalFeedbackButtons:16,bottomEvidenceHidden:true,stateBlocksClear:true,imageGradient:true,goalTitleInside:true,stateBlockAligned:true,feedbackBottomRight:true,feedbackBackgroundless:true,normalActive:true});
+    assert.equal(result.mixedDefault.active,true);
+    assert.ok(result.mixedDefault.alertCount>=2&&result.mixedDefault.alertCount<=4);
+    assert.equal(result.mixedDefault.routineCount,8-result.mixedDefault.alertCount);
+    assert.equal(result.mixedDefault.highAlertFirst,true);
+    assert.equal(result.mixedDefault.alertsFirst,true);
+    assert.equal(result.mixedDefault.alertPriority,true);
+    assert.equal(result.mixedDefault.cardStyles,true);
+    assert.equal(result.mixedDefault.highlightsOnlyOnRoutine,true);
+    assert.equal(result.mixedDefault.criticalCue,true);
+    assert.equal(result.mixedDefault.detailMatchesCard,true);
+    assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:8,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:247,landscapeCards:true,normalOrder:['security','garage','front','ev','bins','pets','wildlife','birds'],controlsUniformSpaced:true,cardHeading:{text:'8 updates on 8 monitor goals',aboveCards:true,sameStyle:true},refreshButtons:8,checkedTimeInsideTrigger:false,goalFeedbackButtons:16,goLiveButtons:0,criticalCards:0,bottomEvidenceHidden:true,stateBlocksClear:true,goalTitlesClear:true,imageGradient:true,topOnlyGradient:true,goalTitleInside:true,stateBlockAligned:true,feedbackBottomRight:true,feedbackBackgroundless:true,normalActive:true});
     assert.deepEqual(result.storySummary,{belowCards:true,heading:'6 key moments in last 12 hours',count:6,titles:['Cardinal at the feeder','Playtime on the rug','Blue jay visit','Water break','Raccoon in the yard','Goldfinch visit'],ratings:['5','5','4','4','5','4'],images:true});
     assert.deepEqual(result.storyRatingColors,{five:'rgb(246, 196, 83)',four:'rgb(113, 237, 190)'});
     assert.deepEqual(result.storyTimeline,{oneSurface:true,line:true,dots:true,timestamps:true,timeAboveTitle:true,cameraRatio:true,twoLineTitle:true,noDividers:true,compactRows:true,feedbackButtons:12,feedbackSelected:true,feedbackKeepsDetailClosed:true});
@@ -366,6 +411,7 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     ]);
     assert.deepEqual(result.refreshed,{time:'just now',dialogOpen:false});
     assert.deepEqual(result.alertStates,['PERSON','OPEN','AT DOOR','Package left','RACCOON','NEEDS CHARGING','NOT OUT','CARDINAL']);
+    assert.deepEqual(result.alertCritical,{count:1,scene:'security'});
     assert.equal(result.alertBlocksClear,true);
     assert.equal(result.alertBlockAligned,true);
     assert.deepEqual(result.alertOrder,['security','garage','pets','front','wildlife','ev','bins','birds']);
@@ -384,7 +430,7 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     assert.equal(result.cardBodyOpens,true);
     assert.equal(result.newCardScrollLeft,0);
     assert.deepEqual(result.normalTreatment,{stateBackgroundClear:true,durationBackgroundMatchesCard:true});
-    assert.deepEqual(result.dark,{section:true,lightPage:false,storiesOneSurface:true});
+    assert.deepEqual(result.dark,{section:true,lightPage:false,storiesOneSurface:true,pressed:true,label:'Switch to light mode',moonVisible:true});
     assert.equal(result.evidenceCoverage.length,16);
     assert.ok(result.evidenceCoverage.every(item=>{
       const isHighlightNormal=item.mode==='normal'&&['birds','pets','wildlife'].includes(item.scene);
@@ -396,11 +442,13 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
       {mode:'alert',scene:'pets',state:'AT DOOR',duration:'for 8 mins',image:'assets/smart-pet-at-door.webp?v=1'},
       {mode:'alert',scene:'wildlife',state:'RACCOON',duration:'for 4 mins',image:'assets/smart-wildlife-raccoon.webp?v=1'},
     ]);
+    assert.deepEqual(result.gridMode,{active:true,listInactive:true,flipInactive:true,twoPerRow:true,squareCards:true,allVisible:true,focusBoxesHidden:true,stateTextLarger:true,nowBottomLeft:true,securityNormalRow:true,securityAlertRow:true,detailFocusVisible:true,detailOpens:true});
     assert.deepEqual(result.flipStart,{active:true,listInactive:true,current:'security',currentCount:1,inertCount:7,noNavigation:true,portrait:true,transitionActive:true,announced:true});
     assert.deepEqual(result.flipNext,{current:'garage',dragged:true,exitFollowsDrag:true,clickSuppressed:true,announced:true});
     assert.deepEqual(result.flipRight,{current:'garage',dragged:true});
-    assert.deepEqual(result.listRestored,{active:true,inertCount:0,allVisible:true,landscapeCards:true,transitionActive:true,noDragging:true});
+    assert.deepEqual(result.listRestored,{active:true,inertCount:0,allVisible:true,landscapeCards:true,transitionActive:true,noDragging:true,focusBoxVisible:true});
     assert.equal(result.narrowControlsAligned,true);
+    assert.deepEqual(result.narrowGrid,{square:true,stateFont:18,nowClearOfFeedback:true,securityRow:true});
     assert.equal(result.storiesUnchanged,true);
   }finally{
     await new Promise(resolve=>server.close(resolve));

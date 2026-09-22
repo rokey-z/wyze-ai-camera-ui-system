@@ -1627,14 +1627,13 @@
   .sc-state-mode,.sc-theme-mode{display:flex;width:max-content;margin:0;padding:3px;gap:2px;border-radius:10px;background:#18263a;color:#aebed3}
   .sc-state-mode button,.sc-theme-mode button{min-width:68px;height:36px;padding:0 12px;border:0;border-radius:8px;background:transparent;color:inherit;font:700 12px var(--sans);cursor:pointer}
   .sc-state-mode button,.sc-theme-mode button{min-width:48px;padding:0 8px}
-  .sc-state-mode button.active,.sc-theme-mode button.active{background:#ffffff18;color:#fff}
-  .sc-theme-mode button[data-sc-theme="light"].active{background:#fff;color:#172235}
+  .sc-state-mode button.active{background:#ffffff18;color:#fff}
   .sc-state-mode button[data-sc-state="alert"].active{background:rgba(113,237,190,.82);color:#09271e}
   .sc-state-mode button:focus-visible,.sc-theme-mode button:focus-visible{outline:2px solid #fff;outline-offset:2px}
-  .smartcards.is-alert .sc-card-top{border:0;background:none;color:#fff;box-shadow:none;backdrop-filter:none}
-  .smartcards.is-alert .sc-card-top .sc-state{color:#71edbe}
-  .smartcards.is-alert .sc-card-top .sc-sub{color:#fff}
-  .smartcards.is-alert .sc-card[data-scene="security"] .sc-card-top .sc-state{color:#ff6570}
+  .sc-card.is-alert-card .sc-card-top{border:0;background:none;color:#fff;box-shadow:none;backdrop-filter:none}
+  .sc-card.is-alert-card .sc-card-top .sc-state{color:#71edbe}
+  .sc-card.is-alert-card .sc-card-top .sc-sub{color:#fff}
+  .sc-card.is-alert-card[data-scene="security"] .sc-card-top .sc-state{color:#ff6570}
   .sc-focus-layer{position:absolute;inset:0;transform:translate3d(0,0,0) scale(1);transform-origin:var(--sc-focus-x,50%) var(--sc-focus-y,50%);transition:transform .42s cubic-bezier(.22,1,.36,1);will-change:transform}
   .sc-detection-box{position:absolute;z-index:2;border:2px solid #f7fbff;border-radius:4px;opacity:.9;box-shadow:0 0 0 1px #02091473,0 0 12px #02091452;pointer-events:none;transition:left .18s ease,top .18s ease,width .18s ease,height .18s ease,border-color .18s ease}
   .sc-card[data-scene="garage"]{--sc-focus-x:62%;--sc-focus-y:34%}.sc-card[data-scene="garage"] .sc-detection-box{left:34%;top:11%;width:56%;height:46%}
@@ -1643,35 +1642,35 @@
   .sc-card[data-scene="ev"]{--sc-focus-x:40.5%;--sc-focus-y:43.5%}.sc-card[data-scene="ev"] .sc-detection-box{left:32%;top:28%;width:17%;height:31%}
   .sc-card[data-scene="pets"]{--sc-focus-x:61.5%;--sc-focus-y:47%}.sc-card[data-scene="pets"] .sc-detection-box{left:47%;top:31%;width:29%;height:32%}
   .sc-card[data-scene="wildlife"]{--sc-focus-x:68%;--sc-focus-y:42%}.sc-card[data-scene="wildlife"] .sc-detection-box{left:57%;top:29%;width:22%;height:26%}
-  .smartcards.is-alert .sc-detection-box{border-color:#71edbe;box-shadow:0 0 0 1px #061c1673,0 0 12px #71edbe4d}
-  .smartcards.is-alert .sc-card[data-scene="garage"]{--sc-focus-x:48%;--sc-focus-y:36%}.smartcards.is-alert .sc-card[data-scene="garage"] .sc-detection-box{left:10%;top:7%;width:76%;height:58%}
-  .smartcards.is-alert .sc-card[data-scene="front"]{--sc-focus-x:58%;--sc-focus-y:75%}.smartcards.is-alert .sc-card[data-scene="front"] .sc-detection-box{left:48%;top:66%;width:20%;height:18%}
-  .smartcards.is-alert .sc-card[data-scene="bins"] .sc-photo{object-position:left center}
-  .smartcards.is-alert .sc-card[data-scene="bins"]{--sc-focus-x:15.5%;--sc-focus-y:57%}.smartcards.is-alert .sc-card[data-scene="bins"] .sc-detection-box{left:8%;top:38%;width:15%;height:38%}
-  .smartcards.is-alert .sc-card[data-scene="pets"]{--sc-focus-x:85%;--sc-focus-y:24%}.smartcards.is-alert .sc-card[data-scene="pets"] .sc-detection-box{left:75%;top:11%;width:20%;height:30%}
-  .smartcards.is-alert .sc-card[data-scene="wildlife"]{--sc-focus-x:58%;--sc-focus-y:59%}.smartcards.is-alert .sc-card[data-scene="wildlife"] .sc-detection-box{left:47%;top:50%;width:23%;height:20%}
+  .sc-card.is-alert-card .sc-detection-box,.sc-detail-dialog[data-mode="alert"] .sc-detection-box{border-color:#71edbe;box-shadow:0 0 0 1px #061c1673,0 0 12px #71edbe4d}
+  .sc-card.is-alert-card[data-scene="garage"]{--sc-focus-x:48%;--sc-focus-y:36%}.sc-card.is-alert-card[data-scene="garage"] .sc-detection-box{left:10%;top:7%;width:76%;height:58%}
+  .sc-card.is-alert-card[data-scene="front"]{--sc-focus-x:58%;--sc-focus-y:75%}.sc-card.is-alert-card[data-scene="front"] .sc-detection-box{left:48%;top:66%;width:20%;height:18%}
+  .sc-card.is-alert-card[data-scene="bins"] .sc-photo{object-position:left center}
+  .sc-card.is-alert-card[data-scene="bins"]{--sc-focus-x:15.5%;--sc-focus-y:57%}.sc-card.is-alert-card[data-scene="bins"] .sc-detection-box{left:8%;top:38%;width:15%;height:38%}
+  .sc-card.is-alert-card[data-scene="pets"]{--sc-focus-x:85%;--sc-focus-y:24%}.sc-card.is-alert-card[data-scene="pets"] .sc-detection-box{left:75%;top:11%;width:20%;height:30%}
+  .sc-card.is-alert-card[data-scene="wildlife"]{--sc-focus-x:58%;--sc-focus-y:59%}.sc-card.is-alert-card[data-scene="wildlife"] .sc-detection-box{left:47%;top:50%;width:23%;height:20%}
   .sc-security-cameras{background:#07111f}.sc-security-cameras .sc-focus-layer{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:2px}
   .sc-security-cameras .sc-photo,.sc-security-cameras .sc-camera-thumb{position:relative;inset:auto;display:block;width:100%;height:100%;object-fit:cover;min-width:0;min-height:0}
   .sc-card[data-scene="security"]{--sc-focus-x:28.5%;--sc-focus-y:20.5%}.sc-card[data-scene="security"] .sc-detection-box{left:24%;top:8%;width:9%;height:25%}
   .sc-card[data-scene="birds"]{--sc-focus-x:66.5%;--sc-focus-y:38%}.sc-card[data-scene="birds"] .sc-detection-box{left:53%;top:18%;width:27%;height:40%}
-  .smartcards.is-alert .sc-security-cameras .sc-focus-layer{display:block}
-  .smartcards.is-alert .sc-security-cameras .sc-security-main{position:absolute;inset:0;width:100%;height:100%}
-  .smartcards.is-alert .sc-security-cameras .sc-camera-thumb{position:absolute;z-index:3;right:10px;width:64px;height:58px;border:1px solid #ffffffb8;border-radius:7px;box-shadow:0 4px 12px #02091499}
-  .smartcards.is-alert .sc-security-cameras .sc-camera-thumb:nth-of-type(2){top:10px}
-  .smartcards.is-alert .sc-security-cameras .sc-camera-thumb:nth-of-type(3){top:76px}
-  .smartcards.is-alert .sc-security-cameras .sc-camera-thumb:nth-of-type(4){top:142px}
-  .smartcards.is-alert .sc-card[data-scene="security"]{--sc-focus-x:57%;--sc-focus-y:42%}.smartcards.is-alert .sc-card[data-scene="security"] .sc-detection-box{left:49%;top:17%;width:16%;height:50%;border-color:#ff4b55;box-shadow:0 0 0 1px #19030766,0 0 12px #ff4b554d}
-  .smartcards.is-alert .sc-card[data-scene="birds"]{--sc-focus-x:53%;--sc-focus-y:50%}.smartcards.is-alert .sc-card[data-scene="birds"] .sc-detection-box{left:45%;top:39%;width:16%;height:22%}
-  .smartcards.is-highlights .sc-grid>.sc-card[data-scene="birds"],.sc-detail-dialog[data-mode="highlights"] .sc-detail-preview-card[data-scene="birds"]{--sc-focus-x:53%;--sc-focus-y:50%}
-  .smartcards.is-highlights .sc-grid>.sc-card[data-scene="birds"] .sc-detection-box,.sc-detail-dialog[data-mode="highlights"] .sc-detail-preview-card[data-scene="birds"] .sc-detection-box{left:45%;top:39%;width:16%;height:22%}
-  .smartcards.is-highlights .sc-grid>.sc-card[data-scene="pets"],.sc-detail-dialog[data-mode="highlights"] .sc-detail-preview-card[data-scene="pets"]{--sc-focus-x:57%;--sc-focus-y:40%}
-  .smartcards.is-highlights .sc-grid>.sc-card[data-scene="pets"] .sc-detection-box,.sc-detail-dialog[data-mode="highlights"] .sc-detail-preview-card[data-scene="pets"] .sc-detection-box{left:47%;top:19%;width:25%;height:46%}
-  .smartcards.is-highlights .sc-grid>.sc-card[data-scene="wildlife"],.sc-detail-dialog[data-mode="highlights"] .sc-detail-preview-card[data-scene="wildlife"]{--sc-focus-x:58%;--sc-focus-y:59%}
-  .smartcards.is-highlights .sc-grid>.sc-card[data-scene="wildlife"] .sc-detection-box,.sc-detail-dialog[data-mode="highlights"] .sc-detail-preview-card[data-scene="wildlife"] .sc-detection-box{left:47%;top:49%;width:23%;height:18%}
+  .sc-card.is-alert-card .sc-security-cameras .sc-focus-layer,.sc-detail-dialog[data-mode="alert"][data-scene="security"] .sc-security-cameras .sc-focus-layer{display:block}
+  .sc-card.is-alert-card .sc-security-cameras .sc-security-main,.sc-detail-dialog[data-mode="alert"][data-scene="security"] .sc-security-cameras .sc-security-main{position:absolute;inset:0;width:100%;height:100%}
+  .sc-card.is-alert-card .sc-security-cameras .sc-camera-thumb,.sc-detail-dialog[data-mode="alert"][data-scene="security"] .sc-security-cameras .sc-camera-thumb{position:absolute;z-index:3;right:10px;width:64px;height:58px;border:1px solid #ffffffb8;border-radius:7px;box-shadow:0 4px 12px #02091499}
+  .sc-card.is-alert-card .sc-security-cameras .sc-camera-thumb:nth-of-type(2),.sc-detail-dialog[data-mode="alert"][data-scene="security"] .sc-security-cameras .sc-camera-thumb:nth-of-type(2){top:10px}
+  .sc-card.is-alert-card .sc-security-cameras .sc-camera-thumb:nth-of-type(3),.sc-detail-dialog[data-mode="alert"][data-scene="security"] .sc-security-cameras .sc-camera-thumb:nth-of-type(3){top:76px}
+  .sc-card.is-alert-card .sc-security-cameras .sc-camera-thumb:nth-of-type(4),.sc-detail-dialog[data-mode="alert"][data-scene="security"] .sc-security-cameras .sc-camera-thumb:nth-of-type(4){top:142px}
+  .sc-card.is-alert-card[data-scene="security"],.sc-detail-dialog[data-mode="alert"][data-scene="security"] .sc-detail-preview-card{--sc-focus-x:57%;--sc-focus-y:42%}.sc-card.is-alert-card[data-scene="security"] .sc-detection-box,.sc-detail-dialog[data-mode="alert"][data-scene="security"] .sc-detection-box{left:49%;top:17%;width:16%;height:50%;border-color:#ff4b55;box-shadow:0 0 0 1px #19030766,0 0 12px #ff4b554d}
+  .sc-card.is-alert-card[data-scene="birds"]{--sc-focus-x:53%;--sc-focus-y:50%}.sc-card.is-alert-card[data-scene="birds"] .sc-detection-box{left:45%;top:39%;width:16%;height:22%}
+  .sc-grid>.sc-card[data-card-mode="highlights"][data-scene="birds"],.sc-detail-dialog[data-mode="highlights"] .sc-detail-preview-card[data-scene="birds"]{--sc-focus-x:53%;--sc-focus-y:50%}
+  .sc-grid>.sc-card[data-card-mode="highlights"][data-scene="birds"] .sc-detection-box,.sc-detail-dialog[data-mode="highlights"] .sc-detail-preview-card[data-scene="birds"] .sc-detection-box{left:45%;top:39%;width:16%;height:22%}
+  .sc-grid>.sc-card[data-card-mode="highlights"][data-scene="pets"],.sc-detail-dialog[data-mode="highlights"] .sc-detail-preview-card[data-scene="pets"]{--sc-focus-x:57%;--sc-focus-y:40%}
+  .sc-grid>.sc-card[data-card-mode="highlights"][data-scene="pets"] .sc-detection-box,.sc-detail-dialog[data-mode="highlights"] .sc-detail-preview-card[data-scene="pets"] .sc-detection-box{left:47%;top:19%;width:25%;height:46%}
+  .sc-grid>.sc-card[data-card-mode="highlights"][data-scene="wildlife"],.sc-detail-dialog[data-mode="highlights"] .sc-detail-preview-card[data-scene="wildlife"]{--sc-focus-x:58%;--sc-focus-y:59%}
+  .sc-grid>.sc-card[data-card-mode="highlights"][data-scene="wildlife"] .sc-detection-box,.sc-detail-dialog[data-mode="highlights"] .sc-detail-preview-card[data-scene="wildlife"] .sc-detection-box{left:47%;top:49%;width:23%;height:18%}
   /* Location is card context, not state: float it above the translucent status block. */
   .sc-card-top{top:36px}
   .sc-card-top .sc-label{position:absolute;left:1px;bottom:calc(100% + 7px);color:#f7fbff;text-shadow:0 1px 5px #020914,0 0 12px #020914;font-size:10px;white-space:nowrap}
-  .smartcards.is-alert .sc-card-top .sc-label{color:#f7fbff}
+  .sc-card.is-alert-card .sc-card-top .sc-label{color:#f7fbff}
   @media(max-width:620px){.sc-card-top{top:36px}.sc-card-top .sc-label{font-size:10px}}
   .sc-sub{font-size:16px;font-weight:700;line-height:1.2}
   .sc-card:after{left:25px;top:114px;bottom:auto;width:auto;max-width:none;padding:0;border:0;overflow:visible;text-overflow:clip;white-space:nowrap;font-size:11px;line-height:1.2;color:#f3f7ff;text-shadow:0 1px 5px #020914,0 0 12px #020914}
@@ -1686,11 +1685,11 @@
   .sc-card-top .sc-label{position:static}
   .sc-actions>.primary{top:10px;right:12px;bottom:auto;left:auto;color:#fff;text-shadow:0 1px 3px #06101e99}
   .sc-card:after{top:auto;right:auto;bottom:12px;left:12px;text-align:left}
-  .smartcards.is-alert .sc-card:after{color:#fff;text-shadow:0 1px 5px #020914,0 0 12px #020914}
-  .sc-card .sc-scene:before,.sc-card[data-tone] .sc-scene:before{background:linear-gradient(to top,rgba(3,8,16,.72) 0%,rgba(3,8,16,.2) 40%,rgba(3,8,16,.26) 100%)}
+  .sc-card.is-alert-card:after{color:#fff;text-shadow:0 1px 5px #020914,0 0 12px #020914}
+  .sc-card .sc-scene:before,.sc-card[data-tone] .sc-scene:before{inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.76) 0%,rgba(0,0,0,.38) 36%,rgba(0,0,0,0) 72%)}
   .sc-grid>.sc-card:before{display:none}
-  .smartcards:not(.is-alert) .sc-card-top{background:none;box-shadow:none;backdrop-filter:none}
-  .smartcards:not(.is-alert) .sc-card-top .sc-sub{display:inline-flex;width:max-content;margin-top:5px;padding:3px 8px;border-radius:999px;background:rgba(255,255,255,.18);color:#fff;backdrop-filter:blur(8px)}
+  .sc-grid>.sc-card:not(.is-alert-card) .sc-card-top{background:none;box-shadow:none;backdrop-filter:none}
+  .sc-grid>.sc-card:not(.is-alert-card) .sc-card-top .sc-sub{display:inline-flex;width:max-content;margin-top:5px;padding:3px 8px;border-radius:999px;background:rgba(255,255,255,.18);color:#fff;backdrop-filter:blur(8px)}
   body.sc-light-page{background:#f2f5f8;color:#182438}
   body.sc-light-page .tabs{background:#f2f5f8e8;border-bottom-color:#cfd7e2}
   body.sc-light-page .tab{color:#617087}
@@ -1713,7 +1712,7 @@
   .sc-actions .sc-feedback svg{width:13px;height:13px}
   body.sc-light-page .sc-actions .sc-feedback button{color:#42536b}
   /* Keep the goal and feedback on the image, outside the state treatment. */
-  .sc-card>.sc-label{top:12px;right:104px;left:12px;max-width:none;color:#fff;text-shadow:0 1px 5px #020914,0 0 12px #020914}
+  .sc-card>.sc-label{top:12px;right:12px;left:12px;max-width:none;padding:0;border:0;background:none;box-shadow:none;backdrop-filter:none;color:#fff;text-shadow:0 1px 5px #020914,0 0 12px #020914}
   body.sc-light-page .sc-card>.sc-label{color:#fff;text-shadow:0 1px 5px #020914,0 0 12px #020914}
   .sc-card-top{top:32px;left:12px;width:max-content;max-width:calc(100% - 24px);min-height:0;padding:0;background:none;box-shadow:none;backdrop-filter:none}
   .sc-card-top .sc-state{margin-top:0;text-shadow:0 2px 8px #000b}
@@ -1728,9 +1727,9 @@
   .sc-evidence-refresh:active{transform:rotate(45deg)}
   .sc-evidence-refresh:focus-visible{outline:2px solid #fff;outline-offset:1px}
   .sc-evidence-refresh svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-  .smartcards.is-highlights .sc-grid>.sc-card[data-highlight] .sc-evidence-refresh{display:none}
+  .sc-grid>.sc-card[data-card-mode="highlights"] .sc-evidence-refresh{display:none}
   .sc-highlight-collection{display:none;position:absolute;z-index:4;inset:0;overflow:hidden;border-radius:16px;pointer-events:none;font-family:var(--sans)}
-  .smartcards.is-highlights .sc-grid>.sc-card[data-highlight] .sc-highlight-collection{display:block}
+  .sc-grid>.sc-card[data-card-mode="highlights"] .sc-highlight-collection{display:block}
   .sc-highlight-now img{display:block;width:100%;height:100%;object-fit:cover}
   .sc-highlight-now{position:absolute;top:48px;right:12px;display:block;width:76px;height:58px;padding:0;overflow:hidden;border:1px solid #ffffffd1;border-radius:8px;background:#182536;box-shadow:0 4px 12px #0009;cursor:pointer;pointer-events:auto}
   .sc-highlight-now-kicker{position:absolute;z-index:1;top:4px;left:4px;padding:2px 4px;border-radius:3px;background:#07111dd9;color:#fff;font-size:8px;font-weight:850;letter-spacing:.05em;text-transform:uppercase}
@@ -1832,10 +1831,10 @@
   .sc-detail-state{display:flex;flex-direction:column;align-items:flex-start;align-self:start;gap:5px;min-width:0;width:max-content;max-width:100%;margin:0;padding:0;border-radius:12px;background:none;color:#fff}
   .sc-detail-state strong{color:inherit;font-size:23px;font-weight:850;line-height:1.05}
   .sc-detail-state span{padding:3px 8px;border-radius:999px;background:rgba(255,255,255,.18);color:inherit;font-size:13px;font-weight:650}
-  .smartcards.is-alert .sc-detail-dialog[data-mode="alert"] .sc-detail-state{background:none;color:#fff}
-  .smartcards.is-alert .sc-detail-dialog[data-mode="alert"] .sc-detail-state strong{color:#71edbe}
-  .smartcards.is-alert .sc-detail-dialog[data-mode="alert"] .sc-detail-state span{padding:0;border-radius:0;background:none}
-  .smartcards.is-alert .sc-detail-dialog[data-mode="alert"][data-scene="security"] .sc-detail-state strong{color:#ff6570}
+  .sc-detail-dialog[data-mode="alert"] .sc-detail-state{background:none;color:#fff}
+  .sc-detail-dialog[data-mode="alert"] .sc-detail-state strong{color:#71edbe}
+  .sc-detail-dialog[data-mode="alert"] .sc-detail-state span{padding:0;border-radius:0;background:none}
+  .sc-detail-dialog[data-mode="alert"][data-scene="security"] .sc-detail-state strong{color:#ff6570}
   .sc-detail-evidence-head{display:flex;min-width:0;flex-direction:column;align-items:flex-end;gap:10px;text-align:right}
   .sc-detail-checked{display:block;color:#e7edf5;font-size:11px;font-weight:650}
   .sc-detail-dialog .sc-evidence-camera-summary{max-width:100%;flex-wrap:wrap;row-gap:6px}
@@ -1881,20 +1880,64 @@
   @media(max-width:620px){.sc-detail-dialog{width:100%;max-height:94dvh}.sc-detail-preview-card.sc-card{aspect-ratio:40/27}}
   @media(prefers-reduced-motion:reduce){.sc-detail-dialog{animation:none}}
 
-  /* Two presentations of the same cards. The activity timeline below is independent. */
+  /* Three presentations of the same cards. The activity timeline below is independent. */
   .sc-view-mode{display:inline-flex;gap:2px;margin:0 0 18px;padding:3px;border-radius:10px;background:#223044;color:#aab9cd;font-family:var(--sans)}
   .sc-view-mode button{min-width:62px;min-height:34px;padding:0 11px;border:0;border-radius:8px;background:none;color:inherit;font:750 11px var(--sans);cursor:pointer}
   .sc-view-mode button[aria-pressed="true"]{background:#364961;color:#fff;box-shadow:0 1px 4px #0209142e}
   .sc-view-mode button:focus-visible{outline:2px solid #71edbe;outline-offset:2px}
   body.sc-light-page .sc-view-mode{background:#dfe5ed;color:#58677d}
   body.sc-light-page .sc-view-mode button[aria-pressed="true"]{background:#fff;color:#172235;box-shadow:0 1px 4px #1b2c4418}
-  .sc-mode-row{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:6px}
-  .sc-theme-mode{justify-self:start}
-  .sc-view-mode{justify-self:center;margin:0}
-  .sc-state-mode{justify-self:end}
-  .sc-view-mode button{min-width:50px;height:36px;min-height:0;padding:0 7px}
-  @media(max-width:380px){.sc-mode-row{gap:4px}.sc-theme-mode button,.sc-state-mode button{min-width:0;padding:0 5px;font-size:10px}.sc-view-mode button{min-width:42px;padding:0 5px;font-size:10px}}
-  .smartcards:not(.sc-flip-view) .sc-grid>.sc-card{aspect-ratio:40/27}
+  .sc-mode-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .sc-mode-row .sc-theme-mode,.sc-mode-row .sc-view-mode,.sc-mode-row .sc-state-mode{display:flex;align-items:center;flex:0 0 auto;height:42px;margin:0;padding:3px;gap:2px;border-radius:12px}
+  .sc-mode-row .sc-theme-mode{width:42px}
+  .sc-mode-row .sc-theme-toggle{display:grid;place-items:center;width:36px;min-width:36px;height:36px;padding:0;border:0;border-radius:9px;background:#364961;color:#fff;cursor:pointer;box-shadow:none}
+  .sc-theme-toggle svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .sc-theme-toggle .sc-icon-moon{display:none}
+  .smartcards.dark .sc-theme-toggle .sc-icon-sun{display:none}
+  .smartcards.dark .sc-theme-toggle .sc-icon-moon{display:block}
+  body.sc-light-page .sc-mode-row .sc-theme-toggle{background:#fff;color:#172235;box-shadow:0 1px 4px #1b2c4418}
+  .sc-mode-row .sc-view-mode button,.sc-mode-row .sc-state-mode button{width:42px;min-width:42px;height:36px;min-height:36px;padding:0;border-radius:9px;font-size:10px;line-height:1}
+  @media(max-width:380px){.sc-mode-row .sc-view-mode button,.sc-mode-row .sc-state-mode button{width:35px;min-width:35px;font-size:9px}}
+  .sc-mode-row .sc-theme-mode,.sc-mode-row .sc-view-mode,.sc-mode-row .sc-state-mode{transition:background-color .24s ease,color .24s ease}
+  .sc-mode-row .sc-view-mode,.sc-mode-row .sc-state-mode{position:relative;isolation:isolate}
+  .sc-mode-row .sc-view-mode::before,.sc-mode-row .sc-state-mode::before{content:'';position:absolute;z-index:0;top:3px;left:3px;width:42px;height:36px;border-radius:9px;background:#364961;box-shadow:0 1px 4px #0209142e;transition:transform .28s cubic-bezier(.22,1,.36,1),background-color .24s ease,box-shadow .24s ease}
+  .sc-mode-row .sc-view-mode:has(button:nth-child(2)[aria-pressed="true"])::before,.sc-mode-row .sc-state-mode:has(button:nth-child(2).active)::before{transform:translateX(calc(100% + 2px))}
+  .sc-mode-row .sc-view-mode:has(button:nth-child(3)[aria-pressed="true"])::before,.sc-mode-row .sc-state-mode:has(button:nth-child(3).active)::before{transform:translateX(calc(200% + 4px))}
+  .sc-mode-row .sc-view-mode button,.sc-mode-row .sc-state-mode button{position:relative;z-index:1;background:transparent;box-shadow:none;transition:color .2s ease,transform .18s ease}
+  .sc-mode-row .sc-view-mode button[aria-pressed="true"],.sc-mode-row .sc-state-mode button.active,body.sc-light-page .sc-mode-row .sc-view-mode button[aria-pressed="true"],body.sc-light-page .sc-mode-row .sc-state-mode button.active{background:transparent;box-shadow:none}
+  .sc-mode-row .sc-state-mode:has(button[data-sc-state="alert"].active)::before{background:rgba(113,237,190,.82)}
+  .sc-mode-row .sc-state-mode button[data-sc-state="alert"].active{color:#09271e}
+  body.sc-light-page .sc-mode-row .sc-view-mode::before,body.sc-light-page .sc-mode-row .sc-state-mode::before,body.sc-light-page .sc-mode-row .sc-state-mode:has(button[data-sc-state="alert"].active)::before{background:#fff;box-shadow:0 1px 4px #1b2c4418}
+  body.sc-light-page .sc-mode-row .sc-state-mode button[data-sc-state="alert"].active{color:#172235}
+  .sc-mode-row .sc-view-mode button:active,.sc-mode-row .sc-state-mode button:active{transform:scale(.93)}
+  .sc-mode-row .sc-theme-toggle{transition:background-color .24s ease,color .24s ease,box-shadow .24s ease,transform .18s ease}
+  .sc-mode-row .sc-theme-toggle:active{transform:scale(.92)}
+  .sc-mode-row .sc-theme-toggle svg{grid-area:1/1;pointer-events:none;transition:opacity .24s ease,transform .28s cubic-bezier(.22,1,.36,1)}
+  .sc-mode-row .sc-theme-toggle .sc-icon-sun{display:block;opacity:1;transform:rotate(0) scale(1)}
+  .sc-mode-row .sc-theme-toggle .sc-icon-moon{display:block;opacity:0;transform:rotate(-45deg) scale(.72)}
+  .smartcards.dark .sc-mode-row .sc-theme-toggle .sc-icon-sun{display:block;opacity:0;transform:rotate(45deg) scale(.72)}
+  .smartcards.dark .sc-mode-row .sc-theme-toggle .sc-icon-moon{display:block;opacity:1;transform:rotate(0) scale(1)}
+  @media(max-width:380px){.sc-mode-row .sc-view-mode::before,.sc-mode-row .sc-state-mode::before{width:35px}}
+  @media(prefers-reduced-motion:reduce){.sc-mode-row .sc-theme-mode,.sc-mode-row .sc-view-mode,.sc-mode-row .sc-state-mode,.sc-mode-row .sc-view-mode::before,.sc-mode-row .sc-state-mode::before,.sc-mode-row .sc-view-mode button,.sc-mode-row .sc-state-mode button,.sc-mode-row .sc-theme-toggle,.sc-mode-row .sc-theme-toggle svg{transition:none}}
+  .smartcards:not(.sc-flip-view):not(.sc-grid-view) .sc-grid>.sc-card{aspect-ratio:40/27}
+  .smartcards.sc-grid-view .sc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .smartcards.sc-grid-view .sc-grid>.sc-card{min-width:0;min-height:0;aspect-ratio:1;box-shadow:0 6px 16px #02071236}
+  .smartcards.sc-grid-view .sc-card>.sc-label{top:9px;right:8px;left:9px;max-width:calc(100% - 17px);font-size:9px;letter-spacing:.04em}
+  .smartcards.sc-grid-view .sc-card-top{top:29px;left:9px;max-width:calc(100% - 18px)}
+  .smartcards.sc-grid-view .sc-card-top .sc-state{font-size:clamp(18px,5.2vw,22px);line-height:1.05}
+  .smartcards.sc-grid-view .sc-card-top .sc-sub{max-width:100%;font-size:10px;line-height:1.15}
+  .smartcards.sc-grid-view .sc-grid>.sc-card:not(.is-alert-card) .sc-card-top .sc-sub{width:auto;margin-top:3px;padding:2px 5px}
+  .smartcards.sc-grid-view .sc-grid>.sc-card .sc-detection-box{display:none}
+  .smartcards.sc-grid-view .sc-actions .sc-feedback{right:8px;bottom:8px}
+  .smartcards.sc-grid-view .sc-highlight-now{top:auto;right:auto;bottom:8px;left:8px;width:54px;height:38px}
+  .smartcards.sc-grid-view .sc-highlight-now-state{font-size:7px}
+  .smartcards.sc-grid-view .sc-card[data-scene="security"] .sc-security-cameras .sc-focus-layer{display:block}
+  .smartcards.sc-grid-view .sc-card[data-scene="security"] .sc-security-cameras .sc-security-main{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .smartcards.sc-grid-view .sc-card[data-scene="security"] .sc-security-cameras .sc-camera-thumb{position:absolute;z-index:4;top:auto;right:auto;bottom:8px;width:28%;height:auto;aspect-ratio:4/3;object-fit:cover;border:1px solid #ffffffc9;border-radius:6px;box-shadow:0 3px 10px #0209149c}
+  .smartcards.sc-grid-view .sc-card[data-scene="security"] .sc-security-cameras .sc-camera-thumb:nth-of-type(2){left:4%}
+  .smartcards.sc-grid-view .sc-card[data-scene="security"] .sc-security-cameras .sc-camera-thumb:nth-of-type(3){left:36%}
+  .smartcards.sc-grid-view .sc-card[data-scene="security"] .sc-security-cameras .sc-camera-thumb:nth-of-type(4){left:68%}
+  .smartcards.sc-grid-view .sc-card[data-scene="security"] .sc-actions .sc-feedback{bottom:48px}
   .sc-flip-status{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
   .smartcards.sc-flip-view .sc-grid{position:relative;display:block;height:clamp(438px,calc((100vw - 24px)*1.48),570px);padding-top:12px;perspective:1000px;touch-action:none;cursor:grab}
   .smartcards.sc-flip-view .sc-grid.is-dragging{cursor:grabbing;user-select:none}
@@ -1908,6 +1951,10 @@
   .smartcards.sc-flip-view .sc-grid>.sc-card.is-exiting-up{z-index:4;visibility:visible;opacity:0;transform:translate(var(--sc-exit-x,-105%),var(--sc-exit-y,0px)) rotate(var(--sc-exit-rotate,-7deg))}
   .smartcards.sc-flip-view .sc-grid>.sc-card.is-exiting-down{z-index:4;visibility:visible;opacity:0;transform:translate(var(--sc-exit-x,105%),var(--sc-exit-y,0px)) rotate(var(--sc-exit-rotate,7deg))}
   @media(prefers-reduced-motion:reduce){.smartcards.sc-flip-view .sc-grid>.sc-card{transition:none}}
+  .sc-grid>.sc-card.is-critical-alert::after{content:'';display:block;position:absolute;z-index:7;inset:0;width:auto;height:auto;max-width:none;padding:0;border:2px solid #ff4b55;border-radius:inherit;background:none;box-shadow:0 0 0 1px #ff4b5540;pointer-events:none}
+  .sc-grid>.sc-card.is-critical-alert .sc-state::before{content:'';display:inline-block;width:9px;height:9px;margin:0 8px 2px 0;vertical-align:middle;border-radius:50%;background:#ff4b55;box-shadow:0 0 0 3px #ff4b5533;animation:sc-critical-blink .85s ease-in-out infinite}
+  @keyframes sc-critical-blink{0%,100%{opacity:1}50%{opacity:.18}}
+  @media(prefers-reduced-motion:reduce){.sc-grid>.sc-card.is-critical-alert .sc-state::before{animation:none}}
 
   /* Dedicated GitHub Pages view: keep only the mobile Smart Cards experience. */
   body.sc-standalone{min-height:100vh;background:#0d1726}
@@ -2853,31 +2900,32 @@ Goal: *"Did the bins go out — and come back?"*
   <div class="tabpane on" id="pane-smart">
     <section class="smartcards" id="smartCards" aria-label="Smart camera cards">
       <div class="sc-mode-row">
-        <div class="sc-theme-mode" role="group" aria-label="Preview color theme">
-          <button class="active" type="button" data-sc-theme="light" aria-pressed="true">Light</button>
-          <button type="button" data-sc-theme="dark" aria-pressed="false">Dark</button>
+        <div class="sc-theme-mode">
+          <button class="sc-theme-toggle" id="sc-theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false" title="Switch to dark mode"><svg class="sc-icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg><svg class="sc-icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.5 8.5 0 1 0 20.2 15.2Z"/></svg></button>
         </div>
         <div class="sc-view-mode" role="group" aria-label="Card view">
           <button type="button" data-sc-view="list" aria-pressed="true">List</button>
+          <button type="button" data-sc-view="grid" aria-pressed="false">Grid</button>
           <button type="button" data-sc-view="flip" aria-pressed="false">Flip</button>
         </div>
         <div class="sc-state-mode" role="group" aria-label="Preview card state emphasis">
-          <button class="active" type="button" data-sc-state="normal" aria-pressed="true">Normal</button>
+          <button class="active" type="button" data-sc-state="mixed" aria-pressed="true" title="Real-world mix of normal and alert states; click again to reshuffle">Mixed</button>
+          <button type="button" data-sc-state="normal" aria-pressed="false">Normal</button>
           <button type="button" data-sc-state="alert" aria-pressed="false">Alert</button>
         </div>
       </div>
       <section class="sc-card-feed" aria-labelledby="sc-cards-heading">
-        <div class="sc-stories-head sc-cards-head"><h2 id="sc-cards-heading">Smart cards</h2></div>
+        <div class="sc-stories-head sc-cards-head"><h2 id="sc-cards-heading">8 updates on 8 monitor goals</h2></div>
       <div class="sc-shell">
         <div class="sc-grid">
-<article class="sc-card sc-hero" data-scene="security" data-checked="8 secs ago"><span class="sc-label">Home security</span><div class="sc-card-top"><div class="sc-state">SAFE</div><p class="sc-sub">for 2 hours</p></div><div class="sc-scene sc-security-cameras"><img class="sc-photo sc-security-main" src="assets/smart-security-secure.webp?v=1" alt="Side gate camera: closed gate with the secured path clear" width="1672" height="941" loading="eager"><img class="sc-camera-thumb" src="assets/smart-garage-closed.webp?v=2" alt="Garage camera: door closed" width="1672" height="941" loading="lazy"><img class="sc-camera-thumb" src="assets/smart-front-door-clear.webp?v=2" alt="Delivery camera: porch clear" width="1672" height="941" loading="lazy"><img class="sc-camera-thumb" src="assets/smart-trash-bins-out.webp?v=2" alt="Driveway camera: bins at the curb" width="1672" height="941" loading="lazy"><span class="sc-detection-box" aria-hidden="true"></span></div><div class="sc-actions"><button class="primary">Go live</button><div class="sc-feedback" aria-label="Was this result helpful?"><button aria-label="Correct result"><svg viewBox="0 0 24 24"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg></button><button aria-label="Incorrect result"><svg viewBox="0 0 24 24"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg></button></div></div></article>
-<article class="sc-card sc-hero" data-scene="garage" data-checked="12 secs ago"><span class="sc-label">Garage monitor</span><div class="sc-card-top"><div class="sc-state">CLOSED</div><p class="sc-sub">for 2 hours</p></div><div class="sc-scene"><img class="sc-photo" src="assets/smart-garage-closed.webp?v=2" alt="Closed garage door in a clear driveway" width="1672" height="941" loading="eager"><span class="sc-detection-box" aria-hidden="true"></span></div><div class="sc-actions"><button class="primary">Go live</button><div class="sc-feedback" aria-label="Was this result helpful?"><button aria-label="Correct result"><svg viewBox="0 0 24 24"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg></button><button aria-label="Incorrect result"><svg viewBox="0 0 24 24"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg></button></div></div></article>
-          <article class="sc-card sc-hero" data-scene="ev" data-checked="15 secs ago"><span class="sc-label">EV charging reminder</span><div class="sc-card-top"><div class="sc-state">CHARGING</div><p class="sc-sub">for 45 mins</p></div><div class="sc-scene"><img class="sc-photo" src="assets/smart-ev-charging.webp?v=1" alt="Electric car connected to a wall charger in the garage" width="1672" height="941" loading="eager"><span class="sc-detection-box" aria-hidden="true"></span></div><div class="sc-actions"><button class="primary">Go live</button><div class="sc-feedback" aria-label="Was this result helpful?"><button aria-label="Correct result"><svg viewBox="0 0 24 24"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg></button><button aria-label="Incorrect result"><svg viewBox="0 0 24 24"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg></button></div></div></article>
-          <article class="sc-card sc-hero" data-scene="front" data-tone="front" data-checked="2 mins ago"><span class="sc-label">Delivery monitor</span><div class="sc-card-top"><div class="sc-state">NO PACKAGE</div><p class="sc-sub">for 3 hours</p></div><div class="sc-scene"><img class="sc-photo" src="assets/smart-front-door-clear.webp?v=2" alt="Clear front porch with no packages or visitors" width="1672" height="941" loading="eager"><span class="sc-detection-box" aria-hidden="true"></span></div><div class="sc-actions"><button class="primary">Go live</button><div class="sc-feedback" aria-label="Was this result helpful?"><button aria-label="Correct result"><svg viewBox="0 0 24 24"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg></button><button aria-label="Incorrect result"><svg viewBox="0 0 24 24"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg></button></div></div></article>
-          <article class="sc-card sc-hero" data-scene="bins" data-tone="bins" data-checked="5 mins ago"><span class="sc-label">Trash day reminder</span><div class="sc-card-top"><div class="sc-state">Bins OUT</div><p class="sc-sub">Ready for tomorrow's pickup</p></div><div class="sc-scene"><img class="sc-photo" src="assets/smart-trash-bins-out.webp?v=2" alt="Trash and recycling bins placed at the curb for pickup" width="1672" height="941" loading="eager"><span class="sc-detection-box" aria-hidden="true"></span></div><div class="sc-actions"><button class="primary">Go live</button><div class="sc-feedback" aria-label="Was this result helpful?"><button aria-label="Correct result"><svg viewBox="0 0 24 24"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg></button><button aria-label="Incorrect result"><svg viewBox="0 0 24 24"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg></button></div></div></article>
-          <article class="sc-card sc-hero" data-scene="birds" data-checked="20 secs ago"><span class="sc-label">Bird watcher</span><div class="sc-card-top"><div class="sc-state">NO BIRDS</div><p class="sc-sub">3 bird visits today</p></div><div class="sc-scene"><img class="sc-photo" src="assets/smart-bird-feeder-clear.webp?v=1" alt="Backyard bird feeder is clear with no birds present" width="1672" height="941" loading="lazy"><span class="sc-detection-box" aria-hidden="true"></span></div><div class="sc-actions"><button class="primary">Go live</button><div class="sc-feedback" aria-label="Was this result helpful?"><button aria-label="Correct result"><svg viewBox="0 0 24 24"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg></button><button aria-label="Incorrect result"><svg viewBox="0 0 24 24"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg></button></div></div></article>
-          <article class="sc-card sc-hero" data-scene="pets" data-checked="11 secs ago"><span class="sc-label">Pet watcher</span><div class="sc-card-top"><div class="sc-state">RESTING</div><p class="sc-sub">for 35 mins</p></div><div class="sc-scene"><img class="sc-photo" src="assets/smart-pet-resting.webp?v=1" alt="Golden retriever resting on the living room rug" width="1672" height="941" loading="lazy"><span class="sc-detection-box" aria-hidden="true"></span></div><div class="sc-actions"><button class="primary">Go live</button><div class="sc-feedback" aria-label="Was this result helpful?"><button aria-label="Correct result"><svg viewBox="0 0 24 24"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg></button><button aria-label="Incorrect result"><svg viewBox="0 0 24 24"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg></button></div></div></article>
-          <article class="sc-card sc-hero" data-scene="wildlife" data-checked="22 secs ago"><span class="sc-label">Wild animal watcher</span><div class="sc-card-top"><div class="sc-state">NO WILDLIFE</div><p class="sc-sub">for 2 hours</p></div><div class="sc-scene"><img class="sc-photo" src="assets/smart-wildlife-clear.webp?v=1" alt="Fenced backyard is clear of wild animals near the bins" width="1672" height="941" loading="lazy"><span class="sc-detection-box" aria-hidden="true"></span></div><div class="sc-actions"><button class="primary">Go live</button><div class="sc-feedback" aria-label="Was this result helpful?"><button aria-label="Correct result"><svg viewBox="0 0 24 24"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg></button><button aria-label="Incorrect result"><svg viewBox="0 0 24 24"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg></button></div></div></article>
+<article class="sc-card sc-hero" data-scene="security" data-checked="8 secs ago"><span class="sc-label">Home security</span><div class="sc-card-top"><div class="sc-state">SAFE</div><p class="sc-sub">for 2 hours</p></div><div class="sc-scene sc-security-cameras"><img class="sc-photo sc-security-main" src="assets/smart-security-secure.webp?v=1" alt="Side gate camera: closed gate with the secured path clear" width="1672" height="941" loading="eager"><img class="sc-camera-thumb" src="assets/smart-garage-closed.webp?v=2" alt="Garage camera: door closed" width="1672" height="941" loading="lazy"><img class="sc-camera-thumb" src="assets/smart-front-door-clear.webp?v=2" alt="Delivery camera: porch clear" width="1672" height="941" loading="lazy"><img class="sc-camera-thumb" src="assets/smart-trash-bins-out.webp?v=2" alt="Driveway camera: bins at the curb" width="1672" height="941" loading="lazy"><span class="sc-detection-box" aria-hidden="true"></span></div><div class="sc-actions"><div class="sc-feedback" aria-label="Was this result helpful?"><button aria-label="Correct result"><svg viewBox="0 0 24 24"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg></button><button aria-label="Incorrect result"><svg viewBox="0 0 24 24"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg></button></div></div></article>
+<article class="sc-card sc-hero" data-scene="garage" data-checked="12 secs ago"><span class="sc-label">Garage monitor</span><div class="sc-card-top"><div class="sc-state">CLOSED</div><p class="sc-sub">for 2 hours</p></div><div class="sc-scene"><img class="sc-photo" src="assets/smart-garage-closed.webp?v=2" alt="Closed garage door in a clear driveway" width="1672" height="941" loading="eager"><span class="sc-detection-box" aria-hidden="true"></span></div><div class="sc-actions"><div class="sc-feedback" aria-label="Was this result helpful?"><button aria-label="Correct result"><svg viewBox="0 0 24 24"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg></button><button aria-label="Incorrect result"><svg viewBox="0 0 24 24"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg></button></div></div></article>
+          <article class="sc-card sc-hero" data-scene="ev" data-checked="15 secs ago"><span class="sc-label">EV charging reminder</span><div class="sc-card-top"><div class="sc-state">CHARGING</div><p class="sc-sub">for 45 mins</p></div><div class="sc-scene"><img class="sc-photo" src="assets/smart-ev-charging.webp?v=1" alt="Electric car connected to a wall charger in the garage" width="1672" height="941" loading="eager"><span class="sc-detection-box" aria-hidden="true"></span></div><div class="sc-actions"><div class="sc-feedback" aria-label="Was this result helpful?"><button aria-label="Correct result"><svg viewBox="0 0 24 24"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg></button><button aria-label="Incorrect result"><svg viewBox="0 0 24 24"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg></button></div></div></article>
+          <article class="sc-card sc-hero" data-scene="front" data-tone="front" data-checked="2 mins ago"><span class="sc-label">Delivery monitor</span><div class="sc-card-top"><div class="sc-state">NO PACKAGE</div><p class="sc-sub">for 3 hours</p></div><div class="sc-scene"><img class="sc-photo" src="assets/smart-front-door-clear.webp?v=2" alt="Clear front porch with no packages or visitors" width="1672" height="941" loading="eager"><span class="sc-detection-box" aria-hidden="true"></span></div><div class="sc-actions"><div class="sc-feedback" aria-label="Was this result helpful?"><button aria-label="Correct result"><svg viewBox="0 0 24 24"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg></button><button aria-label="Incorrect result"><svg viewBox="0 0 24 24"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg></button></div></div></article>
+          <article class="sc-card sc-hero" data-scene="bins" data-tone="bins" data-checked="5 mins ago"><span class="sc-label">Trash day reminder</span><div class="sc-card-top"><div class="sc-state">Bins OUT</div><p class="sc-sub">Ready for tomorrow's pickup</p></div><div class="sc-scene"><img class="sc-photo" src="assets/smart-trash-bins-out.webp?v=2" alt="Trash and recycling bins placed at the curb for pickup" width="1672" height="941" loading="eager"><span class="sc-detection-box" aria-hidden="true"></span></div><div class="sc-actions"><div class="sc-feedback" aria-label="Was this result helpful?"><button aria-label="Correct result"><svg viewBox="0 0 24 24"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg></button><button aria-label="Incorrect result"><svg viewBox="0 0 24 24"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg></button></div></div></article>
+          <article class="sc-card sc-hero" data-scene="birds" data-checked="20 secs ago"><span class="sc-label">Bird watcher</span><div class="sc-card-top"><div class="sc-state">NO BIRDS</div><p class="sc-sub">3 bird visits today</p></div><div class="sc-scene"><img class="sc-photo" src="assets/smart-bird-feeder-clear.webp?v=1" alt="Backyard bird feeder is clear with no birds present" width="1672" height="941" loading="lazy"><span class="sc-detection-box" aria-hidden="true"></span></div><div class="sc-actions"><div class="sc-feedback" aria-label="Was this result helpful?"><button aria-label="Correct result"><svg viewBox="0 0 24 24"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg></button><button aria-label="Incorrect result"><svg viewBox="0 0 24 24"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg></button></div></div></article>
+          <article class="sc-card sc-hero" data-scene="pets" data-checked="11 secs ago"><span class="sc-label">Pet watcher</span><div class="sc-card-top"><div class="sc-state">RESTING</div><p class="sc-sub">for 35 mins</p></div><div class="sc-scene"><img class="sc-photo" src="assets/smart-pet-resting.webp?v=1" alt="Golden retriever resting on the living room rug" width="1672" height="941" loading="lazy"><span class="sc-detection-box" aria-hidden="true"></span></div><div class="sc-actions"><div class="sc-feedback" aria-label="Was this result helpful?"><button aria-label="Correct result"><svg viewBox="0 0 24 24"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg></button><button aria-label="Incorrect result"><svg viewBox="0 0 24 24"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg></button></div></div></article>
+          <article class="sc-card sc-hero" data-scene="wildlife" data-checked="22 secs ago"><span class="sc-label">Wild animal watcher</span><div class="sc-card-top"><div class="sc-state">NO WILDLIFE</div><p class="sc-sub">for 2 hours</p></div><div class="sc-scene"><img class="sc-photo" src="assets/smart-wildlife-clear.webp?v=1" alt="Fenced backyard is clear of wild animals near the bins" width="1672" height="941" loading="lazy"><span class="sc-detection-box" aria-hidden="true"></span></div><div class="sc-actions"><div class="sc-feedback" aria-label="Was this result helpful?"><button aria-label="Correct result"><svg viewBox="0 0 24 24"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg></button><button aria-label="Incorrect result"><svg viewBox="0 0 24 24"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg></button></div></div></article>
         </div>
         <span class="sc-flip-status" aria-live="polite"></span>
       </div>
@@ -6652,16 +6700,16 @@ document.querySelectorAll('.tab').forEach(tb=>tb.addEventListener('click',()=>{
   if(t==='data') scheduleDrawMaplines();
 }));
 /* Smart Cards theme switcher: preview the same card language in either context. */
-document.querySelectorAll('[data-sc-theme]').forEach(btn=>btn.addEventListener('click',()=>{
-  const dark=btn.dataset.scTheme==='dark';
+const smartCardThemeToggle=$('sc-theme-toggle');
+smartCardThemeToggle.addEventListener('click',()=>{
+  const dark=!$('smartCards').classList.contains('dark');
   $('smartCards').classList.toggle('dark',dark);
   document.body.classList.toggle('sc-light-page',!dark);
-  document.querySelectorAll('[data-sc-theme]').forEach(b=>{
-    const active=b===btn;
-    b.classList.toggle('active',active);
-    b.setAttribute('aria-pressed',String(active));
-  });
-}));
+  smartCardThemeToggle.setAttribute('aria-pressed',String(dark));
+  const label=`Switch to ${dark?'light':'dark'} mode`;
+  smartCardThemeToggle.setAttribute('aria-label',label);
+  smartCardThemeToggle.title=label;
+});
 /* Smart Cards state switcher: copy, evidence and emphasis move as one state. */
 const SMART_CARD_STATES={
   normal:{
@@ -7072,6 +7120,7 @@ function initSmartCardEvidence(){
     detailDialog.dataset.videoSort='newest';
     detailDialog.dataset.selectedVideoIndex='-1';
     preview.dataset.scene=scene;
+    preview.classList.toggle('is-alert-card',mode==='alert');
     preview.replaceChildren(card.querySelector('.sc-scene').cloneNode(true),previewScore,caption);
     caption.hidden=true;
     previewScore.hidden=true;
@@ -7215,6 +7264,21 @@ const SMART_CARD_PRIORITY={
   normal:['security','garage','front','ev','bins','pets','wildlife','birds'],
   alert:['security','garage','pets','front','wildlife','ev','bins','birds']
 };
+const SMART_CARD_MIXED_ALERT_PRIORITY=['security','garage','wildlife','ev','bins','front','pets','birds'];
+const SMART_CARD_MIXED_WEIGHTS={security:3,garage:3,wildlife:2,ev:2,bins:1.5,front:1.5,pets:1,birds:.5};
+function chooseMixedAlertScenes(){
+  const selected=new Set([Math.random()<.5?'security':'garage']);
+  const target=2+Math.floor(Math.random()*3);
+  while(selected.size<target){
+    const candidates=SMART_CARD_MIXED_ALERT_PRIORITY.filter(scene=>!selected.has(scene));
+    let roll=Math.random()*candidates.reduce((sum,scene)=>sum+SMART_CARD_MIXED_WEIGHTS[scene],0);
+    for(const scene of candidates){
+      roll-=SMART_CARD_MIXED_WEIGHTS[scene];
+      if(roll<0){selected.add(scene);break}
+    }
+  }
+  return selected;
+}
 const smartCardGrid=document.querySelector('#smartCards .sc-grid');
 const smartCardFlipStatus=document.querySelector('#smartCards .sc-flip-status');
 let smartCardFlipScene='security';
@@ -7250,14 +7314,15 @@ function syncSmartCardView(){
 }
 function setSmartCardView(view){
   const flip=view==='flip';
-  const wasFlip=$('smartCards').classList.contains('sc-flip-view');
-  if(flip===wasFlip)return;
+  const previousView=$('smartCards').classList.contains('sc-flip-view')?'flip':$('smartCards').classList.contains('sc-grid-view')?'grid':'list';
+  if(view===previousView)return;
   smartCardViewAnimations.forEach(animation=>animation.cancel());
   smartCardViewAnimations=[];
   if(flip)smartCardFlipScene=smartCardGrid.firstElementChild.dataset.scene;
   const focusCard=[...smartCardGrid.children].find(card=>card.dataset.scene===smartCardFlipScene);
   const before=focusCard.getBoundingClientRect();
   $('smartCards').classList.toggle('sc-flip-view',flip);
+  $('smartCards').classList.toggle('sc-grid-view',view==='grid');
   document.querySelectorAll('[data-sc-view]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.scView===view)));
   syncSmartCardView();
   if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
@@ -7366,17 +7431,20 @@ smartCardGrid.addEventListener('keydown',event=>{
 });
 function setSmartCardState(mode){
   const isAlert=mode==='alert';
+  const mixedAlerts=mode==='mixed'?chooseMixedAlertScenes():new Set();
   $('smartCards').classList.toggle('is-alert',isAlert);
-  $('smartCards').classList.toggle('is-highlights',!isAlert);
+  $('smartCards').classList.toggle('is-mixed',mode==='mixed');
+  $('smartCards').classList.toggle('is-highlights',mode==='normal');
   const detailDialog=document.querySelector('.sc-detail-dialog');
   if(detailDialog?.open)detailDialog.close();
   document.querySelectorAll('.sc-grid>.sc-card[data-scene]').forEach(card=>{
     const scene=card.dataset.scene;
-    const cardMode=isAlert?'alert':SMART_CARD_STATES.highlights[scene]?'highlights':'normal';
+    const cardMode=isAlert||mixedAlerts.has(scene)?'alert':SMART_CARD_STATES.highlights[scene]?'highlights':'normal';
     const state=SMART_CARD_STATES[cardMode][scene];
     const evidence=SMART_CARD_EVIDENCE[cardMode][scene];
     if(!state)return;
     card.dataset.cardMode=cardMode;
+    card.classList.toggle('is-alert-card',cardMode==='alert');
     card.querySelector('.sc-state').textContent=state.state;
     card.querySelector('.sc-sub').textContent=state.sub;
     card.dataset.checked=state.checked;
@@ -7394,13 +7462,23 @@ function setSmartCardState(mode){
     btn.setAttribute('aria-pressed',String(active));
   });
   const cardsByScene=new Map([...smartCardGrid.children].map(card=>[card.dataset.scene,card]));
-  SMART_CARD_PRIORITY[mode].forEach(scene=>smartCardGrid.append(cardsByScene.get(scene)));
+  const order=mode==='mixed'?[...SMART_CARD_MIXED_ALERT_PRIORITY.filter(scene=>mixedAlerts.has(scene)),...SMART_CARD_PRIORITY.normal.filter(scene=>!mixedAlerts.has(scene))]:SMART_CARD_PRIORITY[mode];
+  order.forEach(scene=>smartCardGrid.append(cardsByScene.get(scene)));
+  const cards=[...smartCardGrid.querySelectorAll(':scope>.sc-card[data-scene]')];
+  const highestAlert=cards.find(card=>card.dataset.cardMode==='alert');
+  cards.forEach(card=>{
+    const critical=card===highestAlert;
+    card.classList.toggle('is-critical-alert',critical);
+    card.setAttribute('aria-label',`${critical?'Urgent alert: ':''}Open details for ${card.querySelector(':scope>.sc-label').textContent.trim()}`);
+  });
+  const goals=new Set(cards.map(card=>card.dataset.scene)).size;
+  smartCards.querySelector('#sc-cards-heading').textContent=`${cards.length} ${cards.length===1?'update':'updates'} on ${goals} monitor ${goals===1?'goal':'goals'}`;
   if($('smartCards').classList.contains('sc-flip-view'))smartCardFlipScene=smartCardGrid.firstElementChild.dataset.scene;
   syncSmartCardView();
 }
 document.querySelectorAll('[data-sc-state]').forEach(btn=>btn.addEventListener('click',()=>setSmartCardState(btn.dataset.scState)));
 initSmartCardEvidence();
-setSmartCardState('normal');
+setSmartCardState('mixed');
 setSmartCardView('list');
 /* ---------- component browse filters ---------- */
 const modMeta={};
