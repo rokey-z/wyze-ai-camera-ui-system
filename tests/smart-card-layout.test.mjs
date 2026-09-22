@@ -74,7 +74,8 @@ test('list, grid, and flip use the same emergency-ordered cards', () => {
   assert.match(html, /\.smartcards\.sc-grid-view \.sc-grid>\.sc-card\{[^}]*aspect-ratio:1/);
   assert.match(html, /\.smartcards\.sc-grid-view \.sc-card-top \.sc-state\{font-size:clamp\(18px,5\.2vw,22px\)/);
   assert.match(html, /\.smartcards\.sc-grid-view \.sc-grid>\.sc-card \.sc-detection-box\{display:none\}/);
-  assert.match(html, /\.smartcards\.sc-grid-view \.sc-highlight-now\{top:auto;right:auto;bottom:8px;left:8px;width:54px;height:38px\}/);
+  assert.match(html, /\.sc-highlight-now\{position:absolute;bottom:12px;left:12px;[^}]*width:76px;height:58px/);
+  assert.match(html, /\.smartcards\.sc-grid-view \.sc-highlight-now\{bottom:8px;left:8px;width:54px;height:38px\}/);
   assert.match(html, /\.smartcards\.sc-grid-view \.sc-card\[data-scene="security"\] \.sc-security-cameras \.sc-focus-layer\{display:block\}/);
   assert.match(html, /\.smartcards\.sc-grid-view \.sc-card\[data-scene="security"\] \.sc-security-cameras \.sc-camera-thumb\{[^}]*bottom:8px;[^}]*aspect-ratio:4\/3/);
   assert.match(html, /\.smartcards\.sc-grid-view \.sc-card\[data-scene="security"\] \.sc-actions \.sc-feedback\{bottom:48px\}/);
