@@ -1803,6 +1803,7 @@
   .sc-evidence-item-feedback button:hover{color:#fff}
   .sc-evidence-item-feedback button:focus-visible{outline:2px solid #fff;outline-offset:2px}
   .sc-evidence-item-feedback svg{width:13px;height:13px;fill:currentColor}
+  .sc-detail-dialog .sc-evidence-item-feedback button[aria-pressed="true"]{color:#71edbe}
   body.sc-detail-open{overflow:hidden}
   .sc-detail-dialog{position:fixed;inset:auto 0 0;width:min(100%,480px);max-width:none;max-height:min(92dvh,900px);margin:auto auto 0;padding:0;overflow-y:auto;overscroll-behavior:contain;border:1px solid #ffffff26;border-bottom:0;border-radius:24px 24px 0 0;background:#101925;color:#f4f7fb;box-shadow:0 -16px 52px #02081480;font-family:var(--sans);animation:sc-sheet-in .3s cubic-bezier(.22,1,.36,1)}
   .sc-detail-dialog::backdrop{background:#030b17ad;backdrop-filter:blur(5px)}
@@ -1938,6 +1939,7 @@
   .smartcards.sc-grid-view .sc-card[data-scene="security"] .sc-security-cameras .sc-camera-thumb:nth-of-type(3){left:36%}
   .smartcards.sc-grid-view .sc-card[data-scene="security"] .sc-security-cameras .sc-camera-thumb:nth-of-type(4){left:68%}
   .smartcards.sc-grid-view .sc-card[data-scene="security"] .sc-actions .sc-feedback{bottom:48px}
+  .smartcards .sc-grid>.sc-card .sc-actions .sc-feedback button[aria-pressed="true"],body.sc-light-page .smartcards .sc-grid>.sc-card .sc-actions .sc-feedback button[aria-pressed="true"]{color:#71edbe;opacity:1;filter:drop-shadow(0 0 4px #062418)}
   .sc-flip-status{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
   .smartcards.sc-flip-view .sc-grid{position:relative;display:block;height:clamp(438px,calc((100vw - 24px)*1.48),570px);padding-top:12px;perspective:1000px;touch-action:none;cursor:grab}
   .smartcards.sc-flip-view .sc-grid.is-dragging{cursor:grabbing;user-select:none}
@@ -7040,7 +7042,7 @@ const SMART_CARD_FEEDBACK_ICONS={
   down:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg>'
 };
 function evidenceFeedback(label){
-  return `<div class="sc-evidence-item-feedback" role="group" aria-label="Rate ${label}"><button type="button" aria-label="${label} was helpful">${SMART_CARD_FEEDBACK_ICONS.up}</button><button type="button" aria-label="${label} was not helpful">${SMART_CARD_FEEDBACK_ICONS.down}</button></div>`;
+  return `<div class="sc-evidence-item-feedback" role="group" aria-label="Rate ${label}"><button type="button" aria-label="${label} was helpful" aria-pressed="false">${SMART_CARD_FEEDBACK_ICONS.up}</button><button type="button" aria-label="${label} was not helpful" aria-pressed="false">${SMART_CARD_FEEDBACK_ICONS.down}</button></div>`;
 }
 function evidenceList(items,label){
   return items.map((text,index)=>`<li><p>${text}</p>${evidenceFeedback(`${label} ${index+1}`)}</li>`).join('');
@@ -7078,6 +7080,23 @@ function initSmartCardEvidence(){
   detailDialog.innerHTML=`<div class="sc-detail-handle" aria-hidden="true"></div><header class="sc-detail-header"><h2 class="sc-detail-title" id="sc-detail-title"></h2><button class="sc-detail-close" type="button" aria-label="Close details">&times;</button></header><div class="sc-detail-preview-card sc-card"><span class="sc-detail-preview-score" role="img" hidden></span><div class="sc-detail-preview-caption" hidden><time></time><p></p><div class="sc-detail-preview-feedback"></div></div></div><div class="sc-detail-content"><p class="sc-detail-state"><strong></strong><span></span></p><div class="sc-detail-evidence-head"><div><span class="sc-detail-checked"></span></div><div class="sc-evidence-camera-summary"></div></div><div class="sc-detail-sections"><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.video}</span><span>Video Evidences</span><div class="sc-video-actions"><div class="sc-video-sort" role="group" aria-label="Sort video evidence" hidden><button type="button" data-video-sort="newest" aria-pressed="true" aria-label="Sort by time, newest first">Time</button><button type="button" data-video-sort="rating-high" aria-pressed="false" aria-label="Sort by rating, highest first">Rating</button></div><button class="sc-evidence-section-more sc-video-more" type="button" aria-expanded="false" aria-controls="sc-video-evidence-list">+ more</button></div></div><ul class="sc-video-strip sc-evidence-video" id="sc-video-evidence-list" aria-label="Video evidences; swipe horizontally"></ul></div><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.memory}</span><span>Household memory</span><span class="sc-evidence-section-more">+ more</span></div><ul class="sc-evidence-list sc-evidence-memory"></ul></div></div></div>`;
   detailDialog.setAttribute('aria-labelledby','sc-detail-title');
   smartCards.append(detailDialog);
+  const feedbackVotes=new Map();
+  const feedbackKey=group=>group.classList.contains('sc-feedback')
+    ?`goal:${group.closest('.sc-card').dataset.scene}`
+    :`evidence:${detailDialog.dataset.mode}:${detailDialog.dataset.scene}:${group.getAttribute('aria-label')}`;
+  const syncFeedbackGroup=group=>{
+    const vote=feedbackVotes.get(feedbackKey(group));
+    group.querySelectorAll('button').forEach((button,index)=>button.setAttribute('aria-pressed',String(vote===(index===0?'up':'down'))));
+  };
+  smartCards.addEventListener('click',event=>{
+    const button=event.target.closest('.sc-feedback button,.sc-evidence-item-feedback button');
+    if(!button)return;
+    const group=button.parentElement;
+    const key=feedbackKey(group);
+    const vote=button===group.firstElementChild?'up':'down';
+    feedbackVotes.set(key,feedbackVotes.get(key)===vote?null:vote);
+    syncFeedbackGroup(group);
+  });
   let lastDetailCard=null;
   const closeDetail=()=>{
     detailDialog.close();
@@ -7137,6 +7156,7 @@ function initSmartCardEvidence(){
     cameraSummary.setAttribute('aria-label',`Cameras involved: ${SMART_CARD_CAMERAS[scene].join(', ')}`);
     renderVideoEvidence();
     detailDialog.querySelector('.sc-evidence-memory').innerHTML=evidenceList(evidence.memory,'household memory');
+    detailDialog.querySelectorAll('.sc-evidence-item-feedback').forEach(syncFeedbackGroup);
     lastDetailCard=card;
     document.body.classList.add('sc-detail-open');
     detailDialog.showModal();
@@ -7184,6 +7204,7 @@ function initSmartCardEvidence(){
       detailDialog.querySelector('.sc-detail-checked').textContent=state.events[index].time;
     }
     caption.querySelector('.sc-detail-preview-feedback').innerHTML=evidenceFeedback(`video evidence ${index+1}`);
+    syncFeedbackGroup(caption.querySelector('.sc-evidence-item-feedback'));
     caption.hidden=false;
     detailDialog.dataset.selectedVideoIndex=String(index);
     detailDialog.querySelectorAll('.sc-video-thumb').forEach(button=>button.setAttribute('aria-pressed',String(button===thumb)));
@@ -7197,6 +7218,7 @@ function initSmartCardEvidence(){
     goalFeedback.setAttribute('aria-label',`Rate ${goal} goal`);
     goalFeedbackButtons[0].setAttribute('aria-label',`${goal} goal was helpful`);
     goalFeedbackButtons[1].setAttribute('aria-label',`${goal} goal was not helpful`);
+    syncFeedbackGroup(goalFeedback);
     const sceneElement=card.querySelector('.sc-scene');
     const focusLayer=document.createElement('div');
     focusLayer.className='sc-focus-layer';
