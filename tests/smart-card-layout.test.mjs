@@ -5,10 +5,11 @@ import test from 'node:test';
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
 const standalone = readFileSync(new URL('../smart-cards.html', import.meta.url), 'utf8');
 
-test('state blocks align with the mobile card top and retain four rounded corners', () => {
+test('state blocks sit below the in-card title and retain four rounded corners', () => {
   const alignedStateRules = html.match(/\.sc-card-top\{top:0;right:auto;left:0/g) ?? [];
   assert.equal(alignedStateRules.length, 2, 'desktop preview and narrow mobile rules must agree');
   assert.match(html, /\.sc-card-top\{top:0;right:auto;left:0;max-width:72%;padding:6px 12px 11px;border-radius:12px\}/);
+  assert.match(html, /\.sc-card-top\{top:32px;left:12px;width:max-content;max-width:calc\(100% - 24px\);min-height:0;padding:0;background:none;box-shadow:none;backdrop-filter:none\}/);
 });
 
 test('live action is top-right and evidence cluster is bottom-left', () => {
@@ -30,21 +31,43 @@ test('checked time is static and followed by an icon-only refresh action', () =>
   assert.match(html, /evidence\.querySelector\('\.sc-evidence-time'\)\.textContent='just now'/);
 });
 
-test('every card has compact goal feedback aligned to the goal line right edge', () => {
+test('every card has an in-image title and backgroundless feedback at bottom-right', () => {
   assert.match(html, /\.sc-card>\.sc-label\{max-width:calc\(100% - 62px\);overflow:hidden;text-overflow:ellipsis\}/);
   assert.match(html, /\.sc-actions \.sc-feedback\{display:flex;position:absolute;z-index:6;top:-27px;right:0;bottom:auto/);
+  assert.match(html, /\.sc-card>\.sc-label\{top:12px;right:104px;left:12px;max-width:none;color:#fff/);
+  assert.match(html, /\.sc-actions \.sc-feedback\{top:auto;right:12px;bottom:12px\}/);
   assert.match(html, /\.sc-actions \.sc-feedback button,\.sc-actions \.sc-feedback button:last-child\{width:24px;height:24px/);
-  assert.match(html, /body\.sc-light-page \.sc-actions \.sc-feedback button\{color:#42536b\}/);
+  assert.match(html, /body\.sc-light-page \.sc-grid>\.sc-card \.sc-actions \.sc-feedback button\{color:#fff;filter:drop-shadow/);
   assert.doesNotMatch(html, /\.sc-card\.is-expanded \.sc-actions \.sc-feedback/);
   assert.match(html, /goalFeedback\.setAttribute\('aria-label',`Rate \$\{goal\} goal`\)/);
   assert.match(html, /goalFeedbackButtons\[0\]\.setAttribute\('aria-label',`\$\{goal\} goal was helpful`\)/);
 });
 
-test('theme and state toggles share one control row', () => {
-  assert.match(html, /<div class="sc-mode-row">\s*<div class="sc-theme-mode"[\s\S]*?<div class="sc-state-mode"/);
+test('theme, view, and state toggles share one centered control row', () => {
+  assert.match(html, /<div class="sc-mode-row">\s*<div class="sc-theme-mode"[\s\S]*?<div class="sc-view-mode"[\s\S]*?<div class="sc-state-mode"/);
+  assert.match(html, /\.sc-mode-row\{display:grid;grid-template-columns:minmax\(0,1fr\) auto minmax\(0,1fr\);gap:6px\}/);
   assert.match(html, /class="active" type="button" data-sc-theme="light" aria-pressed="true">Light<\/button>/);
   assert.match(html, /data-sc-theme="dark" aria-pressed="false">Dark<\/button>/);
   assert.match(html, /<body class="sc-light-page">/);
+});
+
+test('list preserves landscape cards while flip uses the same emergency-ordered cards', () => {
+  assert.match(html, /class="sc-view-mode" role="group" aria-label="Card view"/);
+  assert.match(html, /data-sc-view="list" aria-pressed="true">List/);
+  assert.match(html, /data-sc-view="flip" aria-pressed="false">Flip/);
+  assert.match(html, /\.smartcards:not\(\.sc-flip-view\) \.sc-grid>\.sc-card\{aspect-ratio:40\/27\}/);
+  assert.match(html, /\.smartcards\.sc-flip-view \.sc-grid>\.sc-card\.is-current/);
+  assert.match(html, /normal:\['security','garage','front','ev','bins','pets','wildlife','birds'\]/);
+  assert.match(html, /alert:\['security','garage','pets','front','wildlife','ev','bins','birds'\]/);
+  assert.match(html, /smartCardGrid\.addEventListener\('pointermove'/);
+  assert.match(html, /touch-action:none;cursor:grab/);
+  assert.match(html, /Math\.hypot\(dx,dy\)<8/);
+  assert.match(html, /if\(event\.type==='pointerup'\)stepSmartCardFlip\(1,\{x:drag\.dx,y:drag\.dy\}\)/);
+  assert.match(html, /const nextIndex=\(index\+direction\+cards\.length\)%cards\.length/);
+  assert.match(html, /focusCard\.animate\(\[/);
+  assert.match(html, /window\.matchMedia\('\(prefers-reduced-motion: reduce\)'\)\.matches/);
+  assert.doesNotMatch(html, /class="sc-flip-nav"/);
+  assert.match(html, /<section class="sc-stories"[^>]*>[\s\S]*?<ol class="sc-story-list"><\/ol>/);
 });
 
 test('normal-state duration uses a translucent pill without changing alert copy', () => {
@@ -92,11 +115,11 @@ test('detail sheet is mobile-scrollable and does not move the feed', () => {
   assert.match(html, /@media\(prefers-reduced-motion:reduce\)\{\.sc-detail-dialog\{animation:none\}\}/);
 });
 
-test('footer readability gradient follows the rounded card corners', () => {
-  assert.match(
-    html,
-    /\.sc-card:before,\.sc-card\[data-tone\]:before\{[^}]*border-radius:0 0 16px 16px[^}]*background:linear-gradient\(to top/,
-  );
+test('full-height image gradient follows the rounded scene while the state has no fill', () => {
+  assert.match(html, /\.sc-card \.sc-scene:before,\.sc-card\[data-tone\] \.sc-scene:before\{background:linear-gradient\(to top,rgba\(3,8,16,\.72\) 0%,rgba\(3,8,16,\.2\) 40%,rgba\(3,8,16,\.26\) 100%\)\}/);
+  assert.match(html, /\.sc-grid>\.sc-card:before\{display:none\}/);
+  assert.match(html, /\.smartcards:not\(\.is-alert\) \.sc-card-top\{background:none;box-shadow:none;backdrop-filter:none\}/);
+  assert.match(html, /\.smartcards\.is-alert \.sc-card-top\{border:0;background:none;color:#fff;box-shadow:none;backdrop-filter:none\}/);
 });
 
 test('detail sheet contains the same video and household evidence', () => {
@@ -126,7 +149,12 @@ test('video evidences scroll horizontally with thumbnail ratings and top evidenc
   assert.match(html, /\.filter\(item=>item\.score>=4\)\.sort\(\(a,b\)=>b\.score-a\.score\|\|a\.index-b\.index\)\.slice\(0,3\)/);
   assert.match(html, /featuredIndexes\.has\(index\)\?' is-featured':''/);
   assert.match(html, /class="sc-video-thumb" type="button" data-video-index="\$\{index\}" aria-pressed="\$\{index===selectedIndex\}"/);
-  assert.match(html, /class="sc-video-score" aria-hidden="true">\$\{score\}<\/span>/);
+  assert.match(html, /class="sc-video-score\$\{score===5\?' is-five':''\}" aria-hidden="true">\$\{score\}<\/span>/);
+  assert.match(html, /\.sc-video-item \.sc-video-score\.is-five\{background:#f6c453;color:#3c2a03\}/);
+  assert.match(html, /\.sc-detail-preview-score\.is-five\{background:#f6c453;color:#3c2a03\}/);
+  assert.match(html, /\.sc-story-score\.is-five\{background:#f6c453;color:#3c2a03\}/);
+  assert.match(html, /class="sc-story-score\$\{rating===5\?' is-five':''\}"/);
+  assert.match(html, /previewScore\.classList\.toggle\('is-five',previewScore\.textContent==='5'\)/);
   assert.match(html, /class="sc-detail-preview-score" role="img" hidden/);
   assert.match(html, /previewScore\.textContent=thumb\.querySelector\('\.sc-video-score'\)\.textContent/);
   assert.doesNotMatch(html, /class="sc-video-score"[^>]*>\$\{ratings\[index\]\}\/5/);
@@ -139,12 +167,44 @@ test('video evidences scroll horizontally with thumbnail ratings and top evidenc
   assert.match(html, /detailDialog\.scrollTop=0;\n  \}\);/);
 });
 
-test('detail state and duration reuse each card color treatment', () => {
-  assert.match(html, /\.sc-detail-state\{[^}]*background:linear-gradient\(90deg,rgba\(0,0,0,\.62\) 0%,rgba\(0,0,0,\.25\) 42%,rgba\(0,0,0,0\) 78%\)/);
+test('detail state stays unfilled and duration retains its pill treatment', () => {
+  assert.match(html, /\.sc-detail-state\{[^}]*padding:0;border-radius:12px;background:none;color:#fff/);
   assert.match(html, /\.sc-detail-state span\{[^}]*background:rgba\(255,255,255,\.18\);color:inherit/);
-  assert.match(html, /\.smartcards\.is-alert \.sc-detail-state\{background:rgba\(113,237,190,\.82\);color:#09271e\}/);
-  assert.match(html, /\.smartcards\.is-alert \.sc-detail-dialog\[data-scene="security"\] \.sc-detail-state\{background:rgba\(255,75,85,\.82\);color:#fff\}/);
+  assert.match(html, /\.smartcards\.is-alert \.sc-detail-dialog\[data-mode="alert"\] \.sc-detail-state\{background:none;color:#fff\}/);
+  assert.match(html, /\.smartcards\.is-alert \.sc-detail-dialog\[data-mode="alert"\] \.sc-detail-state strong\{color:#71edbe\}/);
+  assert.match(html, /\.smartcards\.is-alert \.sc-detail-dialog\[data-mode="alert"\]\[data-scene="security"\] \.sc-detail-state strong\{color:#ff6570\}/);
   assert.match(html, /detailDialog\.dataset\.scene=scene/);
+});
+
+test('last-12-hours stories follow the card feed and open their rated video evidence', () => {
+  assert.match(html, /<section class="sc-card-feed" aria-labelledby="sc-cards-heading">\s*<div class="sc-stories-head sc-cards-head"><h2 id="sc-cards-heading">Smart cards<\/h2><\/div>\s*<div class="sc-shell">[\s\S]*?<div class="sc-grid">[\s\S]*?<\/div>\s*<span class="sc-flip-status" aria-live="polite"><\/span>\s*<\/div>\s*<\/section>\s*<section class="sc-stories" aria-labelledby="sc-stories-heading">[\s\S]*?<ol class="sc-story-list"><\/ol>/);
+  assert.match(html, /\.sc-stories\{margin:65px 0 0;font-family:var\(--sans\)\}/);
+  assert.match(html, /<h2 id="sc-stories-heading">6 key moments in last 12 hours<\/h2>/);
+  assert.match(html, /smartCards\.querySelector\('#sc-stories-heading'\)\.textContent=`\$\{SMART_CARD_STORIES\.length\} key \$\{SMART_CARD_STORIES\.length===1\?'moment':'moments'\} in last 12 hours`/);
+  assert.doesNotMatch(html, /Top-rated moments from the last 24 hours/);
+  assert.match(html, /const SMART_CARD_STORIES=\[/);
+  assert.match(html, /const rating=SMART_CARD_VIDEO_RATINGS\.highlights\[scene\]\[index\]/);
+  assert.match(html, /storyList\.addEventListener\('click',event=>\{/);
+  assert.match(html, /openDetail\(card,'highlights'\)/);
+  assert.match(html, /videoStrip\.querySelector\(`\.sc-video-thumb\[data-video-index="\$\{story\.dataset\.storyIndex\}"\]`\)\?\.click\(\)/);
+  assert.match(html, /detailDialog\.querySelector\('\.sc-detail-state strong'\)\.textContent=index===0\?state\.state:state\.events\[index\]\.label\.toUpperCase\(\)/);
+});
+
+test('last-12-hours stories use one timeline surface with camera-ratio thumbs and independent feedback', () => {
+  assert.match(html, /\.sc-story-list\{position:relative;display:grid;gap:0;[^}]*background:#1c2a3c/);
+  assert.match(html, /\.sc-story-list>li:after\{content:'';position:absolute;[^}]*width:1px;background:#6e8195/);
+  assert.match(html, /\.sc-story-list>li:last-child:after\{display:none\}/);
+  assert.match(html, /\.sc-story-list>li:before\{content:'';position:absolute;[^}]*border-radius:50%/);
+  assert.match(html, /\.sc-story-thumb\{[^}]*aspect-ratio:16\/9/);
+  assert.match(html, /\.sc-story-text\{display:-webkit-box;[^}]*-webkit-line-clamp:2/);
+  assert.match(html, /\.sc-story-time\{[^}]*font-weight:500/);
+  assert.match(html, /\.sc-story-copy strong\{display:inline;font-weight:800\}/);
+  assert.match(html, /\.sc-story-description\{display:inline;/);
+  assert.match(html, /\.sc-story-list>li\{position:relative;min-width:0\}/);
+  assert.doesNotMatch(html, /\.sc-story-list>li\{[^}]*border-bottom/);
+  assert.match(html, /<span class="sc-story-copy"><time class="sc-story-time">\$\{event\.time\}<\/time><span class="sc-story-text"><strong>\$\{title\}<\/strong>/);
+  assert.match(html, /class="sc-story-feedback" role="group" aria-label="Rate \$\{title\} story"/);
+  assert.match(html, /const feedback=event\.target\.closest\('\[data-story-feedback\]'\)/);
 });
 
 test('detail evidence summary and cameras sit to the right of state on mobile', () => {
@@ -211,12 +271,31 @@ test('detail sheet identifies the cameras involved in each card state', () => {
 test('normal and alert states provide twenty video observations and two memories for every scene', () => {
   for (const scene of ['security', 'garage', 'ev', 'front', 'bins', 'birds', 'pets', 'wildlife']) {
     const occurrences = html.match(new RegExp(`${scene}:\\{video:\\[`, 'g')) ?? [];
-    assert.equal(occurrences.length, 2, `${scene} needs normal and alert evidence`);
+    assert.equal(occurrences.length, ['birds', 'pets', 'wildlife'].includes(scene) ? 3 : 2, `${scene} needs evidence for every available state`);
   }
   assert.match(html, /SMART_CARD_EVIDENCE\[mode\]\[scene\]\.video\.push\(\.\.\.SMART_CARD_VIDEO_HISTORY\[mode\]\[scene\],\.\.\.SMART_CARD_VIDEO_ARCHIVE\[mode\]\[scene\]\)/);
   assert.match(html, /card\.querySelector\('\.sc-evidence-preview'\)\.textContent=evidence\.video\[0\]/);
   assert.match(html, /videoStrip\.innerHTML=videoEvidenceStrip\(SMART_CARD_EVIDENCE\[mode\]\[scene\]\.video,SMART_CARD_STATES\[mode\]\[scene\],SMART_CARD_VIDEO_RATINGS\[mode\]\[scene\],expanded,detailDialog\.dataset\.videoSort,Number\(detailDialog\.dataset\.selectedVideoIndex\)\)/);
   assert.match(html, /detailDialog\.querySelector\('\.sc-evidence-memory'\)\.innerHTML=evidenceList\(evidence\.memory,'household memory'\)/);
+});
+
+test('bird, pet and wildlife use highlights as their normal state', () => {
+  assert.match(html, /class="active" type="button" data-sc-state="normal" aria-pressed="true">Normal<\/button>/);
+  assert.doesNotMatch(html, /data-sc-state="highlights"/);
+  assert.match(html, /setSmartCardState\('normal'\)/);
+  assert.match(html, /const cardMode=isAlert\?'alert':SMART_CARD_STATES\.highlights\[scene\]\?'highlights':'normal'/);
+  for (const [scene, state] of [['birds', 'CARDINAL'], ['pets', 'DOG PLAYING'], ['wildlife', 'RACCOON']]) {
+    assert.match(html, new RegExp(`${scene}:\\{state:'${state}'.*?current:\\{state:.*?events:\\[\\{label:`));
+  }
+  assert.match(html, /collection\.className='sc-highlight-collection'/);
+  assert.doesNotMatch(html, /class="sc-highlight-history"/);
+  assert.doesNotMatch(html, /class="sc-highlight-latest"/);
+  assert.match(html, /\.sc-grid>\.sc-card \.sc-evidence\{display:none\}/);
+  assert.match(html, /collection\.querySelector\('\.sc-highlight-now'\)\.addEventListener\('click',event=>\{event\.stopPropagation\(\);openDetail\(card,'normal'\)\}\)/);
+  assert.match(html, /state\.events\?\.\[index\]\?\.src\|\|state\.src/);
+  for (const name of ['smart-bird-bluejay.webp','smart-bird-goldfinch.webp','smart-pet-playing.webp','smart-pet-drinking.webp','smart-wildlife-deer.webp','smart-wildlife-fox.webp']) {
+    assert.ok(existsSync(new URL(`../assets/${name}`, import.meta.url)), `${name} must be present`);
+  }
 });
 
 test('EV charging reminder has paired visual states and personalized evidence', () => {
