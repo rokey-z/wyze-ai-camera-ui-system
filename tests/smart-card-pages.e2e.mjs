@@ -21,7 +21,7 @@ const harness = `<!doctype html><html><head><title>RUNNING</title></head><body>
 <iframe id="app" src="/smart-cards.html" style="width:390px;height:844px;border:0"></iframe>
 <script>
 const frame=document.querySelector('#app');
-const finish=result=>{document.title='RESULT:'+btoa(JSON.stringify(result))};
+const finish=result=>{const bytes=new TextEncoder().encode(JSON.stringify(result));document.title='RESULT:'+btoa(Array.from(bytes,byte=>String.fromCharCode(byte)).join(''))};
 let attempts=0;
 const inspect=()=>{
   attempts+=1;
@@ -398,7 +398,7 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     assert.equal(result.mixedDefault.highlightsOnlyOnRoutine,true);
     assert.equal(result.mixedDefault.criticalCue,true);
     assert.equal(result.mixedDefault.detailMatchesCard,true);
-    assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:8,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:247,landscapeCards:true,normalOrder:['security','garage','front','ev','bins','pets','wildlife','birds'],controlsUniformSpaced:true,cardHeading:{text:'8 updates on 8 monitor goals',aboveCards:true,sameStyle:true},refreshButtons:8,checkedTimeInsideTrigger:false,goalFeedbackButtons:16,goLiveButtons:0,criticalCards:0,bottomEvidenceHidden:true,stateBlocksClear:true,goalTitlesClear:true,imageGradient:true,topOnlyGradient:true,goalTitleInside:true,stateBlockAligned:true,feedbackBottomRight:true,feedbackBackgroundless:true,normalActive:true});
+    assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:8,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:247,landscapeCards:true,normalOrder:['security','garage','front','ev','bins','pets','wildlife','birds'],controlsUniformSpaced:true,cardHeading:{text:'Now · 8 updates across 8 goals',aboveCards:true,sameStyle:true},refreshButtons:8,checkedTimeInsideTrigger:false,goalFeedbackButtons:16,goLiveButtons:0,criticalCards:0,bottomEvidenceHidden:true,stateBlocksClear:true,goalTitlesClear:true,imageGradient:true,topOnlyGradient:true,goalTitleInside:true,stateBlockAligned:true,feedbackBottomRight:true,feedbackBackgroundless:true,normalActive:true});
     assert.deepEqual(result.storySummary,{belowCards:true,heading:'6 key moments in last 12 hours',count:6,titles:['Cardinal at the feeder','Playtime on the rug','Blue jay visit','Water break','Raccoon in the yard','Goldfinch visit'],ratings:['5','5','4','4','5','4'],images:true});
     assert.deepEqual(result.storyRatingColors,{five:'rgb(246, 196, 83)',four:'rgb(113, 237, 190)'});
     assert.deepEqual(result.storyTimeline,{oneSurface:true,line:true,dots:true,timestamps:true,timeAboveTitle:true,cameraRatio:true,twoLineTitle:true,noDividers:true,compactRows:true,feedbackButtons:12,feedbackSelected:true,feedbackKeepsDetailClosed:true});
