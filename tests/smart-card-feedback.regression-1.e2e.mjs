@@ -1,4 +1,4 @@
-// Regression: ISSUE-001 — goal and evidence thumbs did not acknowledge a vote.
+// Regression: ISSUE-001 — detail evidence thumbs did not acknowledge a vote.
 // Found by /qa on 2026-09-21
 // Report: .gstack/qa-reports/qa-report-127-0-0-1-2026-09-21.md
 import assert from 'node:assert/strict';
@@ -26,21 +26,17 @@ const inspect=()=>{
     const doc=document.querySelector('#app').contentDocument;
     const card=doc.querySelector('.sc-grid>.sc-card[data-scene="security"]');
     if(!card?.dataset.cardMode)throw Error('waiting for smart cards');
-    const goal=card.querySelectorAll('.sc-feedback button');
-    goal[0].click();
-    const goalUp=[...goal].map(button=>button.getAttribute('aria-pressed'));
-    goal[1].click();
-    const goalDown=[...goal].map(button=>button.getAttribute('aria-pressed'));
-    goal[1].click();
-    const goalCleared=[...goal].map(button=>button.getAttribute('aria-pressed'));
-
     card.querySelector('.sc-scene').click();
     const dialog=doc.querySelector('.sc-detail-dialog');
+    const recommendation=dialog.querySelector('.sc-recommendation-feedback .sc-evidence-item-feedback');
+    recommendation.querySelector('button').click();
+    const recommendationUp=[...recommendation.querySelectorAll('button')].map(button=>button.getAttribute('aria-pressed'));
     const memory=dialog.querySelector('.sc-evidence-memory li:first-child .sc-evidence-item-feedback');
     memory.querySelector('button').click();
     const memoryUp=[...memory.querySelectorAll('button')].map(button=>button.getAttribute('aria-pressed'));
     dialog.close();
     card.querySelector('.sc-scene').click();
+    const recommendationRestored=[...dialog.querySelectorAll('.sc-recommendation-feedback .sc-evidence-item-feedback button')].map(button=>button.getAttribute('aria-pressed'));
     const memoryRestored=[...dialog.querySelectorAll('.sc-evidence-memory li:first-child .sc-evidence-item-feedback button')].map(button=>button.getAttribute('aria-pressed'));
 
     dialog.querySelector('.sc-video-thumb[data-video-index="0"]').click();
@@ -49,7 +45,7 @@ const inspect=()=>{
     dialog.querySelector('.sc-video-thumb[data-video-index="1"]').click();
     dialog.querySelector('.sc-video-thumb[data-video-index="0"]').click();
     const videoRestored=[...dialog.querySelectorAll('.sc-detail-preview-feedback button')].map(button=>button.getAttribute('aria-pressed'));
-    finish({goalUp,goalDown,goalCleared,memoryUp,memoryRestored,videoUp,videoRestored});
+    finish({recommendationUp,recommendationRestored,memoryUp,memoryRestored,videoUp,videoRestored});
   }catch(error){if(++attempts<20)setTimeout(inspect,150);else finish({error:String(error)})}
 };
 setTimeout(inspect,150);
@@ -90,7 +86,7 @@ function runChrome(url, userDataDir) {
   });
 }
 
-test('goal and evidence feedback toggles and survives detail rerender', { timeout: 20000 }, async t => {
+test('detail recommendation and evidence feedback toggles and survives rerender', { timeout: 20000 }, async t => {
   if (!chromePath) { t.skip('Chrome not installed'); return; }
   const server = createServer((request, response) => {
     if (request.url === '/__test__/harness.html') {
@@ -114,9 +110,8 @@ test('goal and evidence feedback toggles and survives detail rerender', { timeou
     assert.ok(encoded, 'browser harness did not return results');
     const result = JSON.parse(Buffer.from(encoded, 'base64').toString('utf8'));
     assert.equal(result.error, undefined);
-    assert.deepEqual(result.goalUp, ['true', 'false']);
-    assert.deepEqual(result.goalDown, ['false', 'true']);
-    assert.deepEqual(result.goalCleared, ['false', 'false']);
+    assert.deepEqual(result.recommendationUp, ['true', 'false']);
+    assert.deepEqual(result.recommendationRestored, ['true', 'false']);
     assert.deepEqual(result.memoryUp, ['true', 'false']);
     assert.deepEqual(result.memoryRestored, ['true', 'false']);
     assert.deepEqual(result.videoUp, ['true', 'false']);

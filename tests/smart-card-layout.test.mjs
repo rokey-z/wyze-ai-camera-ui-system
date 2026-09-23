@@ -36,27 +36,22 @@ test('checked time is static and followed by an icon-only refresh action', () =>
   assert.match(html, /evidence\.querySelector\('\.sc-evidence-time'\)\.textContent='just now'/);
 });
 
-test('every card has an in-image title and backgroundless feedback at bottom-right', () => {
-  assert.match(html, /\.sc-card>\.sc-label\{max-width:calc\(100% - 62px\);overflow:hidden;text-overflow:ellipsis\}/);
-  assert.match(html, /\.sc-actions \.sc-feedback\{display:flex;position:absolute;z-index:6;top:-27px;right:0;bottom:auto/);
+test('every card keeps its in-image title and removes card-level rating controls', () => {
   assert.match(html, /\.sc-card>\.sc-label\{top:12px;right:12px;left:12px;max-width:none;padding:0;border:0;background:none;box-shadow:none;backdrop-filter:none;color:#fff/);
-  assert.match(html, /\.sc-actions \.sc-feedback\{top:auto;right:12px;bottom:12px\}/);
-  assert.match(html, /\.sc-actions \.sc-feedback button,\.sc-actions \.sc-feedback button:last-child\{width:24px;height:24px/);
-  assert.match(html, /body\.sc-light-page \.sc-grid>\.sc-card \.sc-actions \.sc-feedback button\{color:#fff;filter:drop-shadow/);
-  assert.doesNotMatch(html, /\.sc-card\.is-expanded \.sc-actions \.sc-feedback/);
-  assert.match(html, /goalFeedback\.setAttribute\('aria-label',`Rate \$\{goal\} goal`\)/);
-  assert.match(html, /goalFeedbackButtons\[0\]\.setAttribute\('aria-label',`\$\{goal\} goal was helpful`\)/);
+  assert.match(html, /\.sc-grid>\.sc-card \.sc-actions \.sc-feedback\{display:none\}/);
+  assert.match(html, /goalFeedback\.remove\(\)/);
 });
 
 test('icon theme, view, and state toggles share one evenly spaced control row', () => {
   assert.match(html, /<div class="sc-mode-row">\s*<div class="sc-theme-mode"[\s\S]*?<div class="sc-view-mode"[\s\S]*?<div class="sc-state-mode"/);
-  assert.match(html, /\.sc-mode-row\{display:flex;align-items:center;justify-content:space-between;gap:10px\}/);
+  assert.match(html, /\.sc-mode-row\{display:flex;align-items:center;justify-content:space-between;gap:6px\}/);
   assert.match(html, /class="sc-theme-toggle" id="sc-theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false"/);
   assert.match(html, /class="sc-icon-sun"/);
   assert.match(html, /class="sc-icon-moon"/);
   assert.doesNotMatch(html, /data-sc-theme=/);
   assert.match(html, /\.sc-mode-row \.sc-theme-mode,\.sc-mode-row \.sc-view-mode,\.sc-mode-row \.sc-state-mode\{[^}]*height:42px/);
-  assert.match(html, /\.sc-mode-row \.sc-view-mode button,\.sc-mode-row \.sc-state-mode button\{width:42px;min-width:42px;height:36px/);
+  assert.match(html, /\.sc-mode-row \.sc-view-mode button,\.sc-mode-row \.sc-state-mode button\{width:40px;min-width:40px;height:36px/);
+  assert.match(html, /\.sc-mode-row \.sc-view-mode svg\{width:17px;height:17px;fill:none;stroke:currentColor/);
   assert.match(html, /\.sc-mode-row \.sc-view-mode::before,\.sc-mode-row \.sc-state-mode::before\{[^}]*transition:transform \.28s/);
   assert.match(html, /\.sc-mode-row \.sc-view-mode:has\(button:nth-child\(3\)\[aria-pressed="true"\]\)::before/);
   assert.match(html, /\.sc-mode-row \.sc-theme-toggle svg\{[^}]*transition:opacity \.24s/);
@@ -66,9 +61,9 @@ test('icon theme, view, and state toggles share one evenly spaced control row', 
 
 test('list, grid, and flip use the same emergency-ordered cards', () => {
   assert.match(html, /class="sc-view-mode" role="group" aria-label="Card view"/);
-  assert.match(html, /data-sc-view="list" aria-pressed="true">List/);
-  assert.match(html, /data-sc-view="grid" aria-pressed="false">Grid/);
-  assert.match(html, /data-sc-view="flip" aria-pressed="false">Flip/);
+  assert.match(html, /data-sc-view="list" aria-label="List view" title="List view" aria-pressed="true"><svg/);
+  assert.match(html, /data-sc-view="grid" aria-label="Grid view" title="Grid view" aria-pressed="false"><svg/);
+  assert.match(html, /data-sc-view="flip" aria-label="Flip view" title="Flip view" aria-pressed="false"><svg/);
   assert.match(html, /\.smartcards:not\(\.sc-flip-view\):not\(\.sc-grid-view\) \.sc-grid>\.sc-card\{aspect-ratio:40\/27\}/);
   assert.match(html, /\.smartcards\.sc-grid-view \.sc-grid\{display:grid;grid-template-columns:repeat\(2,minmax\(0,1fr\)\);gap:12px\}/);
   assert.match(html, /\.smartcards\.sc-grid-view \.sc-grid>\.sc-card\{[^}]*aspect-ratio:1/);
@@ -78,7 +73,6 @@ test('list, grid, and flip use the same emergency-ordered cards', () => {
   assert.match(html, /\.smartcards\.sc-grid-view \.sc-highlight-now\{bottom:8px;left:8px;width:54px;height:38px\}/);
   assert.match(html, /\.smartcards\.sc-grid-view \.sc-card\[data-scene="security"\] \.sc-security-cameras \.sc-focus-layer\{display:block\}/);
   assert.match(html, /\.smartcards\.sc-grid-view \.sc-card\[data-scene="security"\] \.sc-security-cameras \.sc-camera-thumb\{[^}]*bottom:8px;[^}]*aspect-ratio:4\/3/);
-  assert.match(html, /\.smartcards\.sc-grid-view \.sc-card\[data-scene="security"\] \.sc-actions \.sc-feedback\{bottom:48px\}/);
   assert.match(html, /classList\.toggle\('sc-grid-view',view==='grid'\)/);
   assert.match(html, /\.smartcards\.sc-flip-view \.sc-grid>\.sc-card\.is-current/);
   assert.match(html, /normal:\['security','garage','front','ev','bins','pets','wildlife','birds'\]/);
@@ -115,7 +109,9 @@ test('the detail sheet opens above a fixed feed with a large copy of the camera 
   assert.match(html, /const detailDialog=document\.createElement\('dialog'\)/);
   assert.match(html, /detailDialog\.className='sc-detail-dialog'/);
   assert.match(html, /detailDialog\.setAttribute\('aria-labelledby','sc-detail-title'\)/);
-  assert.match(html, /preview\.replaceChildren\(card\.querySelector\('\.sc-scene'\)\.cloneNode\(true\),previewScore,caption\)/);
+  assert.match(html, /preview\.replaceChildren\(card\.querySelector\('\.sc-scene'\)\.cloneNode\(true\),previewScore,caption,previewFeedback\)/);
+  assert.match(html, /previewFeedback\.innerHTML=evidenceFeedback\('this snapshot'\)/);
+  assert.match(html, /\.sc-detail-preview-feedback\{position:absolute;z-index:6;right:12px;bottom:12px\}/);
   assert.match(html, /\.sc-detail-preview-card\.sc-card\{[^}]*aspect-ratio:4\/3/);
   assert.match(html, /\.sc-detail-dialog\{position:fixed;inset:auto 0 0/);
   assert.doesNotMatch(html, /card\.classList\.toggle\('is-expanded'/);
@@ -158,10 +154,60 @@ test('detail sheet contains the same video and household evidence', () => {
   assert.match(html, /<button class="sc-evidence-section-more sc-video-more" type="button" aria-expanded="false"/);
   assert.match(html, /<span>Household memory<\/span><span class="sc-evidence-section-more">\+ more<\/span>/);
   assert.match(html, /\.sc-evidence-preview\{[^}]*max-height:21px[^}]*mask-image:linear-gradient/);
-  assert.match(html, /videoStrip\.innerHTML=videoEvidenceStrip\(SMART_CARD_EVIDENCE\[mode\]\[scene\]\.video,SMART_CARD_STATES\[mode\]\[scene\],SMART_CARD_VIDEO_RATINGS\[mode\]\[scene\],expanded,detailDialog\.dataset\.videoSort,Number\(detailDialog\.dataset\.selectedVideoIndex\)\)/);
+  assert.match(html, /videoStrip\.innerHTML=videoEvidenceStrip\(SMART_CARD_EVIDENCE\[evidenceMode\]\[scene\]\.video,SMART_CARD_STATES\[mode\]\[scene\],SMART_CARD_VIDEO_RATINGS\[evidenceMode\]\[scene\],expanded,detailDialog\.dataset\.videoSort,Number\(detailDialog\.dataset\.selectedVideoIndex\)\)/);
   assert.match(html, /videoStrip\.scrollLeft=0/);
   assert.match(html, /detailDialog\.querySelector\('\.sc-evidence-memory'\)\.innerHTML=evidenceList\(evidence\.memory,'household memory'\)/);
-  assert.match(html, /\.sc-actions \.sc-feedback\{display:flex;position:absolute/);
+  assert.match(html, /detailDialog\.querySelector\('\.sc-recommendation-feedback'\)\.innerHTML=evidenceFeedback/);
+});
+
+test('AI recommendation reasons appear in details and expand New cards in list view', () => {
+  assert.match(html, /data-sc-state="suggested" aria-label="New AI-suggested cards" title="New AI-suggested cards" aria-pressed="false">New<\/button>/);
+  assert.match(html, /suggested:\{\s*security:\{state:'SAFE',sub:'for 2 hours'/);
+  assert.match(html, /const SMART_CARD_RECOMMENDATIONS=\{/);
+  assert.match(html, /<h3>Why this\?<\/h3><p class="sc-recommendation-copy"><\/p>/);
+  assert.match(html, /detailDialog\.querySelector\('\.sc-recommendation-copy'\)\.textContent=SMART_CARD_RECOMMENDATIONS\[scene\]/);
+  assert.match(html, /detailDialog\.querySelector\('\.sc-recommendation-feedback'\)\.innerHTML=evidenceFeedback\('this card suggestion',`recommendation:\$\{scene\}`\)/);
+  assert.match(html, /suggestion\.innerHTML=`<span class="sc-evidence-title-icon">\$\{SMART_CARD_EVIDENCE_ICONS\.suggestion\}<\/span><div class="sc-suggestion-copy"><strong>Why this\?<\/strong><p>\$\{SMART_CARD_RECOMMENDATIONS\[scene\]\}<\/p><\/div><div class="sc-suggestion-actions"/);
+  assert.match(html, /\.smartcards:not\(\.sc-flip-view\):not\(\.sc-grid-view\) \.sc-card\.is-suggested-card \.sc-suggestion-reason\{display:grid/);
+  assert.match(html, /background:linear-gradient\(145deg,#ffe29a21,#ffe29a0a\)/);
+  assert.match(html, /\.sc-recommendation-item\{[^}]*border:1px solid #ffe29a3d/);
+  assert.match(html, /newBadge\.className='sc-new-badge'/);
+  assert.match(html, /newBadge\.textContent='New'/);
+  assert.match(html, /\.sc-card\.is-suggested-card \.sc-new-badge\{display:flex\}/);
+  assert.match(html, /card\.classList\.toggle\('is-suggested-card',cardMode==='suggested'\)/);
+  assert.match(html, /\$\{cards\.length\} new suggestions across \$\{goals\}/);
+});
+
+test('new suggestions can be kept or dropped with structured AI feedback', () => {
+  assert.match(html, /<button class="sc-suggestion-keep" type="button" aria-pressed="false">Keep<\/button><button class="sc-suggestion-delete" type="button">Drop<\/button>/);
+  assert.match(html, /<h2>Why drop this Smart Card\?<\/h2><p>Pick a reason so we can suggest better cards\.<\/p>/);
+  assert.match(html, /Not relevant to me/);
+  assert.match(html, /Wrong camera or area/);
+  assert.match(html, /Too many similar updates/);
+  assert.match(html, /I already monitor this elsewhere/);
+  assert.match(html, /Send feedback &amp; drop/);
+  assert.match(html, /suggestionDecisions\.set\(scene,\{decision:'kept'\}\)/);
+  assert.match(html, /suggestionDecisions\.set\(scene,\{decision:deleting\?'deleted':'dropped',reason:selected\.value,note\}\)/);
+  assert.match(html, /<div class="sc-drop-note" hidden>.*?<textarea id="sc-drop-note-input" class="sc-drop-note-input"/);
+  assert.match(html, /<button class="sc-drop-record-button" type="button" aria-label="Hold to record a voice note" aria-pressed="false">/);
+  assert.match(html, /dropRecording\.holdTimer=setTimeout\(startDropRecording,280\)/);
+  assert.match(html, /\.sc-drop-record-button\{[^}]*width:68px;height:68px/);
+  assert.match(html, /suggestion\.querySelector\('\.sc-suggestion-delete'\)\.addEventListener\('click',event=>\{\s*event\.stopPropagation\(\);\s*showSmartCardBack\(card\);/);
+  assert.match(html, /perspective\(1400px\) rotateY\(90deg\) scale\(\.96\)/);
+  assert.match(html, /springKeyframes\(\{from:-90,velocity:520\}/);
+  assert.match(html, /const lifting=!deleting&&smartCards\.classList\.contains\('sc-grid-view'\);/);
+  assert.match(html, /\.sc-drop-scrim\{position:fixed;inset:0;z-index:80;background:#030b17b3/);
+  assert.match(html, /\.smartcards\.sc-grid-view \.sc-grid>\.sc-card\.is-lifted\.is-dropping\{position:fixed;top:50%;left:50%/);
+  assert.match(html, /smartCardPress=\{target,press:target\.animate\(\{scale:\['1',button\?'\.95':'\.975'\]\}/);
+  assert.match(html, /<button class="sc-detail-delete" type="button">.*?Delete card<\/button><\/div>`;/);
+  assert.match(html, /detailDialog\.querySelector\('\.sc-detail-delete'\)\.addEventListener\('click',\(\)=>\{\s*if\(lastDetailCard\)showSmartCardBack\(lastDetailCard,detailDialog\);/);
+  assert.match(html, /deleting\?'Why delete this Smart Card\?':'Why drop this Smart Card\?'/);
+  assert.match(html, /burstSmartCardConfetti\(card\);\s*collapseSuggestionReason\(card,suggestion\);\s*showSmartCardToast\(`\$\{goal\} added to your Smart Cards`\);/);
+  assert.match(html, /\.smartcards \.sc-grid>\.sc-card\.is-suggested-card\[data-suggestion-decision="kept"\] \.sc-suggestion-reason\{display:none\}/);
+  assert.match(html, /\.smartcards\.sc-flip-view \.sc-grid>\.sc-card\.is-suggested-card \.sc-suggestion-reason\{position:absolute/);
+  assert.match(html, /\.smartcards\.sc-grid-view \.sc-grid>\.sc-card\.is-suggested-card \.sc-suggestion-reason\{position:absolute/);
+  assert.match(html, /suggestionStatus\.textContent=`\$\{goal\} \$\{deleting\?'card deleted':'suggestion dropped'\}\. Feedback reason:/);
+  assert.match(html, /order\.forEach\(scene=>\{const card=cardsByScene\.get\(scene\);if\(card\)smartCardGrid\.append\(card\)\}\)/);
 });
 
 test('video evidences scroll horizontally with thumbnail ratings and top evidence highlights', () => {
@@ -188,7 +234,7 @@ test('video evidences scroll horizontally with thumbnail ratings and top evidenc
   assert.match(html, /data-video-sort="newest" aria-pressed="true" aria-label="Sort by time, newest first">Time<\/button>/);
   assert.match(html, /data-video-sort="rating-high" aria-pressed="false" aria-label="Sort by rating, highest first">Rating<\/button>/);
   assert.doesNotMatch(html, /sc-video-sort-select/);
-  assert.match(html, /caption\.querySelector\('p'\)\.textContent=SMART_CARD_EVIDENCE\[mode\]\[scene\]\.video\[index\]/);
+  assert.match(html, /caption\.querySelector\('p'\)\.textContent=SMART_CARD_EVIDENCE\[evidenceMode\]\[scene\]\.video\[index\]/);
   assert.match(html, /detailDialog\.scrollTop=0;\n  \}\);/);
 });
 
@@ -204,7 +250,7 @@ test('detail state stays unfilled and duration retains its pill treatment', () =
 test('last-12-hours stories follow the card feed and open their rated video evidence', () => {
   assert.match(html, /<section class="sc-card-feed" aria-labelledby="sc-cards-heading">\s*<div class="sc-stories-head sc-cards-head"><h2 id="sc-cards-heading">Now · 8 updates across 8 goals<\/h2><\/div>\s*<div class="sc-shell">[\s\S]*?<div class="sc-grid">[\s\S]*?<\/div>\s*<span class="sc-flip-status" aria-live="polite"><\/span>\s*<\/div>\s*<\/section>\s*<section class="sc-stories" aria-labelledby="sc-stories-heading">[\s\S]*?<ol class="sc-story-list"><\/ol>/);
   assert.match(html, /\.sc-stories-head h2\{[^}]*font-family:var\(--sans\)/);
-  assert.match(html, /smartCards\.querySelector\('#sc-cards-heading'\)\.textContent=`Now · \$\{cards\.length\} \$\{cards\.length===1\?'update':'updates'\} across \$\{goals\} \$\{goals===1\?'goal':'goals'\}`/);
+  assert.match(html, /smartCards\.querySelector\('#sc-cards-heading'\)\.textContent=isSuggested\?`\$\{cards\.length\} new suggestions across \$\{goals\} \$\{goals===1\?'goal':'goals'\}`:`Now · \$\{cards\.length\} \$\{cards\.length===1\?'update':'updates'\} across \$\{goals\} \$\{goals===1\?'goal':'goals'\}\$\{mixedSuggested\.size\?` · \$\{mixedSuggested\.size\} new`:''\}`/);
   assert.match(html, /\.sc-stories\{margin:65px 0 0;font-family:var\(--sans\)\}/);
   assert.match(html, /<h2 id="sc-stories-heading">6 key moments in last 12 hours<\/h2>/);
   assert.match(html, /smartCards\.querySelector\('#sc-stories-heading'\)\.textContent=`\$\{SMART_CARD_STORIES\.length\} key \$\{SMART_CARD_STORIES\.length===1\?'moment':'moments'\} in last 12 hours`/);
@@ -241,7 +287,7 @@ test('detail evidence summary and cameras sit to the right of state on mobile', 
 });
 
 test('each supporting-evidence row has unfilled feedback controls and content-first hierarchy', () => {
-  assert.match(html, /function evidenceFeedback\(label\)/);
+  assert.match(html, /function evidenceFeedback\(label,key=''\)/);
   assert.match(html, /Rate \$\{label\}/);
   assert.doesNotMatch(html, /class="sc-evidence-icon"/);
   assert.doesNotMatch(html, /class="sc-evidence-bullet"/);
@@ -302,7 +348,7 @@ test('normal and alert states provide twenty video observations and two memories
   }
   assert.match(html, /SMART_CARD_EVIDENCE\[mode\]\[scene\]\.video\.push\(\.\.\.SMART_CARD_VIDEO_HISTORY\[mode\]\[scene\],\.\.\.SMART_CARD_VIDEO_ARCHIVE\[mode\]\[scene\]\)/);
   assert.match(html, /card\.querySelector\('\.sc-evidence-preview'\)\.textContent=evidence\.video\[0\]/);
-  assert.match(html, /videoStrip\.innerHTML=videoEvidenceStrip\(SMART_CARD_EVIDENCE\[mode\]\[scene\]\.video,SMART_CARD_STATES\[mode\]\[scene\],SMART_CARD_VIDEO_RATINGS\[mode\]\[scene\],expanded,detailDialog\.dataset\.videoSort,Number\(detailDialog\.dataset\.selectedVideoIndex\)\)/);
+  assert.match(html, /videoStrip\.innerHTML=videoEvidenceStrip\(SMART_CARD_EVIDENCE\[evidenceMode\]\[scene\]\.video,SMART_CARD_STATES\[mode\]\[scene\],SMART_CARD_VIDEO_RATINGS\[evidenceMode\]\[scene\],expanded,detailDialog\.dataset\.videoSort,Number\(detailDialog\.dataset\.selectedVideoIndex\)\)/);
   assert.match(html, /detailDialog\.querySelector\('\.sc-evidence-memory'\)\.innerHTML=evidenceList\(evidence\.memory,'household memory'\)/);
 });
 
@@ -311,8 +357,8 @@ test('mixed defaults to alert-prioritized real scenarios; normal keeps wildlife 
   assert.match(html, /type="button" data-sc-state="normal" aria-pressed="false">Normal<\/button>/);
   assert.doesNotMatch(html, /data-sc-state="highlights"/);
   assert.match(html, /setSmartCardState\('mixed'\)/);
-  assert.match(html, /const cardMode=isAlert\|\|mixedAlerts\.has\(scene\)\?'alert':SMART_CARD_STATES\.highlights\[scene\]\?'highlights':'normal'/);
-  assert.match(html, /const order=mode==='mixed'\?\[\.\.\.SMART_CARD_MIXED_ALERT_PRIORITY\.filter\(scene=>mixedAlerts\.has\(scene\)\),\.\.\.SMART_CARD_PRIORITY\.normal\.filter\(scene=>!mixedAlerts\.has\(scene\)\)\]:SMART_CARD_PRIORITY\[mode\]/);
+  assert.match(html, /const cardMode=isSuggested\|\|mixedSuggested\.has\(scene\)\?'suggested':isAlert\|\|mixedAlerts\.has\(scene\)\?'alert':SMART_CARD_STATES\.highlights\[scene\]\?'highlights':'normal'/);
+  assert.match(html, /const mixedAlertOrder=SMART_CARD_MIXED_ALERT_PRIORITY\.filter\(scene=>mixedAlerts\.has\(scene\)\);\s*const order=mode==='mixed'\?\[\.\.\.mixedAlertOrder\.slice\(0,1\),\.\.\.SMART_CARD_PRIORITY\.suggested\.filter\(scene=>mixedSuggested\.has\(scene\)\),\.\.\.mixedAlertOrder\.slice\(1\),\.\.\.SMART_CARD_PRIORITY\.normal\.filter\(scene=>!mixedAlerts\.has\(scene\)&&!mixedSuggested\.has\(scene\)\)\]:SMART_CARD_PRIORITY\[mode\]/);
   for (const [scene, state] of [['birds', 'CARDINAL'], ['pets', 'DOG PLAYING'], ['wildlife', 'RACCOON']]) {
     assert.match(html, new RegExp(`${scene}:\\{state:'${state}'.*?current:\\{state:.*?events:\\[\\{label:`));
   }

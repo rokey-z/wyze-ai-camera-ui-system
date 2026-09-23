@@ -1707,6 +1707,7 @@
   /* Goal-level feedback sits on the same line as the goal, aligned to the card's right edge. */
   .sc-card>.sc-label{max-width:calc(100% - 62px);overflow:hidden;text-overflow:ellipsis}
   .sc-actions .sc-feedback{display:flex;position:absolute;z-index:6;top:-27px;right:0;bottom:auto;gap:2px;margin:0;padding:0;border:0;border-radius:0;background:none;box-shadow:none;backdrop-filter:none;transition:opacity .18s ease,visibility 0s}
+  .sc-grid>.sc-card .sc-actions .sc-feedback{display:none}
   .sc-actions .sc-feedback button,.sc-actions .sc-feedback button:last-child{width:24px;height:24px;min-width:0;min-height:0;margin:0;padding:0;border:0;border-radius:0;background:none;color:#f4f7fb;box-shadow:none;opacity:.82}
   .sc-actions .sc-feedback button:hover,.sc-actions .sc-feedback button:active{background:none;color:#fff;box-shadow:none;opacity:1}
   .sc-actions .sc-feedback svg{width:13px;height:13px}
@@ -1809,7 +1810,7 @@
   .sc-detail-dialog::backdrop{background:#030b17ad;backdrop-filter:blur(5px)}
   @keyframes sc-sheet-in{from{transform:translateY(32px);opacity:.5}to{transform:translateY(0);opacity:1}}
   .sc-detail-handle{width:36px;height:4px;margin:9px auto 0;border-radius:99px;background:#7f8ea2}
-  .sc-detail-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 18px 14px}
+  .sc-detail-header{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 18px 14px;background:#101925}
   .sc-detail-title{margin:0;color:#fff;font-size:16px;font-weight:800;line-height:1.2}
   .sc-detail-close{display:grid;place-items:center;flex:none;width:36px;height:36px;padding:0;border:0;border-radius:50%;background:#ffffff14;color:#fff;font-size:24px;line-height:1;cursor:pointer}
   .sc-detail-close:hover{background:#ffffff2b}
@@ -1826,8 +1827,14 @@
   .sc-detail-preview-caption[hidden]{display:none}
   .sc-detail-preview-caption time{font-size:11px;font-weight:700;color:#c7d5e5}
   .sc-detail-preview-caption p{margin:0;font-size:13px;font-weight:700;line-height:1.35}
-  .sc-detail-preview-caption .sc-evidence-item-feedback{justify-self:end}
-  .sc-detail-preview-caption .sc-evidence-item-feedback button{width:28px;height:28px}
+  .sc-detail-preview-caption{padding-right:112px}
+  .sc-detail-preview-feedback{position:absolute;z-index:6;right:12px;bottom:12px}
+  .sc-detail-preview-feedback .sc-evidence-item-feedback{gap:8px}
+  .sc-detail-dialog .sc-detail-preview-feedback .sc-evidence-item-feedback button{width:42px;height:42px;border:1px solid #ffffff33;border-radius:50%;background:#0b1420a6;color:#fff;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 4px 14px #02081459;transition:background-color .18s ease,color .18s ease,border-color .18s ease}
+  .sc-detail-dialog .sc-detail-preview-feedback .sc-evidence-item-feedback button:hover{background:#16233acc}
+  .sc-detail-dialog .sc-detail-preview-feedback .sc-evidence-item-feedback button[aria-pressed="true"]{border-color:#71edbe;background:#71edbe;color:#09271e}
+  .sc-detail-dialog .sc-detail-preview-feedback .sc-evidence-item-feedback button:last-child[aria-pressed="true"]{border-color:#ff8a92;background:#ff8a92;color:#2a070b}
+  .sc-detail-preview-feedback svg{width:18px;height:18px}
   .sc-detail-content{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.45fr);column-gap:8px;padding:18px 18px max(30px,env(safe-area-inset-bottom))}
   .sc-detail-state{display:flex;flex-direction:column;align-items:flex-start;align-self:start;gap:5px;min-width:0;width:max-content;max-width:100%;margin:0;padding:0;border-radius:12px;background:none;color:#fff}
   .sc-detail-state strong{color:inherit;font-size:23px;font-weight:850;line-height:1.05}
@@ -1836,6 +1843,7 @@
   .sc-detail-dialog[data-mode="alert"] .sc-detail-state strong{color:#71edbe}
   .sc-detail-dialog[data-mode="alert"] .sc-detail-state span{padding:0;border-radius:0;background:none}
   .sc-detail-dialog[data-mode="alert"][data-scene="security"] .sc-detail-state strong{color:#ff6570}
+  .sc-detail-dialog[data-mode="suggested"] .sc-detail-state strong{color:#9abaff}
   .sc-detail-evidence-head{display:flex;min-width:0;flex-direction:column;align-items:flex-end;gap:10px;text-align:right}
   .sc-detail-checked{display:block;color:#e7edf5;font-size:11px;font-weight:650}
   .sc-detail-dialog .sc-evidence-camera-summary{max-width:100%;flex-wrap:wrap;row-gap:6px}
@@ -1846,6 +1854,18 @@
   .sc-detail-dialog .sc-evidence-item p{font-size:13px;line-height:1.4}
   .sc-detail-dialog .sc-evidence-list{gap:13px;margin-top:11px}
   .sc-detail-dialog .sc-evidence-item-feedback button{width:30px;height:30px}
+  .sc-recommendation-item{display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:10px;align-items:start;padding:14px;border:1px solid #ffe29a3d;border-radius:14px;background:linear-gradient(145deg,#ffe29a21,#ffe29a0a)}
+  .sc-recommendation-item .sc-evidence-title-icon{margin-top:1px;color:#f6c453}
+  .sc-recommendation-body{min-width:0}
+  .sc-recommendation-body h3{margin:0 0 6px;color:#f3d98a;font:800 17px/1.2 var(--sans);letter-spacing:-.01em}
+  .sc-recommendation-body p{margin:0;color:#dfe7f1;font:500 13px/1.5 var(--sans)}
+  .sc-recommendation-item>.sc-evidence-item-feedback{align-self:center}
+  .sc-detail-delete{display:flex;grid-column:1/-1;align-items:center;justify-content:center;gap:8px;min-height:46px;margin-top:14px;padding:0 16px;border:1px solid #ff657040;border-radius:12px;background:#ff65700d;color:#ff8a92;font:750 13px/1 var(--sans);cursor:pointer;transition:background-color .2s ease,border-color .2s ease}
+  .sc-detail-delete svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  .sc-detail-delete:hover{border-color:#ff657080;background:#ff65701f}
+  .sc-detail-delete:focus-visible{outline:2px solid #fff;outline-offset:2px}
+  .sc-detail-dialog.is-dropping>.sc-detail-preview-card,.sc-detail-dialog.is-dropping>.sc-detail-content{display:none}
+  .sc-detail-dialog>.sc-drop-back .sc-suggestion-delete-content{padding:4px 18px max(24px,env(safe-area-inset-bottom))}
   .sc-video-strip{display:flex;max-width:calc(100% + 36px);gap:8px;margin:11px -18px 0;padding:2px 18px 10px;overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:x mandatory;scroll-padding-inline-start:18px;scrollbar-width:none;list-style:none}
   .sc-video-strip::-webkit-scrollbar{display:none}
   .sc-video-item{flex:0 0 94px;min-width:0;scroll-snap-align:start}
@@ -1855,6 +1875,7 @@
   .sc-video-thumb:focus-visible{outline:2px solid #fff;outline-offset:3px}
   .sc-video-thumb img{display:block;width:100%;height:100%;object-fit:cover}
   .sc-video-score{position:absolute;top:5px;right:5px;display:grid;place-items:center;min-width:21px;height:21px;padding:0 5px;border-radius:6px;background:#101925d9;color:#fff;font-size:11px;font-weight:800;box-shadow:0 2px 8px #0008}
+  .sc-video-duration{position:absolute;left:5px;bottom:5px;padding:2px 5px;border-radius:5px;background:#050b14b8;color:#fff;font:700 9.5px/1.2 var(--mono);letter-spacing:.02em;font-variant-numeric:tabular-nums;pointer-events:none}
   .sc-video-item.is-featured .sc-video-score{background:#71edbe;color:#09271e}
   .sc-video-item .sc-video-score.is-five{background:#f6c453;color:#3c2a03}
   .sc-video-copy{display:none}
@@ -1862,12 +1883,12 @@
   .sc-video-actions .sc-evidence-section-more{margin-left:0}
   .sc-video-sort{display:flex;align-items:center;gap:2px;padding:2px;border-radius:8px;background:#ffffff12}
   .sc-video-sort[hidden]{display:none}
-  .sc-video-sort button{min-height:28px;padding:0 7px;border:0;border-radius:6px;background:transparent;color:#9fb0c7;font:700 10px/1 var(--sans);cursor:pointer}
+  .sc-video-sort button{min-height:28px;padding:0 7px;border:0;border-radius:6px;background:transparent;color:#9fb0c7;font:700 10px/1 var(--sans);cursor:pointer;transition:background-color .2s ease,color .2s ease}
   .sc-video-sort button[aria-pressed="true"]{background:#ffffff29;color:#fff}
   .sc-video-sort button:hover{color:#fff}
   .sc-video-sort button:focus-visible{outline:2px solid #fff;outline-offset:2px}
   .sc-video-strip.is-expanded{display:grid;max-width:none;gap:0;margin:10px 0 0;padding:0;overflow:visible;scroll-snap-type:none}
-  .sc-video-strip.is-expanded .sc-video-item{min-width:0;border-bottom:1px solid #ffffff1c;scroll-snap-align:none}
+  .sc-video-strip.is-expanded .sc-video-item{position:relative;background:#101925;min-width:0;border-bottom:1px solid #ffffff1c;scroll-snap-align:none}
   .sc-video-strip.is-expanded .sc-video-item:last-child{border-bottom:0}
   .sc-video-strip.is-expanded .sc-video-thumb{display:flex;align-items:center;gap:11px;height:auto;min-height:72px;padding:8px 0;border:0;border-radius:0;background:none;text-align:left}
   .sc-video-strip.is-expanded .sc-video-thumb:hover{background:#ffffff0d}
@@ -1877,6 +1898,7 @@
   .sc-video-strip.is-expanded .sc-video-thumb[aria-pressed="true"] img{border-color:#fff;outline:2px solid #fff;outline-offset:-2px}
   .sc-video-strip.is-expanded .sc-video-copy{display:flex;min-width:0;flex:1;flex-direction:column;gap:4px;color:#f4f7fb;font-size:11px;font-weight:670;line-height:1.3}
   .sc-video-strip.is-expanded .sc-video-copy time{color:#9fb0c7;font-size:10px;font-weight:600}
+  .sc-video-strip.is-expanded .sc-video-duration{display:none}
   .sc-video-strip.is-expanded .sc-video-score{position:static;flex:none;margin-left:auto;box-shadow:none}
   @media(max-width:620px){.sc-detail-dialog{width:100%;max-height:94dvh}.sc-detail-preview-card.sc-card{aspect-ratio:40/27}}
   @media(prefers-reduced-motion:reduce){.sc-detail-dialog{animation:none}}
@@ -1888,7 +1910,7 @@
   .sc-view-mode button:focus-visible{outline:2px solid #71edbe;outline-offset:2px}
   body.sc-light-page .sc-view-mode{background:#dfe5ed;color:#58677d}
   body.sc-light-page .sc-view-mode button[aria-pressed="true"]{background:#fff;color:#172235;box-shadow:0 1px 4px #1b2c4418}
-  .sc-mode-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .sc-mode-row{display:flex;align-items:center;justify-content:space-between;gap:6px}
   .sc-mode-row .sc-theme-mode,.sc-mode-row .sc-view-mode,.sc-mode-row .sc-state-mode{display:flex;align-items:center;flex:0 0 auto;height:42px;margin:0;padding:3px;gap:2px;border-radius:12px}
   .sc-mode-row .sc-theme-mode{width:42px}
   .sc-mode-row .sc-theme-toggle{display:grid;place-items:center;width:36px;min-width:36px;height:36px;padding:0;border:0;border-radius:9px;background:#364961;color:#fff;cursor:pointer;box-shadow:none}
@@ -1897,19 +1919,27 @@
   .smartcards.dark .sc-theme-toggle .sc-icon-sun{display:none}
   .smartcards.dark .sc-theme-toggle .sc-icon-moon{display:block}
   body.sc-light-page .sc-mode-row .sc-theme-toggle{background:#fff;color:#172235;box-shadow:0 1px 4px #1b2c4418}
-  .sc-mode-row .sc-view-mode button,.sc-mode-row .sc-state-mode button{width:42px;min-width:42px;height:36px;min-height:36px;padding:0;border-radius:9px;font-size:10px;line-height:1}
+  .sc-mode-row .sc-view-mode button,.sc-mode-row .sc-state-mode button{width:40px;min-width:40px;height:36px;min-height:36px;padding:0;border-radius:9px;font-size:10px;line-height:1}
+  .sc-mode-row .sc-view-mode button{display:grid;place-items:center}
+  .sc-mode-row .sc-view-mode svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
   @media(max-width:380px){.sc-mode-row .sc-view-mode button,.sc-mode-row .sc-state-mode button{width:35px;min-width:35px;font-size:9px}}
+  @media(max-width:360px){.sc-mode-row .sc-view-mode button,.sc-mode-row .sc-state-mode button{width:28px;min-width:28px;font-size:8px}.sc-mode-row .sc-view-mode svg{width:15px;height:15px}}
   .sc-mode-row .sc-theme-mode,.sc-mode-row .sc-view-mode,.sc-mode-row .sc-state-mode{transition:background-color .24s ease,color .24s ease}
   .sc-mode-row .sc-view-mode,.sc-mode-row .sc-state-mode{position:relative;isolation:isolate}
-  .sc-mode-row .sc-view-mode::before,.sc-mode-row .sc-state-mode::before{content:'';position:absolute;z-index:0;top:3px;left:3px;width:42px;height:36px;border-radius:9px;background:#364961;box-shadow:0 1px 4px #0209142e;transition:transform .28s cubic-bezier(.22,1,.36,1),background-color .24s ease,box-shadow .24s ease}
-  .sc-mode-row .sc-view-mode:has(button:nth-child(2)[aria-pressed="true"])::before,.sc-mode-row .sc-state-mode:has(button:nth-child(2).active)::before{transform:translateX(calc(100% + 2px))}
-  .sc-mode-row .sc-view-mode:has(button:nth-child(3)[aria-pressed="true"])::before,.sc-mode-row .sc-state-mode:has(button:nth-child(3).active)::before{transform:translateX(calc(200% + 4px))}
+  .sc-mode-row .sc-view-mode::before,.sc-mode-row .sc-state-mode::before{content:'';position:absolute;z-index:0;top:3px;left:3px;width:40px;height:36px;border-radius:9px;background:#364961;box-shadow:0 1px 4px #0209142e;transition:transform .28s cubic-bezier(.22,1,.36,1),background-color .24s ease,box-shadow .24s ease}
+  .sc-mode-row .sc-view-mode:has(button:nth-child(2)[aria-pressed="true"])::before,.sc-mode-row .sc-state-mode:has(button:nth-child(2).active)::before{transform:translateX(42px)}
+  .sc-mode-row .sc-view-mode:has(button:nth-child(3)[aria-pressed="true"])::before,.sc-mode-row .sc-state-mode:has(button:nth-child(3).active)::before{transform:translateX(84px)}
+  .sc-mode-row .sc-state-mode:has(button:nth-child(4).active)::before{transform:translateX(126px)}
   .sc-mode-row .sc-view-mode button,.sc-mode-row .sc-state-mode button{position:relative;z-index:1;background:transparent;box-shadow:none;transition:color .2s ease,transform .18s ease}
   .sc-mode-row .sc-view-mode button[aria-pressed="true"],.sc-mode-row .sc-state-mode button.active,body.sc-light-page .sc-mode-row .sc-view-mode button[aria-pressed="true"],body.sc-light-page .sc-mode-row .sc-state-mode button.active{background:transparent;box-shadow:none}
   .sc-mode-row .sc-state-mode:has(button[data-sc-state="alert"].active)::before{background:rgba(113,237,190,.82)}
+  .sc-mode-row .sc-state-mode:has(button[data-sc-state="suggested"].active)::before{background:#78a5ff}
   .sc-mode-row .sc-state-mode button[data-sc-state="alert"].active{color:#09271e}
+  .sc-mode-row .sc-state-mode button[data-sc-state="suggested"].active{color:#071528}
   body.sc-light-page .sc-mode-row .sc-view-mode::before,body.sc-light-page .sc-mode-row .sc-state-mode::before,body.sc-light-page .sc-mode-row .sc-state-mode:has(button[data-sc-state="alert"].active)::before{background:#fff;box-shadow:0 1px 4px #1b2c4418}
+  body.sc-light-page .sc-mode-row .sc-state-mode:has(button[data-sc-state="suggested"].active)::before{background:#2764e7}
   body.sc-light-page .sc-mode-row .sc-state-mode button[data-sc-state="alert"].active{color:#172235}
+  body.sc-light-page .sc-mode-row .sc-state-mode button[data-sc-state="suggested"].active{color:#fff}
   .sc-mode-row .sc-view-mode button:active,.sc-mode-row .sc-state-mode button:active{transform:scale(.93)}
   .sc-mode-row .sc-theme-toggle{transition:background-color .24s ease,color .24s ease,box-shadow .24s ease,transform .18s ease}
   .sc-mode-row .sc-theme-toggle:active{transform:scale(.92)}
@@ -1919,10 +1949,115 @@
   .smartcards.dark .sc-mode-row .sc-theme-toggle .sc-icon-sun{display:block;opacity:0;transform:rotate(45deg) scale(.72)}
   .smartcards.dark .sc-mode-row .sc-theme-toggle .sc-icon-moon{display:block;opacity:1;transform:rotate(0) scale(1)}
   @media(max-width:380px){.sc-mode-row .sc-view-mode::before,.sc-mode-row .sc-state-mode::before{width:35px}}
+  @media(max-width:380px){.sc-mode-row .sc-view-mode:has(button:nth-child(2)[aria-pressed="true"])::before,.sc-mode-row .sc-state-mode:has(button:nth-child(2).active)::before{transform:translateX(37px)}.sc-mode-row .sc-view-mode:has(button:nth-child(3)[aria-pressed="true"])::before,.sc-mode-row .sc-state-mode:has(button:nth-child(3).active)::before{transform:translateX(74px)}.sc-mode-row .sc-state-mode:has(button:nth-child(4).active)::before{transform:translateX(111px)}}
+  @media(max-width:360px){.sc-mode-row .sc-view-mode::before,.sc-mode-row .sc-state-mode::before{width:28px}.sc-mode-row .sc-view-mode:has(button:nth-child(2)[aria-pressed="true"])::before,.sc-mode-row .sc-state-mode:has(button:nth-child(2).active)::before{transform:translateX(30px)}.sc-mode-row .sc-view-mode:has(button:nth-child(3)[aria-pressed="true"])::before,.sc-mode-row .sc-state-mode:has(button:nth-child(3).active)::before{transform:translateX(60px)}.sc-mode-row .sc-state-mode:has(button:nth-child(4).active)::before{transform:translateX(90px)}}
   @media(prefers-reduced-motion:reduce){.sc-mode-row .sc-theme-mode,.sc-mode-row .sc-view-mode,.sc-mode-row .sc-state-mode,.sc-mode-row .sc-view-mode::before,.sc-mode-row .sc-state-mode::before,.sc-mode-row .sc-view-mode button,.sc-mode-row .sc-state-mode button,.sc-mode-row .sc-theme-toggle,.sc-mode-row .sc-theme-toggle svg{transition:none}}
   .smartcards:not(.sc-flip-view):not(.sc-grid-view) .sc-grid>.sc-card{aspect-ratio:40/27}
+  .sc-suggestion-reason{display:none}
+  .smartcards:not(.sc-flip-view):not(.sc-grid-view) .sc-grid>.sc-card.is-suggested-card{aspect-ratio:auto;overflow:hidden;border:1px solid #f6c45352;background:#142135;box-shadow:0 10px 24px #07101f35}
+  .smartcards:not(.sc-flip-view):not(.sc-grid-view) .sc-grid>.sc-card.is-suggested-card .sc-scene{position:relative;inset:auto;display:block;width:100%;aspect-ratio:40/27;border-radius:16px 16px 0 0;clip-path:inset(0 round 16px 16px 0 0)}
+  .smartcards:not(.sc-flip-view):not(.sc-grid-view) .sc-grid>.sc-card.is-suggested-card .sc-actions>.sc-feedback{display:none}
+  .smartcards:not(.sc-flip-view):not(.sc-grid-view) .sc-card.is-suggested-card .sc-suggestion-reason{display:grid;grid-template-columns:20px minmax(0,1fr);gap:10px;align-items:start;padding:14px;background:linear-gradient(145deg,#ffe29a21,#ffe29a0a);color:#f4f7fb}
+  .sc-suggestion-reason>.sc-evidence-title-icon{margin-top:1px;color:#f6c453}
+  .sc-suggestion-copy{min-width:0}
+  .sc-suggestion-copy strong{display:block;margin:0 0 6px;color:#f3d98a;font:800 17px/1.2 var(--sans);letter-spacing:-.01em}
+  .sc-suggestion-copy p{margin:0;color:#dfe7f1;font:500 13px/1.5 var(--sans)}
+  .sc-suggestion-actions{display:grid;grid-column:1/-1;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;width:100%;margin-top:5px}
+  .sc-suggestion-actions button{width:100%;min-height:42px;padding:0 16px;border:1px solid #ffffff28;border-radius:12px;background:#ffffff0d;color:#dbe5f2;font:800 12px/1 var(--sans);cursor:pointer}
+  .sc-suggestion-actions .sc-suggestion-keep{border-color:#71edbe66;background:#71edbe18;color:#9af2d1}
+  .sc-suggestion-actions button:hover{background:#ffffff1c}
+  .sc-suggestion-actions button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+  .sc-suggestion-actions .sc-suggestion-keep[aria-pressed="true"]{border-color:#71edbe;background:#71edbe;color:#09271e}
+  .smartcards .sc-grid>.sc-card.is-dropping{display:flex;flex-direction:column;cursor:default}
+  .smartcards .sc-grid>.sc-card.is-dropping>:not(.sc-drop-back),.smartcards .sc-grid>.sc-card.is-dropping::before,.smartcards .sc-grid>.sc-card.is-dropping::after{display:none!important}
+  .sc-drop-back{flex:1;width:100%;box-sizing:border-box;color:#f4f7fb;cursor:default}
+  .smartcards:not(.sc-flip-view):not(.sc-grid-view) .sc-grid>.sc-card.is-suggested-card[data-suggestion-decision="kept"] .sc-scene{border-radius:16px;clip-path:inset(0 round 16px)}
+  .sc-confetti{position:fixed;z-index:60;overflow:visible;pointer-events:none}
+  .sc-confetti i{position:absolute;display:block;will-change:transform,opacity}
+  .sc-toast{position:fixed;left:50%;bottom:max(24px,env(safe-area-inset-bottom));z-index:70;display:flex;align-items:center;gap:10px;width:max-content;max-width:calc(100% - 32px);box-sizing:border-box;padding:11px 16px 11px 11px;border-radius:999px;background:#0d1622f2;color:#f4f7fb;font:700 13px/1.3 var(--sans);box-shadow:0 12px 32px #02081466;opacity:0;transform:translate(-50%,16px) scale(.96);pointer-events:none;transition:opacity .22s ease,transform .32s cubic-bezier(.22,1,.36,1)}
+  .sc-toast.is-visible{opacity:1;transform:translate(-50%,0) scale(1)}
+  .sc-toast-check{display:grid;place-items:center;flex:none;width:24px;height:24px;border-radius:50%;background:#71edbe;color:#09271e}
+  .sc-toast-check svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+  body.sc-light-page .sc-toast{background:#172235f2;color:#fff;box-shadow:0 12px 32px #1d2c4440}
+  @media(prefers-reduced-motion:reduce){.sc-toast{transition:opacity .2s ease;transform:translate(-50%,0)}}
+  .sc-suggestion-delete-content{padding:20px 18px 18px}
+  .sc-suggestion-delete-content h2{margin:0;color:#fff;font-size:18px;line-height:1.2}
+  .sc-suggestion-delete-content>p{margin:7px 0 16px;color:#aebdd0;font-size:13px;line-height:1.45}
+  .sc-suggestion-reasons{display:grid;gap:8px;margin:0;padding:0;border:0}
+  .sc-suggestion-reasons label{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 13px;border:1px solid #ffffff1f;border-radius:12px;background:#ffffff08;color:#edf3fa;font-size:13px;font-weight:650;cursor:pointer}
+  .sc-suggestion-reasons label:has(input:checked){border-color:#78a5ff;background:#78a5ff1f}
+  .sc-suggestion-reasons input{accent-color:#78a5ff}
+  .sc-drop-note{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .32s cubic-bezier(.22,1,.36,1),opacity .24s ease}
+  .sc-drop-note.is-open{grid-template-rows:1fr;opacity:1}
+  .sc-drop-note[hidden]{display:none}
+  .sc-drop-note-inner{min-height:0;overflow:hidden}
+  .sc-drop-note-label{display:block;margin:16px 0 7px;color:#dce6f2;font-size:12px;font-weight:750}
+  .sc-drop-note-label span{color:#8193ab;font-weight:600}
+  .sc-drop-note-input{display:block;width:100%;min-height:78px;box-sizing:border-box;padding:11px 12px;border:1px solid #ffffff26;border-radius:12px;background:#ffffff08;color:#f4f7fb;font:600 13px/1.45 var(--sans);resize:vertical}
+  .sc-drop-note-input::placeholder{color:#7d8ea6}
+  .sc-drop-note-input:focus{outline:2px solid #78a5ff;outline-offset:1px;border-color:transparent}
+  .sc-drop-record{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:14px;margin-top:12px;padding:12px 14px 12px 12px;border:1px solid #ffffff1a;border-radius:18px;background:#ffffff06;transition:border-color .2s ease,background-color .2s ease}
+  .sc-drop-record.is-recording{border-color:#ff657066;background:#ff65700f}
+  .sc-drop-record-button{position:relative;display:grid;place-items:center;width:68px;height:68px;padding:0;border:0;border-radius:50%;background:#78a5ff;color:#07142b;cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;transition:transform .18s cubic-bezier(.22,1,.36,1),background-color .2s ease}
+  .sc-drop-record-button svg{position:relative;width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .sc-drop-record-button svg rect{fill:currentColor}
+  .sc-drop-record-button:focus-visible{outline:2px solid #fff;outline-offset:3px}
+  .sc-drop-record.is-pressing .sc-drop-record-button{transform:scale(.94)}
+  .sc-drop-record.is-recording .sc-drop-record-button{transform:scale(1.06);background:#ff6570;color:#210509}
+  .sc-drop-record-ring{position:absolute;inset:0;border-radius:50%;background:inherit;opacity:0}
+  .sc-drop-record.is-recording .sc-drop-record-ring{animation:sc-drop-ring 1.3s ease-out infinite}
+  @keyframes sc-drop-ring{from{opacity:.45;transform:scale(1)}to{opacity:0;transform:scale(1.7)}}
+  .sc-drop-record-copy{display:grid;gap:3px;min-width:0}
+  .sc-drop-record-copy strong{color:#f4f7fb;font-size:14px;font-weight:800;font-variant-numeric:tabular-nums}
+  .sc-drop-record-copy span{color:#93a4bb;font-size:12px;font-weight:600}
+  .sc-drop-record-wave{display:flex;align-items:center;gap:3px;height:28px;opacity:.3}
+  .sc-drop-record-wave i{width:3px;height:6px;border-radius:2px;background:currentColor;color:#93a4bb}
+  .sc-drop-record.is-recording .sc-drop-record-wave{opacity:1}
+  .sc-drop-record.is-recording .sc-drop-record-wave i{color:#ff8a92;animation:sc-drop-wave .9s ease-in-out infinite}
+  .sc-drop-record.is-recording .sc-drop-record-wave i:nth-child(2){animation-delay:-.7s}
+  .sc-drop-record.is-recording .sc-drop-record-wave i:nth-child(3){animation-delay:-.35s}
+  .sc-drop-record.is-recording .sc-drop-record-wave i:nth-child(4){animation-delay:-.55s}
+  .sc-drop-record.is-recording .sc-drop-record-wave i:nth-child(5){animation-delay:-.15s}
+  @keyframes sc-drop-wave{0%,100%{height:6px}50%{height:24px}}
+  @media(prefers-reduced-motion:reduce){.sc-drop-note{transition:none}.sc-drop-record.is-recording .sc-drop-record-ring,.sc-drop-record.is-recording .sc-drop-record-wave i{animation:none;height:14px}}
+  .sc-suggestion-delete-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px}
+  .sc-suggestion-delete-actions button{min-height:42px;border:0;border-radius:12px;font:800 12px/1 var(--sans);cursor:pointer}
+  .sc-suggestion-delete-cancel{background:#ffffff12;color:#dce6f2}
+  .sc-suggestion-delete-confirm{background:#ff6570;color:#210509}
+  .sc-suggestion-delete-confirm:disabled{opacity:.38;cursor:not-allowed}
+  .sc-suggestion-status{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .sc-new-badge{display:none;position:absolute;z-index:7;top:10px;right:10px;align-items:center;min-height:22px;padding:0 9px;border-radius:999px;background:#f6c453;color:#352500;font:850 9px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;box-shadow:0 3px 10px #0005}
+  .sc-card.is-suggested-card .sc-new-badge{display:flex}
+  .sc-card.is-suggested-card>.sc-label{max-width:calc(100% - 64px)}
+  body.sc-light-page .smartcards:not(.sc-flip-view):not(.sc-grid-view) .sc-grid>.sc-card.is-suggested-card{background:#fffdf6;border-color:#d7a91f66}
+  body.sc-light-page .smartcards:not(.sc-flip-view):not(.sc-grid-view) .sc-card.is-suggested-card .sc-suggestion-reason{background:linear-gradient(145deg,#ffe8994d,#ffe8991f);color:#182438}
+  body.sc-light-page .sc-suggestion-copy p{color:#2a3a52}
+  body.sc-light-page .sc-suggestion-copy strong{color:#7a5800}
+  body.sc-light-page .sc-suggestion-actions button{border-color:#1c355733;background:#1c35570a;color:#263a55}
+  body.sc-light-page .sc-suggestion-actions .sc-suggestion-keep{border-color:#15785666;background:#16a77714;color:#096142}
+  body.sc-light-page .sc-suggestion-actions .sc-suggestion-keep[aria-pressed="true"]{background:#16a777;color:#fff}
+  body.sc-light-page .sc-grid .sc-suggestion-delete-content h2{color:#172235}
+  body.sc-light-page .sc-grid .sc-suggestion-delete-content>p{color:#5f7087}
+  body.sc-light-page .sc-grid .sc-suggestion-reasons label{border-color:#cfd8e6;background:#fff;color:#172235}
+  body.sc-light-page .sc-grid .sc-suggestion-reasons label:has(input:checked){border-color:#2764e7;background:#2764e70f}
+  body.sc-light-page .sc-grid .sc-drop-note-label{color:#263a55}
+  body.sc-light-page .sc-grid .sc-drop-note-label span{color:#6b7c93}
+  body.sc-light-page .sc-grid .sc-drop-note-input{border-color:#cfd8e6;background:#fff;color:#172235}
+  body.sc-light-page .sc-grid .sc-drop-note-input::placeholder{color:#8190a5}
+  body.sc-light-page .sc-grid .sc-drop-note-input:focus{outline-color:#2764e7}
+  body.sc-light-page .sc-grid .sc-drop-record{border-color:#d6deea;background:#fff}
+  body.sc-light-page .sc-grid .sc-drop-record.is-recording{border-color:#e5484d66;background:#fff4f4}
+  body.sc-light-page .sc-grid .sc-drop-record-button{background:#2764e7;color:#fff}
+  body.sc-light-page .sc-grid .sc-drop-record.is-recording .sc-drop-record-button{background:#e5484d;color:#fff}
+  body.sc-light-page .sc-grid .sc-drop-record-button:focus-visible{outline-color:#172235}
+  body.sc-light-page .sc-grid .sc-drop-record-copy strong{color:#172235}
+  body.sc-light-page .sc-grid .sc-drop-record-copy span{color:#5f7087}
+  body.sc-light-page .sc-grid .sc-drop-record-wave i{color:#8190a5}
+  body.sc-light-page .sc-grid .sc-drop-record.is-recording .sc-drop-record-wave i{color:#e5484d}
+  body.sc-light-page .sc-grid .sc-suggestion-delete-cancel{background:#e7ecf3;color:#263a55}
   .smartcards.sc-grid-view .sc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
   .smartcards.sc-grid-view .sc-grid>.sc-card{min-width:0;min-height:0;aspect-ratio:1;box-shadow:0 6px 16px #02071236}
+  .smartcards.sc-grid-view .sc-new-badge{top:7px;right:7px;min-height:18px;padding:0 6px;font-size:7px}
   .smartcards.sc-grid-view .sc-card>.sc-label{top:9px;right:8px;left:9px;max-width:calc(100% - 17px);font-size:9px;letter-spacing:.04em}
   .smartcards.sc-grid-view .sc-card-top{top:29px;left:9px;max-width:calc(100% - 18px)}
   .smartcards.sc-grid-view .sc-card-top .sc-state{font-size:clamp(18px,5.2vw,22px);line-height:1.05}
@@ -1940,8 +2075,8 @@
   .smartcards.sc-grid-view .sc-card[data-scene="security"] .sc-security-cameras .sc-camera-thumb:nth-of-type(4){left:68%}
   .smartcards.sc-grid-view .sc-card[data-scene="security"] .sc-actions .sc-feedback{bottom:48px}
   .smartcards .sc-grid>.sc-card .sc-actions .sc-feedback button[aria-pressed="true"],body.sc-light-page .smartcards .sc-grid>.sc-card .sc-actions .sc-feedback button[aria-pressed="true"]{color:#71edbe;opacity:1;filter:drop-shadow(0 0 4px #062418)}
-  .sc-flip-status{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-  .smartcards.sc-flip-view .sc-grid{position:relative;display:block;height:clamp(438px,calc((100vw - 24px)*1.48),570px);padding-top:12px;perspective:1000px;touch-action:none;cursor:grab}
+  .sc-flip-status,.sc-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  .smartcards.sc-flip-view .sc-grid{position:relative;display:block;height:clamp(438px,calc((100vw - 24px)*1.48),570px);padding-top:12px;overflow:clip;perspective:1000px;touch-action:none;cursor:grab}
   .smartcards.sc-flip-view .sc-grid.is-dragging{cursor:grabbing;user-select:none}
   .smartcards.sc-flip-view .sc-grid:before,.smartcards.sc-flip-view .sc-grid:after{content:'';position:absolute;top:4px;right:11px;bottom:0;left:11px;border-radius:16px;background:#344359;box-shadow:0 7px 18px #0209142b;pointer-events:none}
   .smartcards.sc-flip-view .sc-grid:before{top:-2px;right:20px;left:20px;background:#506077}
@@ -1953,6 +2088,26 @@
   .smartcards.sc-flip-view .sc-grid>.sc-card.is-exiting-up{z-index:4;visibility:visible;opacity:0;transform:translate(var(--sc-exit-x,-105%),var(--sc-exit-y,0px)) rotate(var(--sc-exit-rotate,-7deg))}
   .smartcards.sc-flip-view .sc-grid>.sc-card.is-exiting-down{z-index:4;visibility:visible;opacity:0;transform:translate(var(--sc-exit-x,105%),var(--sc-exit-y,0px)) rotate(var(--sc-exit-rotate,7deg))}
   @media(prefers-reduced-motion:reduce){.smartcards.sc-flip-view .sc-grid>.sc-card{transition:none}}
+  .smartcards.sc-grid-view .sc-grid>.sc-card.is-suggested-card .sc-suggestion-reason{position:absolute;z-index:5;left:8px;right:8px;bottom:8px;display:block;padding:0;background:none}
+  .smartcards.sc-grid-view .sc-grid>.sc-card.is-suggested-card .sc-suggestion-reason>.sc-evidence-title-icon,.smartcards.sc-grid-view .sc-grid>.sc-card.is-suggested-card .sc-suggestion-copy{display:none}
+  .smartcards.sc-grid-view .sc-grid>.sc-card.is-suggested-card .sc-suggestion-actions{gap:6px;margin:0}
+  .smartcards.sc-grid-view .sc-grid>.sc-card.is-suggested-card:not([data-suggestion-decision="kept"]) :is(.sc-camera-thumb,.sc-highlight-now){display:none}
+  .smartcards.sc-grid-view .sc-grid>.sc-card.is-suggested-card .sc-suggestion-actions button{min-height:34px;padding:0 6px;border-radius:10px;font-size:11.5px}
+  .smartcards.sc-flip-view .sc-grid>.sc-card.is-suggested-card .sc-suggestion-reason{position:absolute;z-index:5;left:12px;right:12px;bottom:12px;display:grid;grid-template-columns:20px minmax(0,1fr);gap:10px;align-items:start;padding:14px;border:1px solid #ffffff24;border-radius:18px;background:#0b1420b8;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);color:#f4f7fb;box-shadow:0 12px 32px #02081459}
+  .smartcards.sc-flip-view .sc-grid>.sc-card.is-suggested-card .sc-suggestion-copy strong{color:#f3d98a}
+  .smartcards.sc-flip-view .sc-grid>.sc-card.is-suggested-card .sc-suggestion-copy p{display:-webkit-box;overflow:hidden;color:#e6edf6;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+  .smartcards:is(.sc-grid-view,.sc-flip-view) .sc-grid>.sc-card.is-suggested-card .sc-suggestion-actions button{border-color:#ffffff3d;background:#0b1420a6;color:#fff;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+  .smartcards:is(.sc-grid-view,.sc-flip-view) .sc-grid>.sc-card.is-suggested-card .sc-suggestion-actions .sc-suggestion-keep{border-color:#71edbe8c;background:#0f3a2dc4;color:#9af2d1}
+  .smartcards:is(.sc-grid-view,.sc-flip-view) .sc-grid>.sc-card.is-suggested-card .sc-suggestion-actions .sc-suggestion-keep[aria-pressed="true"]{border-color:#71edbe;background:#71edbe;color:#09271e}
+  .smartcards.sc-flip-view .sc-grid>.sc-card.is-suggested-card .sc-suggestion-actions{margin-top:4px}
+  .smartcards .sc-grid>.sc-card.is-suggested-card[data-suggestion-decision="kept"] .sc-suggestion-reason{display:none}
+  .smartcards .sc-grid>.sc-card.is-suggested-card.is-dropping{border:1px solid #f6c45352;background:#142135}
+  body.sc-light-page .smartcards .sc-grid>.sc-card.is-suggested-card.is-dropping{border-color:#d7a91f66;background:#fffdf6}
+  .sc-drop-scrim{position:fixed;inset:0;z-index:80;background:#030b17b3;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+  body.sc-drop-open{overflow:hidden}
+  .smartcards .sc-grid>.sc-card.is-lifted{z-index:81;box-shadow:0 28px 70px #02081499}
+  .smartcards.sc-grid-view .sc-grid>.sc-card.is-lifted.is-dropping{position:fixed;top:50%;left:50%;width:min(440px,calc(100vw - 32px));max-height:calc(100dvh - 32px);margin:0;overflow-y:auto;overscroll-behavior:contain;aspect-ratio:auto;translate:-50% -50%}
+  .smartcards.sc-flip-view .sc-grid>.sc-card.is-dropping{overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;cursor:default}
   .sc-grid>.sc-card.is-critical-alert::after{content:'';display:block;position:absolute;z-index:7;inset:0;width:auto;height:auto;max-width:none;padding:0;border:2px solid #ff4b55;border-radius:inherit;background:none;box-shadow:0 0 0 1px #ff4b5540;pointer-events:none}
   .sc-grid>.sc-card.is-critical-alert .sc-state::before{content:'';display:inline-block;width:9px;height:9px;margin:0 8px 2px 0;vertical-align:middle;border-radius:50%;background:#ff4b55;box-shadow:0 0 0 3px #ff4b5533;animation:sc-critical-blink .85s ease-in-out infinite}
   @keyframes sc-critical-blink{0%,100%{opacity:1}50%{opacity:.18}}
@@ -2906,14 +3061,15 @@ Goal: *"Did the bins go out — and come back?"*
           <button class="sc-theme-toggle" id="sc-theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false" title="Switch to dark mode"><svg class="sc-icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg><svg class="sc-icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.5 8.5 0 1 0 20.2 15.2Z"/></svg></button>
         </div>
         <div class="sc-view-mode" role="group" aria-label="Card view">
-          <button type="button" data-sc-view="list" aria-pressed="true">List</button>
-          <button type="button" data-sc-view="grid" aria-pressed="false">Grid</button>
-          <button type="button" data-sc-view="flip" aria-pressed="false">Flip</button>
+          <button type="button" data-sc-view="list" aria-label="List view" title="List view" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg><span class="sc-sr-only">List</span></button>
+          <button type="button" data-sc-view="grid" aria-label="Grid view" title="Grid view" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg><span class="sc-sr-only">Grid</span></button>
+          <button type="button" data-sc-view="flip" aria-label="Flip view" title="Flip view" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="7" width="14" height="13" rx="2"/><path d="M8 4h8a2 2 0 0 1 2 2"/></svg><span class="sc-sr-only">Flip</span></button>
         </div>
         <div class="sc-state-mode" role="group" aria-label="Preview card state emphasis">
           <button class="active" type="button" data-sc-state="mixed" aria-pressed="true" title="Real-world mix of normal and alert states; click again to reshuffle">Mixed</button>
           <button type="button" data-sc-state="normal" aria-pressed="false">Normal</button>
           <button type="button" data-sc-state="alert" aria-pressed="false">Alert</button>
+          <button type="button" data-sc-state="suggested" aria-label="New AI-suggested cards" title="New AI-suggested cards" aria-pressed="false">New</button>
         </div>
       </div>
       <section class="sc-card-feed" aria-labelledby="sc-cards-heading">
@@ -6734,6 +6890,16 @@ const SMART_CARD_STATES={
     pets:{state:'AT DOOR',sub:'for 8 mins',checked:'7 secs ago',src:'assets/smart-pet-at-door.webp?v=1',alt:'Golden retriever waiting beside the closed patio door'},
     wildlife:{state:'RACCOON',sub:'for 4 mins',checked:'9 secs ago',src:'assets/smart-wildlife-raccoon.webp?v=1',alt:'Raccoon visible on the backyard lawn near the bins'}
   },
+  suggested:{
+    security:{state:'SAFE',sub:'for 2 hours',checked:'8 secs ago',src:'assets/smart-security-secure.webp?v=1',alt:'Closed side gate with the secured path clear'},
+    garage:{state:'CLOSED',sub:'for 2 hours',checked:'12 secs ago',src:'assets/smart-garage-closed.webp?v=2',alt:'Closed garage door in a clear driveway'},
+    front:{state:'NO PACKAGE',sub:'for 3 hours',checked:'2 mins ago',src:'assets/smart-front-door-clear.webp?v=2',alt:'Clear front porch with no packages or visitors'},
+    bins:{state:'Bins OUT',sub:"Ready for tomorrow's pickup",checked:'5 mins ago',src:'assets/smart-trash-bins-out.webp?v=2',alt:'Trash and recycling bins placed at the curb for pickup'},
+    birds:{state:'NO BIRDS',sub:'3 bird visits today',checked:'20 secs ago',src:'assets/smart-bird-feeder-clear.webp?v=1',alt:'Backyard bird feeder is clear with no birds present'},
+    ev:{state:'CHARGING',sub:'for 45 mins',checked:'15 secs ago',src:'assets/smart-ev-charging.webp?v=1',alt:'Electric car connected to a wall charger in the garage'},
+    pets:{state:'RESTING',sub:'for 35 mins',checked:'11 secs ago',src:'assets/smart-pet-resting.webp?v=1',alt:'Golden retriever resting on the living room rug'},
+    wildlife:{state:'NO WILDLIFE',sub:'for 2 hours',checked:'22 secs ago',src:'assets/smart-wildlife-clear.webp?v=1',alt:'Fenced backyard is clear of wild animals near the bins'}
+  },
   highlights:{
     birds:{state:'CARDINAL',sub:'7 mins ago',checked:'7 mins ago',src:'assets/smart-bird-cardinal.webp?v=1',alt:'Recent cardinal visit at the backyard bird feeder',current:{state:'NO BIRDS',checked:'20 secs ago',src:'assets/smart-bird-feeder-clear.webp?v=1',alt:'Current feeder view with no birds'},events:[{label:'Cardinal',time:'7 mins ago',shortTime:'7m',src:'assets/smart-bird-cardinal.webp?v=1'},{label:'Blue jay',time:'2 hours ago',shortTime:'2h',src:'assets/smart-bird-bluejay.webp?v=1'},{label:'Goldfinch',time:'4 hours ago',shortTime:'4h',src:'assets/smart-bird-goldfinch.webp?v=1'}]},
     pets:{state:'DOG PLAYING',sub:'46 mins ago',checked:'46 mins ago',src:'assets/smart-pet-playing.webp?v=1',alt:'Golden retriever playing with a ball on the living room rug',current:{state:'RESTING',checked:'11 secs ago',src:'assets/smart-pet-resting.webp?v=1',alt:'Current view of the dog resting'},events:[{label:'Playtime',time:'46 mins ago',shortTime:'46m',src:'assets/smart-pet-playing.webp?v=1'},{label:'Water break',time:'2 hours ago',shortTime:'2h',src:'assets/smart-pet-drinking.webp?v=1'},{label:'At the door',time:'4 hours ago',shortTime:'4h',src:'assets/smart-pet-at-door.webp?v=1'}]},
@@ -7022,10 +7188,21 @@ const SMART_CARD_STORIES=[
   {scene:'wildlife',index:0,title:'Raccoon in the yard'},
   {scene:'birds',index:2,title:'Goldfinch visit'}
 ];
+const SMART_CARD_RECOMMENDATIONS={
+  security:'Your exterior cameras cover the main entry points, and activity at the side gate after Home mode is unusual for your household.',
+  garage:'Your garage camera has a stable view of the door, and you regularly check whether it closes after evening arrivals.',
+  front:'Your front door camera clearly sees the delivery zone, and packages are usually brought inside soon after arrival.',
+  bins:'Your driveway camera sees both the bin storage and curb locations, and pickup follows a predictable weekly schedule.',
+  birds:'Your feeder camera captures clear species-level views, and you frequently save distinct bird visits.',
+  ev:'Your garage camera sees the charge port and cable, and the car usually plugs in after weekday arrivals.',
+  pets:'Your living room camera sees the dog’s resting and patio-door areas, and longer waits at the door matter to your household.',
+  wildlife:'Your backyard camera covers the bins and fence line, and after-dark animal visits are unusual for your home.'
+};
 const SMART_CARD_EVIDENCE_ICONS={
   video:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M8.5 15 11 7h2l2.5 8M4 14l3-8h3M20 14l-3-8h-3M9 17h6"/></svg>',
   memory:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 4.5A3.5 3.5 0 0 0 6 8v.3A3.6 3.6 0 0 0 4 14a3.5 3.5 0 0 0 3.5 5.5H10V5.8c0-.7-.2-1.3-.5-1.3ZM14.5 4.5A3.5 3.5 0 0 1 18 8v.3a3.6 3.6 0 0 1 2 5.7 3.5 3.5 0 0 1-3.5 5.5H14V5.8c0-.7.2-1.3.5-1.3Z"/><path d="M6 9.5h2M16 9.5h2M6.5 16H10M14 16h3.5"/></svg>',
-  camera:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 8C11.4696 8 10.9609 8.21071 10.5858 8.58579C10.2107 8.96086 10 9.46957 10 10C10 10.5304 10.2107 11.0391 10.5858 11.4142C10.9609 11.7893 11.4696 12 12 12C12.5304 12 13.0391 11.7893 13.4142 11.4142C13.7893 11.0391 14 10.5304 14 10C14 9.46957 13.7893 8.96086 13.4142 8.58579C13.0391 8.21071 12.5304 8 12 8Z" fill="#757575"/><path d="M6 18H11V20H7V22H17V20H13V18H18C19.1 18 20 17.1 20 16V4C20 2.9 19.1 2 18 2H6C4.9 2 4 2.9 4 4V16C4 17.1 4.9 18 6 18ZM12 6C14.21 6 16 7.79 16 10C16 12.21 14.21 14 12 14C9.79 14 8 12.21 8 10C8 7.79 9.79 6 12 6Z" fill="#757575"/></svg>'
+  camera:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 8C11.4696 8 10.9609 8.21071 10.5858 8.58579C10.2107 8.96086 10 9.46957 10 10C10 10.5304 10.2107 11.0391 10.5858 11.4142C10.9609 11.7893 11.4696 12 12 12C12.5304 12 13.0391 11.7893 13.4142 11.4142C13.7893 11.0391 14 10.5304 14 10C14 9.46957 13.7893 8.96086 13.4142 8.58579C13.0391 8.21071 12.5304 8 12 8Z" fill="#757575"/><path d="M6 18H11V20H7V22H17V20H13V18H18C19.1 18 20 17.1 20 16V4C20 2.9 19.1 2 18 2H6C4.9 2 4 2.9 4 4V16C4 17.1 4.9 18 6 18ZM12 6C14.21 6 16 7.79 16 10C16 12.21 14.21 14 12 14C9.79 14 8 12.21 8 10C8 7.79 9.79 6 12 6Z" fill="#757575"/></svg>',
+  suggestion:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 1.25 4.25L17.5 8.5l-4.25 1.25L12 14l-1.25-4.25L6.5 8.5l4.25-1.25L12 3Z"/><path d="m18.5 14 .75 2.25L21.5 17l-2.25.75L18.5 20l-.75-2.25L15.5 17l2.25-.75L18.5 14Z"/><path d="m5 13 .65 1.85L7.5 15.5l-1.85.65L5 18l-.65-1.85-1.85-.65 1.85-.65L5 13Z"/></svg>'
 };
 const SMART_CARD_CAMERAS={
   security:['Side Gate Cam','Garage Cam','Front Door Cam','Driveway Cam'],
@@ -7041,11 +7218,14 @@ const SMART_CARD_FEEDBACK_ICONS={
   up:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg>',
   down:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg>'
 };
-function evidenceFeedback(label){
-  return `<div class="sc-evidence-item-feedback" role="group" aria-label="Rate ${label}"><button type="button" aria-label="${label} was helpful" aria-pressed="false">${SMART_CARD_FEEDBACK_ICONS.up}</button><button type="button" aria-label="${label} was not helpful" aria-pressed="false">${SMART_CARD_FEEDBACK_ICONS.down}</button></div>`;
+function evidenceFeedback(label,key=''){
+  return `<div class="sc-evidence-item-feedback"${key?` data-feedback-key="${key}"`:''} role="group" aria-label="Rate ${label}"><button type="button" aria-label="${label} was helpful" aria-pressed="false">${SMART_CARD_FEEDBACK_ICONS.up}</button><button type="button" aria-label="${label} was not helpful" aria-pressed="false">${SMART_CARD_FEEDBACK_ICONS.down}</button></div>`;
 }
 function evidenceList(items,label){
   return items.map((text,index)=>`<li><p>${text}</p>${evidenceFeedback(`${label} ${index+1}`)}</li>`).join('');
+}
+function smartCardEvidenceMode(mode){
+  return mode==='suggested'?'normal':mode;
 }
 function videoEvidenceTime(state,index){
   if(state.events?.[index])return state.events[index].time;
@@ -7061,6 +7241,10 @@ function videoEvidenceTime(state,index){
   const hours=Math.round(age/3600);
   return `${hours} ${hours===1?'hour':'hours'} ago`;
 }
+function videoEvidenceDuration(state,index){
+  const seconds=state.events?.[index]?.duration??[18,12,24,9,15,31,8,20,11,27,14,6,22,10,17,13,25,7,19,16][index%20];
+  return `${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`;
+}
 function videoEvidenceStrip(items,state,ratings,expanded=false,sort='newest',selectedIndex=-1){
   const fallbackScores=[3,2,2,2,1,1,3,3,2,2,2,2,1,1,1,1,1];
   const scores=items.map((_,index)=>ratings[index]??fallbackScores[index-ratings.length]);
@@ -7068,7 +7252,7 @@ function videoEvidenceStrip(items,state,ratings,expanded=false,sort='newest',sel
   const positions=['50% 50%','62% 50%','35% 50%','72% 45%','25% 55%','50% 35%','60% 70%','80% 50%','15% 50%'];
   const entries=items.map((description,index)=>({description,index,score:scores[index]}));
   if(expanded&&sort==='rating-high')entries.sort((a,b)=>b.score-a.score||a.index-b.index);
-  return (expanded?entries:entries.slice(0,9)).map(({description,index,score})=>`<li class="sc-video-item${featuredIndexes.has(index)?' is-featured':''}"><button class="sc-video-thumb" type="button" data-video-index="${index}" aria-pressed="${index===selectedIndex}" aria-label="Preview video evidence ${index+1}, ${videoEvidenceTime(state,index)}, rating ${score}: ${description}"><img src="${state.events?.[index]?.src||state.src}" alt="" loading="lazy" style="object-position:${positions[index%positions.length]}"><span class="sc-video-copy"><span>${description}</span><time>${videoEvidenceTime(state,index)}</time></span><span class="sc-video-score${score===5?' is-five':''}" aria-hidden="true">${score}</span></button></li>`).join('');
+  return (expanded?entries:entries.slice(0,9)).map(({description,index,score})=>`<li class="sc-video-item${featuredIndexes.has(index)?' is-featured':''}"><button class="sc-video-thumb" type="button" data-video-index="${index}" aria-pressed="${index===selectedIndex}" aria-label="Preview video evidence ${index+1}, ${videoEvidenceTime(state,index)}, ${videoEvidenceDuration(state,index)} long, rating ${score}: ${description}"><img src="${state.events?.[index]?.src||state.src}" alt="" loading="lazy" style="object-position:${positions[index%positions.length]}"><span class="sc-video-duration" aria-hidden="true">${videoEvidenceDuration(state,index)}</span><span class="sc-video-copy"><span>${description}</span><time>${videoEvidenceTime(state,index)} · ${videoEvidenceDuration(state,index)}</time></span><span class="sc-video-score${score===5?' is-five':''}" aria-hidden="true">${score}</span></button></li>`).join('');
 }
 function cameraSourceSummary(cameras){
   return cameras.map(camera=>`<span class="sc-evidence-camera-item">${SMART_CARD_EVIDENCE_ICONS.camera}<span>${camera.replace(/ Cam$/,'')}</span></span>`).join('');
@@ -7077,13 +7261,368 @@ function initSmartCardEvidence(){
   const smartCards=$('smartCards');
   const detailDialog=document.createElement('dialog');
   detailDialog.className='sc-detail-dialog';
-  detailDialog.innerHTML=`<div class="sc-detail-handle" aria-hidden="true"></div><header class="sc-detail-header"><h2 class="sc-detail-title" id="sc-detail-title"></h2><button class="sc-detail-close" type="button" aria-label="Close details">&times;</button></header><div class="sc-detail-preview-card sc-card"><span class="sc-detail-preview-score" role="img" hidden></span><div class="sc-detail-preview-caption" hidden><time></time><p></p><div class="sc-detail-preview-feedback"></div></div></div><div class="sc-detail-content"><p class="sc-detail-state"><strong></strong><span></span></p><div class="sc-detail-evidence-head"><div><span class="sc-detail-checked"></span></div><div class="sc-evidence-camera-summary"></div></div><div class="sc-detail-sections"><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.video}</span><span>Video Evidences</span><div class="sc-video-actions"><div class="sc-video-sort" role="group" aria-label="Sort video evidence" hidden><button type="button" data-video-sort="newest" aria-pressed="true" aria-label="Sort by time, newest first">Time</button><button type="button" data-video-sort="rating-high" aria-pressed="false" aria-label="Sort by rating, highest first">Rating</button></div><button class="sc-evidence-section-more sc-video-more" type="button" aria-expanded="false" aria-controls="sc-video-evidence-list">+ more</button></div></div><ul class="sc-video-strip sc-evidence-video" id="sc-video-evidence-list" aria-label="Video evidences; swipe horizontally"></ul></div><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.memory}</span><span>Household memory</span><span class="sc-evidence-section-more">+ more</span></div><ul class="sc-evidence-list sc-evidence-memory"></ul></div></div></div>`;
+  detailDialog.innerHTML=`<div class="sc-detail-handle" aria-hidden="true"></div><header class="sc-detail-header"><h2 class="sc-detail-title" id="sc-detail-title"></h2><button class="sc-detail-close" type="button" aria-label="Close details">&times;</button></header><div class="sc-detail-preview-card sc-card"><span class="sc-detail-preview-score" role="img" hidden></span><div class="sc-detail-preview-caption" hidden><time></time><p></p></div><div class="sc-detail-preview-feedback"></div></div><div class="sc-detail-content"><p class="sc-detail-state"><strong></strong><span></span></p><div class="sc-detail-evidence-head"><div><span class="sc-detail-checked"></span></div><div class="sc-evidence-camera-summary"></div></div><div class="sc-detail-sections"><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.video}</span><span>Video Evidences</span><div class="sc-video-actions"><div class="sc-video-sort" role="group" aria-label="Sort video evidence" hidden><button type="button" data-video-sort="newest" aria-pressed="true" aria-label="Sort by time, newest first">Time</button><button type="button" data-video-sort="rating-high" aria-pressed="false" aria-label="Sort by rating, highest first">Rating</button></div><button class="sc-evidence-section-more sc-video-more" type="button" aria-expanded="false" aria-controls="sc-video-evidence-list">+ more</button></div></div><ul class="sc-video-strip sc-evidence-video" id="sc-video-evidence-list" aria-label="Video evidences; swipe horizontally"></ul></div><div class="sc-evidence-item"><div class="sc-evidence-section-header"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.memory}</span><span>Household memory</span><span class="sc-evidence-section-more">+ more</span></div><ul class="sc-evidence-list sc-evidence-memory"></ul></div><div class="sc-recommendation-item"><span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.suggestion}</span><div class="sc-recommendation-body"><h3>Why this?</h3><p class="sc-recommendation-copy"></p></div><div class="sc-recommendation-feedback"></div></div></div><button class="sc-detail-delete" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>Delete card</button></div>`;
   detailDialog.setAttribute('aria-labelledby','sc-detail-title');
   smartCards.append(detailDialog);
+  const suggestionStatus=document.createElement('p');
+  suggestionStatus.className='sc-suggestion-status';
+  suggestionStatus.setAttribute('role','status');
+  suggestionStatus.setAttribute('aria-live','polite');
+  smartCards.append(suggestionStatus);
+  let lastDetailCard=null;
+  const dropPanel=document.createElement('div');
+  dropPanel.className='sc-drop-back';
+  dropPanel.setAttribute('role','group');
+  dropPanel.innerHTML=`<div class="sc-suggestion-delete-content"><h2>Why drop this Smart Card?</h2><p>Pick a reason so we can suggest better cards.</p><fieldset class="sc-suggestion-reasons"><label><input type="radio" name="suggestion-delete-reason" value="not-relevant">Not relevant to me</label><label><input type="radio" name="suggestion-delete-reason" value="wrong-camera">Wrong camera or area</label><label><input type="radio" name="suggestion-delete-reason" value="too-many">Too many similar updates</label><label><input type="radio" name="suggestion-delete-reason" value="already-covered">I already monitor this elsewhere</label></fieldset><div class="sc-drop-note" hidden><div class="sc-drop-note-inner"><label class="sc-drop-note-label" for="sc-drop-note-input">Tell us more <span>(optional)</span></label><textarea id="sc-drop-note-input" class="sc-drop-note-input" rows="3" placeholder="Type here, or hold the mic and talk"></textarea><div class="sc-drop-record"><button class="sc-drop-record-button" type="button" aria-label="Hold to record a voice note" aria-pressed="false"><span class="sc-drop-record-ring" aria-hidden="true"></span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7"/></svg></button><div class="sc-drop-record-copy" aria-live="polite"><strong>Hold to talk</strong><span>Release to add the transcript</span></div><span class="sc-drop-record-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span></div></div></div><div class="sc-suggestion-delete-actions"><button class="sc-suggestion-delete-cancel" type="button">Cancel</button><button class="sc-suggestion-delete-confirm" type="button" disabled>Send feedback &amp; drop</button></div></div>`;
+  dropPanel.setAttribute('aria-labelledby','sc-suggestion-delete-title');
+  dropPanel.querySelector('h2').id='sc-suggestion-delete-title';
+  ['click','keydown'].forEach(type=>dropPanel.addEventListener(type,event=>event.stopPropagation()));
+  const suggestionDecisions=new Map();
+  let pendingSuggestionCard=null;
+  const smartCardMotion=()=>!matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const springKeyframes=({from,velocity=0,stiffness=220,damping=19,mass=1},frame)=>{
+    const dt=1/120;
+    const frames=[];
+    let x=from,v=velocity;
+    for(let step=0;step<600;step++){
+      frames.push(x);
+      v+=(-stiffness*x-damping*v)/mass*dt;
+      x+=v*dt;
+      if(Math.abs(x)<.02&&Math.abs(v)<.05)break;
+    }
+    frames.push(0);
+    return {keyframes:frames.map((value,index)=>({...frame(value),offset:index/(frames.length-1)})),duration:(frames.length-1)*dt*1000};
+  };
+  let smartCardPress=null;
+  const releaseSmartCardPress=()=>{
+    if(!smartCardPress)return;
+    const {target,press}=smartCardPress;
+    smartCardPress=null;
+    const pressed=parseFloat(getComputedStyle(target).scale)||1;
+    press.cancel();
+    const spring=springKeyframes({from:(pressed-1)*100,stiffness:420,damping:20},value=>({scale:String(1+value/100)}));
+    target.animate(spring.keyframes,{duration:spring.duration,easing:'linear'});
+  };
+  smartCards.addEventListener('pointerdown',event=>{
+    if(event.button!==0||!smartCardMotion())return;
+    const button=event.target.closest('button:not(:disabled):not(.sc-drop-record-button)');
+    const card=!button&&!smartCards.classList.contains('sc-flip-view')&&!event.target.closest('.sc-drop-back,input,label,textarea')&&event.target.closest('.sc-grid>.sc-card:not(.is-dropping)');
+    const target=button||card;
+    if(!target)return;
+    releaseSmartCardPress();
+    smartCardPress={target,press:target.animate({scale:['1',button?'.95':'.975']},{duration:120,easing:'cubic-bezier(.3,0,.5,1)',fill:'forwards'})};
+  });
+  ['pointerup','pointercancel','dragstart'].forEach(type=>document.addEventListener(type,releaseSmartCardPress));
+  const flipSmartCard=(card,swap)=>{
+    if(!smartCardMotion()){swap();return Promise.resolve()}
+    const out=card.animate([
+      {transform:'perspective(1400px) rotateY(0deg) scale(1)'},
+      {transform:'perspective(1400px) rotateY(-4deg) scale(.985)',offset:.18},
+      {transform:'perspective(1400px) rotateY(90deg) scale(.96)'}
+    ],{duration:240,easing:'cubic-bezier(.55,0,.75,.2)',fill:'forwards'});
+    return out.finished.then(()=>{
+      swap();
+      const spring=springKeyframes({from:-90,velocity:520},angle=>({transform:`perspective(1400px) rotateY(${angle.toFixed(2)}deg) scale(${(1+angle/90*.04).toFixed(4)})`}));
+      const back=card.animate(spring.keyframes,{duration:spring.duration,easing:'linear'});
+      out.cancel();
+      return back.finished;
+    }).catch(()=>{});
+  };
+  const dropNote=dropPanel.querySelector('.sc-drop-note');
+  const dropNoteInput=dropNote.querySelector('.sc-drop-note-input');
+  const dropRecord=dropNote.querySelector('.sc-drop-record');
+  const dropRecordButton=dropNote.querySelector('.sc-drop-record-button');
+  const dropRecordTitle=dropNote.querySelector('.sc-drop-record-copy strong');
+  const dropRecordHint=dropNote.querySelector('.sc-drop-record-copy span');
+  const SMART_CARD_DROP_TRANSCRIPTS={
+    'not-relevant':'We don\u2019t really use this area at night, so I don\u2019t need updates about it.',
+    'wrong-camera':'This camera points at the neighbor\u2019s side, the driveway camera is the better view for this.',
+    'too-many':'I already get a lot of alerts from this camera, one summary a day would be enough.',
+    'already-covered':'My alarm system already watches this, so I don\u2019t need a second alert here.'
+  };
+  const dropRecording={active:false,holdTimer:0,wordTimer:0,clockTimer:0,started:0,base:'',words:[],index:0};
+  const setDropRecordCopy=(title,hint)=>{dropRecordTitle.textContent=title;dropRecordHint.textContent=hint};
+  const startDropRecording=()=>{
+    const reason=dropPanel.querySelector('input[name="suggestion-delete-reason"]:checked')?.value;
+    Object.assign(dropRecording,{active:true,started:performance.now(),base:dropNoteInput.value.trim(),words:(SMART_CARD_DROP_TRANSCRIPTS[reason]||SMART_CARD_DROP_TRANSCRIPTS['not-relevant']).split(' '),index:0});
+    dropRecord.classList.add('is-recording');
+    dropRecordButton.setAttribute('aria-pressed','true');
+    setDropRecordCopy('Listening\u2026 0:00','Release to stop');
+    navigator.vibrate?.(12);
+    dropRecording.clockTimer=setInterval(()=>{
+      const seconds=Math.floor((performance.now()-dropRecording.started)/1000);
+      dropRecordTitle.textContent=`Listening\u2026 ${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`;
+    },250);
+    dropRecording.wordTimer=setInterval(()=>{
+      if(dropRecording.index>=dropRecording.words.length)return;
+      dropRecording.index++;
+      dropNoteInput.value=[dropRecording.base,dropRecording.words.slice(0,dropRecording.index).join(' ')].filter(Boolean).join(' ');
+      dropNoteInput.scrollTop=dropNoteInput.scrollHeight;
+    },170);
+  };
+  const stopDropRecording=()=>{
+    clearTimeout(dropRecording.holdTimer);
+    if(!dropRecording.active){
+      if(dropRecording.holdTimer&&dropRecord.classList.contains('is-pressing'))setDropRecordCopy('Hold to talk','Keep holding the mic to record');
+      dropRecord.classList.remove('is-pressing');
+      dropRecording.holdTimer=0;
+      return;
+    }
+    clearInterval(dropRecording.wordTimer);
+    clearInterval(dropRecording.clockTimer);
+    if(dropRecording.index)dropNoteInput.value=[dropRecording.base,dropRecording.words.join(' ')].filter(Boolean).join(' ');
+    Object.assign(dropRecording,{active:false,holdTimer:0});
+    dropRecord.classList.remove('is-recording','is-pressing');
+    dropRecordButton.setAttribute('aria-pressed','false');
+    setDropRecordCopy('Transcript added','Hold again to add more');
+  };
+  const pressDropRecord=()=>{
+    if(dropRecording.active||dropRecording.holdTimer)return;
+    dropRecord.classList.add('is-pressing');
+    dropRecording.holdTimer=setTimeout(startDropRecording,280);
+  };
+  dropRecordButton.addEventListener('pointerdown',event=>{
+    if(event.button!==0)return;
+    event.preventDefault();
+    dropRecordButton.setPointerCapture(event.pointerId);
+    pressDropRecord();
+  });
+  ['pointerup','pointercancel','lostpointercapture'].forEach(type=>dropRecordButton.addEventListener(type,stopDropRecording));
+  dropRecordButton.addEventListener('contextmenu',event=>event.preventDefault());
+  dropRecordButton.addEventListener('keydown',event=>{
+    if((event.key===' '||event.key==='Enter')&&!event.repeat){event.preventDefault();pressDropRecord()}
+  });
+  dropRecordButton.addEventListener('keyup',event=>{
+    if(event.key===' '||event.key==='Enter'){event.preventDefault();stopDropRecording()}
+  });
+  dropRecordButton.addEventListener('blur',stopDropRecording);
+  const resetDropNote=()=>{
+    stopDropRecording();
+    dropNote.hidden=true;
+    dropNote.classList.remove('is-open');
+    dropNoteInput.value='';
+    setDropRecordCopy('Hold to talk','Release to add the transcript');
+  };
+  const resetDropPanel=()=>{
+    resetDropNote();
+    dropPanel.querySelectorAll('input').forEach(input=>{input.checked=false});
+    dropPanel.querySelector('.sc-suggestion-delete-confirm').disabled=true;
+  };
+  let dropHost=null;
+  let smartCardLift=null;
+  const LIFT_STYLES=['position','left','top','width','height','margin','z-index','translate'];
+  const clearLiftStyles=card=>LIFT_STYLES.forEach(name=>card.style.removeProperty(name));
+  const pinLiftedCard=(card,{left,top,width,height})=>Object.assign(card.style,{position:'fixed',left:`${left}px`,top:`${top}px`,width:`${width}px`,height:`${height}px`,margin:'0',zIndex:'81'});
+  const liftSmartCard=card=>{
+    const rect=card.getBoundingClientRect();
+    const placeholder=document.createElement('div');
+    placeholder.className='sc-drop-placeholder';
+    placeholder.style.height=`${rect.height}px`;
+    card.before(placeholder);
+    const scrim=document.createElement('div');
+    scrim.className='sc-drop-scrim';
+    scrim.addEventListener('click',()=>dropPanel.querySelector('.sc-suggestion-delete-cancel').click());
+    scrim.addEventListener('pointerdown',event=>event.preventDefault());
+    document.body.append(scrim);
+    document.body.classList.add('sc-drop-open');
+    card.classList.add('is-lifted');
+    pinLiftedCard(card,rect);
+    smartCardLift={card,placeholder,scrim};
+    if(!smartCardMotion())return Promise.resolve();
+    scrim.animate({opacity:[0,1]},{duration:240,easing:'ease-out'});
+    const dx=innerWidth/2-(rect.left+rect.width/2);
+    const dy=innerHeight/2-(rect.top+rect.height/2);
+    const spring=springKeyframes({from:100,stiffness:260,damping:24},value=>({translate:`${(dx*(1-value/100)).toFixed(1)}px ${(dy*(1-value/100)).toFixed(1)}px`}));
+    const lift=card.animate(spring.keyframes,{duration:Math.min(spring.duration,420),easing:'linear',fill:'forwards'});
+    return lift.finished.then(()=>{card.style.translate=`${dx}px ${dy}px`;lift.cancel()},()=>{});
+  };
+  document.addEventListener('keydown',event=>{
+    if(event.key==='Escape'&&smartCardLift&&dropHost===smartCardLift.card){event.preventDefault();dropPanel.querySelector('.sc-suggestion-delete-cancel').click()}
+  });
+  const centerLiftedCard=card=>{
+    clearLiftStyles(card);
+    card.classList.add('is-lifted');
+  };
+  const settleSmartCardLift=(animate=true)=>{
+    const lift=smartCardLift;
+    if(!lift)return Promise.resolve();
+    smartCardLift=null;
+    const {card,placeholder,scrim}=lift;
+    const finish=()=>{
+      clearLiftStyles(card);
+      card.classList.remove('is-lifted');
+      placeholder.remove();
+      scrim.remove();
+      document.body.classList.remove('sc-drop-open');
+    };
+    if(!animate||!smartCardMotion()){finish();return Promise.resolve()}
+    const home=placeholder.getBoundingClientRect();
+    const now=card.getBoundingClientRect();
+    scrim.animate({opacity:[1,0]},{duration:260,easing:'ease-in',fill:'forwards'});
+    const dx=now.left-home.left;
+    const dy=now.top-home.top;
+    pinLiftedCard(card,home);
+    return card.animate({translate:[`${dx}px ${dy}px`,'0 0']},{duration:360,easing:'cubic-bezier(.22,1,.36,1)'}).finished.then(finish,finish);
+  };
+  const showSmartCardFront=(host,animate=true)=>{
+    if(dropHost===host){dropHost=null;pendingSuggestionCard=null}
+    const lifted=smartCardLift?.card===host;
+    const home=lifted&&smartCardLift.placeholder.getBoundingClientRect();
+    const swap=()=>{
+      host.classList.remove('is-dropping');
+      host.style.removeProperty('min-height');
+      if(dropPanel.parentElement===host){dropPanel.remove();resetDropPanel()}
+      if(lifted&&animate){
+        clearLiftStyles(host);
+        pinLiftedCard(host,{left:(innerWidth-home.width)/2,top:(innerHeight-home.height)/2,width:home.width,height:home.height});
+      }
+    };
+    if(!animate){swap();settleSmartCardLift(false);return Promise.resolve()}
+    return flipSmartCard(host,swap).then(()=>lifted?settleSmartCardLift():undefined);
+  };
+  const showSmartCardBack=(card,host=card)=>{
+    if(dropHost===host)return;
+    if(dropHost)showSmartCardFront(dropHost,false);
+    dropHost=host;
+    pendingSuggestionCard=card;
+    resetDropPanel();
+    const deleting=host===detailDialog;
+    dropPanel.querySelector('h2').textContent=deleting?'Why delete this Smart Card?':'Why drop this Smart Card?';
+    dropPanel.querySelector('.sc-suggestion-delete-confirm').textContent=deleting?'Send feedback & delete':'Send feedback & drop';
+    const height=host.offsetHeight;
+    const lifting=!deleting&&smartCards.classList.contains('sc-grid-view');
+    (lifting?liftSmartCard(host):Promise.resolve()).then(()=>dropHost===host&&flipSmartCard(host,()=>{
+      if(lifting)centerLiftedCard(host);
+      else if(!deleting)host.style.minHeight=`${height}px`;
+      host.append(dropPanel);
+      host.classList.add('is-dropping');
+      if(deleting||lifting)host.scrollTop=0;
+    })).then(()=>{if(dropHost===host)dropPanel.querySelector('input').focus({preventScroll:true})});
+  };
+  dropPanel.querySelector('.sc-suggestion-delete-cancel').addEventListener('click',()=>{
+    const host=dropHost;
+    if(!host)return;
+    const trigger=host===detailDialog?host.querySelector('.sc-detail-delete'):host.querySelector('.sc-suggestion-delete');
+    showSmartCardFront(host).then(()=>trigger?.focus({preventScroll:true}));
+  });
+  dropPanel.querySelector('.sc-suggestion-reasons').addEventListener('change',()=>{
+    dropPanel.querySelector('.sc-suggestion-delete-confirm').disabled=false;
+    if(dropNote.hidden){
+      dropNote.hidden=false;
+      void dropNote.offsetHeight;
+      dropNote.classList.add('is-open');
+    }
+  });
+  dropPanel.querySelector('.sc-suggestion-delete-confirm').addEventListener('click',()=>{
+    const selected=dropPanel.querySelector('input[name="suggestion-delete-reason"]:checked');
+    const card=pendingSuggestionCard;
+    const host=dropHost;
+    if(!card||!selected)return;
+    const deleting=host===detailDialog;
+    const scene=card.dataset.scene;
+    const goal=card.querySelector(':scope>.sc-label').textContent.trim();
+    const note=dropNoteInput.value.trim();
+    const reasonLabel=selected.closest('label').textContent.trim();
+    suggestionDecisions.set(scene,{decision:deleting?'deleted':'dropped',reason:selected.value,note});
+    pendingSuggestionCard=null;
+    dropHost=null;
+    const lift=smartCardLift?.card===card?smartCardLift:null;
+    if(lift){
+      smartCardLift=null;
+      if(smartCardMotion())lift.scrim.animate({opacity:[1,0]},{duration:260,easing:'ease-in',fill:'forwards'});
+    }
+    const removeCard=()=>{
+      const followers=[];
+      for(let next=card.nextElementSibling;next;next=next.nextElementSibling)followers.push([next,next.getBoundingClientRect().top,next.getBoundingClientRect().left]);
+      if(lift){lift.placeholder.remove();lift.scrim.remove();document.body.classList.remove('sc-drop-open')}
+      card.remove();
+      resetDropPanel();
+      updateSmartCardHeading();
+      if(smartCardFlipScene===scene&&smartCardGrid.firstElementChild){smartCardFlipScene=smartCardGrid.firstElementChild.dataset.scene;syncSmartCardView()}
+      if(smartCardMotion())followers.forEach(([follower,top,left],index)=>{
+        const now=follower.getBoundingClientRect();
+        const shift=top-now.top;
+        const shiftX=left-now.left;
+        if(shift||shiftX)follower.animate({transform:[`translate(${shiftX}px,${shift}px)`,'none']},{duration:420,delay:index*30,easing:'cubic-bezier(.22,1,.36,1)',fill:'backwards'});
+      });
+    };
+    suggestionStatus.textContent=`${goal} ${deleting?'card deleted':'suggestion dropped'}. Feedback reason: ${reasonLabel}.${note?` Note: ${note}`:''}`;
+    if(deleting){
+      lastDetailCard=null;
+      detailDialog.close();
+      showSmartCardFront(detailDialog,false);
+      card.scrollIntoView({block:'nearest',behavior:smartCardMotion()?'smooth':'auto'});
+      showSmartCardToast(`${goal} deleted`);
+    }
+    if(smartCardMotion())card.animate({opacity:[1,0],transform:['scale(1)','scale(.94)']},{duration:240,easing:'cubic-bezier(.4,0,1,1)',fill:'forwards'}).finished.then(removeCard,removeCard);
+    else removeCard();
+  });
+  function updateSmartCardHeading(){
+    const cards=[...smartCards.querySelectorAll('.sc-grid>.sc-card[data-scene]')];
+    const goals=new Set(cards.map(card=>card.dataset.scene)).size;
+    const newCount=cards.filter(card=>card.dataset.cardMode==='suggested').length;
+    smartCards.querySelector('#sc-cards-heading').textContent=smartCards.classList.contains('is-suggested')?(cards.length?`${cards.length} new suggestions across ${goals} ${goals===1?'goal':'goals'}`:'No new suggestions'):`Now · ${cards.length} ${cards.length===1?'update':'updates'} across ${goals} ${goals===1?'goal':'goals'}${newCount?` · ${newCount} new`:''}`;
+  }
+  const collapseSuggestionReason=(card,suggestion)=>{
+    const done=()=>{card.dataset.suggestionDecision='kept'};
+    if(!smartCardMotion())return done();
+    const style=getComputedStyle(suggestion);
+    const open={height:`${suggestion.offsetHeight}px`,paddingTop:style.paddingTop,paddingBottom:style.paddingBottom,opacity:1};
+    suggestion.style.overflow='hidden';
+    suggestion.style.boxSizing='border-box';
+    const collapse=suggestion.animate([open,{...open,offset:.38},{height:'0px',paddingTop:'0px',paddingBottom:'0px',opacity:0}],{duration:720,easing:'cubic-bezier(.4,0,.2,1)',fill:'forwards'});
+    collapse.finished.then(()=>{done();collapse.cancel();suggestion.style.removeProperty('overflow');suggestion.style.removeProperty('box-sizing')},()=>{});
+  };
+  const SMART_CARD_CONFETTI_COLORS=['#f6c453','#71edbe','#78a5ff','#ff8a92','#c9a7ff','#ffffff'];
+  const burstSmartCardConfetti=card=>{
+    if(!smartCardMotion())return;
+    const box=card.getBoundingClientRect();
+    const layer=document.createElement('div');
+    layer.className='sc-confetti';
+    layer.setAttribute('aria-hidden','true');
+    Object.assign(layer.style,{left:`${box.left}px`,top:`${box.top}px`,width:`${box.width}px`,height:`${box.height}px`});
+    document.body.append(layer);
+    const pieces=Array.from({length:110},(_,index)=>{
+      const piece=document.createElement('i');
+      const size=5+Math.random()*6;
+      const x=box.width*(.06+Math.random()*.88);
+      piece.style.cssText=`left:${x-size/2}px;top:${-size/2}px;width:${size}px;height:${Math.random()<.5?size*.45:size}px;background:${SMART_CARD_CONFETTI_COLORS[index%SMART_CARD_CONFETTI_COLORS.length]};border-radius:${Math.random()<.3?'50%':'1.5px'}`;
+      layer.append(piece);
+      const rise=50+Math.random()*110;
+      const drift=(x-box.width/2)*.35+(Math.random()-.5)*120;
+      const fall=box.height*(.45+Math.random()*.6);
+      const spin=(Math.random()-.5)*1400;
+      return piece.animate([
+        {transform:'translate(0,0) rotate(0deg) scale(.4)',opacity:0},
+        {transform:`translate(${drift*.35}px,${-rise}px) rotate(${spin*.25}deg) scale(1)`,opacity:1,offset:.22},
+        {transform:`translate(${drift*.8}px,${fall*.6}px) rotate(${spin*.7}deg) scale(1)`,opacity:1,offset:.7},
+        {transform:`translate(${drift}px,${fall}px) rotate(${spin}deg) scale(.9)`,opacity:0}
+      ],{duration:2200+Math.random()*1200,delay:Math.random()*220,easing:'cubic-bezier(.22,.6,.36,1)',fill:'both'}).finished;
+    });
+    card.animate({scale:['1','1.018','1']},{duration:460,easing:'cubic-bezier(.22,1,.36,1)'});
+    Promise.allSettled(pieces).then(()=>layer.remove());
+  };
+  const smartCardToast=document.createElement('div');
+  smartCardToast.className='sc-toast';
+  smartCardToast.setAttribute('aria-hidden','true');
+  document.body.append(smartCardToast);
+  let smartCardToastTimer=0;
+  const showSmartCardToast=message=>{
+    smartCardToast.innerHTML=`<span class="sc-toast-check"><svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span><span></span>`;
+    smartCardToast.lastElementChild.textContent=message;
+    smartCardToast.classList.remove('is-visible');
+    void smartCardToast.offsetWidth;
+    smartCardToast.classList.add('is-visible');
+    clearTimeout(smartCardToastTimer);
+    smartCardToastTimer=setTimeout(()=>smartCardToast.classList.remove('is-visible'),2800);
+  };
   const feedbackVotes=new Map();
-  const feedbackKey=group=>group.classList.contains('sc-feedback')
-    ?`goal:${group.closest('.sc-card').dataset.scene}`
-    :`evidence:${detailDialog.dataset.mode}:${detailDialog.dataset.scene}:${group.getAttribute('aria-label')}`;
+  const feedbackKey=group=>{
+    if(group.dataset.feedbackKey)return group.dataset.feedbackKey;
+    return group.classList.contains('sc-feedback')
+      ?`goal:${group.closest('.sc-card').dataset.scene}`
+      :`evidence:${detailDialog.dataset.mode}:${detailDialog.dataset.scene}:${group.getAttribute('aria-label')}`;
+  };
   const syncFeedbackGroup=group=>{
     const vote=feedbackVotes.get(feedbackKey(group));
     group.querySelectorAll('button').forEach((button,index)=>button.setAttribute('aria-pressed',String(vote===(index===0?'up':'down'))));
@@ -7097,7 +7636,6 @@ function initSmartCardEvidence(){
     feedbackVotes.set(key,feedbackVotes.get(key)===vote?null:vote);
     syncFeedbackGroup(group);
   });
-  let lastDetailCard=null;
   const closeDetail=()=>{
     detailDialog.close();
     document.body.classList.remove('sc-detail-open');
@@ -7106,19 +7644,24 @@ function initSmartCardEvidence(){
   detailDialog.addEventListener('click',event=>{if(event.target===detailDialog)closeDetail()});
   detailDialog.addEventListener('close',()=>{
     if(detailDialog.open)return;
+    if(dropHost===detailDialog)showSmartCardFront(detailDialog,false);
     document.body.classList.remove('sc-detail-open');
     lastDetailCard?.focus({preventScroll:true});
+  });
+  detailDialog.querySelector('.sc-detail-delete').addEventListener('click',()=>{
+    if(lastDetailCard)showSmartCardBack(lastDetailCard,detailDialog);
   });
   const videoStrip=detailDialog.querySelector('.sc-evidence-video');
   const videoMore=detailDialog.querySelector('.sc-video-more');
   const videoSort=detailDialog.querySelector('.sc-video-sort');
   const renderVideoEvidence=()=>{
     const {mode,scene}=detailDialog.dataset;
+    const evidenceMode=smartCardEvidenceMode(mode);
     const isHighlights=mode==='highlights';
     const expanded=!isHighlights&&detailDialog.dataset.videoExpanded==='true';
     videoStrip.classList.toggle('is-expanded',expanded);
     videoStrip.setAttribute('aria-label',expanded?'Video evidences; vertical list':'Video evidences; swipe horizontally');
-    videoStrip.innerHTML=videoEvidenceStrip(SMART_CARD_EVIDENCE[mode][scene].video,SMART_CARD_STATES[mode][scene],SMART_CARD_VIDEO_RATINGS[mode][scene],expanded,detailDialog.dataset.videoSort,Number(detailDialog.dataset.selectedVideoIndex));
+    videoStrip.innerHTML=videoEvidenceStrip(SMART_CARD_EVIDENCE[evidenceMode][scene].video,SMART_CARD_STATES[mode][scene],SMART_CARD_VIDEO_RATINGS[evidenceMode][scene],expanded,detailDialog.dataset.videoSort,Number(detailDialog.dataset.selectedVideoIndex));
     videoMore.textContent=expanded?'− less':'+ more';
     videoMore.setAttribute('aria-expanded',String(expanded));
     videoMore.hidden=isHighlights;
@@ -7128,8 +7671,9 @@ function initSmartCardEvidence(){
   const openDetail=(card,modeOverride)=>{
     const scene=card.dataset.scene;
     const mode=modeOverride||card.dataset.cardMode||'normal';
+    const evidenceMode=smartCardEvidenceMode(mode);
     const state=SMART_CARD_STATES[mode][scene];
-    const evidence=SMART_CARD_EVIDENCE[mode][scene];
+    const evidence=SMART_CARD_EVIDENCE[evidenceMode][scene];
     const preview=detailDialog.querySelector('.sc-detail-preview-card');
     const caption=preview.querySelector('.sc-detail-preview-caption');
     const previewScore=preview.querySelector('.sc-detail-preview-score');
@@ -7140,7 +7684,10 @@ function initSmartCardEvidence(){
     detailDialog.dataset.selectedVideoIndex='-1';
     preview.dataset.scene=scene;
     preview.classList.toggle('is-alert-card',mode==='alert');
-    preview.replaceChildren(card.querySelector('.sc-scene').cloneNode(true),previewScore,caption);
+    const previewFeedback=preview.querySelector('.sc-detail-preview-feedback');
+    preview.replaceChildren(card.querySelector('.sc-scene').cloneNode(true),previewScore,caption,previewFeedback);
+    previewFeedback.innerHTML=evidenceFeedback('this snapshot');
+    syncFeedbackGroup(previewFeedback.firstElementChild);
     caption.hidden=true;
     previewScore.hidden=true;
     previewScore.textContent='';
@@ -7156,6 +7703,8 @@ function initSmartCardEvidence(){
     cameraSummary.setAttribute('aria-label',`Cameras involved: ${SMART_CARD_CAMERAS[scene].join(', ')}`);
     renderVideoEvidence();
     detailDialog.querySelector('.sc-evidence-memory').innerHTML=evidenceList(evidence.memory,'household memory');
+    detailDialog.querySelector('.sc-recommendation-copy').textContent=SMART_CARD_RECOMMENDATIONS[scene];
+    detailDialog.querySelector('.sc-recommendation-feedback').innerHTML=evidenceFeedback('this card suggestion',`recommendation:${scene}`);
     detailDialog.querySelectorAll('.sc-evidence-item-feedback').forEach(syncFeedbackGroup);
     lastDetailCard=card;
     document.body.classList.add('sc-detail-open');
@@ -7164,20 +7713,40 @@ function initSmartCardEvidence(){
     videoStrip.scrollLeft=0;
   };
   videoMore.addEventListener('click',()=>{
+    const startHeight=videoStrip.getBoundingClientRect().height;
+    videoStrip.getAnimations().forEach(animation=>animation.cancel());
     detailDialog.dataset.videoExpanded=String(detailDialog.dataset.videoExpanded!=='true');
     renderVideoEvidence();
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+    const endHeight=videoStrip.getBoundingClientRect().height;
+    const expanded=videoStrip.classList.contains('is-expanded');
+    const ease='cubic-bezier(.22,1,.36,1)';
+    Object.assign(videoStrip.style,{overflow:'hidden',boxSizing:'border-box'});
+    videoStrip.animate({height:[`${startHeight}px`,`${endHeight}px`]},{duration:320,easing:ease}).finished.catch(()=>{}).finally(()=>{videoStrip.style.removeProperty('overflow');videoStrip.style.removeProperty('box-sizing')});
+    [...videoStrip.children].slice(0,expanded?9:6).forEach((item,index)=>item.animate({opacity:[0,1],transform:[expanded?'translateY(-6px)':'translateX(10px)','none']},{duration:260,delay:index*24,easing:ease,fill:'backwards'}));
+    if(expanded)videoSort.animate({opacity:[0,1]},{duration:200,easing:'ease-out'});
   });
   videoSort.addEventListener('click',event=>{
     const button=event.target.closest('[data-video-sort]');
     if(!button)return;
+    if(button.dataset.videoSort===detailDialog.dataset.videoSort)return;
+    const before=new Map([...videoStrip.querySelectorAll('.sc-video-thumb')].map(thumb=>[thumb.dataset.videoIndex,thumb.closest('.sc-video-item').getBoundingClientRect().top]));
     detailDialog.dataset.videoSort=button.dataset.videoSort;
     renderVideoEvidence();
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+    videoStrip.querySelectorAll('.sc-video-item').forEach((item,index)=>{
+      const top=before.get(item.querySelector('.sc-video-thumb').dataset.videoIndex);
+      const shift=top===undefined?0:top-item.getBoundingClientRect().top;
+      if(!shift)return;
+      item.animate({transform:[`translateY(${shift}px)`,'none']},{duration:420,delay:Math.min(index,8)*18,easing:'cubic-bezier(.22,1,.36,1)',fill:'backwards'});
+    });
   });
   videoStrip.addEventListener('click',event=>{
     const thumb=event.target.closest('.sc-video-thumb');
     if(!thumb)return;
     const index=Number(thumb.dataset.videoIndex);
     const {scene,mode}=detailDialog.dataset;
+    const evidenceMode=smartCardEvidenceMode(mode);
     const state=SMART_CARD_STATES[mode][scene];
     const preview=detailDialog.querySelector('.sc-detail-preview-card');
     const caption=preview.querySelector('.sc-detail-preview-caption');
@@ -7190,21 +7759,21 @@ function initSmartCardEvidence(){
     const selectedScene=document.createElement('div');
     selectedScene.className='sc-scene';
     selectedScene.append(image);
-    preview.replaceChildren(selectedScene,previewScore,caption);
+    preview.replaceChildren(selectedScene,previewScore,caption,preview.querySelector('.sc-detail-preview-feedback'));
     previewScore.textContent=thumb.querySelector('.sc-video-score').textContent;
     previewScore.setAttribute('aria-label',`Evidence rating ${previewScore.textContent}`);
     previewScore.classList.toggle('is-featured',thumb.closest('.sc-video-item').classList.contains('is-featured'));
     previewScore.classList.toggle('is-five',previewScore.textContent==='5');
     previewScore.hidden=false;
     caption.querySelector('time').textContent=videoEvidenceTime(state,index);
-    caption.querySelector('p').textContent=SMART_CARD_EVIDENCE[mode][scene].video[index];
+    caption.querySelector('p').textContent=SMART_CARD_EVIDENCE[evidenceMode][scene].video[index];
     if(mode==='highlights'&&state.events?.[index]){
       detailDialog.querySelector('.sc-detail-state strong').textContent=index===0?state.state:state.events[index].label.toUpperCase();
       detailDialog.querySelector('.sc-detail-state span').textContent=state.events[index].time;
       detailDialog.querySelector('.sc-detail-checked').textContent=state.events[index].time;
     }
-    caption.querySelector('.sc-detail-preview-feedback').innerHTML=evidenceFeedback(`video evidence ${index+1}`);
-    syncFeedbackGroup(caption.querySelector('.sc-evidence-item-feedback'));
+    preview.querySelector('.sc-detail-preview-feedback').innerHTML=evidenceFeedback(`video evidence ${index+1}`);
+    syncFeedbackGroup(preview.querySelector('.sc-detail-preview-feedback .sc-evidence-item-feedback'));
     caption.hidden=false;
     detailDialog.dataset.selectedVideoIndex=String(index);
     detailDialog.querySelectorAll('.sc-video-thumb').forEach(button=>button.setAttribute('aria-pressed',String(button===thumb)));
@@ -7219,6 +7788,7 @@ function initSmartCardEvidence(){
     goalFeedbackButtons[0].setAttribute('aria-label',`${goal} goal was helpful`);
     goalFeedbackButtons[1].setAttribute('aria-label',`${goal} goal was not helpful`);
     syncFeedbackGroup(goalFeedback);
+    goalFeedback.remove();
     const sceneElement=card.querySelector('.sc-scene');
     const focusLayer=document.createElement('div');
     focusLayer.className='sc-focus-layer';
@@ -7229,6 +7799,31 @@ function initSmartCardEvidence(){
     evidence.setAttribute('aria-label','AI evidence');
     evidence.innerHTML=`<div class="sc-evidence-meta"><span class="sc-evidence-time"></span><button class="sc-evidence-refresh" type="button" aria-label="Refresh ${goal} state" title="Refresh state"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6v5h-5"/><path d="M18.2 15a7 7 0 1 1 .3-7.5L20 11"/></svg></button></div><button class="sc-evidence-trigger" type="button" aria-label="Open ${goal} details"><span class="sc-evidence-rule" aria-hidden="true"></span><span class="sc-evidence-preview"></span></button>`;
     card.append(evidence);
+    const suggestion=document.createElement('section');
+    suggestion.className='sc-suggestion-reason';
+    suggestion.setAttribute('aria-label',`Why WYZE suggested ${goal}`);
+    suggestion.innerHTML=`<span class="sc-evidence-title-icon">${SMART_CARD_EVIDENCE_ICONS.suggestion}</span><div class="sc-suggestion-copy"><strong>Why this?</strong><p>${SMART_CARD_RECOMMENDATIONS[scene]}</p></div><div class="sc-suggestion-actions" role="group" aria-label="Decide whether to add ${goal}"><button class="sc-suggestion-keep" type="button" aria-pressed="false">Keep</button><button class="sc-suggestion-delete" type="button">Drop</button></div>`;
+    card.append(suggestion);
+    const newBadge=document.createElement('span');
+    newBadge.className='sc-new-badge';
+    newBadge.textContent='New';
+    card.append(newBadge);
+    suggestion.querySelector('.sc-suggestion-keep').addEventListener('click',event=>{
+      event.stopPropagation();
+      const keep=event.currentTarget;
+      if(keep.getAttribute('aria-pressed')==='true')return;
+      suggestionDecisions.set(scene,{decision:'kept'});
+      keep.textContent='Kept';
+      keep.setAttribute('aria-pressed','true');
+      suggestionStatus.textContent=`${goal} monitoring goal kept.`;
+      burstSmartCardConfetti(card);
+      collapseSuggestionReason(card,suggestion);
+      showSmartCardToast(`${goal} added to your Smart Cards`);
+    });
+    suggestion.querySelector('.sc-suggestion-delete').addEventListener('click',event=>{
+      event.stopPropagation();
+      showSmartCardBack(card);
+    });
     const highlights=SMART_CARD_STATES.highlights[scene];
     if(highlights){
       card.dataset.highlight='true';
@@ -7284,7 +7879,8 @@ function initSmartCardEvidence(){
 }
 const SMART_CARD_PRIORITY={
   normal:['security','garage','front','ev','bins','pets','wildlife','birds'],
-  alert:['security','garage','pets','front','wildlife','ev','bins','birds']
+  alert:['security','garage','pets','front','wildlife','ev','bins','birds'],
+  suggested:['security','garage','front','ev','bins','pets','wildlife','birds']
 };
 const SMART_CARD_MIXED_ALERT_PRIORITY=['security','garage','wildlife','ev','bins','front','pets','birds'];
 const SMART_CARD_MIXED_WEIGHTS={security:3,garage:3,wildlife:2,ev:2,bins:1.5,front:1.5,pets:1,birds:.5};
@@ -7300,6 +7896,10 @@ function chooseMixedAlertScenes(){
     }
   }
   return selected;
+}
+function chooseMixedSuggestedScenes(alerts){
+  const candidates=SMART_CARD_PRIORITY.suggested.filter(scene=>!alerts.has(scene)).sort(()=>Math.random()-.5);
+  return new Set(candidates.slice(0,1+Math.floor(Math.random()*2)));
 }
 const smartCardGrid=document.querySelector('#smartCards .sc-grid');
 const smartCardFlipStatus=document.querySelector('#smartCards .sc-flip-status');
@@ -7399,7 +7999,7 @@ function stepSmartCardFlip(direction,exitVector){
 document.querySelectorAll('[data-sc-view]').forEach(button=>button.addEventListener('click',()=>setSmartCardView(button.dataset.scView)));
 smartCardGrid.addEventListener('dragstart',event=>event.preventDefault());
 smartCardGrid.addEventListener('pointerdown',event=>{
-  if(!$('smartCards').classList.contains('sc-flip-view')||smartCardFlipTimer||event.button!==0||event.target.closest('button'))return;
+  if(!$('smartCards').classList.contains('sc-flip-view')||smartCardFlipTimer||event.button!==0||event.target.closest('button,.sc-drop-back'))return;
   smartCardViewAnimations.forEach(animation=>animation.cancel());
   smartCardViewAnimations=[];
   const card=smartCardGrid.querySelector('.sc-card.is-current');
@@ -7453,20 +8053,24 @@ smartCardGrid.addEventListener('keydown',event=>{
 });
 function setSmartCardState(mode){
   const isAlert=mode==='alert';
+  const isSuggested=mode==='suggested';
   const mixedAlerts=mode==='mixed'?chooseMixedAlertScenes():new Set();
+  const mixedSuggested=mode==='mixed'?chooseMixedSuggestedScenes(mixedAlerts):new Set();
   $('smartCards').classList.toggle('is-alert',isAlert);
   $('smartCards').classList.toggle('is-mixed',mode==='mixed');
   $('smartCards').classList.toggle('is-highlights',mode==='normal');
+  $('smartCards').classList.toggle('is-suggested',isSuggested);
   const detailDialog=document.querySelector('.sc-detail-dialog');
   if(detailDialog?.open)detailDialog.close();
   document.querySelectorAll('.sc-grid>.sc-card[data-scene]').forEach(card=>{
     const scene=card.dataset.scene;
-    const cardMode=isAlert||mixedAlerts.has(scene)?'alert':SMART_CARD_STATES.highlights[scene]?'highlights':'normal';
+    const cardMode=isSuggested||mixedSuggested.has(scene)?'suggested':isAlert||mixedAlerts.has(scene)?'alert':SMART_CARD_STATES.highlights[scene]?'highlights':'normal';
     const state=SMART_CARD_STATES[cardMode][scene];
-    const evidence=SMART_CARD_EVIDENCE[cardMode][scene];
+    const evidence=SMART_CARD_EVIDENCE[smartCardEvidenceMode(cardMode)][scene];
     if(!state)return;
     card.dataset.cardMode=cardMode;
     card.classList.toggle('is-alert-card',cardMode==='alert');
+    card.classList.toggle('is-suggested-card',cardMode==='suggested');
     card.querySelector('.sc-state').textContent=state.state;
     card.querySelector('.sc-sub').textContent=state.sub;
     card.dataset.checked=state.checked;
@@ -7484,8 +8088,9 @@ function setSmartCardState(mode){
     btn.setAttribute('aria-pressed',String(active));
   });
   const cardsByScene=new Map([...smartCardGrid.children].map(card=>[card.dataset.scene,card]));
-  const order=mode==='mixed'?[...SMART_CARD_MIXED_ALERT_PRIORITY.filter(scene=>mixedAlerts.has(scene)),...SMART_CARD_PRIORITY.normal.filter(scene=>!mixedAlerts.has(scene))]:SMART_CARD_PRIORITY[mode];
-  order.forEach(scene=>smartCardGrid.append(cardsByScene.get(scene)));
+  const mixedAlertOrder=SMART_CARD_MIXED_ALERT_PRIORITY.filter(scene=>mixedAlerts.has(scene));
+  const order=mode==='mixed'?[...mixedAlertOrder.slice(0,1),...SMART_CARD_PRIORITY.suggested.filter(scene=>mixedSuggested.has(scene)),...mixedAlertOrder.slice(1),...SMART_CARD_PRIORITY.normal.filter(scene=>!mixedAlerts.has(scene)&&!mixedSuggested.has(scene))]:SMART_CARD_PRIORITY[mode];
+  order.forEach(scene=>{const card=cardsByScene.get(scene);if(card)smartCardGrid.append(card)});
   const cards=[...smartCardGrid.querySelectorAll(':scope>.sc-card[data-scene]')];
   const highestAlert=cards.find(card=>card.dataset.cardMode==='alert');
   cards.forEach(card=>{
@@ -7494,7 +8099,7 @@ function setSmartCardState(mode){
     card.setAttribute('aria-label',`${critical?'Urgent alert: ':''}Open details for ${card.querySelector(':scope>.sc-label').textContent.trim()}`);
   });
   const goals=new Set(cards.map(card=>card.dataset.scene)).size;
-  smartCards.querySelector('#sc-cards-heading').textContent=`Now · ${cards.length} ${cards.length===1?'update':'updates'} across ${goals} ${goals===1?'goal':'goals'}`;
+  smartCards.querySelector('#sc-cards-heading').textContent=isSuggested?`${cards.length} new suggestions across ${goals} ${goals===1?'goal':'goals'}`:`Now · ${cards.length} ${cards.length===1?'update':'updates'} across ${goals} ${goals===1?'goal':'goals'}${mixedSuggested.size?` · ${mixedSuggested.size} new`:''}`;
   if($('smartCards').classList.contains('sc-flip-view'))smartCardFlipScene=smartCardGrid.firstElementChild.dataset.scene;
   syncSmartCardView();
 }
