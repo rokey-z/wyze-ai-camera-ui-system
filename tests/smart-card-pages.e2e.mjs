@@ -29,6 +29,7 @@ const inspect=()=>{
     const win=frame.contentWindow;
     const doc=frame.contentDocument;
     if(!doc?.querySelector('.sc-grid>.sc-card[data-card-mode]')||!win.location.search.includes('view=smart-cards'))throw new Error('waiting');
+    const setView=view=>{for(let guard=0;guard<3&&doc.querySelector('.sc-view-cycle').dataset.view!==view;guard++)doc.querySelector('.sc-view-cycle').click()};
     const mixedCards=[...doc.querySelectorAll('.sc-grid>.sc-card')];
     const mixedAlerts=mixedCards.filter(card=>card.dataset.cardMode==='alert');
     const mixedPriority=['security','garage','wildlife','ev','bins','front','pets','birds'];
@@ -50,7 +51,7 @@ const inspect=()=>{
       const state=doc.querySelector('.sc-state-mode').getBoundingClientRect();
       const buttons=[...doc.querySelectorAll('.sc-view-mode button,.sc-state-mode button')].map(button=>button.getBoundingClientRect());
       const icon=doc.querySelector('#sc-theme-toggle').getBoundingClientRect();
-      return Math.abs(theme.top-view.top)<=1&&Math.abs(view.top-state.top)<=1&&[theme,view,state].every(group=>Math.abs(group.height-42)<=1)&&view.left-theme.right>=8&&state.left-view.right>=8&&theme.left>=row.left&&state.right<=row.right&&buttons.every(button=>Math.abs(button.width-buttons[0].width)<=1&&Math.abs(button.height-36)<=1)&&Math.abs(icon.height-36)<=1;
+      return Math.abs(theme.top-view.top)<=1&&Math.abs(view.top-state.top)<=1&&[theme,view,state].every(group=>Math.abs(group.height-42)<=1)&&view.left-theme.right>=8&&state.left-view.right>=8&&theme.left>=row.left&&state.right<=row.right&&buttons.every(button=>Math.abs(button.height-36)<=1)&&[...doc.querySelectorAll('.sc-state-mode button')].map(button=>button.getBoundingClientRect().width).every((width,index,widths)=>Math.abs(width-widths[0])<=1)&&Math.abs(icon.height-36)<=1;
     };
     const initial={
       path:win.location.pathname,
@@ -94,7 +95,7 @@ const inspect=()=>{
       labels:[...doc.querySelectorAll('.sc-view-mode button')].map(button=>button.getAttribute('aria-label')),
       icons:[...doc.querySelectorAll('.sc-view-mode button')].every(button=>!!button.querySelector('svg')),
       iconOnly:[...doc.querySelectorAll('.sc-view-mode button')].every(button=>[...button.childNodes].filter(node=>node.nodeType===win.Node.TEXT_NODE).every(node=>!node.textContent.trim())),
-      listDefault:doc.querySelector('[data-sc-view="list"]').getAttribute('aria-pressed')==='true',
+      listDefault:doc.querySelector('.sc-view-cycle').dataset.view==='list',
     };
     const firstCard=doc.querySelector('.sc-grid>.sc-card');
     const lastCard=doc.querySelector('.sc-grid>.sc-card:last-child');
@@ -271,7 +272,7 @@ const inspect=()=>{
         dialog.close();
       }
     }
-    doc.querySelector('[data-sc-view="list"]').click();
+    setView('list');
     doc.querySelector('[data-sc-state="suggested"]').click();
     const suggestedCard=doc.querySelector('.sc-grid>.sc-card');
     const suggestionPanel=suggestedCard.querySelector('.sc-suggestion-reason');
@@ -304,16 +305,16 @@ const inspect=()=>{
     dialog.close();
     suggestionPanel.querySelector('.sc-suggestion-keep').click();
     suggested.kept=suggestionPanel.querySelector('.sc-suggestion-keep').textContent==='Kept'&&suggestionPanel.querySelector('.sc-suggestion-keep').getAttribute('aria-pressed')==='true'&&doc.querySelector('.sc-suggestion-status').textContent.includes('monitoring goal kept');
-    doc.querySelector('[data-sc-view="grid"]').click();
+    setView('grid');
     const gridPanel=doc.querySelectorAll('.sc-grid>.sc-card .sc-suggestion-reason')[1];
     suggested.gridHidesReason=getComputedStyle(gridPanel.querySelector('.sc-suggestion-copy')).display==='none'&&getComputedStyle(gridPanel.querySelector('.sc-suggestion-actions')).display==='grid'&&getComputedStyle(gridPanel).position==='absolute';
     doc.querySelector('[data-sc-state="normal"]').click();
-    doc.querySelector('[data-sc-view="list"]').click();
+    setView('list');
     const storyBeforeFlip={heading:doc.querySelector('#sc-stories-heading').textContent,count:doc.querySelectorAll('.sc-story-list .sc-story').length,html:storyList.innerHTML};
-    doc.querySelector('[data-sc-view="grid"]').click();
+    setView('grid');
     const gridCards=[...doc.querySelectorAll('.sc-grid>.sc-card')];
     const securityGridRow=()=>{const card=doc.querySelector('.sc-grid>.sc-card[data-scene="security"]');const scene=card.querySelector('.sc-security-cameras');const main=card.querySelector('.sc-security-main');const thumbs=[...card.querySelectorAll('.sc-camera-thumb')];return getComputedStyle(card.querySelector('.sc-focus-layer')).display==='block'&&Math.abs(main.offsetWidth-scene.offsetWidth)<=1&&Math.abs(main.offsetHeight-scene.offsetHeight)<=1&&thumbs.length===3&&thumbs.every((thumb,index)=>thumb.offsetWidth<scene.offsetWidth*.3&&Math.abs(thumb.offsetTop+thumb.offsetHeight-(scene.offsetHeight-8))<=1&&(index===0||thumb.offsetLeft>thumbs[index-1].offsetLeft+thumbs[index-1].offsetWidth))&&!card.querySelector('.sc-feedback')};
-    const gridMode={active:doc.querySelector('[data-sc-view="grid"]').getAttribute('aria-pressed')==='true',listInactive:doc.querySelector('[data-sc-view="list"]').getAttribute('aria-pressed')==='false',flipInactive:doc.querySelector('[data-sc-view="flip"]').getAttribute('aria-pressed')==='false',twoPerRow:gridCards[0].offsetTop===gridCards[1].offsetTop&&gridCards[1].offsetLeft>gridCards[0].offsetLeft&&gridCards[2].offsetTop>gridCards[0].offsetTop,squareCards:gridCards.every(card=>Math.abs(card.offsetWidth-card.offsetHeight)<=1),allVisible:gridCards.every(card=>getComputedStyle(card).visibility==='visible'&&!card.inert),focusBoxesHidden:gridCards.every(card=>getComputedStyle(card.querySelector('.sc-detection-box')).display==='none'),stateTextLarger:parseFloat(getComputedStyle(gridCards[0].querySelector('.sc-state')).fontSize)>=20,nowBottomLeft:gridCards.filter(card=>card.dataset.cardMode==='highlights').every(card=>{const bounds=card.getBoundingClientRect();const now=card.querySelector('.sc-highlight-now').getBoundingClientRect();return Math.abs(now.left-(bounds.left+8))<=1&&Math.abs(now.bottom-(bounds.bottom-8))<=1}),securityNormalRow:securityGridRow()};
+    const gridMode={active:doc.querySelector('.sc-view-cycle').dataset.view==='grid',listInactive:doc.querySelector('.sc-view-cycle').dataset.view!=='list',flipInactive:doc.querySelector('.sc-view-cycle').dataset.view!=='flip',twoPerRow:gridCards[0].offsetTop===gridCards[1].offsetTop&&gridCards[1].offsetLeft>gridCards[0].offsetLeft&&gridCards[2].offsetTop>gridCards[0].offsetTop,squareCards:gridCards.every(card=>Math.abs(card.offsetWidth-card.offsetHeight)<=1),allVisible:gridCards.every(card=>getComputedStyle(card).visibility==='visible'&&!card.inert),focusBoxesHidden:gridCards.every(card=>getComputedStyle(card.querySelector('.sc-detection-box')).display==='none'),stateTextLarger:parseFloat(getComputedStyle(gridCards[0].querySelector('.sc-state')).fontSize)>=20,nowBottomLeft:gridCards.filter(card=>card.dataset.cardMode==='highlights').every(card=>{const bounds=card.getBoundingClientRect();const now=card.querySelector('.sc-highlight-now').getBoundingClientRect();return Math.abs(now.left-(bounds.left+8))<=1&&Math.abs(now.bottom-(bounds.bottom-8))<=1}),securityNormalRow:securityGridRow()};
     doc.querySelector('[data-sc-state="alert"]').click();
     gridMode.securityAlertRow=securityGridRow();
     doc.querySelector('[data-sc-state="normal"]').click();
@@ -321,9 +322,9 @@ const inspect=()=>{
     gridMode.detailOpens=dialog.open&&dialog.querySelector('.sc-detail-title').textContent==='Home security';
     gridMode.detailFocusVisible=getComputedStyle(dialog.querySelector('.sc-detection-box')).display!=='none';
     dialog.close();
-    doc.querySelector('[data-sc-view="list"]').click();
-    doc.querySelector('[data-sc-view="flip"]').click();
-    const flipStart={active:doc.querySelector('[data-sc-view="flip"]').getAttribute('aria-pressed')==='true',listInactive:doc.querySelector('[data-sc-view="list"]').getAttribute('aria-pressed')==='false',current:doc.querySelector('.sc-grid>.sc-card.is-current')?.dataset.scene,currentCount:doc.querySelectorAll('.sc-grid>.sc-card.is-current').length,inertCount:doc.querySelectorAll('.sc-grid>.sc-card[inert]').length,noNavigation:!doc.querySelector('.sc-flip-nav'),portrait:(()=>{const card=doc.querySelector('.sc-grid>.sc-card.is-current');return card.offsetHeight>card.offsetWidth})(),transitionActive:win.matchMedia('(prefers-reduced-motion: reduce)').matches||doc.querySelector('.sc-grid>.sc-card.is-current').getAnimations().length>0,announced:doc.querySelector('.sc-flip-status').textContent.includes('Home security'),nowBottomLeft:[...doc.querySelectorAll('.sc-grid>.sc-card[data-card-mode="highlights"]')].every(card=>{const now=card.querySelector('.sc-highlight-now');const layer=card.querySelector('.sc-highlight-collection');return Math.abs(now.offsetLeft-12)<=1&&Math.abs(layer.clientHeight-(now.offsetTop+now.offsetHeight)-12)<=1})};
+    setView('list');
+    setView('flip');
+    const flipStart={active:doc.querySelector('.sc-view-cycle').dataset.view==='flip',listInactive:doc.querySelector('.sc-view-cycle').dataset.view!=='list',current:doc.querySelector('.sc-grid>.sc-card.is-current')?.dataset.scene,currentCount:doc.querySelectorAll('.sc-grid>.sc-card.is-current').length,inertCount:doc.querySelectorAll('.sc-grid>.sc-card[inert]').length,noNavigation:!doc.querySelector('.sc-flip-nav'),portrait:(()=>{const card=doc.querySelector('.sc-grid>.sc-card.is-current');return card.offsetHeight>card.offsetWidth})(),transitionActive:win.matchMedia('(prefers-reduced-motion: reduce)').matches||doc.querySelector('.sc-grid>.sc-card.is-current').getAnimations().length>0,announced:doc.querySelector('.sc-flip-status').textContent.includes('Home security'),nowBottomLeft:[...doc.querySelectorAll('.sc-grid>.sc-card[data-card-mode="highlights"]')].every(card=>{const now=card.querySelector('.sc-highlight-now');const layer=card.querySelector('.sc-highlight-collection');return Math.abs(now.offsetLeft-12)<=1&&Math.abs(layer.clientHeight-(now.offsetTop+now.offsetHeight)-12)<=1})};
     const flipGrid=doc.querySelector('.sc-grid');
     const currentCard=flipGrid.querySelector('.sc-card.is-current');
     currentCard.dispatchEvent(new win.PointerEvent('pointerdown',{bubbles:true,pointerId:17,button:0,clientX:300,clientY:200}));
@@ -332,8 +333,8 @@ const inspect=()=>{
     flipGrid.dispatchEvent(new win.PointerEvent('pointerup',{bubbles:true,pointerId:17,button:0,clientX:320,clientY:340}));
     currentCard.click();
     const flipNext={current:doc.querySelector('.sc-grid>.sc-card.is-current')?.dataset.scene,dragged,exitFollowsDrag:Number.parseFloat(currentCard.style.getPropertyValue('--sc-exit-y'))>140,clickSuppressed:!dialog.open,announced:doc.querySelector('.sc-flip-status').textContent.includes('Garage monitor')};
-    doc.querySelector('[data-sc-view="list"]').click();
-    doc.querySelector('[data-sc-view="flip"]').click();
+    setView('list');
+    setView('flip');
     const rightCard=flipGrid.querySelector('.sc-card.is-current');
     const rightViewportBefore={clientWidth:doc.documentElement.clientWidth,rootScrollWidth:doc.documentElement.scrollWidth,bodyScrollWidth:doc.body.scrollWidth,visualWidth:win.visualViewport?.width,visualScale:win.visualViewport?.scale};
     rightCard.dispatchEvent(new win.PointerEvent('pointerdown',{bubbles:true,pointerId:18,button:0,clientX:100,clientY:220}));
@@ -342,12 +343,12 @@ const inspect=()=>{
     const rightViewportDuring={clientWidth:doc.documentElement.clientWidth,rootScrollWidth:doc.documentElement.scrollWidth,bodyScrollWidth:doc.body.scrollWidth,visualWidth:win.visualViewport?.width,visualScale:win.visualViewport?.scale,gridOverflowX:getComputedStyle(flipGrid).overflowX,cardRight:Math.round(rightCard.getBoundingClientRect().right),gridRight:Math.round(flipGrid.getBoundingClientRect().right)};
     flipGrid.dispatchEvent(new win.PointerEvent('pointerup',{bubbles:true,pointerId:18,button:0,clientX:260,clientY:220}));
     const flipRight={current:flipGrid.querySelector('.sc-card.is-current')?.dataset.scene,dragged:rightDragged,movesPastDeck:rightViewportDuring.cardRight>rightViewportDuring.gridRight,viewportStable:rightViewportDuring.rootScrollWidth===rightViewportBefore.rootScrollWidth&&rightViewportDuring.bodyScrollWidth===rightViewportBefore.bodyScrollWidth&&rightViewportDuring.visualWidth===rightViewportBefore.visualWidth&&rightViewportDuring.visualScale===rightViewportBefore.visualScale};
-    doc.querySelector('[data-sc-view="list"]').click();
-    const listRestored={active:doc.querySelector('[data-sc-view="list"]').getAttribute('aria-pressed')==='true',inertCount:doc.querySelectorAll('.sc-grid>.sc-card[inert]').length,allVisible:[...doc.querySelectorAll('.sc-grid>.sc-card')].every(card=>getComputedStyle(card).visibility==='visible'),landscapeCards:[...doc.querySelectorAll('.sc-grid>.sc-card')].every(card=>Math.abs(card.offsetWidth/card.offsetHeight-40/27)<.02),transitionActive:win.matchMedia('(prefers-reduced-motion: reduce)').matches||doc.querySelector('.sc-grid>.sc-card[data-scene="garage"]').getAnimations().length>0,noDragging:!flipGrid.classList.contains('is-dragging'),focusBoxVisible:getComputedStyle(flipGrid.querySelector('.sc-card .sc-detection-box')).display!=='none'};
+    setView('list');
+    const listRestored={active:doc.querySelector('.sc-view-cycle').dataset.view==='list',inertCount:doc.querySelectorAll('.sc-grid>.sc-card[inert]').length,allVisible:[...doc.querySelectorAll('.sc-grid>.sc-card')].every(card=>getComputedStyle(card).visibility==='visible'),landscapeCards:[...doc.querySelectorAll('.sc-grid>.sc-card')].every(card=>Math.abs(card.offsetWidth/card.offsetHeight-40/27)<.02),transitionActive:win.matchMedia('(prefers-reduced-motion: reduce)').matches||doc.querySelector('.sc-grid>.sc-card[data-scene="garage"]').getAnimations().length>0,noDragging:!flipGrid.classList.contains('is-dragging'),focusBoxVisible:getComputedStyle(flipGrid.querySelector('.sc-card .sc-detection-box')).display!=='none'};
     const storyAfterFlip={heading:doc.querySelector('#sc-stories-heading').textContent,count:doc.querySelectorAll('.sc-story-list .sc-story').length,html:storyList.innerHTML};
     frame.style.width='320px';
     const narrowControlsAligned=controlsAligned();
-    doc.querySelector('[data-sc-view="grid"]').click();
+    setView('grid');
     const narrowGrid={square:[...doc.querySelectorAll('.sc-grid>.sc-card')].every(card=>Math.abs(card.offsetWidth-card.offsetHeight)<=1),stateFont:parseFloat(getComputedStyle(doc.querySelector('.sc-grid>.sc-card .sc-state')).fontSize),noGoalFeedback:![...doc.querySelectorAll('.sc-grid>.sc-card')].some(card=>card.querySelector('.sc-feedback')),securityRow:securityGridRow()};
     finish({mixedDefault,initial,viewControls,storySummary,storyRatingColors,storyTimeline,storyDetail,alertStoryTreatment,highlightCoverage,refreshed,alertStates,alertCritical,alertBlocksClear,alertBlockAligned,alertOrder,sheet,selectedVideo,lastVideo,expanded,expandedHighlightOutline,ratingOrder,ratingActive,timeOrder,timeActive,collapsed,closed,previewOpens,cardBodyOpens,newCardScrollLeft,normalTreatment,dark,evidenceCoverage,suggested,gridMode,flipStart,flipNext,flipRight,listRestored,narrowControlsAligned,narrowGrid,storiesUnchanged:JSON.stringify(storyBeforeFlip)===JSON.stringify(storyAfterFlip)});
   }catch(error){
@@ -445,7 +446,7 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     assert.equal(result.mixedDefault.criticalCue,true);
     assert.equal(result.mixedDefault.detailMatchesCard,true);
     assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:8,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:247,landscapeCards:true,normalOrder:['security','garage','front','ev','bins','pets','wildlife','birds'],controlsUniformSpaced:true,cardHeading:{text:'Now · 8 updates across 8 goals',aboveCards:true,sameStyle:true},refreshButtons:8,checkedTimeInsideTrigger:false,cardFeedbackRemoved:true,goLiveButtons:0,criticalCards:0,bottomEvidenceHidden:true,stateBlocksClear:true,goalTitlesClear:true,imageGradient:true,topOnlyGradient:true,goalTitleInside:true,stateBlockAligned:true,normalActive:true});
-    assert.deepEqual(result.viewControls,{count:3,labels:['List view','Grid view','Flip view'],icons:true,iconOnly:true,listDefault:true});
+    assert.deepEqual(result.viewControls,{count:1,labels:['List view. Switch to grid view'],icons:true,iconOnly:true,listDefault:true});
     assert.deepEqual(result.storySummary,{belowCards:true,heading:'6 key moments in last 12 hours',count:6,titles:['Cardinal at the feeder','Playtime on the rug','Blue jay visit','Water break','Raccoon in the yard','Goldfinch visit'],ratings:['5','5','4','4','5','4'],images:true});
     assert.deepEqual(result.storyRatingColors,{five:'rgb(246, 196, 83)',four:'rgb(113, 237, 190)'});
     assert.deepEqual(result.storyTimeline,{oneSurface:true,line:true,dots:true,timestamps:true,timeAboveTitle:true,cameraRatio:true,twoLineTitle:true,noDividers:true,compactRows:true,feedbackButtons:12,feedbackSelected:true,feedbackKeepsDetailClosed:true});
