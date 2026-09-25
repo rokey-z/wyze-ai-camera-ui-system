@@ -247,7 +247,7 @@ test('detail state stays unfilled and duration retains its pill treatment', () =
 });
 
 test('last-12-hours stories follow the card feed and open their rated video evidence', () => {
-  assert.match(html, /<section class="sc-card-feed" aria-labelledby="sc-cards-heading">\s*<article class="sc-intro-card"[\s\S]*?<\/article>\s*<div class="sc-stories-head sc-cards-head"><h2 id="sc-cards-heading">Now · 8 updates across 8 goals<\/h2><\/div>\s*<div class="sc-shell">[\s\S]*?<div class="sc-grid">[\s\S]*?<\/div>\s*<span class="sc-flip-status" aria-live="polite"><\/span>\s*<\/div>\s*<\/section>\s*<section class="sc-stories" aria-labelledby="sc-stories-heading">[\s\S]*?<ol class="sc-story-list"><\/ol>/);
+  assert.match(html, /<section class="sc-card-feed" aria-labelledby="sc-cards-heading">\s*<article class="sc-intro-card"[\s\S]*?<\/article>\s*<div class="sc-stories-head sc-cards-head"><h2 id="sc-cards-heading">Now · 8 updates across 8 goals<\/h2><\/div>\s*<div class="sc-shell">[\s\S]*?<div class="sc-grid">[\s\S]*?<\/div>\s*<span class="sc-flip-status" aria-live="polite"><\/span>\s*<\/div>\s*<\/section>\s*<section class="sc-health"[\s\S]*?<\/section>\s*<section class="sc-stories" aria-labelledby="sc-stories-heading">[\s\S]*?<ol class="sc-story-list"><\/ol>/);
   assert.match(html, /\.sc-stories-head h2\{[^}]*font-family:var\(--sans\)/);
   assert.match(html, /smartCards\.querySelector\('#sc-cards-heading'\)\.textContent=isSuggested\?`\$\{cards\.length\} new suggestions across \$\{goals\} \$\{goals===1\?'goal':'goals'\}`:`Now · \$\{cards\.length\} \$\{cards\.length===1\?'update':'updates'\} across \$\{goals\} \$\{goals===1\?'goal':'goals'\}\$\{mixedSuggested\.size\?` · \$\{mixedSuggested\.size\} new`:''\}`/);
   assert.match(html, /\.sc-stories\{margin:65px 0 0;font-family:var\(--sans\)\}/);
@@ -437,4 +437,17 @@ test('intro card shows learned routines as pills that expand and accept user add
   assert.doesNotMatch(html, /sc-intro-cams/);
   assert.match(html, /aria-label="\$\{escapeHtml\(item\.label\)\} is right" aria-pressed="\$\{item\.vote==='up'\}"/);
   assert.match(html, /\.sc-learned\[data-expanded="true"\] \.sc-evidence-item-feedback\{display:flex;grid-column:2;grid-row:2/);
+});
+
+test('camera health card sits between the card feed and key moments', () => {
+  assert.match(html, /<\/section>\s*<section class="sc-health" aria-labelledby="sc-health-heading">[\s\S]*?<\/section>\s*<section class="sc-stories"/);
+  assert.match(html, /<article class="sc-health-card" data-health="ok">/);
+  assert.match(html, /<ul class="sc-health-list" id="sc-health-list" aria-label="All cameras" hidden><\/ul>/);
+  assert.match(html, /<span class="sc-health-status sc-visually-hidden" aria-live="polite"><\/span>/);
+  assert.match(html, /\.sc-health\{--sc-health-ok:#71edbe;--sc-health-warn:#f6c453;--sc-health-down:#ff6570/);
+  assert.match(html, /body\.sc-light-page \.sc-health\{--sc-health-ok:#16a777;--sc-health-warn:#a26f00;--sc-health-down:#e5484d\}/);
+  assert.match(html, /\.sc-health-metrics\{display:grid;grid-template-columns:16px 42px 42px/);
+  assert.match(html, /@media\(prefers-reduced-motion:reduce\)\{\.sc-health-card\.is-checking \.sc-health-run svg,\.sc-health-card\.is-checking \.sc-health-strip>i\{animation:none\}/);
+  assert.match(html, /syncSmartCardView\(\);\n  setSmartCardHealthMode\(mode\);\n\}/);
+  assert.match(html, /initSmartCardIntro\(\);\ninitSmartCardHealth\(\);/);
 });

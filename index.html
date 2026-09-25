@@ -2233,6 +2233,91 @@
   body.sc-light-page .sc-intro-steps>li:not(.is-done):not(.is-active) strong{color:#5f7087}
   body.sc-light-page .sc-intro-steps>li>div>span{color:#5f7087}
   @media(prefers-reduced-motion:reduce){.sc-intro-pulse::after,.sc-intro-badge-fill::after,.sc-intro-steps>li.is-active .sc-intro-step-dot,.sc-intro-steps>li.is-active .sc-intro-step-dot::after{animation:none}}
+  .sc-health{--sc-health-ok:#71edbe;--sc-health-warn:#f6c453;--sc-health-down:#ff6570;margin:44px 0 0;font-family:var(--sans)}
+  .sc-health+.sc-stories{margin-top:44px}
+  .sc-health-card{position:relative;padding:16px 16px 6px;border-radius:17px;background:#1c2a3c;color:#eef4fc;box-shadow:0 8px 24px #02091424}
+  .sc-health-card[data-health="ok"]{--sc-health-tone:var(--sc-health-ok)}
+  .sc-health-card[data-health="warn"]{--sc-health-tone:var(--sc-health-warn)}
+  .sc-health-card[data-health="down"]{--sc-health-tone:var(--sc-health-down)}
+  .sc-health-top{display:grid;grid-template-columns:40px minmax(0,1fr) auto;align-items:center;gap:11px}
+  .sc-health-icon{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:color-mix(in srgb,var(--sc-health-tone) 16%,transparent);color:var(--sc-health-tone);transition:background-color .3s ease,color .3s ease}
+  .sc-health-icon svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .sc-health-card[data-health="ok"] .sc-health-icon-warn,.sc-health-card:not([data-health="ok"]) .sc-health-icon-ok{display:none}
+  .sc-health-summary{display:grid;gap:3px;min-width:0}
+  .sc-health-title{color:#fff;font:800 16px/1.2 var(--sans);letter-spacing:-.01em}
+  .sc-health-checked{color:#a5bbcf;font:500 11.5px/1.2 var(--sans)}
+  .sc-health-run{display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:0 12px;border:1px solid #ffffff24;border-radius:999px;background:#ffffff0d;color:#eef4fc;font:750 12px/1 var(--sans);white-space:nowrap;cursor:pointer;transition:background-color .2s ease,border-color .2s ease}
+  .sc-health-run:hover{border-color:#ffffff4d;background:#ffffff17}
+  .sc-health-run:focus-visible,.sc-health-more:focus-visible,.sc-health-fix:focus-visible{outline:2px solid #71edbe;outline-offset:2px}
+  .sc-health-run:disabled{cursor:progress;opacity:.75}
+  .sc-health-run svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .sc-health-card.is-checking .sc-health-run svg{animation:sc-health-spin .8s linear infinite}
+  @keyframes sc-health-spin{to{transform:rotate(360deg)}}
+  .sc-health-strip{display:grid;grid-template-columns:repeat(var(--sc-health-count,8),minmax(0,1fr));gap:4px;margin:14px 0 0}
+  .sc-health-strip>i{height:6px;border-radius:999px;background:var(--sc-health-ok);transition:background-color .3s ease}
+  .sc-health-strip>i[data-level="warn"]{background:var(--sc-health-warn)}
+  .sc-health-strip>i[data-level="down"]{background:var(--sc-health-down)}
+  .sc-health-card.is-checking .sc-health-strip>i{animation:sc-health-scan 1.4s ease-in-out both;animation-delay:calc(var(--i)*90ms)}
+  @keyframes sc-health-scan{0%,100%{opacity:1}35%{opacity:.25}}
+  .sc-health-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0 0}
+  .sc-health-stats>div{min-width:0;padding:9px 10px;border-radius:12px;background:#ffffff0a}
+  .sc-health-stats dt{color:#a5bbcf;font:600 10.5px/1.2 var(--sans);letter-spacing:.02em}
+  .sc-health-stats dd{margin:4px 0 0;color:#fff;font:800 15px/1.1 var(--sans);font-variant-numeric:tabular-nums}
+  .sc-health-stats dd[data-level="warn"]{color:var(--sc-health-warn)}
+  .sc-health-stats dd[data-level="down"]{color:var(--sc-health-down)}
+  .sc-health-issues{display:grid;gap:8px;margin:12px 0 0;padding:0;list-style:none}
+  .sc-health-issues:empty{display:none}
+  .sc-health-issue{--sc-issue-tone:var(--sc-health-warn);display:grid;grid-template-columns:28px minmax(0,1fr);gap:4px 10px;padding:11px 12px;border:1px solid color-mix(in srgb,var(--sc-issue-tone) 34%,transparent);border-radius:14px;background:color-mix(in srgb,var(--sc-issue-tone) 9%,transparent)}
+  .sc-health-issue[data-level="down"]{--sc-issue-tone:var(--sc-health-down)}
+  .sc-health-issue-icon{display:grid;grid-row:span 2;place-items:center;width:28px;height:28px;border-radius:50%;background:color-mix(in srgb,var(--sc-issue-tone) 20%,transparent);color:var(--sc-issue-tone)}
+  .sc-health-issue-icon svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .sc-health-issue-head{display:flex;flex-wrap:wrap;align-items:center;gap:6px;min-width:0}
+  .sc-health-issue-head strong{color:#fff;font:750 13.5px/1.3 var(--sans)}
+  .sc-health-tag{padding:2px 7px;border-radius:999px;background:color-mix(in srgb,var(--sc-issue-tone) 22%,transparent);color:var(--sc-issue-tone);font:800 10px/1.3 var(--sans);letter-spacing:.03em;text-transform:uppercase}
+  .sc-health-issue p{grid-column:2;margin:0;color:#c4d1df;font:500 12.5px/1.4 var(--sans)}
+  .sc-health-fix{grid-column:2;justify-self:start;display:inline-flex;align-items:center;gap:6px;min-height:32px;margin-top:6px;padding:0 13px;border:0;border-radius:999px;background:var(--sc-issue-tone);color:#0b1624;font:800 12px/1 var(--sans);cursor:pointer;transition:transform .15s ease,opacity .2s ease}
+  .sc-health-fix:active{transform:scale(.96)}
+  .sc-health-fix:disabled{cursor:default;opacity:.7}
+  .sc-health-fix.is-done{background:none;color:var(--sc-health-ok);opacity:1;padding:0}
+  .sc-health-fix svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .sc-health-more{display:block;width:100%;margin:10px 0 0;padding:12px 0;border:0;border-top:1px solid #ffffff14;background:none;color:#eef4fc;font:750 12.5px/1 var(--sans);text-align:left;cursor:pointer}
+  .sc-health-more::after{content:' ›';color:#a5bbcf}
+  .sc-health-more[aria-expanded="true"]::after{content:''}
+  .sc-health-list{margin:0 0 6px;padding:0;list-style:none}
+  .sc-health-list[hidden]{display:none}
+  .sc-health-row{display:grid;grid-template-columns:8px minmax(0,1fr) auto;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #ffffff0f}
+  .sc-health-dot{width:8px;height:8px;border-radius:50%;background:var(--sc-health-ok)}
+  .sc-health-row[data-level="warn"] .sc-health-dot{background:var(--sc-health-warn)}
+  .sc-health-row[data-level="down"] .sc-health-dot{background:var(--sc-health-down);box-shadow:0 0 0 3px color-mix(in srgb,var(--sc-health-down) 25%,transparent)}
+  .sc-health-name{display:grid;gap:2px;min-width:0}
+  .sc-health-name strong{overflow:hidden;color:#eef4fc;font:700 13px/1.25 var(--sans);text-overflow:ellipsis;white-space:nowrap}
+  .sc-health-name span{color:#a5bbcf;font:500 11px/1.2 var(--sans)}
+  .sc-health-row[data-level="warn"] .sc-health-name span{color:var(--sc-health-warn)}
+  .sc-health-row[data-level="down"] .sc-health-name span{color:var(--sc-health-down)}
+  .sc-health-metrics{display:grid;grid-template-columns:16px 42px 42px;justify-items:end;align-items:center;gap:8px;color:#c4d1df;font:650 11px/1 var(--sans);font-variant-numeric:tabular-nums}
+  .sc-health-metric{display:inline-flex;align-items:center;gap:4px;min-width:0}
+  .sc-health-metric svg{width:14px;height:14px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .sc-health-metric[data-level="warn"]{color:var(--sc-health-warn)}
+  .sc-health-metric[data-level="down"]{color:var(--sc-health-down)}
+  .sc-health-bars{display:inline-flex;align-items:flex-end;gap:1.5px;height:12px}
+  .sc-health-bars>i{width:3px;border-radius:1px;background:currentColor;opacity:.25}
+  .sc-health-bars>i:nth-child(1){height:4px}.sc-health-bars>i:nth-child(2){height:6.5px}.sc-health-bars>i:nth-child(3){height:9px}.sc-health-bars>i:nth-child(4){height:12px}
+  .sc-health-bars>i.is-on{opacity:1}
+  body.sc-light-page .sc-health{--sc-health-ok:#16a777;--sc-health-warn:#a26f00;--sc-health-down:#e5484d}
+  body.sc-light-page .sc-health-card{background:#fff;color:#203047;box-shadow:0 8px 24px #12213b12}
+  body.sc-light-page .sc-health-title,body.sc-light-page .sc-health-issue-head strong,body.sc-light-page .sc-health-stats dd,body.sc-light-page .sc-health-name strong,body.sc-light-page .sc-health-more{color:#172235}
+  body.sc-light-page .sc-health-checked,body.sc-light-page .sc-health-stats dt,body.sc-light-page .sc-health-name span,body.sc-light-page .sc-health-more::after{color:#718198}
+  body.sc-light-page .sc-health-run{border-color:#1c355726;background:#f4f7fa;color:#203047}
+  body.sc-light-page .sc-health-run:hover{border-color:#1c355759;background:#eaf0f6}
+  body.sc-light-page :is(.sc-health-run,.sc-health-more,.sc-health-fix):focus-visible{outline-color:#16a777}
+  body.sc-light-page .sc-health-stats>div{background:#f2f5f9}
+  body.sc-light-page .sc-health-issue p,body.sc-light-page .sc-health-metrics{color:#3b4b62}
+  body.sc-light-page .sc-health-fix{color:#fff}
+  body.sc-light-page .sc-health-fix.is-done{color:var(--sc-health-ok)}
+  body.sc-light-page .sc-health-more{border-top-color:#1c355714}
+  body.sc-light-page .sc-health-row{border-top-color:#1c35570f}
+  @media(max-width:360px){.sc-health-card{padding:14px 12px 4px}.sc-health-top{grid-template-columns:34px minmax(0,1fr) auto;gap:9px}.sc-health-icon{width:34px;height:34px}.sc-health-run{padding:0 10px}.sc-health-metrics{grid-template-columns:16px 38px 38px;gap:6px}}
+  @media(prefers-reduced-motion:reduce){.sc-health-card.is-checking .sc-health-run svg,.sc-health-card.is-checking .sc-health-strip>i{animation:none}.sc-health-icon,.sc-health-strip>i,.sc-health-run,.sc-health-fix{transition:none}}
   .sc-drop-scrim{position:fixed;inset:0;z-index:80;background:#030b17b3;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
   body.sc-drop-open{overflow:hidden}
   .smartcards .sc-grid>.sc-card.is-lifted{z-index:81;box-shadow:0 28px 70px #02081499}
@@ -3230,6 +3315,22 @@ Goal: *"Did the bins go out — and come back?"*
         </div>
         <span class="sc-flip-status" aria-live="polite"></span>
       </div>
+      </section>
+      <section class="sc-health" aria-labelledby="sc-health-heading">
+        <div class="sc-stories-head"><h2 id="sc-health-heading">Camera health</h2></div>
+        <article class="sc-health-card" data-health="ok">
+          <header class="sc-health-top">
+            <span class="sc-health-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 5 6v5.5c0 4.4 3 8.2 7 9.5 4-1.3 7-5.1 7-9.5V6l-7-3Z"/><path class="sc-health-icon-ok" d="m9 12 2.2 2.2L15.5 10"/><path class="sc-health-icon-warn" d="M12 8.5v4.2M12 15.8h.01"/></svg></span>
+            <div class="sc-health-summary"><strong class="sc-health-title"></strong><span class="sc-health-checked"></span></div>
+            <button class="sc-health-run" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.34 5.66M20 4v7h-7"/></svg><span>Run check</span></button>
+          </header>
+          <div class="sc-health-strip" role="img"></div>
+          <dl class="sc-health-stats"></dl>
+          <ul class="sc-health-issues" aria-label="Cameras that need attention"></ul>
+          <button class="sc-health-more" type="button" aria-expanded="false" aria-controls="sc-health-list"></button>
+          <ul class="sc-health-list" id="sc-health-list" aria-label="All cameras" hidden></ul>
+          <span class="sc-health-status sc-visually-hidden" aria-live="polite"></span>
+        </article>
       </section>
       <section class="sc-stories" aria-labelledby="sc-stories-heading">
         <div class="sc-stories-head"><h2 id="sc-stories-heading">6 key moments in last 12 hours</h2></div>
@@ -8266,6 +8367,7 @@ function setSmartCardState(mode){
   smartCards.querySelector('#sc-cards-heading').textContent=isSuggested?`${cards.length} new suggestions across ${goals} ${goals===1?'goal':'goals'}`:`Now · ${cards.length} ${cards.length===1?'update':'updates'} across ${goals} ${goals===1?'goal':'goals'}${mixedSuggested.size?` · ${mixedSuggested.size} new`:''}`;
   if($('smartCards').classList.contains('sc-flip-view'))smartCardFlipScene=smartCardGrid.firstElementChild.dataset.scene;
   syncSmartCardView();
+  setSmartCardHealthMode(mode);
 }
 document.querySelectorAll('[data-sc-state]').forEach(btn=>btn.addEventListener('click',()=>setSmartCardState(btn.dataset.scState)));
 const SMART_CARD_LEARNED=[
@@ -8349,8 +8451,179 @@ function initSmartCardIntro(){
   });
   render();
 }
+/* Camera health: one check across every camera that feeds the Smart Cards. */
+const SMART_CARD_HEALTH_CAMERAS=[
+  {name:'Front Door Cam',wifi:4,power:'wired',sd:58},
+  {name:'Driveway Cam',wifi:3,power:'wired',sd:64},
+  {name:'Garage Cam',wifi:4,power:'wired',sd:41},
+  {name:'EV Garage Cam',wifi:3,power:'wired',sd:37},
+  {name:'Side Gate Cam',wifi:2,power:'battery',battery:76},
+  {name:'Backyard Cam',wifi:3,power:'wired',sd:72},
+  {name:'Backyard Feeder Cam',wifi:3,power:'battery',battery:64},
+  {name:'Living Room Cam',wifi:4,power:'wired',sd:49}
+];
+const SMART_CARD_HEALTH_LOW_BATTERY={level:'warn',tag:'Low battery',detail:'12% left, about 2 days at this pace. Bird watcher goes dark when it runs out.',patch:{battery:12},action:'Remind me tonight',done:'Reminder set for 7 PM'};
+const SMART_CARD_HEALTH_ISSUES={
+  normal:{},
+  mixed:{
+    'Backyard Feeder Cam':SMART_CARD_HEALTH_LOW_BATTERY,
+    'Garage Cam':{level:'warn',tag:'Update ready',detail:'Firmware 4.36.11 sharpens night vision for the garage monitor.',action:'Update now',busy:'Updating…',fixed:'Garage Cam is up to date'}
+  },
+  alert:{
+    'Side Gate Cam':{level:'down',tag:'Offline',detail:'No signal since 2:14 PM. Home security can’t see the side gate.',patch:{wifi:0},action:'Reconnect',busy:'Reconnecting…',fixed:'Side Gate Cam is back online'},
+    'Driveway Cam':{level:'warn',tag:'Blurry view',detail:'The lens looks smudged or wet. Trash day checks may miss the bins.',action:'I cleaned it',busy:'Rechecking…',fixed:'Driveway Cam view is clear'},
+    'Backyard Feeder Cam':SMART_CARD_HEALTH_LOW_BATTERY
+  }
+};
+const SMART_CARD_HEALTH_ICONS={
+  down:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18M8.5 16.5a5 5 0 0 1 7 0M5 13a10 10 0 0 1 5.2-2.8M19 13a10 10 0 0 0-2.1-1.5M2 8.8a15 15 0 0 1 4.2-2.6M22 8.8A15 15 0 0 0 10.7 5M12 20h.01"/></svg>',
+  warn:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.3 3.9 2.4 17.5A2 2 0 0 0 4.1 20.5h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></svg>',
+  check:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
+  battery:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="17" height="10" rx="2"/><path d="M22 11v2"/></svg>',
+  plug:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 2v5M15 2v5M6 7h12v4a6 6 0 0 1-12 0V7ZM12 17v5"/></svg>',
+  cloud:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 9.5a4.25 4.25 0 0 1-.5 8.5H7Z"/></svg>',
+  storage:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M9 7v3M12 7v3M15 9v1"/></svg>'
+};
+const SMART_CARD_WIFI_LABELS=['No signal','Weak','Fair','Good','Excellent'];
+const smartCardHealth={mode:'normal',resolved:new Set(),done:new Set(),busy:new Set(),checking:false,checked:'2 mins ago',expanded:false,token:0};
+function smartCardHealthCameras(){
+  const issues=SMART_CARD_HEALTH_ISSUES[smartCardHealth.mode];
+  return SMART_CARD_HEALTH_CAMERAS.map(camera=>{
+    const issue=!smartCardHealth.resolved.has(camera.name)&&issues[camera.name];
+    return issue?{...camera,...issue.patch,issue,level:issue.level}:{...camera,level:'ok'};
+  });
+}
+function smartCardHealthSummary(cameras){
+  const issues=cameras.filter(camera=>camera.issue).length;
+  return issues?`${issues} ${issues===1?'camera needs':'cameras need'} attention`:`All ${cameras.length} cameras healthy`;
+}
+function renderSmartCardHealth(){
+  const card=document.querySelector('.sc-health-card');
+  if(!card)return;
+  const cameras=smartCardHealthCameras();
+  const count=cameras.length;
+  const tally=level=>cameras.filter(camera=>camera.level===level).length;
+  const online=count-tally('down');
+  const lowBattery=cameras.filter(camera=>camera.power==='battery'&&camera.battery<=20).length;
+  card.dataset.health=tally('down')?'down':tally('warn')?'warn':'ok';
+  card.classList.toggle('is-checking',smartCardHealth.checking);
+  card.querySelector('.sc-health-title').textContent=smartCardHealthSummary(cameras);
+  card.querySelector('.sc-health-checked').textContent=smartCardHealth.checking?'Checking every camera…':`Checked ${smartCardHealth.checked}`;
+  const run=card.querySelector('.sc-health-run');
+  run.disabled=smartCardHealth.checking;
+  run.querySelector('span').textContent=smartCardHealth.checking?'Checking…':'Run check';
+  const strip=card.querySelector('.sc-health-strip');
+  strip.style.setProperty('--sc-health-count',count);
+  strip.setAttribute('aria-label',`${tally('ok')} healthy, ${tally('warn')} need attention, ${tally('down')} offline`);
+  strip.innerHTML=cameras.map((camera,index)=>`<i style="--i:${index}" data-level="${camera.level}" title="${camera.name}"></i>`).join('');
+  card.querySelector('.sc-health-stats').innerHTML=[
+    ['Online',`${online}/${count}`,online<count?'down':''],
+    ['Recording',`${online}/${count}`,online<count?'down':''],
+    ['Battery',lowBattery?`${lowBattery} low`:'Good',lowBattery?'warn':'']
+  ].map(([label,value,level])=>`<div><dt>${label}</dt><dd${level?` data-level="${level}"`:''}>${value}</dd></div>`).join('');
+  card.querySelector('.sc-health-issues').innerHTML=cameras.filter(camera=>camera.issue).sort((a,b)=>(b.level==='down')-(a.level==='down')).map(({name,issue})=>{
+    const done=smartCardHealth.done.has(name);
+    const busy=smartCardHealth.busy.has(name);
+    const action=done?`<span class="sc-health-fix is-done">${SMART_CARD_HEALTH_ICONS.check}${issue.done}</span>`:`<button class="sc-health-fix" type="button"${busy?' disabled':''} aria-label="${busy?issue.busy:`${issue.action}: ${name}`}">${busy?issue.busy:issue.action}</button>`;
+    return `<li class="sc-health-issue" data-camera="${name}" data-level="${issue.level}"><span class="sc-health-issue-icon">${SMART_CARD_HEALTH_ICONS[issue.level]}</span><div class="sc-health-issue-head"><strong>${name}</strong><span class="sc-health-tag">${issue.tag}</span></div><p>${issue.detail}</p>${action}</li>`;
+  }).join('');
+  const more=card.querySelector('.sc-health-more');
+  more.textContent=smartCardHealth.expanded?'Hide cameras':`See all ${count} cameras`;
+  more.setAttribute('aria-expanded',String(smartCardHealth.expanded));
+  const list=card.querySelector('.sc-health-list');
+  list.hidden=!smartCardHealth.expanded;
+  list.innerHTML=cameras.map(camera=>{
+    const wifi=SMART_CARD_WIFI_LABELS[camera.wifi];
+    const wifiLevel=camera.wifi===0?'down':camera.wifi<2?'warn':'';
+    const batteryLevel=camera.battery<=20?'warn':'';
+    const power=camera.power==='battery'?`<span class="sc-health-metric"${batteryLevel?` data-level="${batteryLevel}"`:''} role="img" aria-label="Battery ${camera.battery}%">${SMART_CARD_HEALTH_ICONS.battery}${camera.battery}%</span>`:`<span class="sc-health-metric" role="img" aria-label="Wired power">${SMART_CARD_HEALTH_ICONS.plug}</span>`;
+    const storage=camera.sd==null?`<span class="sc-health-metric" role="img" aria-label="Cloud recording" title="Cloud recording">${SMART_CARD_HEALTH_ICONS.cloud}</span>`:`<span class="sc-health-metric" role="img" aria-label="SD card ${camera.sd}% full">${SMART_CARD_HEALTH_ICONS.storage}${camera.sd}%</span>`;
+    const status=camera.issue?`${camera.issue.tag}${smartCardHealth.done.has(camera.name)?' · reminder set':''}`:'Online · recording';
+    return `<li class="sc-health-row" data-level="${camera.level}"><span class="sc-health-dot" aria-hidden="true"></span><span class="sc-health-name"><strong>${camera.name}</strong><span>${status}</span></span><span class="sc-health-metrics"><span class="sc-health-metric"${wifiLevel?` data-level="${wifiLevel}"`:''} role="img" aria-label="Wi-Fi ${wifi.toLowerCase()}"><span class="sc-health-bars">${[1,2,3,4].map(bar=>`<i${bar<=camera.wifi?' class="is-on"':''}></i>`).join('')}</span></span>${power}${storage}</span></li>`;
+  }).join('');
+}
+function setSmartCardHealthMode(mode){
+  smartCardHealth.mode=SMART_CARD_HEALTH_ISSUES[mode]?mode:'normal';
+  smartCardHealth.resolved.clear();
+  smartCardHealth.done.clear();
+  smartCardHealth.busy.clear();
+  smartCardHealth.checking=false;
+  smartCardHealth.checked=smartCardHealth.mode==='alert'?'1 min ago':'2 mins ago';
+  smartCardHealth.token+=1;
+  renderSmartCardHealth();
+}
+function initSmartCardHealth(){
+  const card=document.querySelector('.sc-health-card');
+  if(!card)return;
+  const status=card.querySelector('.sc-health-status');
+  const motion=()=>!matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const announce=message=>{status.textContent='';setTimeout(()=>{status.textContent=message},60)};
+  const animateHeight=change=>{
+    const start=card.getBoundingClientRect().height;
+    change();
+    if(!motion())return;
+    const end=card.getBoundingClientRect().height;
+    if(start!==end)card.animate({height:[`${start}px`,`${end}px`],overflow:['hidden','hidden']},{duration:320,easing:'cubic-bezier(.22,1,.36,1)'});
+  };
+  const later=(delay,callback)=>{
+    const token=smartCardHealth.token;
+    setTimeout(()=>{if(token===smartCardHealth.token)callback()},motion()?delay:Math.min(delay,300));
+  };
+  card.querySelector('.sc-health-run').addEventListener('click',()=>{
+    if(smartCardHealth.checking)return;
+    smartCardHealth.checking=true;
+    renderSmartCardHealth();
+    announce('Checking every camera');
+    later(1400,()=>{
+      smartCardHealth.checking=false;
+      smartCardHealth.checked='just now';
+      renderSmartCardHealth();
+      announce(`Check complete. ${smartCardHealthSummary(smartCardHealthCameras())}.`);
+    });
+  });
+  card.querySelector('.sc-health-issues').addEventListener('click',event=>{
+    const button=event.target.closest('button.sc-health-fix');
+    if(!button||button.disabled)return;
+    const row=button.closest('.sc-health-issue');
+    const name=row.dataset.camera;
+    const issue=SMART_CARD_HEALTH_ISSUES[smartCardHealth.mode][name];
+    if(!issue.busy){
+      smartCardHealth.done.add(name);
+      renderSmartCardHealth();
+      announce(`${name}: ${issue.done}`);
+      return;
+    }
+    smartCardHealth.busy.add(name);
+    renderSmartCardHealth();
+    card.querySelector(`.sc-health-issue[data-camera="${name}"] .sc-health-fix`).focus();
+    announce(`${name}: ${issue.busy}`);
+    later(1200,()=>{
+      const hadFocus=card.contains(document.activeElement);
+      const finish=()=>{
+        smartCardHealth.busy.delete(name);
+        smartCardHealth.resolved.add(name);
+        animateHeight(renderSmartCardHealth);
+        if(hadFocus)(card.querySelector('button.sc-health-fix:not(:disabled)')||card.querySelector('.sc-health-more')).focus();
+        announce(`${issue.fixed}. ${smartCardHealthSummary(smartCardHealthCameras())}.`);
+      };
+      const current=card.querySelector(`.sc-health-issue[data-camera="${name}"]`);
+      if(!motion()||!current){finish();return}
+      current.animate({opacity:[1,0],transform:['none','scale(.97)']},{duration:200,easing:'ease-in',fill:'forwards'});
+      later(200,finish);
+    });
+  });
+  card.querySelector('.sc-health-more').addEventListener('click',()=>{
+    animateHeight(()=>{
+      smartCardHealth.expanded=!smartCardHealth.expanded;
+      renderSmartCardHealth();
+    });
+    if(smartCardHealth.expanded&&motion())[...card.querySelectorAll('.sc-health-row')].forEach((row,index)=>row.animate({opacity:[0,1],transform:['translateY(-4px)','none']},{duration:240,delay:index*30,easing:'cubic-bezier(.22,1,.36,1)',fill:'backwards'}));
+  });
+  renderSmartCardHealth();
+}
 initSmartCardEvidence();
 initSmartCardIntro();
+initSmartCardHealth();
 setSmartCardState('mixed');
 setSmartCardView('list');
 /* ---------- component browse filters ---------- */
