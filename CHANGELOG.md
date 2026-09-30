@@ -12,6 +12,8 @@ the app (v1, v1.5, v2, v2.5, v3, v4) are design-system names and are unrelated.
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-09-30
+
 ### Added
 - `SMART-CARDS-SPEC.md`: the Smart Cards UI logic, rules, and production data contract. New
   `AGENTS.md` and `CLAUDE.md` tell coding agents to read it first.
@@ -145,7 +147,8 @@ the app (v1, v1.5, v2, v2.5, v3, v4) are design-system names and are unrelated.
   OpenAI, Gemini, and xAI as providers.
 - Mobile layout support and the Sa action strip placement.
 
-[Unreleased]: https://github.com/rokey-z/wyze-ai-camera-ui-system/compare/v0.10.0...HEAD
+[Unreleased]: https://github.com/rokey-z/wyze-ai-camera-ui-system/compare/v0.11.0...HEAD
+[0.11.0]: https://github.com/rokey-z/wyze-ai-camera-ui-system/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/rokey-z/wyze-ai-camera-ui-system/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/rokey-z/wyze-ai-camera-ui-system/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/rokey-z/wyze-ai-camera-ui-system/compare/v0.7.0...v0.8.0
