@@ -43,7 +43,7 @@ test('every card keeps its in-image title and removes card-level rating controls
 });
 
 test('icon theme, view, and state toggles share one evenly spaced control row', () => {
-  assert.match(html, /<div class="sc-mode-row">\s*<div class="sc-theme-mode"[\s\S]*?<div class="sc-view-mode"[\s\S]*?<div class="sc-state-mode"/);
+  assert.match(html, /<div class="sc-mode-row">\s*<span class="sc-brand" aria-label="WYZE">WYZE<\/span>\s*<div class="sc-theme-mode"[\s\S]*?<div class="sc-view-mode"[\s\S]*?<div class="sc-state-mode"/);
   assert.match(html, /\.sc-mode-row\{display:flex;align-items:center;justify-content:space-between;gap:6px\}/);
   assert.match(html, /class="sc-theme-toggle" id="sc-theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false"/);
   assert.match(html, /class="sc-icon-sun"/);
@@ -67,15 +67,15 @@ test('list, grid, and flip use the same emergency-ordered cards', () => {
   assert.match(html, /\.smartcards\.sc-grid-view \.sc-grid\{display:grid;grid-template-columns:repeat\(2,minmax\(0,1fr\)\);gap:12px\}/);
   assert.match(html, /\.smartcards\.sc-grid-view \.sc-grid>\.sc-card\{[^}]*aspect-ratio:1/);
   assert.match(html, /\.smartcards\.sc-grid-view \.sc-card-top \.sc-state\{font-size:clamp\(18px,5\.2vw,22px\)/);
-  assert.match(html, /\.smartcards\.sc-grid-view \.sc-grid>\.sc-card \.sc-detection-box\{display:none\}/);
+  assert.match(html, /\.smartcards\.sc-grid-view \.sc-grid>\.sc-card \.sc-detection-box\{visibility:hidden\}/);
   assert.match(html, /\.sc-highlight-now\{position:absolute;bottom:12px;left:12px;[^}]*width:76px;height:58px/);
   assert.match(html, /\.smartcards\.sc-grid-view \.sc-highlight-now\{bottom:8px;left:8px;width:54px;height:38px\}/);
   assert.match(html, /\.smartcards\.sc-grid-view \.sc-card\[data-scene="security"\] \.sc-security-cameras \.sc-focus-layer\{display:block\}/);
   assert.match(html, /\.smartcards\.sc-grid-view \.sc-card\[data-scene="security"\] \.sc-security-cameras \.sc-camera-thumb\{[^}]*bottom:8px;[^}]*aspect-ratio:4\/3/);
-  assert.match(html, /classList\.toggle\('sc-grid-view',view==='grid'\)/);
+  assert.match(html, /classList\.toggle\('sc-grid-view',view==='grid'\|\|view==='wall'\)/);
   assert.match(html, /\.smartcards\.sc-flip-view \.sc-grid>\.sc-card\.is-current/);
-  assert.match(html, /normal:\['security','garage','front','ev','bins','pets','wildlife','birds'\]/);
-  assert.match(html, /alert:\['security','garage','pets','front','wildlife','ev','bins','birds'\]/);
+  assert.match(html, /normal:\['security','garage','front','ev','bins','pets','wildlife','birds','health'\]/);
+  assert.match(html, /alert:\['security','garage','health','pets','front','wildlife','ev','bins','birds'\]/);
   assert.match(html, /smartCardGrid\.addEventListener\('pointermove'/);
   assert.match(html, /touch-action:none;cursor:grab/);
   assert.match(html, /Math\.hypot\(dx,dy\)<8/);
@@ -247,9 +247,9 @@ test('detail state stays unfilled and duration retains its pill treatment', () =
 });
 
 test('last-12-hours stories follow the card feed and open their rated video evidence', () => {
-  assert.match(html, /<section class="sc-card-feed" aria-labelledby="sc-cards-heading">\s*<article class="sc-intro-card"[\s\S]*?<\/article>\s*<div class="sc-stories-head sc-cards-head"><h2 id="sc-cards-heading">Now · 8 updates across 8 goals<\/h2><\/div>\s*<div class="sc-shell">[\s\S]*?<div class="sc-grid">[\s\S]*?<\/div>\s*<span class="sc-flip-status" aria-live="polite"><\/span>\s*<\/div>\s*<\/section>\s*<section class="sc-stories" aria-labelledby="sc-stories-heading">[\s\S]*?<ol class="sc-story-list"><\/ol>/);
+  assert.match(html, /<section class="sc-card-feed" aria-labelledby="sc-cards-heading">\s*<article class="sc-intro-card"[\s\S]*?<\/article>\s*<div class="sc-stories-head sc-cards-head"><h2 id="sc-cards-heading">Now · 9 updates across 9 goals<\/h2><\/div>\s*<div class="sc-shell">[\s\S]*?<div class="sc-grid">[\s\S]*?<\/div>\s*<span class="sc-flip-status" aria-live="polite"><\/span>\s*<\/div>\s*<\/section>\s*<section class="sc-stories" aria-labelledby="sc-stories-heading">[\s\S]*?<ol class="sc-story-list"><\/ol>/);
   assert.match(html, /\.sc-stories-head h2\{[^}]*font-family:var\(--sans\)/);
-  assert.match(html, /smartCards\.querySelector\('#sc-cards-heading'\)\.textContent=isSuggested\?`\$\{cards\.length\} new suggestions across \$\{goals\} \$\{goals===1\?'goal':'goals'\}`:`Now · \$\{cards\.length\} \$\{cards\.length===1\?'update':'updates'\} across \$\{goals\} \$\{goals===1\?'goal':'goals'\}\$\{mixedSuggested\.size\?` · \$\{mixedSuggested\.size\} new`:''\}`/);
+  assert.match(html, /smartCards\.querySelector\('#sc-cards-heading'\)\.textContent=isSuggested\?`\$\{cards\.length\} new suggestions across \$\{goals\} \$\{goals===1\?'goal':'goals'\}`:`Now · \$\{cards\.length\} \$\{cards\.length===1\?'update':'updates'\} across \$\{goals\} \$\{goals===1\?'goal':'goals'\}\$\{mixedSuggested\.size\?`\\u00a0·\\u00a0\$\{mixedSuggested\.size\}\\u00a0new`:''\}`/);
   assert.match(html, /\.sc-stories\{margin:65px 0 0;font-family:var\(--sans\)\}/);
   assert.match(html, /<h2 id="sc-stories-heading">6 key moments in last 12 hours<\/h2>/);
   assert.match(html, /smartCards\.querySelector\('#sc-stories-heading'\)\.textContent=`\$\{SMART_CARD_STORIES\.length\} key \$\{SMART_CARD_STORIES\.length===1\?'moment':'moments'\} in last 12 hours`/);
@@ -437,4 +437,35 @@ test('intro card shows learned routines as pills that expand and accept user add
   assert.doesNotMatch(html, /sc-intro-cams/);
   assert.match(html, /aria-label="\$\{escapeHtml\(item\.label\)\} is right" aria-pressed="\$\{item\.vote==='up'\}"/);
   assert.match(html, /\.sc-learned\[data-expanded="true"\] \.sc-evidence-item-feedback\{display:flex;grid-column:2;grid-row:2/);
+});
+
+test('wall view tiles cameras edge to edge with no gaps', () => {
+  assert.match(html, /const SMART_CARD_VIEWS=\['list','grid','wall','flip'\];/);
+  assert.match(html, /<span class="sc-view-icon" data-icon="wall"><svg/);
+  assert.match(html, /\$\('smartCards'\)\.classList\.toggle\('sc-wall-view',view==='wall'\);/);
+  assert.match(html, /\.smartcards\.sc-wall-view \.sc-grid\{gap:0\}/);
+  assert.match(html, /\.smartcards\.sc-wall-view \.sc-grid>\.sc-card\.is-critical-alert\{grid-column:1\/-1;aspect-ratio:4\/3\}/);
+  assert.match(html, /const zoom=Math\.min\(2\.4,Math\.max\(1\.15,\.58\*Math\.min\(area\.width\/target\.width,area\.height\/target\.height\)\)\);/);
+  assert.match(html, /stackSmartCards\(cards,activeIndex\);\s*zoomSmartCardWall\(\);/);
+  assert.match(html, /if\(!smartCardAutoZoom\|\|!box\|\|card\.querySelector\('\.sc-security-cameras'\)\)return;/);
+  assert.match(html, /<div class="sc-zoom-mode"><button class="sc-zoom-toggle" type="button" role="switch" aria-checked="true" aria-label="Auto zoom"/);
+  assert.match(html, /@media\(max-width:640px\)\{\.smartcards\.sc-wall-view \.sc-shell\{margin-inline:calc\(50% - 50vw\)\}\}/);
+});
+
+test('camera health card shows every camera with its status', () => {
+  assert.match(html, /<article class="sc-card sc-hero" data-scene="health"[^>]*><span class="sc-label">Camera health<\/span>/);
+  assert.match(html, /<ul class="sc-health-grid" aria-label="Camera status"><\/ul>/);
+  assert.match(html, /SMART_CARD_STATES\.alert\.health=\{state:'1 OFFLINE'/);
+  assert.match(html, /alert:\{Backyard:\{status:'offline',note:'Offline 25m'\},Feeder:\{status:'battery',note:'Battery 12%'\}\}/);
+  assert.match(html, /renderSmartCardHealth\(card,cardMode\);/);
+});
+
+test('mascot floats bottom left as a WYZE AI chat entry', () => {
+  assert.match(html, /<button class="sc-bot-button" type="button" aria-label="Ask WYZE AI" aria-expanded="false" aria-controls="sc-bot-panel"><img class="sc-bot-pose is-active" src="assets\/wyze-mascot\.png"/);
+  assert.match(html, /const gestures=\['wave','laugh','wink-point','peek-wave','cheer'\];/);
+  for (const pose of ['wave','laugh','wink-point','peek-wave','cheer','chat']) assert.ok(existsSync(new URL(`../assets/mascot/${pose}.webp`, import.meta.url)));
+  assert.match(html, /\.sc-bot\{position:fixed;z-index:60;left:max\(14px,env\(safe-area-inset-left\)\);bottom:max\(14px,env\(safe-area-inset-bottom\)\)/);
+  assert.match(html, /<section class="sc-bot-panel" id="sc-bot-panel" role="dialog" aria-label="WYZE AI chat" hidden>/);
+  assert.match(html, /initSmartCardBot\(\);/);
+  assert.ok(existsSync(new URL('../assets/wyze-mascot.png', import.meta.url)));
 });

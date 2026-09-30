@@ -1649,6 +1649,21 @@
   .sc-card.is-alert-card[data-scene="bins"]{--sc-focus-x:15.5%;--sc-focus-y:57%}.sc-card.is-alert-card[data-scene="bins"] .sc-detection-box{left:8%;top:38%;width:15%;height:38%}
   .sc-card.is-alert-card[data-scene="pets"]{--sc-focus-x:85%;--sc-focus-y:24%}.sc-card.is-alert-card[data-scene="pets"] .sc-detection-box{left:75%;top:11%;width:20%;height:30%}
   .sc-card.is-alert-card[data-scene="wildlife"]{--sc-focus-x:58%;--sc-focus-y:59%}.sc-card.is-alert-card[data-scene="wildlife"] .sc-detection-box{left:47%;top:50%;width:23%;height:20%}
+  .sc-health-main{display:none}
+  .sc-health-grid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:2px;margin:0;padding:0;background:#07111f;list-style:none}
+  .smartcards:is(.sc-grid-view,.sc-flip-view) .sc-health-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(4,minmax(0,1fr))}
+  .sc-health-tile{position:relative;min-width:0;min-height:0;overflow:hidden}
+  .smartcards:is(.sc-grid-view,.sc-flip-view) .sc-health-tile.is-online .sc-health-name{display:none}
+  .sc-health-tile img{display:block;width:100%;height:100%;object-fit:cover}
+  .sc-health-tile::after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,#050b14b8,transparent 58%);pointer-events:none}
+  .sc-health-dot{position:absolute;z-index:1;right:6px;bottom:7px;width:7px;height:7px;border-radius:50%;background:#71edbe;box-shadow:0 0 0 2px #050b1480}
+  .sc-health-name{position:absolute;z-index:1;right:18px;bottom:5px;left:6px;overflow:hidden;color:#fff;font:700 10px/1.2 var(--sans);text-overflow:ellipsis;text-shadow:0 1px 3px #000;white-space:nowrap}
+  .sc-health-note{position:absolute;z-index:1;bottom:20px;left:6px;padding:2px 5px;border-radius:4px;background:#ffb454;color:#2b1700;font:800 9px/1.2 var(--sans);white-space:nowrap}
+  .sc-health-tile.is-offline img{filter:grayscale(1) brightness(.35)}
+  .sc-health-tile.is-offline .sc-health-dot{background:#ff6570}
+  .sc-health-tile.is-offline .sc-health-note{background:#ff6570;color:#210509}
+  .sc-health-tile.is-battery .sc-health-dot{background:#ffb454}
+  .sc-card.is-alert-card[data-scene="health"] .sc-card-top .sc-state{color:#ffb454}
   .sc-security-cameras{background:#07111f}.sc-security-cameras .sc-focus-layer{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:2px}
   .sc-security-cameras .sc-photo,.sc-security-cameras .sc-camera-thumb{position:relative;inset:auto;display:block;width:100%;height:100%;object-fit:cover;min-width:0;min-height:0}
   .sc-card[data-scene="security"]{--sc-focus-x:28.5%;--sc-focus-y:20.5%}.sc-card[data-scene="security"] .sc-detection-box{left:24%;top:8%;width:9%;height:25%}
@@ -1715,6 +1730,7 @@
   /* Keep the goal and feedback on the image, outside the state treatment. */
   .sc-card>.sc-label{top:12px;right:12px;left:12px;max-width:none;padding:0;border:0;background:none;box-shadow:none;backdrop-filter:none;color:#fff;text-shadow:0 1px 5px #020914,0 0 12px #020914}
   body.sc-light-page .sc-card>.sc-label{color:#fff;text-shadow:0 1px 5px #020914,0 0 12px #020914}
+  .sc-grid>.sc-card>.sc-label,body.sc-light-page .sc-grid>.sc-card>.sc-label{color:#ffffffa3}
   .sc-card-top{top:32px;left:12px;width:max-content;max-width:calc(100% - 24px);min-height:0;padding:0;background:none;box-shadow:none;backdrop-filter:none}
   .sc-card-top .sc-state{margin-top:0;text-shadow:0 2px 8px #000b}
   .sc-card-top .sc-sub{text-shadow:0 1px 5px #000c}
@@ -1739,7 +1755,7 @@
   @media(max-width:360px){.sc-state-mode button,.sc-theme-mode button{font-size:11px;padding:0 6px}}
   .sc-stories{margin:65px 0 0;font-family:var(--sans)}
   .sc-stories-head{margin:0 0 12px}
-  .sc-stories-head h2{margin:0;color:#eef4fc;font-family:var(--sans);font-size:19px;font-weight:850;letter-spacing:-.02em;line-height:1.15}
+  .sc-stories-head h2{margin:0;color:#eef4fc;font-family:var(--sans);font-size:15px;font-weight:800;letter-spacing:-.01em;line-height:1.25;text-wrap:balance}
   .sc-card-feed .sc-grid{padding-top:0}
   .sc-story-list{position:relative;display:grid;gap:0;margin:0;padding:8px 12px 8px 32px;border-radius:17px;background:#1c2a3c;box-shadow:0 8px 24px #02091424;list-style:none}
   .sc-story-list>li{position:relative;min-width:0}
@@ -1843,6 +1859,8 @@
   .sc-detail-dialog[data-mode="alert"] .sc-detail-state strong{color:#71edbe}
   .sc-detail-dialog[data-mode="alert"] .sc-detail-state span{padding:0;border-radius:0;background:none}
   .sc-detail-dialog[data-mode="alert"][data-scene="security"] .sc-detail-state strong{color:#ff6570}
+  .sc-detail-dialog[data-mode="alert"][data-scene="health"] .sc-detail-state strong{color:#ffb454}
+  .sc-detail-preview-card:has(.sc-health-grid) .sc-detail-preview-feedback{top:12px;bottom:auto}
   .sc-detail-dialog[data-mode="suggested"] .sc-detail-state strong{color:#9abaff}
   .sc-detail-evidence-head{display:flex;min-width:0;flex-direction:column;align-items:flex-end;gap:10px;text-align:right}
   .sc-detail-checked{display:block;color:#e7edf5;font-size:11px;font-weight:650}
@@ -1912,7 +1930,14 @@
   body.sc-light-page .sc-view-mode button[aria-pressed="true"]{background:#fff;color:#172235;box-shadow:0 1px 4px #1b2c4418}
   .sc-mode-row{display:flex;align-items:center;justify-content:space-between;gap:6px}
   .sc-mode-row .sc-theme-mode,.sc-mode-row .sc-view-mode,.sc-mode-row .sc-state-mode{display:flex;align-items:center;flex:0 0 auto;height:42px;margin:0;padding:3px;gap:2px;border-radius:12px}
-  .sc-mode-row .sc-theme-mode{width:42px}
+  .sc-mode-row .sc-theme-mode,.sc-mode-row .sc-zoom-mode{width:42px}
+  .sc-mode-row .sc-zoom-mode{display:flex;align-items:center;flex:0 0 auto;height:42px;margin:0;padding:3px;box-sizing:border-box;border-radius:12px}
+  .sc-zoom-toggle{display:grid;place-items:center;width:36px;height:36px;padding:0;border:0;border-radius:9px;background:#364961;color:#aab9cd;cursor:pointer;transition:background-color .2s ease,color .2s ease}
+  .sc-zoom-toggle svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+  .sc-zoom-toggle[aria-checked="true"]{background:#71edbe;color:#09271e}
+  .sc-zoom-toggle:focus-visible{outline:2px solid #71edbe;outline-offset:2px}
+  body.sc-light-page .sc-zoom-toggle{background:#fff;color:#58677d;box-shadow:0 1px 4px #1b2c4418}
+  body.sc-light-page .sc-zoom-toggle[aria-checked="true"]{background:#16a777;color:#fff}
   .sc-mode-row .sc-theme-toggle{display:grid;place-items:center;width:36px;min-width:36px;height:36px;padding:0;border:0;border-radius:9px;background:#364961;color:#fff;cursor:pointer;box-shadow:none}
   .sc-theme-toggle svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
   .sc-theme-toggle .sc-icon-moon{display:none}
@@ -1924,7 +1949,7 @@
   .sc-view-cycle{position:relative;overflow:hidden}
   .sc-view-icon{position:absolute;inset:0;display:grid;place-items:center;opacity:0;transform:rotate(-120deg) scale(.5);transition:opacity .22s ease,transform .36s cubic-bezier(.34,1.56,.64,1)}
   .sc-view-icon.is-leaving{transform:rotate(120deg) scale(.5);transition:opacity .18s ease,transform .3s cubic-bezier(.4,0,1,1)}
-  .sc-view-cycle[data-view="list"] [data-icon="list"],.sc-view-cycle[data-view="grid"] [data-icon="grid"],.sc-view-cycle[data-view="flip"] [data-icon="flip"]{opacity:1;transform:none}
+  .sc-view-cycle[data-view="list"] [data-icon="list"],.sc-view-cycle[data-view="grid"] [data-icon="grid"],.sc-view-cycle[data-view="wall"] [data-icon="wall"],.sc-view-cycle[data-view="flip"] [data-icon="flip"]{opacity:1;transform:none}
   @media(prefers-reduced-motion:reduce){.sc-view-icon,.sc-view-icon.is-leaving{transition:opacity .15s ease;transform:none}}
   .sc-mode-row .sc-view-mode svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
   @media(max-width:380px){.sc-mode-row .sc-view-mode button,.sc-mode-row .sc-state-mode button{width:35px;min-width:35px;font-size:9px}}
@@ -1960,12 +1985,12 @@
   .sc-mode-row .sc-view-mode button{width:36px;min-width:36px}
   .sc-mode-row .sc-view-mode::before{width:36px}
   .sc-mode-row .sc-state-mode{flex:1 1 auto;min-width:0;gap:0;margin-left:4px}
-  .sc-mode-row .sc-state-mode button{flex:1 1 0;width:auto;min-width:0;font-size:12px;font-weight:700;letter-spacing:-.01em}
+  .sc-mode-row .sc-state-mode button{flex:1 1 0;width:auto;min-width:0;font-size:10px;font-weight:700;letter-spacing:0}
   .sc-mode-row .sc-state-mode::before{width:calc((100% - 6px)/4)}
   .sc-mode-row .sc-state-mode:has(button:nth-child(2).active)::before{transform:translateX(100%)}
   .sc-mode-row .sc-state-mode:has(button:nth-child(3).active)::before{transform:translateX(200%)}
   .sc-mode-row .sc-state-mode:has(button:nth-child(4).active)::before{transform:translateX(300%)}
-  @media(max-width:360px){.sc-mode-row .sc-state-mode{margin-left:0}.sc-mode-row .sc-state-mode button{font-size:11px}}
+  @media(max-width:360px){.sc-mode-row .sc-state-mode{margin-left:0}.sc-mode-row .sc-state-mode button{font-size:9.5px}}
   @media(prefers-reduced-motion:reduce){.sc-mode-row .sc-theme-mode,.sc-mode-row .sc-view-mode,.sc-mode-row .sc-state-mode,.sc-mode-row .sc-view-mode::before,.sc-mode-row .sc-state-mode::before,.sc-mode-row .sc-view-mode button,.sc-mode-row .sc-state-mode button,.sc-mode-row .sc-theme-toggle,.sc-mode-row .sc-theme-toggle svg{transition:none}}
   .smartcards:not(.sc-flip-view):not(.sc-grid-view) .sc-grid>.sc-card{aspect-ratio:40/27}
   .sc-suggestion-reason{display:none}
@@ -1989,6 +2014,57 @@
   .smartcards:not(.sc-flip-view):not(.sc-grid-view) .sc-grid>.sc-card.is-suggested-card[data-suggestion-decision="kept"] .sc-scene{border-radius:16px;clip-path:inset(0 round 16px)}
   .sc-confetti{position:fixed;z-index:60;overflow:visible;pointer-events:none}
   .sc-confetti i{position:absolute;display:block;will-change:transform,opacity}
+  .sc-bot{position:fixed;z-index:60;left:max(14px,env(safe-area-inset-left));bottom:max(14px,env(safe-area-inset-bottom));font-family:var(--sans)}
+  .sc-bot-button{display:block;width:68px;height:68px;padding:0;border:0;border-radius:50%;background:none;cursor:pointer;filter:drop-shadow(0 8px 16px #02081459);animation:sc-bot-bob 3.2s ease-in-out infinite}
+  .sc-bot-button{position:relative}
+  .sc-bot-pose{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:contain;opacity:0;pointer-events:none;transition:opacity .18s ease}
+  .sc-bot-pose.is-active{opacity:1}
+  .sc-bot-button:focus-visible{outline:2px solid #71edbe;outline-offset:3px}
+  .sc-bot.is-open .sc-bot-button{animation:none}
+  @keyframes sc-bot-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+  .sc-bot-hint{position:absolute;left:58px;bottom:52px;margin:0;padding:8px 12px;border-radius:14px 14px 14px 4px;background:#101925;color:#f4f7fb;font:700 12px/1.2 var(--sans);white-space:nowrap;box-shadow:0 8px 20px #02081440;opacity:0;transform:translateY(6px) scale(.95);transform-origin:left bottom;pointer-events:none;transition:opacity .25s ease,transform .3s cubic-bezier(.34,1.56,.64,1)}
+  .sc-bot-hint.is-visible{opacity:1;transform:none}
+  .sc-bot-panel{position:absolute;left:0;bottom:78px;display:flex;flex-direction:column;width:min(340px,calc(100vw - 28px));height:min(460px,calc(100dvh - 140px));overflow:hidden;border:1px solid #ffffff1f;border-radius:20px;background:#101925;color:#f4f7fb;box-shadow:0 18px 50px #02081473;transform-origin:left bottom}
+  .sc-bot-panel[hidden]{display:none}
+  .sc-bot-head{display:flex;align-items:center;gap:10px;padding:12px 12px 10px 14px;border-bottom:1px solid #ffffff14}
+  .sc-bot-head img{width:36px;height:36px;object-fit:contain}
+  .sc-bot-head div{display:grid;flex:1;gap:2px;min-width:0}
+  .sc-bot-head strong{font:800 15px/1.1 var(--sans)}
+  .sc-bot-head span{color:#93a4bb;font:600 11.5px/1.2 var(--sans)}
+  .sc-bot-close{display:grid;place-items:center;width:32px;height:32px;padding:0;border:0;border-radius:50%;background:#ffffff14;color:#fff;font-size:20px;line-height:1;cursor:pointer}
+  .sc-bot-log{display:flex;flex:1;flex-direction:column;gap:8px;margin:0;padding:14px;overflow-y:auto;overscroll-behavior:contain;list-style:none}
+  .sc-bot-msg{max-width:86%;padding:9px 12px;border-radius:16px;font:500 13px/1.45 var(--sans)}
+  .sc-bot-msg.is-bot{align-self:flex-start;border-bottom-left-radius:5px;background:#ffffff12}
+  .sc-bot-msg.is-user{align-self:flex-end;border-bottom-right-radius:5px;background:#71edbe;color:#09271e;font-weight:650}
+  .sc-bot-view{display:block;margin-top:8px;padding:6px 11px;border:1px solid #71edbe80;border-radius:999px;background:none;color:#9af2d1;font:750 12px/1 var(--sans);cursor:pointer}
+  .sc-bot-typing{display:inline-flex;gap:4px;padding:3px 0}
+  .sc-bot-typing i{width:6px;height:6px;border-radius:50%;background:#93a4bb;animation:sc-bot-dot 1s ease-in-out infinite}
+  .sc-bot-typing i:nth-child(2){animation-delay:.15s}
+  .sc-bot-typing i:nth-child(3){animation-delay:.3s}
+  @keyframes sc-bot-dot{0%,100%{opacity:.35;transform:none}50%{opacity:1;transform:translateY(-3px)}}
+  .sc-bot-chips{display:flex;gap:6px;padding:0 14px 10px;overflow-x:auto;scrollbar-width:none}
+  .sc-bot-chips::-webkit-scrollbar{display:none}
+  .sc-bot-chips button{flex:none;padding:7px 11px;border:1px solid #ffffff26;border-radius:999px;background:#ffffff0a;color:#dfe7f1;font:650 12px/1 var(--sans);white-space:nowrap;cursor:pointer}
+  .sc-bot-form{display:flex;gap:8px;padding:10px 12px 12px;border-top:1px solid #ffffff14}
+  .sc-bot-form input{flex:1;min-width:0;height:40px;box-sizing:border-box;padding:0 14px;border:1px solid #ffffff26;border-radius:999px;background:#ffffff0d;color:#f4f7fb;font:600 13px/1 var(--sans)}
+  .sc-bot-form input:focus{outline:2px solid #71edbe;outline-offset:1px;border-color:transparent}
+  .sc-bot-form button{display:grid;place-items:center;flex:none;width:40px;height:40px;padding:0;border:0;border-radius:50%;background:#71edbe;color:#09271e;cursor:pointer}
+  .sc-bot-form svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .sc-bot-panel button:focus-visible{outline:2px solid #71edbe;outline-offset:2px}
+  body.sc-light-page .sc-bot-hint{background:#fff;color:#172235;box-shadow:0 8px 20px #1d2c4426}
+  body.sc-light-page .sc-bot-panel{border-color:#d6deea;background:#f7f9fc;color:#172235;box-shadow:0 18px 50px #1d2c4433}
+  body.sc-light-page .sc-bot-head{border-bottom-color:#1c35571a}
+  body.sc-light-page .sc-bot-head span{color:#5f7087}
+  body.sc-light-page .sc-bot-close{background:#e7ecf3;color:#263a55}
+  body.sc-light-page .sc-bot-msg.is-bot{background:#fff;box-shadow:0 1px 3px #1d2c4414}
+  body.sc-light-page .sc-bot-msg.is-user{background:#16a777;color:#fff}
+  body.sc-light-page .sc-bot-view{border-color:#16a77780;color:#0f7a57}
+  body.sc-light-page .sc-bot-chips button{border-color:#cfd8e6;background:#fff;color:#263a55}
+  body.sc-light-page .sc-bot-form{border-top-color:#1c35571a}
+  body.sc-light-page .sc-bot-form input{border-color:#cfd8e6;background:#fff;color:#172235}
+  body.sc-light-page .sc-bot-form input:focus{outline-color:#16a777}
+  body.sc-light-page .sc-bot-form button{background:#16a777;color:#fff}
+  @media(prefers-reduced-motion:reduce){.sc-bot-button,.sc-bot-typing i{animation:none}.sc-bot-hint{transition:opacity .2s ease}}
   .sc-toast{position:fixed;left:50%;bottom:max(24px,env(safe-area-inset-bottom));z-index:70;display:flex;align-items:center;gap:10px;width:max-content;max-width:calc(100% - 32px);box-sizing:border-box;padding:11px 16px 11px 11px;border-radius:999px;background:#0d1622f2;color:#f4f7fb;font:700 13px/1.3 var(--sans);box-shadow:0 12px 32px #02081466;opacity:0;transform:translate(-50%,16px) scale(.96);pointer-events:none;transition:opacity .22s ease,transform .32s cubic-bezier(.22,1,.36,1)}
   .sc-toast.is-visible{opacity:1;transform:translate(-50%,0) scale(1)}
   .sc-toast-check{display:grid;place-items:center;flex:none;width:24px;height:24px;border-radius:50%;background:#71edbe;color:#09271e}
@@ -2080,7 +2156,7 @@
   .smartcards.sc-grid-view .sc-card-top .sc-state{font-size:clamp(18px,5.2vw,22px);line-height:1.05}
   .smartcards.sc-grid-view .sc-card-top .sc-sub{max-width:100%;font-size:10px;line-height:1.15}
   .smartcards.sc-grid-view .sc-grid>.sc-card:not(.is-alert-card) .sc-card-top .sc-sub{width:auto;margin-top:3px;padding:2px 5px}
-  .smartcards.sc-grid-view .sc-grid>.sc-card .sc-detection-box{display:none}
+  .smartcards.sc-grid-view .sc-grid>.sc-card .sc-detection-box{visibility:hidden}
   .smartcards.sc-grid-view .sc-actions .sc-feedback{right:8px;bottom:8px}
   .smartcards.sc-grid-view .sc-highlight-now{bottom:8px;left:8px;width:54px;height:38px}
   .smartcards.sc-grid-view .sc-highlight-now-state{font-size:7px}
@@ -2236,6 +2312,27 @@
   .sc-drop-scrim{position:fixed;inset:0;z-index:80;background:#030b17b3;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
   body.sc-drop-open{overflow:hidden}
   .smartcards .sc-grid>.sc-card.is-lifted{z-index:81;box-shadow:0 28px 70px #02081499}
+  .smartcards.sc-wall-view .sc-grid{gap:0}
+  .smartcards.sc-wall-view .sc-grid>.sc-card,.smartcards.sc-wall-view .sc-grid>.sc-card.is-suggested-card{border:0;border-radius:0;box-shadow:none}
+  .smartcards.sc-wall-view .sc-grid>.sc-card .sc-scene{border-radius:0;clip-path:none}
+  .smartcards.sc-wall-view .sc-grid>.sc-card.is-lifted{border-radius:16px}
+  .smartcards.sc-wall-view .sc-grid>.sc-card.is-critical-alert{grid-column:1/-1;aspect-ratio:4/3}
+  .smartcards.sc-wall-view .sc-grid>.sc-card.is-critical-alert>.sc-label{top:14px;left:14px;font-size:11px}
+  .smartcards.sc-wall-view .sc-grid>.sc-card.is-critical-alert .sc-card-top{top:30px;left:14px}
+  .smartcards.sc-wall-view .sc-grid>.sc-card.is-critical-alert .sc-card-top .sc-state{font-size:clamp(30px,9vw,40px)}
+  .smartcards.sc-wall-view .sc-grid>.sc-card.is-critical-alert .sc-card-top .sc-sub{font-size:15px}
+  .smartcards.sc-wall-view .sc-grid>.sc-card.is-critical-alert .sc-security-cameras .sc-camera-thumb{bottom:14px;width:22%}
+  .smartcards.sc-wall-view .sc-card>.sc-label{top:10px;line-height:1}
+  .smartcards.sc-wall-view .sc-card-top{top:22px}
+  .smartcards.sc-wall-view .sc-card-top .sc-state{line-height:1}
+  .smartcards.sc-wall-view .sc-card-top .sc-sub{font-size:12.5px;line-height:1.2}
+  .smartcards.sc-wall-view .sc-grid>.sc-card:not(.is-alert-card) .sc-card-top .sc-sub{margin-top:5px;padding:2px 7px}
+  .smartcards.sc-wall-view .sc-grid>.sc-card .sc-detection-box{display:block;visibility:hidden}
+  .smartcards.sc-wall-view .sc-grid>.sc-card .sc-focus-layer{transition:transform .6s cubic-bezier(.22,1,.36,1)}
+  .sc-cards-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .sc-focus-layer .sc-detection-box{border-width:calc(2px / var(--sc-wall-zoom,1))}
+  .sc-grid>.sc-card .sc-focus-layer{transition:transform .6s cubic-bezier(.22,1,.36,1)}
+  @media(max-width:640px){.smartcards.sc-wall-view .sc-shell{margin-inline:calc(50% - 50vw)}}
   .smartcards.sc-grid-view .sc-grid>.sc-card.is-lifted.is-dropping{position:fixed;top:50%;left:50%;width:min(440px,calc(100vw - 32px));max-height:calc(100dvh - 32px);margin:0;overflow-y:auto;overscroll-behavior:contain;aspect-ratio:auto;translate:-50% -50%}
   .smartcards.sc-flip-view .sc-grid>.sc-card.is-dropping{overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;cursor:default}
   .sc-grid>.sc-card.is-critical-alert::after{content:'';display:block;position:absolute;z-index:7;inset:0;width:auto;height:auto;max-width:none;padding:0;border:2px solid #ff4b55;border-radius:inherit;background:none;box-shadow:0 0 0 1px #ff4b5540;pointer-events:none}
@@ -2252,7 +2349,20 @@
   body.sc-standalone #pane-smart{display:block!important}
   body.sc-standalone .smartcards{margin:0 auto}
   body.sc-standalone .sc-mode-row{position:sticky;z-index:20;top:0;margin:0 -12px 30px;padding:10px 12px 12px;background:rgba(13,23,38,.9);backdrop-filter:blur(16px)}
-  body.sc-standalone.sc-light-page .sc-mode-row{background:rgba(242,245,248,.92)}
+  body.sc-standalone.sc-light-page .sc-mode-row{background:rgba(242,245,248,.92);box-shadow:0 0 0 100vmax rgba(242,245,248,.92)}
+  body.sc-standalone .sc-mode-row{box-shadow:0 0 0 100vmax rgba(13,23,38,.9);clip-path:inset(0 -100vmax)}
+  .sc-brand{display:none;flex:none;margin-right:2px;color:#f3f7ff;font:900 19px/1 var(--sans);letter-spacing:.04em}
+  body.sc-light-page .sc-brand{color:#172235}
+  body.sc-standalone .sc-brand{display:block}
+  @media(max-width:620px){
+    .sc-brand{display:block}
+    .tabs:has(.tab.on[data-tab="smart"]){display:none}
+  }
+  @media(max-width:400px){
+    .sc-brand,body.sc-standalone .sc-brand{display:none}
+    body:not(.sc-standalone) .sc-mode-row{position:sticky;z-index:20;top:0;margin:0 -12px 14px;padding:max(10px,env(safe-area-inset-top)) 12px 10px;background:rgba(13,23,38,.9);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 0 0 100vmax rgba(13,23,38,.9);clip-path:inset(0 -100vmax)}
+    body.sc-light-page:not(.sc-standalone) .sc-mode-row{background:rgba(242,245,248,.92);box-shadow:0 0 0 100vmax rgba(242,245,248,.92)}
+  }
 </style>
 </head>
 <body class="sc-light-page">
@@ -3186,13 +3296,25 @@ Goal: *"Did the bins go out — and come back?"*
   <!-- ============ TAB: SMART CARDS — state, proof, action ============ -->
   <div class="tabpane on" id="pane-smart">
     <section class="smartcards" id="smartCards" aria-label="Smart camera cards">
+      <div class="sc-bot">
+        <p class="sc-bot-hint" aria-hidden="true">Hi! Ask me about your home</p>
+        <button class="sc-bot-button" type="button" aria-label="Ask WYZE AI" aria-expanded="false" aria-controls="sc-bot-panel"><img class="sc-bot-pose is-active" src="assets/wyze-mascot.png" alt="" width="292" height="292"><img class="sc-bot-pose" src="assets/mascot/wave.webp" alt="" width="240" height="240"></button>
+        <section class="sc-bot-panel" id="sc-bot-panel" role="dialog" aria-label="WYZE AI chat" hidden>
+          <header class="sc-bot-head"><img src="assets/wyze-mascot.png" alt="" width="292" height="292"><div><strong>WYZE AI</strong><span>Ask about your cameras</span></div><button class="sc-bot-close" type="button" aria-label="Close chat">&times;</button></header>
+          <ol class="sc-bot-log" aria-live="polite"></ol>
+          <div class="sc-bot-chips" role="group" aria-label="Suggested questions"><button type="button">Is the garage closed?</button><button type="button">What happened overnight?</button><button type="button">Any camera offline?</button><button type="button">How is my dog?</button></div>
+          <form class="sc-bot-form"><label class="sc-visually-hidden" for="sc-bot-input">Ask WYZE AI</label><input id="sc-bot-input" type="text" autocomplete="off" placeholder="Ask about your home…"><button type="submit" aria-label="Send"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button></form>
+        </section>
+      </div>
       <div class="sc-mode-row">
+        <span class="sc-brand" aria-label="WYZE">WYZE</span>
         <div class="sc-theme-mode">
           <button class="sc-theme-toggle" id="sc-theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false" title="Switch to dark mode"><svg class="sc-icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg><svg class="sc-icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.5 8.5 0 1 0 20.2 15.2Z"/></svg></button>
         </div>
         <div class="sc-view-mode" role="group" aria-label="Card view">
-          <button class="sc-view-cycle" type="button" data-view="list" aria-label="List view. Switch to grid view" title="Switch view"><span class="sc-view-icon" data-icon="list"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg></span><span class="sc-view-icon" data-icon="grid"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg></span><span class="sc-view-icon" data-icon="flip"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="7" width="14" height="13" rx="2"/><path d="M8 4h8a2 2 0 0 1 2 2"/></svg></span></button>
+          <button class="sc-view-cycle" type="button" data-view="list" aria-label="List view. Switch to grid view" title="Switch view"><span class="sc-view-icon" data-icon="list"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg></span><span class="sc-view-icon" data-icon="grid"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg></span><span class="sc-view-icon" data-icon="wall"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M12 4v16M4 12h16"/></svg></span><span class="sc-view-icon" data-icon="flip"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="7" width="14" height="13" rx="2"/><path d="M8 4h8a2 2 0 0 1 2 2"/></svg></span></button>
         </div>
+        <div class="sc-zoom-mode"><button class="sc-zoom-toggle" type="button" role="switch" aria-checked="true" aria-label="Auto zoom" title="Auto zoom: frame each camera on what matters"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8M10.5 7.5v6M7.5 10.5h6"/></svg></button></div>
         <div class="sc-state-mode" role="group" aria-label="Preview card state emphasis">
           <button class="active" type="button" data-sc-state="mixed" aria-pressed="true" title="Real-world mix of normal and alert states; click again to reshuffle">Mixed</button>
           <button type="button" data-sc-state="normal" aria-pressed="false">Normal</button>
@@ -3216,7 +3338,7 @@ Goal: *"Did the bins go out — and come back?"*
             <li><span class="sc-intro-step-dot" aria-hidden="true"></span><div><strong>Your first Smart Cards</strong><span>In about 14 hours. We’ll let you know.</span></div></li>
           </ol>
         </article>
-        <div class="sc-stories-head sc-cards-head"><h2 id="sc-cards-heading">Now · 8 updates across 8 goals</h2></div>
+        <div class="sc-stories-head sc-cards-head"><h2 id="sc-cards-heading">Now · 9 updates across 9 goals</h2></div>
       <div class="sc-shell">
         <div class="sc-grid">
 <article class="sc-card sc-hero" data-scene="security" data-checked="8 secs ago"><span class="sc-label">Home security</span><div class="sc-card-top"><div class="sc-state">SAFE</div><p class="sc-sub">for 2 hours</p></div><div class="sc-scene sc-security-cameras"><img class="sc-photo sc-security-main" src="assets/smart-security-secure.webp?v=1" alt="Side gate camera: closed gate with the secured path clear" width="1672" height="941" loading="eager"><img class="sc-camera-thumb" src="assets/smart-garage-closed.webp?v=2" alt="Garage camera: door closed" width="1672" height="941" loading="lazy"><img class="sc-camera-thumb" src="assets/smart-front-door-clear.webp?v=2" alt="Delivery camera: porch clear" width="1672" height="941" loading="lazy"><img class="sc-camera-thumb" src="assets/smart-trash-bins-out.webp?v=2" alt="Driveway camera: bins at the curb" width="1672" height="941" loading="lazy"><span class="sc-detection-box" aria-hidden="true"></span></div><div class="sc-actions"><div class="sc-feedback" aria-label="Was this result helpful?"><button aria-label="Correct result"><svg viewBox="0 0 24 24"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg></button><button aria-label="Incorrect result"><svg viewBox="0 0 24 24"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg></button></div></div></article>
@@ -3227,6 +3349,7 @@ Goal: *"Did the bins go out — and come back?"*
           <article class="sc-card sc-hero" data-scene="birds" data-checked="20 secs ago"><span class="sc-label">Bird watcher</span><div class="sc-card-top"><div class="sc-state">NO BIRDS</div><p class="sc-sub">3 bird visits today</p></div><div class="sc-scene"><img class="sc-photo" src="assets/smart-bird-feeder-clear.webp?v=1" alt="Backyard bird feeder is clear with no birds present" width="1672" height="941" loading="lazy"><span class="sc-detection-box" aria-hidden="true"></span></div><div class="sc-actions"><div class="sc-feedback" aria-label="Was this result helpful?"><button aria-label="Correct result"><svg viewBox="0 0 24 24"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg></button><button aria-label="Incorrect result"><svg viewBox="0 0 24 24"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg></button></div></div></article>
           <article class="sc-card sc-hero" data-scene="pets" data-checked="11 secs ago"><span class="sc-label">Pet watcher</span><div class="sc-card-top"><div class="sc-state">RESTING</div><p class="sc-sub">for 35 mins</p></div><div class="sc-scene"><img class="sc-photo" src="assets/smart-pet-resting.webp?v=1" alt="Golden retriever resting on the living room rug" width="1672" height="941" loading="lazy"><span class="sc-detection-box" aria-hidden="true"></span></div><div class="sc-actions"><div class="sc-feedback" aria-label="Was this result helpful?"><button aria-label="Correct result"><svg viewBox="0 0 24 24"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg></button><button aria-label="Incorrect result"><svg viewBox="0 0 24 24"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg></button></div></div></article>
           <article class="sc-card sc-hero" data-scene="wildlife" data-checked="22 secs ago"><span class="sc-label">Wild animal watcher</span><div class="sc-card-top"><div class="sc-state">NO WILDLIFE</div><p class="sc-sub">for 2 hours</p></div><div class="sc-scene"><img class="sc-photo" src="assets/smart-wildlife-clear.webp?v=1" alt="Fenced backyard is clear of wild animals near the bins" width="1672" height="941" loading="lazy"><span class="sc-detection-box" aria-hidden="true"></span></div><div class="sc-actions"><div class="sc-feedback" aria-label="Was this result helpful?"><button aria-label="Correct result"><svg viewBox="0 0 24 24"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg></button><button aria-label="Incorrect result"><svg viewBox="0 0 24 24"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg></button></div></div></article>
+          <article class="sc-card sc-hero" data-scene="health" data-checked="30 secs ago"><span class="sc-label">Camera health</span><div class="sc-card-top"><div class="sc-state">ALL ONLINE</div><p class="sc-sub">8 of 8 cameras</p></div><div class="sc-scene sc-health-cameras"><img class="sc-photo sc-health-main" src="assets/smart-wildlife-clear.webp?v=1" alt="Snapshots from all eight cameras, each online" width="1672" height="941" loading="lazy"><ul class="sc-health-grid" aria-label="Camera status"></ul></div><div class="sc-actions"><div class="sc-feedback" aria-label="Was this result helpful?"><button aria-label="Correct result"><svg viewBox="0 0 24 24"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg></button><button aria-label="Incorrect result"><svg viewBox="0 0 24 24"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg></button></div></div></article>
         </div>
         <span class="sc-flip-status" aria-live="polite"></span>
       </div>
@@ -7313,14 +7436,37 @@ const SMART_CARD_VIDEO_ARCHIVE={
     ]
   }
 };
+const SMART_CARD_HEALTH_CAMERAS=[
+  {name:'Side Gate',src:'assets/smart-security-secure.webp?v=1'},
+  {name:'Garage',src:'assets/smart-garage-closed.webp?v=2'},
+  {name:'Front Door',src:'assets/smart-front-door-clear.webp?v=2'},
+  {name:'Driveway',src:'assets/smart-trash-bins-out.webp?v=2'},
+  {name:'EV Garage',src:'assets/smart-ev-charging.webp?v=1'},
+  {name:'Living Room',src:'assets/smart-pet-resting.webp?v=1'},
+  {name:'Feeder',src:'assets/smart-bird-feeder-clear.webp?v=1'},
+  {name:'Backyard',src:'assets/smart-wildlife-clear.webp?v=1'}
+];
+const SMART_CARD_HEALTH_ISSUES={
+  normal:{},
+  alert:{Backyard:{status:'offline',note:'Offline 25m'},Feeder:{status:'battery',note:'Battery 12%'}}
+};
+SMART_CARD_STATES.normal.health={state:'ALL ONLINE',sub:'8 of 8 cameras',checked:'30 secs ago',src:'assets/smart-wildlife-clear.webp?v=1',alt:'Snapshots from all eight cameras, each online'};
+SMART_CARD_STATES.alert.health={state:'1 OFFLINE',sub:'Backyard Cam for 25 mins',checked:'30 secs ago',src:'assets/smart-wildlife-clear.webp?v=1',alt:'Camera snapshots with the backyard camera offline'};
+SMART_CARD_STATES.suggested.health={state:'ALL ONLINE',sub:'checking 8 cameras',checked:'30 secs ago',src:'assets/smart-wildlife-clear.webp?v=1',alt:'Snapshots from all eight cameras, each online'};
+SMART_CARD_EVIDENCE.normal.health={video:['All eight cameras sent a fresh snapshot in the last minute.','Every camera reports a strong Wi-Fi signal.','No camera has restarted or dropped frames in the last 24 hours.'],memory:['You rely on the backyard and driveway cameras most at night.','Battery cameras are usually recharged when they drop below 20%.']};
+SMART_CARD_EVIDENCE.alert.health={video:['Backyard Cam stopped sending video 25 minutes ago.','Its last frame shows a clear yard with no one near the camera.','Backyard Feeder Cam is running on 12% battery.'],memory:['Backyard Cam dropped offline twice last month when the router restarted overnight.','Your wild animal watcher depends on this camera after dark.']};
+SMART_CARD_VIDEO_HISTORY.normal.health=['Garage Cam uploaded its hourly snapshot on schedule.','Front Door Cam reconnected right after a brief Wi-Fi blip.','Driveway Cam switched to night vision at dusk as expected.','Living Room Cam firmware is up to date.','EV Garage Cam kept a strong signal through the evening.','Side Gate Cam recorded its motion test without delay.'];
+SMART_CARD_VIDEO_ARCHIVE.normal.health=['All cameras passed the overnight health check.','Backyard Feeder Cam battery holds at 64%.','Backyard Cam lens is clear with no fogging.','No camera reported a storage error.','Driveway Cam kept a steady frame rate.','Garage Cam audio stream is available.','Front Door Cam clock is in sync.','Living Room Cam privacy mode stayed off as scheduled.','Side Gate Cam night vision works after dark.','EV Garage Cam view is unobstructed.','The first check today found every camera online.'];
+SMART_CARD_VIDEO_HISTORY.alert.health=['Backyard Cam missed its last three check-ins.','The router log shows Backyard Cam disconnected at 2:14 AM.','Backyard Feeder Cam battery dropped below 15% overnight.','Other cameras on the same network stayed online.','Driveway Cam still covers part of the backyard fence.','No power outage was reported for the home.'];
+SMART_CARD_VIDEO_ARCHIVE.alert.health=['Backyard Cam signal was weak for an hour before it dropped.','Its final frame arrived at 2:13 AM.','Backyard Feeder Cam switched to power-saving mode.','Garage Cam remains online with a strong signal.','Front Door Cam remains online.','Side Gate Cam remains online.','Living Room Cam remains online.','EV Garage Cam remains online.','Driveway Cam remains online.','An earlier check shows Backyard Cam online at midnight.','The first check today found every camera online.'];
 for(const mode of ['normal','alert']){
   for(const scene of Object.keys(SMART_CARD_EVIDENCE[mode])){
     SMART_CARD_EVIDENCE[mode][scene].video.push(...SMART_CARD_VIDEO_HISTORY[mode][scene],...SMART_CARD_VIDEO_ARCHIVE[mode][scene]);
   }
 }
 const SMART_CARD_VIDEO_RATINGS={
-  normal:{security:[5,4,4],garage:[5,4,3],ev:[5,4,3],front:[5,4,3],bins:[5,4,4],birds:[5,4,3],pets:[5,4,3],wildlife:[5,4,3]},
-  alert:{security:[5,5,3],garage:[5,4,4],ev:[5,4,3],front:[5,4,3],bins:[5,4,4],birds:[5,5,4],pets:[5,4,4],wildlife:[5,5,4]},
+  normal:{security:[5,4,4],garage:[5,4,3],ev:[5,4,3],front:[5,4,3],bins:[5,4,4],birds:[5,4,3],pets:[5,4,3],wildlife:[5,4,3],health:[5,4,3]},
+  alert:{security:[5,5,3],garage:[5,4,4],ev:[5,4,3],front:[5,4,3],bins:[5,4,4],birds:[5,5,4],pets:[5,4,4],wildlife:[5,5,4],health:[5,5,4]},
   highlights:{birds:[5,4,4],pets:[5,4,4],wildlife:[5,4,4]}
 };
 const SMART_CARD_STORIES=[
@@ -7339,7 +7485,8 @@ const SMART_CARD_RECOMMENDATIONS={
   birds:'Your feeder camera captures clear species-level views, and you frequently save distinct bird visits.',
   ev:'Your garage camera sees the charge port and cable, and the car usually plugs in after weekday arrivals.',
   pets:'Your living room camera sees the dog’s resting and patio-door areas, and longer waits at the door matter to your household.',
-  wildlife:'Your backyard camera covers the bins and fence line, and after-dark animal visits are unusual for your home.'
+  wildlife:'Your backyard camera covers the bins and fence line, and after-dark animal visits are unusual for your home.',
+  health:'You have 8 cameras across doors, yard, and garage, and a camera that quietly goes offline leaves a gap in every goal that depends on it.'
 };
 const SMART_CARD_EVIDENCE_ICONS={
   video:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M8.5 15 11 7h2l2.5 8M4 14l3-8h3M20 14l-3-8h-3M9 17h6"/></svg>',
@@ -7355,7 +7502,8 @@ const SMART_CARD_CAMERAS={
   birds:['Backyard Feeder Cam'],
   ev:['EV Garage Cam'],
   pets:['Living Room Cam'],
-  wildlife:['Backyard Cam']
+  wildlife:['Backyard Cam'],
+  health:['Side Gate Cam','Garage Cam','Front Door Cam','Driveway Cam','EV Garage Cam','Living Room Cam','Backyard Feeder Cam','Backyard Cam']
 };
 const SMART_CARD_FEEDBACK_ICONS={
   up:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg>',
@@ -7398,6 +7546,7 @@ function videoEvidenceStrip(items,state,ratings,expanded=false,sort='newest',sel
   return (expanded?entries:entries.slice(0,9)).map(({description,index,score})=>`<li class="sc-video-item${featuredIndexes.has(index)?' is-featured':''}"><button class="sc-video-thumb" type="button" data-video-index="${index}" aria-pressed="${index===selectedIndex}" aria-label="Preview video evidence ${index+1}, ${videoEvidenceTime(state,index)}, ${videoEvidenceDuration(state,index)} long, rating ${score}: ${description}"><img src="${state.events?.[index]?.src||state.src}" alt="" loading="lazy" style="object-position:${positions[index%positions.length]}"><span class="sc-video-duration" aria-hidden="true">${videoEvidenceDuration(state,index)}</span><span class="sc-video-copy"><span>${description}</span><time>${videoEvidenceTime(state,index)} · ${videoEvidenceDuration(state,index)}</time></span><span class="sc-video-score${score===5?' is-five':''}" aria-hidden="true">${score}</span></button></li>`).join('');
 }
 function cameraSourceSummary(cameras){
+  if(cameras.length>4)return `<span class="sc-evidence-camera-item">${SMART_CARD_EVIDENCE_ICONS.camera}<span>All ${cameras.length} cameras</span></span>`;
   return cameras.map(camera=>`<span class="sc-evidence-camera-item">${SMART_CARD_EVIDENCE_ICONS.camera}<span>${camera.replace(/ Cam$/,'')}</span></span>`).join('');
 }
 function initSmartCardEvidence(){
@@ -7704,7 +7853,7 @@ function initSmartCardEvidence(){
     const cards=[...smartCards.querySelectorAll('.sc-grid>.sc-card[data-scene]')];
     const goals=new Set(cards.map(card=>card.dataset.scene)).size;
     const newCount=cards.filter(card=>card.dataset.cardMode==='suggested').length;
-    smartCards.querySelector('#sc-cards-heading').textContent=smartCards.classList.contains('is-suggested')?(cards.length?`${cards.length} new suggestions across ${goals} ${goals===1?'goal':'goals'}`:'No new suggestions'):`Now · ${cards.length} ${cards.length===1?'update':'updates'} across ${goals} ${goals===1?'goal':'goals'}${newCount?` · ${newCount} new`:''}`;
+    smartCards.querySelector('#sc-cards-heading').textContent=smartCards.classList.contains('is-suggested')?(cards.length?`${cards.length} new suggestions across ${goals} ${goals===1?'goal':'goals'}`:'No new suggestions'):`Now · ${cards.length} ${cards.length===1?'update':'updates'} across ${goals} ${goals===1?'goal':'goals'}${newCount?`\u00a0·\u00a0${newCount}\u00a0new`:''}`;
   }
   const collapseSuggestionReason=(card,suggestion)=>{
     const done=()=>{card.dataset.suggestionDecision='kept'};
@@ -7829,6 +7978,7 @@ function initSmartCardEvidence(){
     preview.classList.toggle('is-alert-card',mode==='alert');
     const previewFeedback=preview.querySelector('.sc-detail-preview-feedback');
     preview.replaceChildren(card.querySelector('.sc-scene').cloneNode(true),previewScore,caption,previewFeedback);
+    preview.querySelectorAll('.sc-focus-layer').forEach(layer=>layer.removeAttribute('style'));
     previewFeedback.innerHTML=evidenceFeedback('this snapshot');
     syncFeedbackGroup(previewFeedback.firstElementChild);
     caption.hidden=true;
@@ -8021,12 +8171,12 @@ function initSmartCardEvidence(){
   });
 }
 const SMART_CARD_PRIORITY={
-  normal:['security','garage','front','ev','bins','pets','wildlife','birds'],
-  alert:['security','garage','pets','front','wildlife','ev','bins','birds'],
-  suggested:['security','garage','front','ev','bins','pets','wildlife','birds']
+  normal:['security','garage','front','ev','bins','pets','wildlife','birds','health'],
+  alert:['security','garage','health','pets','front','wildlife','ev','bins','birds'],
+  suggested:['security','garage','front','ev','bins','pets','wildlife','birds','health']
 };
-const SMART_CARD_MIXED_ALERT_PRIORITY=['security','garage','wildlife','ev','bins','front','pets','birds'];
-const SMART_CARD_MIXED_WEIGHTS={security:3,garage:3,wildlife:2,ev:2,bins:1.5,front:1.5,pets:1,birds:.5};
+const SMART_CARD_MIXED_ALERT_PRIORITY=['security','garage','health','wildlife','ev','bins','front','pets','birds'];
+const SMART_CARD_MIXED_WEIGHTS={security:3,garage:3,health:1.5,wildlife:2,ev:2,bins:1.5,front:1.5,pets:1,birds:.5};
 function chooseMixedAlertScenes(){
   const selected=new Set([Math.random()<.5?'security':'garage']);
   const target=2+Math.floor(Math.random()*3);
@@ -8062,6 +8212,41 @@ function stackSmartCards(cards,activeIndex){
     if(depth<cards.length&&!card.classList.contains('is-current'))card.classList.add(`is-behind-${depth}`);
   });
 }
+let smartCardAutoZoom=true;
+function zoomSmartCardWall(){
+  smartCardGrid.querySelectorAll(':scope>.sc-card').forEach(card=>{
+    const layer=card.querySelector('.sc-focus-layer');
+    const box=card.querySelector('.sc-detection-box');
+    if(!layer)return;
+    ['transform','transform-origin','transition','--sc-wall-zoom'].forEach(name=>layer.style.removeProperty(name));
+    if(!smartCardAutoZoom||!box||card.querySelector('.sc-security-cameras'))return;
+    Object.assign(layer.style,{transition:'none',transform:'none'});
+    const area=layer.getBoundingClientRect();
+    const target=box.getBoundingClientRect();
+    if(!area.width||!target.width){layer.style.removeProperty('transform');layer.style.removeProperty('transition');return}
+    const zoom=Math.min(2.4,Math.max(1.15,.58*Math.min(area.width/target.width,area.height/target.height)));
+    const limitX=area.width/2*(zoom-1);
+    const limitY=area.height/2*(zoom-1);
+    const x=Math.max(-limitX,Math.min(limitX,-zoom*(target.left-area.left+target.width/2-area.width/2)));
+    const y=Math.max(-limitY,Math.min(limitY,-zoom*(target.top-area.top+target.height/2-area.height/2)));
+    layer.style.transformOrigin='50% 50%';
+    layer.style.transform='scale(1)';
+    void layer.offsetWidth;
+    layer.style.removeProperty('transition');
+    layer.style.setProperty('--sc-wall-zoom',zoom.toFixed(3));
+    layer.style.transform=`translate(${x.toFixed(1)}px,${y.toFixed(1)}px) scale(${zoom.toFixed(3)})`;
+  });
+}
+document.querySelector('.sc-zoom-toggle').addEventListener('click',event=>{
+  smartCardAutoZoom=!smartCardAutoZoom;
+  event.currentTarget.setAttribute('aria-checked',String(smartCardAutoZoom));
+  zoomSmartCardWall();
+});
+let smartCardWallResize=0;
+window.addEventListener('resize',()=>{
+  clearTimeout(smartCardWallResize);
+  smartCardWallResize=setTimeout(zoomSmartCardWall,150);
+});
 function syncSmartCardView(){
   window.clearTimeout(smartCardFlipTimer);
   smartCardFlipTimer=0;
@@ -8082,13 +8267,14 @@ function syncSmartCardView(){
     else card.removeAttribute('aria-hidden');
   });
   stackSmartCards(cards,activeIndex);
+  zoomSmartCardWall();
   smartCardGrid.classList.remove('is-dragging');
   smartCardDrag=null;
   announceSmartCard(flip?cards[activeIndex]:null);
 }
 function setSmartCardView(view){
   const flip=view==='flip';
-  const previousView=$('smartCards').classList.contains('sc-flip-view')?'flip':$('smartCards').classList.contains('sc-grid-view')?'grid':'list';
+  const previousView=$('smartCards').classList.contains('sc-flip-view')?'flip':$('smartCards').classList.contains('sc-wall-view')?'wall':$('smartCards').classList.contains('sc-grid-view')?'grid':'list';
   if(view===previousView)return;
   smartCardViewAnimations.forEach(animation=>animation.cancel());
   smartCardViewAnimations=[];
@@ -8096,7 +8282,8 @@ function setSmartCardView(view){
   const focusCard=[...smartCardGrid.children].find(card=>card.dataset.scene===smartCardFlipScene);
   const before=focusCard.getBoundingClientRect();
   $('smartCards').classList.toggle('sc-flip-view',flip);
-  $('smartCards').classList.toggle('sc-grid-view',view==='grid');
+  $('smartCards').classList.toggle('sc-grid-view',view==='grid'||view==='wall');
+  $('smartCards').classList.toggle('sc-wall-view',view==='wall');
   syncSmartCardViewCycle(previousView,view);
   syncSmartCardView();
   if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
@@ -8149,8 +8336,8 @@ function stepSmartCardFlip(direction,exitVector){
     smartCardFlipTimer=0;
   },360);
 }
-const SMART_CARD_VIEWS=['list','grid','flip'];
-const SMART_CARD_VIEW_LABELS={list:'List',grid:'Grid',flip:'Flip'};
+const SMART_CARD_VIEWS=['list','grid','wall','flip'];
+const SMART_CARD_VIEW_LABELS={list:'List',grid:'Grid',wall:'Wall',flip:'Flip'};
 const smartCardViewCycle=document.querySelector('.sc-view-cycle');
 function syncSmartCardViewCycle(previousView,view){
   const next=SMART_CARD_VIEWS[(SMART_CARD_VIEWS.indexOf(view)+1)%SMART_CARD_VIEWS.length];
@@ -8215,6 +8402,16 @@ smartCardGrid.addEventListener('keydown',event=>{
     stepSmartCardFlip(event.key==='ArrowRight'?1:-1);
   }
 });
+function renderSmartCardHealth(card,mode){
+  const grid=card.querySelector('.sc-health-grid');
+  if(!grid)return;
+  const issues=SMART_CARD_HEALTH_ISSUES[mode==='alert'?'alert':'normal'];
+  grid.innerHTML=SMART_CARD_HEALTH_CAMERAS.map(({name,src})=>{
+    const issue=issues[name];
+    const status=issue?.status||'online';
+    return `<li class="sc-health-tile is-${status}" aria-label="${name} Cam: ${issue?issue.note:'online'}"><img src="${src}" alt="" loading="lazy"><span class="sc-health-dot" aria-hidden="true"></span>${issue?`<span class="sc-health-note" aria-hidden="true">${issue.note}</span>`:''}<span class="sc-health-name" aria-hidden="true">${name}</span></li>`;
+  }).join('');
+}
 function setSmartCardState(mode){
   const isAlert=mode==='alert';
   const isSuggested=mode==='suggested';
@@ -8241,6 +8438,7 @@ function setSmartCardState(mode){
     const photo=card.querySelector('.sc-photo');
     photo.src=state.src;
     photo.alt=state.alt;
+    renderSmartCardHealth(card,cardMode);
     if(evidence){
       card.querySelector('.sc-evidence-time').textContent=state.checked;
       card.querySelector('.sc-evidence-preview').textContent=evidence.video[0];
@@ -8263,7 +8461,7 @@ function setSmartCardState(mode){
     card.setAttribute('aria-label',`${critical?'Urgent alert: ':''}Open details for ${card.querySelector(':scope>.sc-label').textContent.trim()}`);
   });
   const goals=new Set(cards.map(card=>card.dataset.scene)).size;
-  smartCards.querySelector('#sc-cards-heading').textContent=isSuggested?`${cards.length} new suggestions across ${goals} ${goals===1?'goal':'goals'}`:`Now · ${cards.length} ${cards.length===1?'update':'updates'} across ${goals} ${goals===1?'goal':'goals'}${mixedSuggested.size?` · ${mixedSuggested.size} new`:''}`;
+  smartCards.querySelector('#sc-cards-heading').textContent=isSuggested?`${cards.length} new suggestions across ${goals} ${goals===1?'goal':'goals'}`:`Now · ${cards.length} ${cards.length===1?'update':'updates'} across ${goals} ${goals===1?'goal':'goals'}${mixedSuggested.size?`\u00a0·\u00a0${mixedSuggested.size}\u00a0new`:''}`;
   if($('smartCards').classList.contains('sc-flip-view'))smartCardFlipScene=smartCardGrid.firstElementChild.dataset.scene;
   syncSmartCardView();
 }
@@ -8349,8 +8547,143 @@ function initSmartCardIntro(){
   });
   render();
 }
+const SMART_CARD_BOT_TOPICS=[
+  {scene:'garage',words:['garage','door open','door closed']},
+  {scene:'front',words:['package','delivery','deliveries','porch','front door']},
+  {scene:'health',words:['offline','online','camera health','battery','wifi','wi-fi','camera']},
+  {scene:'pets',words:['dog','pet','puppy']},
+  {scene:'bins',words:['bin','trash','garbage','pickup']},
+  {scene:'ev',words:['car','ev','charg']},
+  {scene:'birds',words:['bird','feeder','cardinal']},
+  {scene:'wildlife',words:['raccoon','wildlife','animal','deer','fox']},
+  {scene:'security',words:['security','person','gate','intruder','someone']}
+];
+function initSmartCardBot(){
+  const bot=document.querySelector('.sc-bot');
+  if(!bot)return;
+  const button=bot.querySelector('.sc-bot-button');
+  const panel=bot.querySelector('.sc-bot-panel');
+  const log=bot.querySelector('.sc-bot-log');
+  const form=bot.querySelector('.sc-bot-form');
+  const input=form.querySelector('input');
+  const hint=bot.querySelector('.sc-bot-hint');
+  const poseLayers=[...button.querySelectorAll('.sc-bot-pose')];
+  const idlePose=poseLayers[0].getAttribute('src');
+  const posePath=name=>`assets/mascot/${name}.webp`;
+  const gestures=['wave','laugh','wink-point','peek-wave','cheer'];
+  ['chat',...gestures].forEach(name=>{const image=new Image();image.src=posePath(name)});
+  let frontLayer=0;
+  let currentPose=idlePose;
+  let gestureTimer=0;
+  let restTimer=0;
+  const showPose=src=>{
+    if(src===currentPose)return;
+    currentPose=src;
+    const next=poseLayers[1-frontLayer];
+    next.src=src;
+    const swap=()=>{
+      if(currentPose!==src)return;
+      next.classList.add('is-active');
+      poseLayers[frontLayer].classList.remove('is-active');
+      frontLayer=1-frontLayer;
+      if(motion())next.animate([{transform:'scale(.82) rotate(-6deg)'},{transform:'scale(1.08) rotate(2deg)',offset:.6},{transform:'none'}],{duration:440,easing:'cubic-bezier(.34,1.56,.64,1)'});
+    };
+    (next.decode?next.decode():Promise.resolve()).then(swap,swap);
+  };
+  const playGesture=(name,hold=2200)=>{
+    if(!panel.hidden)return;
+    if(!name){
+      const pool=gestures.filter(pose=>posePath(pose)!==currentPose);
+      name=pool[Math.floor(Math.random()*pool.length)];
+    }
+    clearTimeout(restTimer);
+    showPose(posePath(name));
+    restTimer=setTimeout(()=>{if(panel.hidden)showPose(idlePose)},hold);
+  };
+  const scheduleGesture=()=>{
+    clearTimeout(gestureTimer);
+    gestureTimer=setTimeout(()=>{
+      if(motion()&&!document.hidden)playGesture();
+      scheduleGesture();
+    },4000+Math.random()*4000);
+  };
+  const motion=()=>!matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const escapeHtml=text=>text.replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+  const cardFor=scene=>document.querySelector(`#smartCards .sc-grid>.sc-card[data-scene="${scene}"]`);
+  const addMessage=(html,from)=>{
+    const item=document.createElement('li');
+    item.className=`sc-bot-msg is-${from}`;
+    item.innerHTML=html;
+    log.append(item);
+    log.scrollTop=log.scrollHeight;
+    return item;
+  };
+  const answer=question=>{
+    const text=question.toLowerCase();
+    if(/overnight|happen|today|last night|moments/.test(text)){
+      return `Here’s what stood out in the last 12 hours: ${SMART_CARD_STORIES.map(story=>story.title.toLowerCase()).join(', ')}.`;
+    }
+    const topic=SMART_CARD_BOT_TOPICS.find(({words})=>words.some(word=>text.includes(word)));
+    const card=topic&&cardFor(topic.scene);
+    if(!card){
+      const count=document.querySelectorAll('#smartCards .sc-grid>.sc-card').length;
+      return `I’m watching ${count} goals for you. Try asking about the garage, packages, your dog, or whether any camera is offline.`;
+    }
+    const goal=card.querySelector(':scope>.sc-label').textContent.trim();
+    const state=card.querySelector('.sc-state').textContent.trim();
+    const sub=card.querySelector('.sc-sub').textContent.trim();
+    const checked=card.dataset.checked;
+    return `<strong>${escapeHtml(goal)}:</strong> ${escapeHtml(state)} · ${escapeHtml(sub)}. Checked ${escapeHtml(checked)}.<button class="sc-bot-view" type="button" data-scene="${topic.scene}">View card</button>`;
+  };
+  const ask=question=>{
+    const trimmed=question.trim();
+    if(!trimmed)return;
+    addMessage(escapeHtml(trimmed),'user');
+    const typing=addMessage('<span class="sc-bot-typing" aria-label="WYZE AI is typing"><i></i><i></i><i></i></span>','bot');
+    setTimeout(()=>{typing.innerHTML=answer(trimmed);log.scrollTop=log.scrollHeight},motion()?650:0);
+  };
+  const setOpen=open=>{
+    panel.hidden=!open;
+    button.setAttribute('aria-expanded',String(open));
+    bot.classList.toggle('is-open',open);
+    hint.classList.remove('is-visible');
+    clearTimeout(restTimer);
+    showPose(open?posePath('chat'):idlePose);
+    if(open){
+      if(!log.children.length)addMessage('Hi, I’m WYZE AI. I watch your cameras so you don’t have to. What would you like to know?','bot');
+      if(motion())panel.animate({opacity:[0,1],transform:['translateY(12px) scale(.96)','none']},{duration:260,easing:'cubic-bezier(.22,1,.36,1)'});
+      input.focus({preventScroll:true});
+    }else button.focus({preventScroll:true});
+  };
+  button.addEventListener('click',()=>setOpen(panel.hidden));
+  bot.querySelector('.sc-bot-close').addEventListener('click',()=>setOpen(false));
+  bot.addEventListener('keydown',event=>{if(event.key==='Escape'&&!panel.hidden){event.preventDefault();setOpen(false)}});
+  bot.querySelector('.sc-bot-chips').addEventListener('click',event=>{
+    const chip=event.target.closest('button');
+    if(chip)ask(chip.textContent);
+  });
+  form.addEventListener('submit',event=>{
+    event.preventDefault();
+    ask(input.value);
+    input.value='';
+  });
+  log.addEventListener('click',event=>{
+    const view=event.target.closest('.sc-bot-view');
+    if(!view)return;
+    const card=cardFor(view.dataset.scene);
+    setOpen(false);
+    card?.scrollIntoView({block:'center',behavior:motion()?'smooth':'auto'});
+    if(card&&motion())card.animate({scale:['1','1.03','1']},{duration:520,delay:300,easing:'cubic-bezier(.22,1,.36,1)'});
+  });
+  button.addEventListener('pointerenter',()=>{if(motion())playGesture()});
+  if(motion())button.animate([{transform:'translateY(24px) scale(.4)',opacity:0},{transform:'translateY(-6px) scale(1.06)',opacity:1,offset:.65},{transform:'none',opacity:1}],{duration:620,easing:'cubic-bezier(.34,1.56,.64,1)'});
+  setTimeout(()=>{if(panel.hidden){hint.classList.add('is-visible');if(motion())playGesture('wave',4800)}},1200);
+  setTimeout(()=>hint.classList.remove('is-visible'),6200);
+  scheduleGesture();
+}
 initSmartCardEvidence();
 initSmartCardIntro();
+initSmartCardBot();
 setSmartCardState('mixed');
 setSmartCardView('list');
 /* ---------- component browse filters ---------- */

@@ -28,6 +28,17 @@ modules, and compose a customized interface. Three tabs:
 | `Camera-UI-Complete-Spec-v3.docx` | Complete design & engineering specification (v3) |
 | `AI-Camera-Builder-Reference.md` | Machine-actionable build reference for the camera-builder agent |
 
+### Versions and releases
+
+The current release is in [`VERSION`](VERSION), and every release is summarized in
+[`CHANGELOG.md`](CHANGELOG.md) and tagged in git (`v0.8.0` and so on). To cut a release:
+
+1. Move the entries under **Unreleased** in `CHANGELOG.md` into a new version section, and
+   add a compare link for it at the bottom.
+2. Put the same number in `VERSION`, following [SemVer](https://semver.org/): minor for new
+   features, patch for fixes.
+3. Commit, then tag and push: `git tag -a v0.9.0 -m "v0.9.0" && git push origin main --tags`.
+
 ### The framework in brief
 
 A camera UI is a **composition problem**. The agent decomposes a plain-language goal into
