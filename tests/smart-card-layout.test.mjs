@@ -191,7 +191,7 @@ test('new suggestions can be kept or dropped with structured AI feedback', () =>
   assert.match(html, /<button class="sc-drop-record-button" type="button" aria-label="Hold to record a voice note" aria-pressed="false">/);
   assert.match(html, /dropRecording\.holdTimer=setTimeout\(startDropRecording,280\)/);
   assert.match(html, /\.sc-drop-record-button\{[^}]*width:68px;height:68px/);
-  assert.match(html, /suggestion\.querySelector\('\.sc-suggestion-delete'\)\.addEventListener\('click',event=>\{\s*event\.stopPropagation\(\);\s*showSmartCardBack\(card\);/);
+  assert.match(html, /suggestion\.querySelector\('\.sc-suggestion-delete'\)\.addEventListener\('click',event=>\{\s*event\.stopPropagation\(\);\s*askSmartCardDrop\(card\);/);
   assert.match(html, /perspective\(1400px\) rotateY\(90deg\) scale\(\.96\)/);
   assert.match(html, /springKeyframes\(\{from:-90,velocity:520\}/);
   assert.match(html, /const lifting=!deleting&&smartCards\.classList\.contains\('sc-grid-view'\);/);
@@ -417,7 +417,7 @@ test('dedicated Pages entry opens the standalone Smart Cards view', () => {
 
 test('New view opens with a Smart Cards introduction that shows learning progress', () => {
   assert.match(html, /<article class="sc-intro-card" aria-labelledby="sc-intro-title">/);
-  assert.match(html, /<h3 id="sc-intro-title">WYZE AI is learning your home<\/h3>/);
+  assert.match(html, /<img class="sc-intro-mascot" src="assets\/mascot\/wave\.webp"[^>]*>\s*<div class="sc-intro-bubble">\s*<h3 id="sc-intro-title">Hi, I’m learning your home<\/h3>/);
   assert.match(html, /<span class="sc-intro-badge" role="progressbar" aria-label="Learning progress" aria-valuemin="0" aria-valuemax="48" aria-valuenow="34" aria-valuetext="34 of 48 hours" style="--sc-progress:71%"><i class="sc-intro-badge-fill" aria-hidden="true"><\/i>/);
   assert.doesNotMatch(html, /sc-intro-bar/);
   assert.match(html, /<li class="is-active" aria-current="step">/);
@@ -426,13 +426,16 @@ test('New view opens with a Smart Cards introduction that shows learning progres
 });
 
 test('intro card shows learned routines as pills that expand and accept user additions', () => {
-  assert.match(html, /<p class="sc-intro-copy">Soon your cameras will answer questions like “Is the garage closed\?” instead of sending you clips\. For now, WYZE AI is learning what’s normal\.<\/p>/);
+  assert.match(html, /<p class="sc-intro-copy">Right now I’m watching your cameras to learn what’s normal\. Next, I’ll suggest Smart Cards that answer what you check most, like “Is the garage closed\?”<\/p>/);
   assert.match(html, /<div class="sc-intro-step-head"><strong>Learning your routines<\/strong><button class="sc-learned-more" type="button" aria-expanded="false" aria-controls="sc-learned-list">See details<\/button><\/div>/);
   assert.match(html, /<ul class="sc-learned-list" id="sc-learned-list" aria-label="What WYZE AI has found so far"><\/ul>/);
-  assert.match(html, /<li class="sc-learned-add-item"\$\{form\.hidden\?'':' hidden'\}><button class="sc-learned-add" type="button">\+ Tell me more<\/button><\/li>/);
+  assert.match(html, /<li class="sc-learned-add-item"><button class="sc-learned-add" type="button">\+ Tell me more<\/button><\/li>/);
+  assert.match(html, /message:'What else should I keep an eye on\?/);
+  assert.doesNotMatch(html, /sc-learned-form/);
   assert.match(html, /\{label:'Garage door',detail:'Usually closed by 9 PM\. Closed on each of the last 5 nights\.',cameras:\['Garage','Driveway'\]\}/);
   assert.match(html, /<span class="sc-learned-camera">\$\{SMART_CARD_EVIDENCE_ICONS\.camera\}/);
   assert.match(html, /items\.unshift\(\{label,detail:'You added this\. WYZE AI will look for it/);
+  assert.match(html, /message:`Why drop <strong>\$\{safeGoal\}<\/strong>\? Pick a reason, or tell me in your own words\.`/);
   assert.match(html, /\.sc-learned\[data-expanded="true"\] \.sc-learned-detail\{display:block/);
   assert.doesNotMatch(html, /sc-intro-cams/);
   assert.match(html, /aria-label="\$\{escapeHtml\(item\.label\)\} is right" aria-pressed="\$\{item\.vote==='up'\}"/);

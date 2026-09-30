@@ -12,6 +12,16 @@ the app (v1, v1.5, v2, v2.5, v3, v4) are design-system names and are unrelated.
 
 ## [Unreleased]
 
+## [0.10.0] - 2026-09-29
+
+### Changed
+- Drop now opens the WYZE AI chat, which asks why with the four reasons as quick replies (or
+  your own words), then removes the card.
+- "+ Tell me more" opens the chat to ask what else to watch, and your answer becomes a
+  "You added" pill. The inline text field is gone.
+- The learning intro card opens with the waving mascot and a chat bubble in his voice:
+  what he's doing now and what's next.
+
 ## [0.9.0] - 2026-09-29
 
 ### Added
@@ -127,7 +137,8 @@ the app (v1, v1.5, v2, v2.5, v3, v4) are design-system names and are unrelated.
   OpenAI, Gemini, and xAI as providers.
 - Mobile layout support and the Sa action strip placement.
 
-[Unreleased]: https://github.com/rokey-z/wyze-ai-camera-ui-system/compare/v0.9.0...HEAD
+[Unreleased]: https://github.com/rokey-z/wyze-ai-camera-ui-system/compare/v0.10.0...HEAD
+[0.10.0]: https://github.com/rokey-z/wyze-ai-camera-ui-system/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/rokey-z/wyze-ai-camera-ui-system/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/rokey-z/wyze-ai-camera-ui-system/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/rokey-z/wyze-ai-camera-ui-system/compare/v0.6.0...v0.7.0
