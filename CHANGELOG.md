@@ -12,6 +12,14 @@ the app (v1, v1.5, v2, v2.5, v3, v4) are design-system names and are unrelated.
 
 ## [Unreleased]
 
+### Added
+- `SMART-CARDS-SPEC.md`: the Smart Cards UI logic, rules, and production data contract. New
+  `AGENTS.md` and `CLAUDE.md` tell coding agents to read it first.
+- A small version label under the WYZE wordmark, read from `VERSION`.
+- The urgent alert card carries a live view window over its image: bottom-left in list and
+  flip views, top-right in grid and wall views. It shows the camera with a blinking LIVE badge,
+  the camera name, and a ticking clock. Tap it to open the details, or hide it with ×.
+
 ## [0.10.0] - 2026-09-29
 
 ### Changed

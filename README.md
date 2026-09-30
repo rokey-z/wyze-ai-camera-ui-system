@@ -27,6 +27,7 @@ modules, and compose a customized interface. Three tabs:
 | `smart-cards.html` | Dedicated GitHub Pages entry for the mobile Smart Cards experience |
 | `Camera-UI-Complete-Spec-v3.docx` | Complete design & engineering specification (v3) |
 | `AI-Camera-Builder-Reference.md` | Machine-actionable build reference for the camera-builder agent |
+| `SMART-CARDS-SPEC.md` | Smart Cards UI logic, rules, and production data contract. Agents read it first (see `AGENTS.md`). |
 
 ### Versions and releases
 
@@ -36,7 +37,8 @@ The current release is in [`VERSION`](VERSION), and every release is summarized 
 1. Move the entries under **Unreleased** in `CHANGELOG.md` into a new version section, and
    add a compare link for it at the bottom.
 2. Put the same number in `VERSION`, following [SemVer](https://semver.org/): minor for new
-   features, patch for fixes.
+   features, patch for fixes. Also update the version label under the WYZE wordmark in
+   `index.html`; the page reads `VERSION` when served, and a test checks the two match.
 3. Commit, then tag and push: `git tag -a v0.9.0 -m "v0.9.0" && git push origin main --tags`.
 
 ### The framework in brief

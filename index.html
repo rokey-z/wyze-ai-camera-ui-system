@@ -2014,6 +2014,25 @@
   .smartcards:not(.sc-flip-view):not(.sc-grid-view) .sc-grid>.sc-card.is-suggested-card[data-suggestion-decision="kept"] .sc-scene{border-radius:16px;clip-path:inset(0 round 16px)}
   .sc-confetti{position:fixed;z-index:60;overflow:visible;pointer-events:none}
   .sc-confetti i{position:absolute;display:block;will-change:transform,opacity}
+  .sc-live{position:absolute;z-index:6;bottom:12px;left:12px;display:block;width:36%;min-width:118px;max-width:190px;aspect-ratio:16/10;overflow:hidden;border:2px solid #ff4b55;border-radius:12px;background:#050b14;box-shadow:0 8px 22px #0208148c;font-family:var(--sans)}
+  .smartcards.sc-grid-view .sc-grid>.sc-card>.sc-live{top:8px;right:8px;bottom:auto;left:auto;width:52%;min-width:0;border-width:1.5px;border-radius:10px}
+  .smartcards.sc-grid-view .sc-grid>.sc-card:not(.is-critical-alert)>.sc-live .sc-live-clock,.smartcards.sc-grid-view:not(.sc-wall-view) .sc-grid>.sc-card>.sc-live .sc-live-clock{display:none}
+  .smartcards.sc-wall-view .sc-grid>.sc-card.is-critical-alert>.sc-live{top:14px;right:14px;width:40%}
+  .sc-grid>.sc-card.is-dropping>.sc-live,.sc-grid>.sc-card.is-lifted>.sc-live{display:none}
+  .sc-live-open{position:absolute;inset:0;display:block;width:100%;height:100%;padding:0;border:0;background:none;cursor:pointer}
+  .sc-live[hidden]{display:none}
+  .sc-live-frame{position:absolute;inset:0;overflow:hidden}
+  .sc-live-frame img{display:block;width:100%;height:100%;object-fit:cover;transform-origin:50% 45%;animation:sc-live-drift 14s ease-in-out infinite alternate}
+  @keyframes sc-live-drift{from{transform:scale(1.08) translate(-2%,-1%)}to{transform:scale(1.16) translate(2%,1.5%)}}
+  .sc-live::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#050b1466,transparent 38%,transparent 58%,#050b14b3);pointer-events:none}
+  .sc-live-badge{position:absolute;z-index:1;top:7px;left:7px;display:inline-flex;align-items:center;gap:4px;padding:3px 6px;border-radius:5px;background:#ff4b55;color:#fff;font:800 9px/1 var(--sans);letter-spacing:.06em}
+  .sc-live-badge i{width:5px;height:5px;border-radius:50%;background:#fff;animation:sc-critical-blink .85s steps(2,start) infinite}
+  .sc-live-close{position:absolute;z-index:2;top:5px;right:5px;display:grid;place-items:center;width:24px;height:24px;padding:0;border:0;border-radius:50%;background:#050b14a6;color:#fff;font-size:16px;line-height:1;cursor:pointer}
+  .sc-live-close:focus-visible,.sc-live-open:focus-visible{outline:2px solid #fff;outline-offset:-3px}
+  .sc-live-meta{position:absolute;z-index:1;right:8px;bottom:6px;left:8px;display:flex;align-items:baseline;justify-content:space-between;gap:6px;color:#fff;text-align:left;text-shadow:0 1px 3px #000}
+  .sc-live-cam{overflow:hidden;font:750 10.5px/1.2 var(--sans);text-overflow:ellipsis;white-space:nowrap}
+  .sc-live-clock{flex:none;color:#dfe7f1;font:650 9.5px/1.2 var(--sans);font-variant-numeric:tabular-nums}
+  @media(prefers-reduced-motion:reduce){.sc-live-frame img,.sc-live-badge i{animation:none}}
   .sc-grid>.sc-card.is-asking{outline:3px solid #71edbe;outline-offset:3px}
   body.sc-light-page .sc-grid>.sc-card.is-asking{outline-color:#16a777}
   .sc-bot{position:fixed;z-index:60;left:max(14px,env(safe-area-inset-left));bottom:max(14px,env(safe-area-inset-bottom));font-family:var(--sans)}
@@ -2349,6 +2368,9 @@
   body.sc-standalone.sc-light-page .sc-mode-row{background:rgba(242,245,248,.92);box-shadow:0 0 0 100vmax rgba(242,245,248,.92)}
   body.sc-standalone .sc-mode-row{box-shadow:0 0 0 100vmax rgba(13,23,38,.9);clip-path:inset(0 -100vmax)}
   .sc-brand{display:none;flex:none;margin-right:2px;color:#f3f7ff;font:900 19px/1 var(--sans);letter-spacing:.04em}
+  .sc-brand-name{display:block}
+  .sc-brand-version{display:block;margin-top:3px;color:#8fa1b8;font:650 9px/1 var(--sans);letter-spacing:.02em;font-variant-numeric:tabular-nums}
+  body.sc-light-page .sc-brand-version{color:#6b7c93}
   body.sc-light-page .sc-brand{color:#172235}
   body.sc-standalone .sc-brand{display:block}
   @media(max-width:620px){
@@ -3293,6 +3315,7 @@ Goal: *"Did the bins go out — and come back?"*
   <!-- ============ TAB: SMART CARDS — state, proof, action ============ -->
   <div class="tabpane on" id="pane-smart">
     <section class="smartcards" id="smartCards" aria-label="Smart camera cards">
+      <div class="sc-live" hidden><button class="sc-live-open" type="button"><span class="sc-live-frame"><img alt="" width="1672" height="941"></span><span class="sc-live-badge"><i aria-hidden="true"></i>LIVE</span><span class="sc-live-meta"><span class="sc-live-cam"></span><time class="sc-live-clock"></time></span></button><button class="sc-live-close" type="button" aria-label="Hide live view">&times;</button></div>
       <div class="sc-bot">
         <p class="sc-bot-hint" aria-hidden="true">Hi! Ask me about your home</p>
         <button class="sc-bot-button" type="button" aria-label="Ask WYZE AI" aria-expanded="false" aria-controls="sc-bot-panel"><img class="sc-bot-pose is-active" src="assets/wyze-mascot.png" alt="" width="292" height="292"><img class="sc-bot-pose" src="assets/mascot/wave.webp" alt="" width="240" height="240"></button>
@@ -3304,7 +3327,7 @@ Goal: *"Did the bins go out — and come back?"*
         </section>
       </div>
       <div class="sc-mode-row">
-        <span class="sc-brand" aria-label="WYZE">WYZE</span>
+        <span class="sc-brand"><span class="sc-brand-name">WYZE</span><span class="sc-brand-version" data-version-source="VERSION">v0.10.0</span></span>
         <div class="sc-theme-mode">
           <button class="sc-theme-toggle" id="sc-theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false" title="Switch to dark mode"><svg class="sc-icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg><svg class="sc-icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.5 8.5 0 1 0 20.2 15.2Z"/></svg></button>
         </div>
@@ -7848,6 +7871,7 @@ function initSmartCardEvidence(){
       beforeRemove?.();
       card.remove();
       updateSmartCardHeading();
+      syncSmartCardLive();
       if(smartCardFlipScene===scene&&smartCardGrid.firstElementChild){smartCardFlipScene=smartCardGrid.firstElementChild.dataset.scene;syncSmartCardView()}
       if(smartCardMotion())followers.forEach(([follower,top,left],index)=>{
         const now=follower.getBoundingClientRect();
@@ -8445,6 +8469,51 @@ function renderSmartCardHealth(card,mode){
     return `<li class="sc-health-tile is-${status}" aria-label="${name} Cam: ${issue?issue.note:'online'}"><img src="${src}" alt="" loading="lazy"><span class="sc-health-dot" aria-hidden="true"></span>${issue?`<span class="sc-health-note" aria-hidden="true">${issue.note}</span>`:''}<span class="sc-health-name" aria-hidden="true">${name}</span></li>`;
   }).join('');
 }
+let smartCardLiveDismissed='';
+let smartCardLiveClock=0;
+function syncSmartCardLive(){
+  const live=document.querySelector('.sc-live');
+  if(!live)return;
+  const card=document.querySelector('#smartCards .sc-grid>.sc-card.is-critical-alert');
+  const key=card?`${card.dataset.scene}:${card.dataset.cardMode}`:'';
+  const show=!!card&&key!==smartCardLiveDismissed;
+  clearInterval(smartCardLiveClock);
+  if(!show){live.hidden=true;document.querySelector('#smartCards .sc-bot')?.before(live);return}
+  const scene=card.dataset.scene;
+  const goal=card.querySelector(':scope>.sc-label').textContent.trim();
+  const camera=(SMART_CARD_CAMERAS[scene]||[goal])[0];
+  const photo=card.querySelector('.sc-photo');
+  const image=live.querySelector('img');
+  image.src=photo.src;
+  image.style.objectPosition=getComputedStyle(photo).objectPosition;
+  live.querySelector('.sc-live-cam').textContent=camera.replace(/ Cam$/,'');
+  live.dataset.scene=scene;
+  live.querySelector('.sc-live-open').setAttribute('aria-label',`Live view from ${camera} for the ${goal} alert. Open details`);
+  const tick=()=>{live.querySelector('.sc-live-clock').textContent=new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit',second:'2-digit'})};
+  tick();
+  smartCardLiveClock=setInterval(tick,1000);
+  const wasHidden=live.hidden||live.parentElement!==card;
+  if(live.parentElement!==card)card.append(live);
+  live.hidden=false;
+  if(wasHidden&&!matchMedia('(prefers-reduced-motion: reduce)').matches)live.animate([{opacity:0,transform:'translateY(18px) scale(.92)'},{opacity:1,transform:'none'}],{duration:360,easing:'cubic-bezier(.22,1,.36,1)'});
+}
+function initSmartCardLive(){
+  const live=document.querySelector('.sc-live');
+  if(!live)return;
+  const close=live.querySelector('.sc-live-close');
+  const dismiss=event=>{
+    event.stopPropagation();
+    const card=document.querySelector('#smartCards .sc-grid>.sc-card.is-critical-alert');
+    smartCardLiveDismissed=card?`${card.dataset.scene}:${card.dataset.cardMode}`:'';
+    syncSmartCardLive();
+  };
+  close.addEventListener('click',dismiss);
+  live.querySelector('.sc-live-open').addEventListener('click',()=>{
+    const card=document.querySelector(`#smartCards .sc-grid>.sc-card[data-scene="${live.dataset.scene}"]`);
+    card?.querySelector('.sc-scene')?.click();
+  });
+  syncSmartCardLive();
+}
 function setSmartCardState(mode){
   const isAlert=mode==='alert';
   const isSuggested=mode==='suggested';
@@ -8497,6 +8566,7 @@ function setSmartCardState(mode){
   smartCards.querySelector('#sc-cards-heading').textContent=isSuggested?`${cards.length} new suggestions across ${goals} ${goals===1?'goal':'goals'}`:`Now · ${cards.length} ${cards.length===1?'update':'updates'} across ${goals} ${goals===1?'goal':'goals'}${mixedSuggested.size?`\u00a0·\u00a0${mixedSuggested.size}\u00a0new`:''}`;
   if($('smartCards').classList.contains('sc-flip-view'))smartCardFlipScene=smartCardGrid.firstElementChild.dataset.scene;
   syncSmartCardView();
+  syncSmartCardLive();
 }
 document.querySelectorAll('[data-sc-state]').forEach(btn=>btn.addEventListener('click',()=>setSmartCardState(btn.dataset.scState)));
 const SMART_CARD_LEARNED=[
@@ -8731,6 +8801,12 @@ function initSmartCardBot(){
 initSmartCardEvidence();
 initSmartCardIntro();
 initSmartCardBot();
+initSmartCardLive();
+/* The version label reads the repo's VERSION file so it can never drift from releases. */
+fetch('VERSION',{cache:'no-store'}).then(response=>response.ok?response.text():'').then(text=>{
+  const version=text.trim();
+  if(/^\d+\.\d+\.\d+$/.test(version))document.querySelectorAll('[data-version-source="VERSION"]').forEach(label=>{label.textContent=`v${version}`});
+}).catch(()=>{});
 setSmartCardState('mixed');
 setSmartCardView('list');
 /* ---------- component browse filters ---------- */

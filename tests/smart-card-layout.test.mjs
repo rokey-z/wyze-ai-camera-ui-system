@@ -43,7 +43,7 @@ test('every card keeps its in-image title and removes card-level rating controls
 });
 
 test('icon theme, view, and state toggles share one evenly spaced control row', () => {
-  assert.match(html, /<div class="sc-mode-row">\s*<span class="sc-brand" aria-label="WYZE">WYZE<\/span>\s*<div class="sc-theme-mode"[\s\S]*?<div class="sc-view-mode"[\s\S]*?<div class="sc-state-mode"/);
+  assert.match(html, /<div class="sc-mode-row">\s*<span class="sc-brand"><span class="sc-brand-name">WYZE<\/span><span class="sc-brand-version" data-version-source="VERSION">v[\d.]+<\/span><\/span>\s*<div class="sc-theme-mode"[\s\S]*?<div class="sc-view-mode"[\s\S]*?<div class="sc-state-mode"/);
   assert.match(html, /\.sc-mode-row\{display:flex;align-items:center;justify-content:space-between;gap:6px\}/);
   assert.match(html, /class="sc-theme-toggle" id="sc-theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false"/);
   assert.match(html, /class="sc-icon-sun"/);
@@ -471,4 +471,17 @@ test('mascot floats bottom left as a WYZE AI chat entry', () => {
   assert.match(html, /<section class="sc-bot-panel" id="sc-bot-panel" role="dialog" aria-label="WYZE AI chat" hidden>/);
   assert.match(html, /initSmartCardBot\(\);/);
   assert.ok(existsSync(new URL('../assets/wyze-mascot.png', import.meta.url)));
+});
+
+test('a high alert shows a live stream window in the bottom corner', () => {
+  assert.match(html, /<div class="sc-live" hidden><button class="sc-live-open" type="button"><span class="sc-live-frame"><img[\s\S]*?<button class="sc-live-close" type="button" aria-label="Hide live view">/);
+  assert.match(html, /const card=document\.querySelector\('#smartCards \.sc-grid>\.sc-card\.is-critical-alert'\);/);
+  assert.match(html, /\.sc-live\{position:absolute;z-index:6;bottom:12px;left:12px;/);
+  assert.match(html, /if\(live\.parentElement!==card\)card\.append\(live\);/);
+  assert.match(html, /syncSmartCardView\(\);\s*syncSmartCardLive\(\);\s*\}/);
+});
+
+test('the version under the WYZE wordmark matches the VERSION file', () => {
+  const version = readFileSync(new URL('../VERSION', import.meta.url), 'utf8').trim();
+  assert.match(html, new RegExp(`<span class="sc-brand-version" data-version-source="VERSION">v${version.replaceAll('.', '\\.')}<\\/span>`));
 });
