@@ -12,6 +12,8 @@ the app (v1, v1.5, v2, v2.5, v3, v4) are design-system names and are unrelated.
 
 ## [Unreleased]
 
+## [0.12.0] - 2026-10-01
+
 ### Added
 - Smart Cards: a Camera offline state (the honesty rule, spec §11). While Camera health reports
   a camera offline, every goal bound to it shows "CAMERA OFFLINE" in amber over its greyed last
@@ -160,7 +162,8 @@ the app (v1, v1.5, v2, v2.5, v3, v4) are design-system names and are unrelated.
   OpenAI, Gemini, and xAI as providers.
 - Mobile layout support and the Sa action strip placement.
 
-[Unreleased]: https://github.com/rokey-z/wyze-ai-camera-ui-system/compare/v0.11.0...HEAD
+[Unreleased]: https://github.com/rokey-z/wyze-ai-camera-ui-system/compare/v0.12.0...HEAD
+[0.12.0]: https://github.com/rokey-z/wyze-ai-camera-ui-system/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/rokey-z/wyze-ai-camera-ui-system/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/rokey-z/wyze-ai-camera-ui-system/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/rokey-z/wyze-ai-camera-ui-system/compare/v0.8.0...v0.9.0
