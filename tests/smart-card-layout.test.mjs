@@ -18,12 +18,13 @@ test('cards have no Go live action and retain their evidence cluster', () => {
   assert.match(html, /\.sc-card:after\{display:none\}/);
 });
 
-test('only the highest active alert receives a red perimeter and blinking state dot', () => {
+test('only the highest active alert receives a red perimeter, with no dot before the state', () => {
   assert.match(html, /const highestAlert=cards\.find\(card=>card\.dataset\.cardMode==='alert'\)/);
   assert.match(html, /card\.classList\.toggle\('is-critical-alert',critical\)/);
   assert.match(html, /\.sc-grid>\.sc-card\.is-critical-alert::after\{[^}]*border:2px solid #ff4b55;border-radius:inherit/);
-  assert.match(html, /\.sc-grid>\.sc-card\.is-critical-alert \.sc-state::before\{[^}]*background:#ff4b55;[^}]*animation:sc-critical-blink \.85s/);
-  assert.match(html, /@media\(prefers-reduced-motion:reduce\)\{\.sc-grid>\.sc-card\.is-critical-alert \.sc-state::before\{animation:none\}\}/);
+  // A blinking dot before the state read as live video; only the LIVE badge blinks.
+  assert.doesNotMatch(html, /\.is-critical-alert \.sc-state::before/);
+  assert.match(html, /\.sc-live-badge i\{[^}]*animation:sc-critical-blink \.85s/);
 });
 
 test('checked time is static and followed by an icon-only refresh action', () => {
@@ -61,7 +62,7 @@ test('icon theme, view, and state toggles share one evenly spaced control row', 
 
 test('list, grid, and flip use the same emergency-ordered cards', () => {
   assert.match(html, /class="sc-view-mode" role="group" aria-label="Card view"/);
-  assert.match(html, /<button class="sc-view-cycle" type="button" data-view="list" aria-label="List view\. Switch to grid view" title="Switch view"><span class="sc-view-icon" data-icon="list"><svg[\s\S]*?<span class="sc-view-icon" data-icon="grid"><svg[\s\S]*?<span class="sc-view-icon" data-icon="flip"><svg/);
+  assert.match(html, /<button class="sc-view-cycle" type="button" data-view="wall" aria-label="Wall view\. Switch to flip view" title="Switch view"><span class="sc-view-icon" data-icon="list"><svg[\s\S]*?<span class="sc-view-icon" data-icon="grid"><svg[\s\S]*?<span class="sc-view-icon" data-icon="flip"><svg/);
   assert.match(html, /smartCardViewCycle\.addEventListener\('click',\(\)=>setSmartCardView\(SMART_CARD_VIEWS\[/);
   assert.match(html, /\.smartcards:not\(\.sc-flip-view\):not\(\.sc-grid-view\) \.sc-grid>\.sc-card\{aspect-ratio:40\/27\}/);
   assert.match(html, /\.smartcards\.sc-grid-view \.sc-grid\{display:grid;grid-template-columns:repeat\(2,minmax\(0,1fr\)\);gap:12px\}/);
@@ -356,8 +357,8 @@ test('mixed defaults to alert-prioritized real scenarios; normal keeps wildlife 
   assert.match(html, /type="button" data-sc-state="normal" aria-pressed="false">Normal<\/button>/);
   assert.doesNotMatch(html, /data-sc-state="highlights"/);
   assert.match(html, /setSmartCardState\('mixed'\)/);
-  assert.match(html, /const cardMode=isSuggested\|\|mixedSuggested\.has\(scene\)\?'suggested':isAlert\|\|mixedAlerts\.has\(scene\)\?'alert':SMART_CARD_STATES\.highlights\[scene\]\?'highlights':'normal'/);
-  assert.match(html, /const mixedAlertOrder=SMART_CARD_MIXED_ALERT_PRIORITY\.filter\(scene=>mixedAlerts\.has\(scene\)\);\s*const order=mode==='mixed'\?\[\.\.\.mixedAlertOrder\.slice\(0,1\),\.\.\.SMART_CARD_PRIORITY\.suggested\.filter\(scene=>mixedSuggested\.has\(scene\)\),\.\.\.mixedAlertOrder\.slice\(1\),\.\.\.SMART_CARD_PRIORITY\.normal\.filter\(scene=>!mixedAlerts\.has\(scene\)&&!mixedSuggested\.has\(scene\)\)\]:SMART_CARD_PRIORITY\[mode\]/);
+  assert.match(html, /const cardMode=offline\.length\?'alert':isSuggested\|\|mixedSuggested\.has\(scene\)\?'suggested':isAlert\|\|mixedAlerts\.has\(scene\)\?'alert':SMART_CARD_STATES\.highlights\[scene\]\?'highlights':'normal'/);
+  assert.match(html, /const alertScenes=new Set\(\[\.\.\.mixedAlerts,\.\.\.offlineScenes\]\);\s*const mixedAlertOrder=SMART_CARD_MIXED_ALERT_PRIORITY\.filter\(scene=>alertScenes\.has\(scene\)\);\s*const order=mode==='mixed'\?\[\.\.\.mixedAlertOrder\.slice\(0,1\),\.\.\.SMART_CARD_PRIORITY\.suggested\.filter\(scene=>mixedSuggested\.has\(scene\)\),\.\.\.mixedAlertOrder\.slice\(1\),\.\.\.SMART_CARD_PRIORITY\.normal\.filter\(scene=>!alertScenes\.has\(scene\)&&!mixedSuggested\.has\(scene\)\)\]:SMART_CARD_PRIORITY\[mode\]/);
   for (const [scene, state] of [['birds', 'CARDINAL'], ['pets', 'DOG PLAYING'], ['wildlife', 'RACCOON']]) {
     assert.match(html, new RegExp(`${scene}:\\{state:'${state}'.*?current:\\{state:.*?events:\\[\\{label:`));
   }
@@ -442,6 +443,13 @@ test('intro card shows learned routines as pills that expand and accept user add
   assert.match(html, /\.sc-learned\[data-expanded="true"\] \.sc-evidence-item-feedback\{display:flex;grid-column:2;grid-row:2/);
 });
 
+test('the page opens in wall view with the mixed state', () => {
+  assert.match(html, /<section class="smartcards sc-grid-view sc-wall-view" id="smartCards"/);
+  assert.match(html, /class="sc-view-cycle" type="button" data-view="wall" aria-label="Wall view\. Switch to flip view"/);
+  assert.match(html, /setSmartCardState\('mixed'\);\nsetSmartCardView\('wall'\);/);
+  assert.match(html, /<button class="active" type="button" data-sc-state="mixed" aria-pressed="true"/);
+});
+
 test('wall view tiles cameras edge to edge with no gaps', () => {
   assert.match(html, /const SMART_CARD_VIEWS=\['list','grid','wall','flip'\];/);
   assert.match(html, /<span class="sc-view-icon" data-icon="wall"><svg/);
@@ -450,7 +458,7 @@ test('wall view tiles cameras edge to edge with no gaps', () => {
   assert.match(html, /\.smartcards\.sc-wall-view \.sc-grid>\.sc-card\.is-critical-alert\{grid-column:1\/-1;aspect-ratio:4\/3\}/);
   assert.match(html, /const zoom=Math\.min\(2\.4,Math\.max\(1\.15,\.58\*Math\.min\(area\.width\/target\.width,area\.height\/target\.height\)\)\);/);
   assert.match(html, /stackSmartCards\(cards,activeIndex\);\s*zoomSmartCardWall\(\);/);
-  assert.match(html, /if\(!smartCardAutoZoom\|\|!box\|\|card\.querySelector\('\.sc-security-cameras'\)\)return;/);
+  assert.match(html, /if\(!smartCardAutoZoom\|\|!box\|\|card\.querySelector\('\.sc-security-cameras'\)\|\|card\.classList\.contains\('is-camera-offline'\)\)return;/);
   assert.match(html, /<div class="sc-zoom-mode"><button class="sc-zoom-toggle" type="button" role="switch" aria-checked="true" aria-label="Auto zoom"/);
   assert.match(html, /@media\(max-width:640px\)\{\.smartcards\.sc-wall-view \.sc-shell\{margin-inline:calc\(50% - 50vw\)\}\}/);
 });
@@ -478,10 +486,36 @@ test('a high alert shows a live stream window in the bottom corner', () => {
   assert.match(html, /const card=document\.querySelector\('#smartCards \.sc-grid>\.sc-card\.is-critical-alert'\);/);
   assert.match(html, /\.sc-live\{position:absolute;z-index:6;bottom:12px;left:12px;/);
   assert.match(html, /if\(live\.parentElement!==card\)card\.append\(live\);/);
+  // No live window on a Live Card (its camera tiles are the live view) or on a card whose camera is offline.
+  assert.match(html, /const show=!!card&&!card\.querySelector\('\.sc-health-grid'\)&&!card\.classList\.contains\('is-camera-offline'\)&&key!==smartCardLiveDismissed;/);
   assert.match(html, /syncSmartCardView\(\);\s*syncSmartCardLive\(\);\s*\}/);
 });
 
 test('the version under the WYZE wordmark matches the VERSION file', () => {
   const version = readFileSync(new URL('../VERSION', import.meta.url), 'utf8').trim();
   assert.match(html, new RegExp(`<span class="sc-brand-version" data-version-source="VERSION">v${version.replaceAll('.', '\\.')}<\\/span>`));
+});
+
+test('a kept suggestion becomes a normal card without its NEW badge', () => {
+  assert.match(html, /\.sc-card\.is-suggested-card \.sc-new-badge\{display:flex\}\s*\.sc-card\.is-suggested-card\[data-suggestion-decision="kept"\] \.sc-new-badge\{display:none\}/);
+});
+
+test('the goal line is set in regular weight', () => {
+  assert.match(html, /\.sc-card>\.sc-label\{position:absolute;z-index:5;[^}]*font:400 11px\/1\.2 var\(--sans\)/);
+  assert.doesNotMatch(html, /\.sc-card>\.sc-label\{[^}]*font:800/);
+});
+
+test('camera offline follows the honesty rule on every goal bound to the offline camera', () => {
+  assert.match(html, /function smartCardOfflineCameras\(healthMode\)\{\s*if\(healthMode!=='alert'\)return \[\];/);
+  assert.match(html, /filter\(\(\[,issue\]\)=>issue\.status==='offline'\)\.map\(\(\[name,issue\]\)=>\(\{camera:`\$\{name\} Cam`,note:issue\.note\}\)\)/);
+  assert.match(html, /state:all\?'CAMERA OFFLINE':`\$\{offline\.length\} CAMERA\$\{offline\.length>1\?'S':''\} OFFLINE`,sub:all\?`\$\{names\} · last seen \$\{last\.state\}`/);
+  assert.match(html, /const mixedSuggested=mode==='mixed'\?chooseMixedSuggestedScenes\(new Set\(\[\.\.\.mixedAlerts,\.\.\.offlineScenes\]\)\):new Set\(\);/);
+  assert.match(html, /card\.classList\.toggle\('is-camera-offline',offline\.length>0\);/);
+  assert.match(html, /\$\{card\.classList\.contains\('is-camera-offline'\)\?'Camera offline: ':''\}Open details for/);
+  assert.match(html, /\.sc-grid>\.sc-card\.is-camera-offline \.sc-photo,[^{]*\{filter:grayscale\(1\) brightness\(\.35\)\}/);
+  assert.match(html, /\.sc-grid>\.sc-card\.is-camera-offline\.is-alert-card \.sc-card-top \.sc-state,[^{]*\{color:#ffb454\}/);
+  assert.match(html, /\.sc-grid>\.sc-card\.is-camera-offline>\.sc-offline-note\{[^}]*background:#ff6570;color:#210509/);
+  assert.match(html, /body\.sc-light-page \.sc-grid>\.sc-card\.is-camera-offline>\.sc-offline-note\{/);
+  assert.match(html, /const offline=!modeOverride&&card\.classList\.contains\('is-camera-offline'\);/);
+  assert.match(html, /detailDialog\.dataset\.offline=String\(offline\);/);
 });

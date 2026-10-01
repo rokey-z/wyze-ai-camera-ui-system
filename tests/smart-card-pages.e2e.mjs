@@ -33,12 +33,16 @@ const inspect=()=>{
     const mixedCards=[...doc.querySelectorAll('.sc-grid>.sc-card')];
     const mixedAlerts=mixedCards.filter(card=>card.dataset.cardMode==='alert');
     const mixedPriority=['security','garage','health','wildlife','ev','bins','front','pets','birds'];
-    const mixedDefault={active:doc.querySelector('[data-sc-state="mixed"]').getAttribute('aria-pressed')==='true',alertCount:mixedAlerts.length,routineCount:mixedCards.length-mixedAlerts.length,highAlertFirst:['security','garage'].includes(mixedCards[0].dataset.scene),alertsFirst:mixedCards[0].dataset.cardMode==='alert'&&mixedCards.filter(card=>card.dataset.cardMode!=='suggested').slice(0,mixedAlerts.length).every(card=>card.dataset.cardMode==='alert')&&mixedCards.filter(card=>card.dataset.cardMode!=='suggested').slice(mixedAlerts.length).every(card=>card.dataset.cardMode!=='alert'),alertPriority:mixedAlerts.map(card=>card.dataset.scene).join(',')===mixedPriority.filter(scene=>mixedAlerts.some(card=>card.dataset.scene===scene)).join(','),cardStyles:mixedCards.every(card=>{const alert=card.dataset.cardMode==='alert';const expected=alert?(card.dataset.scene==='security'?'rgb(255, 101, 112)':card.dataset.scene==='health'?'rgb(255, 180, 84)':'rgb(113, 237, 190)'):'rgb(255, 255, 255)';return card.classList.contains('is-alert-card')===alert&&getComputedStyle(card.querySelector('.sc-state')).color===expected}),highlightsOnlyOnRoutine:mixedCards.filter(card=>['birds','pets','wildlife'].includes(card.dataset.scene)).every(card=>['alert','highlights','suggested'].includes(card.dataset.cardMode)),newCount:mixedCards.filter(card=>card.dataset.cardMode==='suggested').length,newAfterAlerts:mixedCards.slice(1).findIndex(card=>card.dataset.cardMode!=='suggested')===mixedCards.filter(card=>card.dataset.cardMode==='suggested').length};
-    mixedDefault.criticalCue=doc.querySelectorAll('.sc-grid>.sc-card.is-critical-alert').length===1&&mixedCards[0].classList.contains('is-critical-alert')&&mixedCards[0].getAttribute('aria-label').startsWith('Urgent alert:')&&getComputedStyle(mixedCards[0],'::after').borderTopColor==='rgb(255, 75, 85)'&&getComputedStyle(mixedCards[0],'::after').borderTopWidth==='2px'&&getComputedStyle(mixedCards[0].querySelector('.sc-state'),'::before').backgroundColor==='rgb(255, 75, 85)'&&(win.matchMedia('(prefers-reduced-motion: reduce)').matches||getComputedStyle(mixedCards[0].querySelector('.sc-state'),'::before').animationName==='sc-critical-blink');
+    const mixedDefault={active:doc.querySelector('[data-sc-state="mixed"]').getAttribute('aria-pressed')==='true',alertCount:mixedAlerts.length,routineCount:mixedCards.length-mixedAlerts.length,highAlertFirst:['security','garage'].includes(mixedCards[0].dataset.scene),alertsFirst:mixedCards[0].dataset.cardMode==='alert'&&mixedCards.filter(card=>card.dataset.cardMode!=='suggested').slice(0,mixedAlerts.length).every(card=>card.dataset.cardMode==='alert')&&mixedCards.filter(card=>card.dataset.cardMode!=='suggested').slice(mixedAlerts.length).every(card=>card.dataset.cardMode!=='alert'),alertPriority:mixedAlerts.map(card=>card.dataset.scene).join(',')===mixedPriority.filter(scene=>mixedAlerts.some(card=>card.dataset.scene===scene)).join(','),cardStyles:mixedCards.every(card=>{const alert=card.dataset.cardMode==='alert';const expected=alert?(card.classList.contains('is-camera-offline')||card.dataset.scene==='health'?'rgb(255, 180, 84)':card.dataset.scene==='security'?'rgb(255, 101, 112)':'rgb(113, 237, 190)'):'rgb(255, 255, 255)';return card.classList.contains('is-alert-card')===alert&&getComputedStyle(card.querySelector('.sc-state')).color===expected}),highlightsOnlyOnRoutine:mixedCards.filter(card=>['birds','pets','wildlife'].includes(card.dataset.scene)).every(card=>['alert','highlights','suggested'].includes(card.dataset.cardMode)),newCount:mixedCards.filter(card=>card.dataset.cardMode==='suggested').length,newAfterAlerts:mixedCards.slice(1).findIndex(card=>card.dataset.cardMode!=='suggested')===mixedCards.filter(card=>card.dataset.cardMode==='suggested').length};
+    mixedDefault.criticalCue=doc.querySelectorAll('.sc-grid>.sc-card.is-critical-alert').length===1&&mixedCards[0].classList.contains('is-critical-alert')&&mixedCards[0].getAttribute('aria-label').startsWith('Urgent alert:')&&getComputedStyle(mixedCards[0],'::after').borderTopColor==='rgb(255, 75, 85)'&&getComputedStyle(mixedCards[0],'::after').borderTopWidth==='2px'&&getComputedStyle(mixedCards[0].querySelector('.sc-state'),'::before').content==='none'&&!!mixedCards[0].querySelector('.sc-live:not([hidden]) .sc-live-badge i')&&(win.matchMedia('(prefers-reduced-motion: reduce)').matches||getComputedStyle(mixedCards[0].querySelector('.sc-live .sc-live-badge i')).animationName==='sc-critical-blink');
     mixedCards[0].querySelector('.sc-scene').click();
     const mixedDialog=doc.querySelector('.sc-detail-dialog');
     mixedDefault.detailMatchesCard=mixedDialog.dataset.mode===mixedCards[0].dataset.cardMode&&mixedDialog.querySelector('.sc-detail-state strong').textContent===mixedCards[0].querySelector('.sc-state').textContent&&mixedDialog.querySelector('.sc-detail-preview-card .sc-photo').getAttribute('src')===mixedCards[0].querySelector('.sc-photo').getAttribute('src');
     mixedDialog.close();
+    const defaultView={view:doc.querySelector('.sc-view-cycle').dataset.view,label:doc.querySelector('.sc-view-cycle').getAttribute('aria-label'),wall:doc.querySelector('#smartCards').classList.contains('sc-wall-view')&&doc.querySelector('.sc-grid>.sc-card.is-critical-alert').offsetWidth>doc.querySelector('.sc-grid>.sc-card:not(.is-critical-alert)').offsetWidth*1.5};
+    /* The rest of this run was written against the list layout, so switch to it from the wall default. */
+    setView('list');
+    doc.getAnimations().forEach(animation=>{if(animation.effect?.getComputedTiming().endTime!==Infinity)animation.finish()});
     doc.querySelector('[data-sc-state="normal"]').click();
     const images=[...doc.images];
     const hiddenSelectors=['.wrap>header','.tabs','.wrap>footer'];
@@ -95,7 +99,7 @@ const inspect=()=>{
       labels:[...doc.querySelectorAll('.sc-view-mode button')].map(button=>button.getAttribute('aria-label')),
       icons:[...doc.querySelectorAll('.sc-view-mode button')].every(button=>!!button.querySelector('svg')),
       iconOnly:[...doc.querySelectorAll('.sc-view-mode button')].every(button=>[...button.childNodes].filter(node=>node.nodeType===win.Node.TEXT_NODE).every(node=>!node.textContent.trim())),
-      listDefault:doc.querySelector('.sc-view-cycle').dataset.view==='list',
+      defaultView,
     };
     const firstCard=doc.querySelector('.sc-grid>.sc-card');
     const lastCard=doc.querySelector('.sc-grid>.sc-card:last-child');
@@ -434,7 +438,8 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     const result=JSON.parse(Buffer.from(encoded,'base64').toString('utf8'));
     assert.equal(result.error,undefined);
     assert.equal(result.mixedDefault.active,true);
-    assert.ok(result.mixedDefault.alertCount>=2&&result.mixedDefault.alertCount<=4);
+    // 2–4 picked alerts, plus Camera offline on the goal bound to an offline camera when Camera health is one of them.
+    assert.ok(result.mixedDefault.alertCount>=2&&result.mixedDefault.alertCount<=5);
     assert.equal(result.mixedDefault.routineCount,9-result.mixedDefault.alertCount);
     assert.equal(result.mixedDefault.highAlertFirst,true);
     assert.equal(result.mixedDefault.alertsFirst,true);
@@ -446,7 +451,7 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     assert.equal(result.mixedDefault.criticalCue,true);
     assert.equal(result.mixedDefault.detailMatchesCard,true);
     assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:9,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:247,landscapeCards:true,normalOrder:['security','garage','front','ev','bins','pets','wildlife','birds','health'],controlsUniformSpaced:true,cardHeading:{text:'Now · 9 updates across 9 goals',aboveCards:true,sameStyle:true},refreshButtons:9,checkedTimeInsideTrigger:false,cardFeedbackRemoved:true,goLiveButtons:0,criticalCards:0,bottomEvidenceHidden:true,stateBlocksClear:true,goalTitlesClear:true,imageGradient:true,topOnlyGradient:true,goalTitleInside:true,stateBlockAligned:true,normalActive:true});
-    assert.deepEqual(result.viewControls,{count:1,labels:['List view. Switch to grid view'],icons:true,iconOnly:true,listDefault:true});
+    assert.deepEqual(result.viewControls,{count:1,labels:['List view. Switch to grid view'],icons:true,iconOnly:true,defaultView:{view:'wall',label:'Wall view. Switch to flip view',wall:true}});
     assert.deepEqual(result.storySummary,{belowCards:true,heading:'6 key moments in last 12 hours',count:6,titles:['Cardinal at the feeder','Playtime on the rug','Blue jay visit','Water break','Raccoon in the yard','Goldfinch visit'],ratings:['5','5','4','4','5','4'],images:true});
     assert.deepEqual(result.storyRatingColors,{five:'rgb(246, 196, 83)',four:'rgb(113, 237, 190)'});
     assert.deepEqual(result.storyTimeline,{oneSurface:true,line:true,dots:true,timestamps:true,timeAboveTitle:true,cameraRatio:true,twoLineTitle:true,noDividers:true,compactRows:true,feedbackButtons:12,feedbackSelected:true,feedbackKeepsDetailClosed:true});
@@ -458,7 +463,8 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
       {scene:'wildlife',cardMode:'highlights',hero:'assets/smart-wildlife-raccoon.webp?v=1',currentSrc:'assets/smart-wildlife-clear.webp?v=1',currentLabel:'NO WILDLIFE',title:'RACCOON',age:'3 hours ago',layout:{oneHero:true,noHistoryTiles:true,nowBottomLeft:true,noGoalFeedback:true,noBottomLabel:true},highlightDetail:{mode:'highlights',state:'RACCOON',videoItems:3,moreHidden:true,heroImage:'assets/smart-wildlife-raccoon.webp?v=1',memoryItems:2},olderObservation:{selected:'1',image:'assets/smart-wildlife-deer.webp?v=1'},currentDetail:{mode:'normal',image:'assets/smart-wildlife-clear.webp?v=1',state:'NO WILDLIFE'}},
     ]);
     assert.deepEqual(result.refreshed,{time:'just now',dialogOpen:false});
-    assert.deepEqual(result.alertStates,['PERSON','OPEN','1 OFFLINE','AT DOOR','Package left','RACCOON','NEEDS CHARGING','NOT OUT','CARDINAL']);
+    // Camera health reports Backyard Cam offline, so the Wild animal watcher bound to it says so instead of showing an alert it can't see.
+    assert.deepEqual(result.alertStates,['PERSON','OPEN','1 OFFLINE','AT DOOR','Package left','CAMERA OFFLINE','NEEDS CHARGING','NOT OUT','CARDINAL']);
     assert.deepEqual(result.alertCritical,{count:1,scene:'security'});
     assert.equal(result.alertBlocksClear,true);
     assert.equal(result.alertBlockAligned,true);
@@ -488,7 +494,7 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
       {mode:'normal',scene:'pets',state:'DOG PLAYING',duration:'46 mins ago',image:'assets/smart-pet-playing.webp?v=1'},
       {mode:'normal',scene:'wildlife',state:'RACCOON',duration:'3 hours ago',image:'assets/smart-wildlife-raccoon.webp?v=1'},
       {mode:'alert',scene:'pets',state:'AT DOOR',duration:'for 8 mins',image:'assets/smart-pet-at-door.webp?v=1'},
-      {mode:'alert',scene:'wildlife',state:'RACCOON',duration:'for 4 mins',image:'assets/smart-wildlife-raccoon.webp?v=1'},
+      {mode:'alert',scene:'wildlife',state:'CAMERA OFFLINE',duration:'Backyard Cam · last seen NO WILDLIFE',image:'assets/smart-wildlife-clear.webp?v=1'},
     ]);
     assert.deepEqual(result.suggested,{active:true,mode:'suggested',state:'SAFE',duration:'for 2 hours',heading:'9 new suggestions across 9 goals',inlineVisible:true,extendedDown:true,copyMatches:true,inlineFeedbackButtons:0,detailFeedbackButtons:2,detailMode:'suggested',detailState:'SAFE',detailUsesEvidence:true,actions:['Keep','Drop'],newBadge:'New',newBadgeTopRight:true,yellowInline:true,yellowDetail:true,kept:true,gridHidesReason:true});
     assert.deepEqual(result.gridMode,{active:true,listInactive:true,flipInactive:true,twoPerRow:true,squareCards:true,allVisible:true,focusBoxesHidden:true,stateTextLarger:true,nowBottomLeft:true,securityNormalRow:true,securityAlertRow:true,detailFocusVisible:true,detailOpens:true});

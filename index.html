@@ -1694,7 +1694,7 @@
   .sc-card,.sc-card.sc-hero{overflow:visible;border:0;outline:0;border-radius:16px}
   .sc-card:focus-within{outline:0}
   .sc-scene{overflow:hidden;border-radius:16px;clip-path:inset(0 round 16px)}
-  .sc-card>.sc-label{position:absolute;z-index:5;right:auto;left:0;top:-21px;color:#f7fbff;text-align:left;text-shadow:0 1px 5px #020914;font:800 11px/1.2 var(--sans);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+  .sc-card>.sc-label{position:absolute;z-index:5;right:auto;left:0;top:-21px;color:#f7fbff;text-align:left;text-shadow:0 1px 5px #020914;font:400 11px/1.2 var(--sans);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
   .sc-card-top{top:0;right:auto;left:0;max-width:72%;padding:6px 12px 11px;border-radius:12px}
   .sc-card-top .sc-state{margin-top:2px}
   .sc-card-top .sc-label{position:static}
@@ -2140,6 +2140,7 @@
   .sc-suggestion-status{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   .sc-new-badge{display:none;position:absolute;z-index:7;top:10px;right:10px;align-items:center;min-height:22px;padding:0 9px;border-radius:999px;background:#f6c453;color:#352500;font:850 9px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;box-shadow:0 3px 10px #0005}
   .sc-card.is-suggested-card .sc-new-badge{display:flex}
+  .sc-card.is-suggested-card[data-suggestion-decision="kept"] .sc-new-badge{display:none}
   .sc-card.is-suggested-card>.sc-label{max-width:calc(100% - 64px)}
   body.sc-light-page .smartcards:not(.sc-flip-view):not(.sc-grid-view) .sc-grid>.sc-card.is-suggested-card{background:#fffdf6;border-color:#d7a91f66}
   body.sc-light-page .smartcards:not(.sc-flip-view):not(.sc-grid-view) .sc-card.is-suggested-card .sc-suggestion-reason{background:linear-gradient(145deg,#ffe8994d,#ffe8991f);color:#182438}
@@ -2352,9 +2353,18 @@
   .smartcards.sc-grid-view .sc-grid>.sc-card.is-lifted.is-dropping{position:fixed;top:50%;left:50%;width:min(440px,calc(100vw - 32px));max-height:calc(100dvh - 32px);margin:0;overflow-y:auto;overscroll-behavior:contain;aspect-ratio:auto;translate:-50% -50%}
   .smartcards.sc-flip-view .sc-grid>.sc-card.is-dropping{overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;cursor:default}
   .sc-grid>.sc-card.is-critical-alert::after{content:'';display:block;position:absolute;z-index:7;inset:0;width:auto;height:auto;max-width:none;padding:0;border:2px solid #ff4b55;border-radius:inherit;background:none;box-shadow:0 0 0 1px #ff4b5540;pointer-events:none}
-  .sc-grid>.sc-card.is-critical-alert .sc-state::before{content:'';display:inline-block;width:9px;height:9px;margin:0 8px 2px 0;vertical-align:middle;border-radius:50%;background:#ff4b55;box-shadow:0 0 0 3px #ff4b5533;animation:sc-critical-blink .85s ease-in-out infinite}
   @keyframes sc-critical-blink{0%,100%{opacity:1}50%{opacity:.18}}
-  @media(prefers-reduced-motion:reduce){.sc-grid>.sc-card.is-critical-alert .sc-state::before{animation:none}}
+  /* Camera offline: a goal whose camera can't see says so instead of showing a calm or stale state (spec §11). Drawn on the image, so identical in both themes. */
+  .sc-offline-note{display:none}
+  .sc-grid>.sc-card.is-camera-offline .sc-photo,.sc-detail-dialog[data-offline="true"] .sc-detail-preview-card .sc-photo{filter:grayscale(1) brightness(.35)}
+  .sc-grid>.sc-card.is-camera-offline.is-alert-card .sc-card-top .sc-state,.sc-detail-dialog[data-offline="true"] .sc-detail-state strong{color:#ffb454}
+  .sc-grid>.sc-card.is-camera-offline .sc-detection-box,.sc-detail-dialog[data-offline="true"] .sc-detection-box{display:none}
+  .sc-detail-dialog[data-offline="true"] .sc-detail-state span{padding:0;border-radius:0;background:none}
+  .sc-grid>.sc-card.is-camera-offline>.sc-offline-note{position:absolute;z-index:6;left:10px;bottom:10px;display:inline-flex;align-items:center;gap:5px;padding:3px 7px;border-radius:5px;background:#ff6570;color:#210509;font:800 10px/1.2 var(--sans);white-space:nowrap}
+  .sc-grid>.sc-card.is-camera-offline>.sc-offline-note::before{content:'';width:6px;height:6px;border-radius:50%;background:#210509}
+  .sc-grid>.sc-card.is-camera-offline>.sc-offline-note.is-above-thumbs{bottom:calc(21% + 16px)}
+  .smartcards.sc-wall-view .sc-grid>.sc-card.is-critical-alert.is-camera-offline>.sc-offline-note{left:14px;bottom:14px}
+  body.sc-light-page .sc-grid>.sc-card.is-camera-offline>.sc-offline-note{background:#ff6570;color:#210509}
 
   /* Dedicated GitHub Pages view: keep only the mobile Smart Cards experience. */
   body.sc-standalone{min-height:100vh;background:#0d1726}
@@ -3314,7 +3324,7 @@ Goal: *"Did the bins go out — and come back?"*
 
   <!-- ============ TAB: SMART CARDS — state, proof, action ============ -->
   <div class="tabpane on" id="pane-smart">
-    <section class="smartcards" id="smartCards" aria-label="Smart camera cards">
+    <section class="smartcards sc-grid-view sc-wall-view" id="smartCards" aria-label="Smart camera cards">
       <div class="sc-live" hidden><button class="sc-live-open" type="button"><span class="sc-live-frame"><img alt="" width="1672" height="941"></span><span class="sc-live-badge"><i aria-hidden="true"></i>LIVE</span><span class="sc-live-meta"><span class="sc-live-cam"></span><time class="sc-live-clock"></time></span></button><button class="sc-live-close" type="button" aria-label="Hide live view">&times;</button></div>
       <div class="sc-bot">
         <p class="sc-bot-hint" aria-hidden="true">Hi! Ask me about your home</p>
@@ -3332,7 +3342,7 @@ Goal: *"Did the bins go out — and come back?"*
           <button class="sc-theme-toggle" id="sc-theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false" title="Switch to dark mode"><svg class="sc-icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg><svg class="sc-icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.5 8.5 0 1 0 20.2 15.2Z"/></svg></button>
         </div>
         <div class="sc-view-mode" role="group" aria-label="Card view">
-          <button class="sc-view-cycle" type="button" data-view="list" aria-label="List view. Switch to grid view" title="Switch view"><span class="sc-view-icon" data-icon="list"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg></span><span class="sc-view-icon" data-icon="grid"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg></span><span class="sc-view-icon" data-icon="wall"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M12 4v16M4 12h16"/></svg></span><span class="sc-view-icon" data-icon="flip"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="7" width="14" height="13" rx="2"/><path d="M8 4h8a2 2 0 0 1 2 2"/></svg></span></button>
+          <button class="sc-view-cycle" type="button" data-view="wall" aria-label="Wall view. Switch to flip view" title="Switch view"><span class="sc-view-icon" data-icon="list"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg></span><span class="sc-view-icon" data-icon="grid"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg></span><span class="sc-view-icon" data-icon="wall"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M12 4v16M4 12h16"/></svg></span><span class="sc-view-icon" data-icon="flip"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="7" width="14" height="13" rx="2"/><path d="M8 4h8a2 2 0 0 1 2 2"/></svg></span></button>
         </div>
         <div class="sc-zoom-mode"><button class="sc-zoom-toggle" type="button" role="switch" aria-checked="true" aria-label="Auto zoom" title="Auto zoom: frame each camera on what matters"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m20 20-4.8-4.8M10.5 7.5v6M7.5 10.5h6"/></svg></button></div>
         <div class="sc-state-mode" role="group" aria-label="Preview card state emphasis">
@@ -8019,7 +8029,8 @@ function initSmartCardEvidence(){
   };
   const openDetail=(card,modeOverride)=>{
     const scene=card.dataset.scene;
-    const mode=modeOverride||card.dataset.cardMode||'normal';
+    const offline=!modeOverride&&card.classList.contains('is-camera-offline');
+    const mode=modeOverride||(offline?'normal':card.dataset.cardMode||'normal');
     const evidenceMode=smartCardEvidenceMode(mode);
     const state=SMART_CARD_STATES[mode][scene];
     const evidence=SMART_CARD_EVIDENCE[evidenceMode][scene];
@@ -8028,6 +8039,7 @@ function initSmartCardEvidence(){
     const previewScore=preview.querySelector('.sc-detail-preview-score');
     detailDialog.dataset.scene=scene;
     detailDialog.dataset.mode=mode;
+    detailDialog.dataset.offline=String(offline);
     detailDialog.dataset.videoExpanded='false';
     detailDialog.dataset.videoSort='newest';
     detailDialog.dataset.selectedVideoIndex='-1';
@@ -8045,8 +8057,8 @@ function initSmartCardEvidence(){
     preview.querySelectorAll('img').forEach(image=>image.loading='eager');
     if(modeOverride){const image=preview.querySelector('.sc-photo');image.src=state.src;image.alt=state.alt}
     detailDialog.querySelector('.sc-detail-title').textContent=card.querySelector(':scope>.sc-label').textContent;
-    detailDialog.querySelector('.sc-detail-state strong').textContent=state.state;
-    detailDialog.querySelector('.sc-detail-state span').textContent=state.sub;
+    detailDialog.querySelector('.sc-detail-state strong').textContent=offline?card.querySelector('.sc-state').textContent:state.state;
+    detailDialog.querySelector('.sc-detail-state span').textContent=offline?card.querySelector('.sc-sub').textContent:state.sub;
     detailDialog.querySelector('.sc-detail-checked').textContent=modeOverride?state.checked:card.querySelector('.sc-evidence-time').textContent;
     const cameraSummary=detailDialog.querySelector('.sc-evidence-camera-summary');
     cameraSummary.innerHTML=cameraSourceSummary(SMART_CARD_CAMERAS[scene]);
@@ -8276,7 +8288,7 @@ function zoomSmartCardWall(){
     const box=card.querySelector('.sc-detection-box');
     if(!layer)return;
     ['transform','transform-origin','transition','--sc-wall-zoom'].forEach(name=>layer.style.removeProperty(name));
-    if(!smartCardAutoZoom||!box||card.querySelector('.sc-security-cameras'))return;
+    if(!smartCardAutoZoom||!box||card.querySelector('.sc-security-cameras')||card.classList.contains('is-camera-offline'))return;
     Object.assign(layer.style,{transition:'none',transform:'none'});
     const area=layer.getBoundingClientRect();
     const target=box.getBoundingClientRect();
@@ -8469,6 +8481,25 @@ function renderSmartCardHealth(card,mode){
     return `<li class="sc-health-tile is-${status}" aria-label="${name} Cam: ${issue?issue.note:'online'}"><img src="${src}" alt="" loading="lazy"><span class="sc-health-dot" aria-hidden="true"></span>${issue?`<span class="sc-health-note" aria-hidden="true">${issue.note}</span>`:''}<span class="sc-health-name" aria-hidden="true">${name}</span></li>`;
   }).join('');
 }
+// Honesty rule (spec §11): a camera Camera health reports offline turns every goal bound to it into Camera offline.
+function smartCardOfflineCameras(healthMode){
+  if(healthMode!=='alert')return [];
+  return Object.entries(SMART_CARD_HEALTH_ISSUES.alert).filter(([,issue])=>issue.status==='offline').map(([name,issue])=>({camera:`${name} Cam`,note:issue.note}));
+}
+function smartCardOfflineState(scene,offline){
+  const last=SMART_CARD_STATES.normal[scene];
+  const cameras=SMART_CARD_CAMERAS[scene]||[];
+  const names=offline.map(item=>item.camera).join(', ');
+  const all=offline.length===cameras.length;
+  return {...last,state:all?'CAMERA OFFLINE':`${offline.length} CAMERA${offline.length>1?'S':''} OFFLINE`,sub:all?`${names} · last seen ${last.state}`:`${names} offline`};
+}
+function syncSmartCardOfflineNote(card,offline){
+  let note=card.querySelector(':scope>.sc-offline-note');
+  if(!offline.length){note?.remove();return}
+  if(!note){note=document.createElement('span');note.className='sc-offline-note';note.setAttribute('aria-hidden','true');card.append(note)}
+  note.textContent=offline[0].note;
+  note.classList.toggle('is-above-thumbs',!!card.querySelector('.sc-security-cameras'));
+}
 let smartCardLiveDismissed='';
 let smartCardLiveClock=0;
 function syncSmartCardLive(){
@@ -8476,7 +8507,7 @@ function syncSmartCardLive(){
   if(!live)return;
   const card=document.querySelector('#smartCards .sc-grid>.sc-card.is-critical-alert');
   const key=card?`${card.dataset.scene}:${card.dataset.cardMode}`:'';
-  const show=!!card&&key!==smartCardLiveDismissed;
+  const show=!!card&&!card.querySelector('.sc-health-grid')&&!card.classList.contains('is-camera-offline')&&key!==smartCardLiveDismissed;
   clearInterval(smartCardLiveClock);
   if(!show){live.hidden=true;document.querySelector('#smartCards .sc-bot')?.before(live);return}
   const scene=card.dataset.scene;
@@ -8518,7 +8549,11 @@ function setSmartCardState(mode){
   const isAlert=mode==='alert';
   const isSuggested=mode==='suggested';
   const mixedAlerts=mode==='mixed'?chooseMixedAlertScenes():new Set();
-  const mixedSuggested=mode==='mixed'?chooseMixedSuggestedScenes(mixedAlerts):new Set();
+  const healthMode=!isSuggested&&(isAlert||mixedAlerts.has('health'))?'alert':'normal';
+  const offlineCameras=smartCardOfflineCameras(healthMode);
+  const offlineFor=scene=>scene==='health'?[]:offlineCameras.filter(item=>(SMART_CARD_CAMERAS[scene]||[]).includes(item.camera));
+  const offlineScenes=new Set(Object.keys(SMART_CARD_CAMERAS).filter(scene=>offlineFor(scene).length));
+  const mixedSuggested=mode==='mixed'?chooseMixedSuggestedScenes(new Set([...mixedAlerts,...offlineScenes])):new Set();
   $('smartCards').classList.toggle('is-alert',isAlert);
   $('smartCards').classList.toggle('is-mixed',mode==='mixed');
   $('smartCards').classList.toggle('is-highlights',mode==='normal');
@@ -8527,13 +8562,16 @@ function setSmartCardState(mode){
   if(detailDialog?.open)detailDialog.close();
   document.querySelectorAll('.sc-grid>.sc-card[data-scene]').forEach(card=>{
     const scene=card.dataset.scene;
-    const cardMode=isSuggested||mixedSuggested.has(scene)?'suggested':isAlert||mixedAlerts.has(scene)?'alert':SMART_CARD_STATES.highlights[scene]?'highlights':'normal';
-    const state=SMART_CARD_STATES[cardMode][scene];
-    const evidence=SMART_CARD_EVIDENCE[smartCardEvidenceMode(cardMode)][scene];
+    const offline=offlineFor(scene);
+    const cardMode=offline.length?'alert':isSuggested||mixedSuggested.has(scene)?'suggested':isAlert||mixedAlerts.has(scene)?'alert':SMART_CARD_STATES.highlights[scene]?'highlights':'normal';
+    const state=offline.length?smartCardOfflineState(scene,offline):SMART_CARD_STATES[cardMode][scene];
+    const evidence=SMART_CARD_EVIDENCE[offline.length?'normal':smartCardEvidenceMode(cardMode)][scene];
     if(!state)return;
     card.dataset.cardMode=cardMode;
     card.classList.toggle('is-alert-card',cardMode==='alert');
     card.classList.toggle('is-suggested-card',cardMode==='suggested');
+    card.classList.toggle('is-camera-offline',offline.length>0);
+    syncSmartCardOfflineNote(card,offline);
     card.querySelector('.sc-state').textContent=state.state;
     card.querySelector('.sc-sub').textContent=state.sub;
     card.dataset.checked=state.checked;
@@ -8552,15 +8590,16 @@ function setSmartCardState(mode){
     btn.setAttribute('aria-pressed',String(active));
   });
   const cardsByScene=new Map([...smartCardGrid.children].map(card=>[card.dataset.scene,card]));
-  const mixedAlertOrder=SMART_CARD_MIXED_ALERT_PRIORITY.filter(scene=>mixedAlerts.has(scene));
-  const order=mode==='mixed'?[...mixedAlertOrder.slice(0,1),...SMART_CARD_PRIORITY.suggested.filter(scene=>mixedSuggested.has(scene)),...mixedAlertOrder.slice(1),...SMART_CARD_PRIORITY.normal.filter(scene=>!mixedAlerts.has(scene)&&!mixedSuggested.has(scene))]:SMART_CARD_PRIORITY[mode];
+  const alertScenes=new Set([...mixedAlerts,...offlineScenes]);
+  const mixedAlertOrder=SMART_CARD_MIXED_ALERT_PRIORITY.filter(scene=>alertScenes.has(scene));
+  const order=mode==='mixed'?[...mixedAlertOrder.slice(0,1),...SMART_CARD_PRIORITY.suggested.filter(scene=>mixedSuggested.has(scene)),...mixedAlertOrder.slice(1),...SMART_CARD_PRIORITY.normal.filter(scene=>!alertScenes.has(scene)&&!mixedSuggested.has(scene))]:SMART_CARD_PRIORITY[mode];
   order.forEach(scene=>{const card=cardsByScene.get(scene);if(card)smartCardGrid.append(card)});
   const cards=[...smartCardGrid.querySelectorAll(':scope>.sc-card[data-scene]')];
   const highestAlert=cards.find(card=>card.dataset.cardMode==='alert');
   cards.forEach(card=>{
     const critical=card===highestAlert;
     card.classList.toggle('is-critical-alert',critical);
-    card.setAttribute('aria-label',`${critical?'Urgent alert: ':''}Open details for ${card.querySelector(':scope>.sc-label').textContent.trim()}`);
+    card.setAttribute('aria-label',`${critical?'Urgent alert: ':''}${card.classList.contains('is-camera-offline')?'Camera offline: ':''}Open details for ${card.querySelector(':scope>.sc-label').textContent.trim()}`);
   });
   const goals=new Set(cards.map(card=>card.dataset.scene)).size;
   smartCards.querySelector('#sc-cards-heading').textContent=isSuggested?`${cards.length} new suggestions across ${goals} ${goals===1?'goal':'goals'}`:`Now · ${cards.length} ${cards.length===1?'update':'updates'} across ${goals} ${goals===1?'goal':'goals'}${mixedSuggested.size?`\u00a0·\u00a0${mixedSuggested.size}\u00a0new`:''}`;
@@ -8807,8 +8846,9 @@ fetch('VERSION',{cache:'no-store'}).then(response=>response.ok?response.text():'
   const version=text.trim();
   if(/^\d+\.\d+\.\d+$/.test(version))document.querySelectorAll('[data-version-source="VERSION"]').forEach(label=>{label.textContent=`v${version}`});
 }).catch(()=>{});
+/* Default: Wall view with the Mixed state. The markup already starts in wall, so this only syncs. */
 setSmartCardState('mixed');
-setSmartCardView('list');
+setSmartCardView('wall');
 /* ---------- component browse filters ---------- */
 const modMeta={};
 FAMILIES.forEach(([fam,mods])=>mods.forEach(([id])=>{

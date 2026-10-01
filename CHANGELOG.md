@@ -12,6 +12,19 @@ the app (v1, v1.5, v2, v2.5, v3, v4) are design-system names and are unrelated.
 
 ## [Unreleased]
 
+### Added
+- Smart Cards: a Camera offline state (the honesty rule, spec §11). While Camera health reports
+  a camera offline, every goal bound to it shows "CAMERA OFFLINE" in amber over its greyed last
+  frame, with an Offline tag. It is ordered as an alert, never suggested, and gets no live window.
+
+### Changed
+- Smart Cards: the page opens in Wall view (was List). Mixed stays the default state.
+- Smart Cards: the critical alert no longer has a blinking dot before its state; it read as live
+  video. The LIVE badge is the only thing that blinks.
+- Smart Cards: a kept suggestion loses its NEW badge.
+- Smart Cards: the goal line is set in regular weight (400).
+- Smart Cards: a critical Camera health card no longer gets the live window.
+
 ## [0.11.0] - 2026-09-30
 
 ### Added

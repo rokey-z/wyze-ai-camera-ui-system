@@ -42,7 +42,8 @@ this document in the same change.
 | **Checked** | Freshness of the last look, such as "18 secs ago" | `card.dataset.checked` |
 | **Card mode** | Which data a card shows: `normal`, `alert`, `suggested`, `highlights` | `card.dataset.cardMode` |
 | **Page state** | The top switch: Mixed, Normal, Alert, New | `setSmartCardState(mode)` with `mixed / normal / alert / suggested` |
-| **Critical alert** | The single most important alert on screen. It gets a red outline, a blinking dot, and the live window. | `.is-critical-alert` |
+| **Critical alert** | The single most important alert on screen. It gets a red outline and the live window. | `.is-critical-alert` |
+| **Camera offline** | A goal whose bound camera is offline. It says so instead of showing a calm or stale state (§11). | `.is-camera-offline` |
 | **Suggestion** | A card the AI proposes and the user hasn't kept yet. Shown with a NEW badge. | `.is-suggested-card` |
 | **Evidence** | Why the AI believes the state: video frames, household memory, and a recommendation | `SMART_CARD_EVIDENCE` |
 | **Highlight** | A recent notable event that outranks a boring current state, such as a cardinal visit | `SMART_CARD_STATES.highlights` |
@@ -110,8 +111,15 @@ hides while Smart Cards is active.
   - Normal and suggested: white.
   - Tests pin these colors.
 - **Duration** is a translucent pill in normal modes and plain text in alerts.
-- **Critical alert:** a 2px red perimeter (`#ff4b55`), a blinking dot before the state, and an
-  `aria-label` starting "Urgent alert:". Exactly one card per screen can be critical.
+- **Critical alert:** a 2px red perimeter (`#ff4b55`) and an `aria-label` starting "Urgent
+  alert:". Exactly one card per screen can be critical. There is **no dot before the state**: a
+  blinking red dot reads as live video, so the LIVE badge on the live window (§9) is the only
+  thing that blinks.
+- **Goal line:** regular weight (400), uppercase, 64% white.
+- **Camera offline:** state "CAMERA OFFLINE" (or "{n} CAMERA(S) OFFLINE" when only some of a
+  multi-camera goal's cameras are down) in amber `#ffb454`, duration "{Camera} · last seen
+  {last state}", the last frame greyscale and darkened, a red "Offline 25m" tag at the bottom
+  left, no focus box, and an `aria-label` starting "Camera offline:". See §11.
 - **Image layer:**
   - Every card image is wrapped in `.sc-focus-layer`, which is the element that zooms.
   - Home security is multi-camera: in normal mode it shows a 2×2 grid, and in alert mode one
@@ -130,7 +138,8 @@ hides while Smart Cards is active.
 `setSmartCardState(mode)` resolves each card's mode in this order:
 
 ```
-cardMode = suggested   if page is New, or the goal is picked as a Mixed suggestion
+cardMode = alert       if a camera bound to the goal is offline (Camera offline, §11)
+         = suggested   if page is New, or the goal is picked as a Mixed suggestion
          = alert       if page is Alert, or the goal is picked as a Mixed alert
          = highlights  if the goal has highlight data (birds, pets, wildlife)
          = normal      otherwise
@@ -138,7 +147,9 @@ cardMode = suggested   if page is New, or the goal is picked as a Mixed suggesti
 
 Each mode reads its own data: `SMART_CARD_STATES[cardMode][scene]` and
 `SMART_CARD_EVIDENCE[normal|alert][scene]`. Suggested and highlights modes reuse the normal
-evidence. Changing the mode rewrites the state, duration, checked time, and image, and
+evidence. A Camera offline card is ordered as an alert but reads its last known normal state and
+evidence (`smartCardOfflineState`). A goal whose camera is offline is never picked as a Mixed
+suggestion. Changing the mode rewrites the state, duration, checked time, and image, and
 re-renders the health grid.
 
 ### 4.2 Mixed: the realistic default
@@ -162,11 +173,17 @@ The page opens in Mixed. It simulates a real moment:
 4. **Then routine cards,** in `SMART_CARD_PRIORITY.normal` order.
 
 Alert-only and New pages use `SMART_CARD_PRIORITY.alert` and `SMART_CARD_PRIORITY.suggested`.
-The critical alert is always `cards.find(card => cardMode === 'alert')` after ordering.
+Camera offline cards count as alerts for this ordering, at their goal's alert priority.
+The critical alert is always `cards.find(card => cardMode === 'alert')` after ordering, so any
+goal can be critical when it is the top alert. (The Mixed demo always includes Home security or
+Garage monitor, so they are the ones you see.)
 
 ---
 
 ## 5. Views
+
+The page opens in **Wall** view with the **Mixed** state (the markup starts with
+`sc-grid-view sc-wall-view` and the button at `data-view="wall"`, so there is no jump on load).
 
 The view button cycles `SMART_CARD_VIEWS = ['list','grid','wall','flip']`. Its label always names
 the next view, such as "List view. Switch to grid view". The icon swap spins old icons out and
@@ -189,8 +206,8 @@ zoom = clamp(1.15, 0.58 × min(tileW / boxW, tileH / boxH), 2.4)
 pan  = move the box center to the tile center, clamped so no image edge shows
 ```
 
-- **Skipped:** Home security (its thumbnails share the layer) and Camera health (no single
-  focus area).
+- **Skipped:** Home security (its thumbnails share the layer), Camera health (no single
+  focus area), and Camera offline cards (they keep the whole last frame).
 - **Focus box line:** it keeps a constant thin line through
   `border-width: calc(2px / var(--sc-wall-zoom))`.
 - **Detail preview:** it removes the inline zoom, so the preview always shows the full frame.
@@ -233,7 +250,7 @@ A suggestion is a card the AI proposes. The user decides:
 
 | Action | Where | What happens |
 |---|---|---|
-| **Keep** | The Keep button on the card | Button changes to "Kept". The "Why this?" section collapses. Confetti rises from the card top (110 pieces, about 2–3s). A toast says "{Goal} added to your Smart Cards". The card stays, marked `data-suggestion-decision="kept"`, and becomes a normal card. |
+| **Keep** | The Keep button on the card | Button changes to "Kept". The "Why this?" section collapses. Confetti rises from the card top (110 pieces, about 2–3s). A toast says "{Goal} added to your Smart Cards". The card stays, marked `data-suggestion-decision="kept"`, and becomes a normal card: its NEW badge disappears (`[data-suggestion-decision="kept"] .sc-new-badge{display:none}`). |
 | **Drop** | The Drop button on the card | **Opens the WYZE AI chat**, which asks "Why drop {Goal}?". Quick replies are the four reasons, or the user types their own. While it asks, the card has a green ring (`.is-asking`). On reply, the card fades out, the cards below slide up, the heading recounts, and the AI confirms. Closing the chat keeps the card. |
 | **Delete** | The detail sheet | The flip-form flow described in §6. It works for any card, not just suggestions. |
 
@@ -279,7 +296,9 @@ pipeline. Thumbs on an entity are corrections and must be sent back.
 
 ## 9. Live window (critical alert only)
 
-When a critical alert exists, `.sc-live` is moved *into that card*:
+When a critical alert exists, `.sc-live` is moved *into that card*, except when that card is
+Camera health (its camera tiles are already the live view, and the camera at issue can't stream)
+or a Camera offline card:
 
 - **Position:** bottom left in list and flip views; top right in grid and wall views (Home
   security thumbnails fill the bottom edge there).
@@ -287,7 +306,8 @@ When a critical alert exists, `.sc-live` is moved *into that card*:
   clock ticking every second.
 - **Tap:** opens the card's detail sheet.
 - **× button:** hides it for this `scene:mode` until a different card becomes critical.
-- **When it hides:** with no critical alert (Normal, New), and while its card is dropping.
+- **When it hides:** with no critical alert (Normal, New), when the critical card is Camera
+  health or Camera offline, and while its card is dropping.
 - **Mock:** the snapshot drifts slowly to suggest video. **Production must use the real live
   stream** of the camera that triggered the alert.
 
@@ -342,6 +362,13 @@ When a critical alert exists, `.sc-live` is moved *into that card*:
 - **Honesty rule:** when a camera is offline, every goal that depends on it must say so on its
   own card instead of showing a calm state. The health card is the summary, not a substitute.
   Production: the health data comes from device status APIs, never inferred from silence.
+- **Camera offline (implemented):** while Camera health is in alert, `smartCardOfflineCameras`
+  lists its offline cameras (`SMART_CARD_HEALTH_ISSUES.alert`, status `offline`; low battery
+  doesn't count). Every other goal whose `SMART_CARD_CAMERAS` includes one becomes a Camera
+  offline card (§3): ordered as an alert, never suggested, no live window, no zoom. Its detail
+  sheet shows the same state in amber over the grey last frame, with the goal's normal evidence
+  (`data-offline="true"` on the dialog). In the demo, Backyard Cam is offline, so the Wild animal
+  watcher shows "CAMERA OFFLINE · Backyard Cam · last seen NO WILDLIFE".
 
 ---
 
@@ -359,7 +386,7 @@ When a critical alert exists, `.sc-live` is moved *into that card*:
 - **Type:**
   - Section titles 15px/800.
   - "Why this?" title 17px/800, body 13px/500 at 1.5.
-  - Goal line 11px uppercase at 64% white.
+  - Goal line 11px uppercase at 64% white, regular weight (400).
   - State 22–40px depending on view.
 - **Motion:**
   - Standard ease `cubic-bezier(.22,1,.36,1)`.
@@ -437,7 +464,7 @@ type CardEvent =
 | Ordering | `SMART_CARD_PRIORITY`, `SMART_CARD_MIXED_ALERT_PRIORITY`, `SMART_CARD_MIXED_WEIGHTS`, `chooseMixedAlertScenes`, `chooseMixedSuggestedScenes`, `setSmartCardState` |
 | Views | `SMART_CARD_VIEWS`, `setSmartCardView`, `syncSmartCardView`, `syncSmartCardViewCycle`, `stackSmartCards`, `stepSmartCardFlip`, `finishSmartCardDrag`, `zoomSmartCardWall` |
 | Cards and detail | `initSmartCardEvidence` (builds the card chrome, detail sheet, keep, drop, delete, feedback), `videoEvidenceStrip`, `videoEvidenceDuration`, `evidenceFeedback`, `cameraSourceSummary`, `dismissSmartCard`, `askSmartCardDrop` |
-| Health and live | `renderSmartCardHealth`, `syncSmartCardLive`, `initSmartCardLive` |
+| Health and live | `renderSmartCardHealth`, `smartCardOfflineCameras`, `smartCardOfflineState`, `syncSmartCardOfflineNote`, `syncSmartCardLive`, `initSmartCardLive` |
 | Intro | `initSmartCardIntro` |
 | Chat | `initSmartCardBot`, `SMART_CARD_BOT_TOPICS`, `smartCardBot.prompt` |
 | Styles | `.sc-*`. Views are scoped by `.smartcards.sc-grid-view`, `.sc-wall-view` (always with `sc-grid-view`), and `.sc-flip-view`. Page states use `.is-mixed`, `.is-alert`, `.is-suggested`, `.is-highlights`. |
