@@ -13,7 +13,8 @@ the app (v1, v1.5, v2, v2.5, v3, v4) are design-system names and are unrelated.
 ## [Unreleased]
 
 ### Added
-- Smart Cards: a Create new goal block at the end of the card feed, which asks WYZE AI in chat.
+- Smart Cards: a square Create new goal tile in the last wall cell ("Just say what you want to
+  watch"), which asks WYZE AI in chat.
 - Smart Cards: a floating, translucent white bottom tab bar with two icon-only tabs: Smart Cards
   (AI sparkles, the default) and Devices & Events (camera). The selected icon is filled, a
   highlight pill springs between the tabs, and the incoming panel slides in from the side of
@@ -24,11 +25,12 @@ the app (v1, v1.5, v2, v2.5, v3, v4) are design-system names and are unrelated.
 - Smart Cards: the top line is the Wyze AI One logo (the constellation "W") with a small
   light/dark icon after the version label, on both tabs. The view, Auto zoom, and state controls are hidden, and the page always
   shows Mixed in Wall view with Auto zoom on.
-- Smart Cards: the learning intro card now also shows at the top in Mixed, folded to its title
-  and progress pill, with a chevron to unfold it.
+- Smart Cards: the learning intro card is always present. Folded, it sits in the pinned top line
+  to the right of the logo (title, chevron and progress pill, no mascot). Unfolded, it becomes the
+  full card at the top of the feed, and the folded block hides.
 - Smart Cards: the toast and the mascot's hint bubble sit higher, clear of the tab bar.
 - Smart Cards: the page opens in dark mode.
-- Smart Cards: the header logo is centered in a round glass backdrop, the header has no
+- Smart Cards: the header logo sits in a round glass backdrop on the left, the header has no
   background, and on scroll the logo shrinks while the version and theme icon fade.
 
 ## [0.12.0] - 2026-10-01

@@ -55,7 +55,9 @@ this document in the same change.
 ## 2. Screen anatomy (top to bottom)
 
 1. **Top line** (`.sc-mode-row`), pinned on phones (≤620px) and on the standalone route:
-   - **WYZE AI logo** (`.sc-brand-logo` in `.sc-brand`), **centered**: the constellation "W" from
+   - **Layout:** the logo cluster sits on the left, and the folded learning block
+     (`.sc-learning-chip`, §8) fills the rest of the row to its right. Both stay pinned.
+   - **WYZE AI logo** (`.sc-brand-logo` in `.sc-brand`): the constellation "W" from
      Wyze AI One (`assets/wyze-ai-logo.png`, 36px as in that app's header, `alt="WYZE"`) inside a
      44px round glass backdrop (`.sc-brand-name`: dark glass `#0d1726b3` in dark, white glass
      `#ffffffb8` in light, 20px backdrop blur), with a small version label under it.
@@ -77,14 +79,18 @@ this document in the same change.
 The page has two tabs (§2.1). Items 2–4 are the **Smart Cards** tab; item 5 is the **Devices &
 Events** tab.
 
-2. **Learning intro card** (`.sc-intro-card`). Shown at the top in Mixed, **folded**, and fully
-   open in New (§8).
+2. **Learning intro card** (`.sc-intro-card`, §8). Folded, it lives in the pinned top line as
+   `.sc-learning-chip`. Unfolded, it is the full card at the top of the feed. It is always present:
+   folded in Mixed, Normal, and Alert, and fully open in New.
 3. **Section title** (`#sc-cards-heading`). This is text, not a control. Format:
    - `Now · {n} updates across {g} goals` (Mixed, Normal, Alert)
    - `· {k} new` appended when suggestions are mixed in, kept together with non-breaking spaces
    - `{n} new suggestions across {g} goals` (New)
-4. **Card feed** (`.sc-grid`), in the chosen view, ending with a **Create new goal** block
-   (`.sc-new-goal`): a dashed, rounded button with a green plus. It opens the WYZE AI chat
+4. **Card feed** (`.sc-grid`), in the chosen view. Its last cell is a square **Create new goal**
+   tile (`.sc-new-goal`, a child of `.sc-grid`, kept last after every reorder, hidden in list and
+   flip views): a dimmed rounded square fill, a green plus, "Create new goal", and "Just say what
+   you want to watch". Card code selects `:scope>.sc-card`, never every grid child. It opens the
+   WYZE AI chat
    (`smartCardBot.prompt`) to ask what to watch, with example chips. The reply confirms that WYZE
    AI will start watching and add a card later. Production: route the answer to goal creation.
 5. **Key moments** (`.sc-stories`, on the Devices & Events tab): "{n} key moments in last 12
@@ -308,12 +314,14 @@ signal for future suggestions.
 
 ## 8. Learning intro card (Mixed and New)
 
-**Folded state (Mixed):** the card starts folded (`data-folded="true"`): a 52px mascot, the title
-"Hi, I'm learning your home" at 16px, and the progress pill. The copy and the steps hide. A
-chevron button (`.sc-intro-fold`, `aria-expanded`, `aria-controls="sc-intro-steps"`) at the top
-right unfolds it to the full card below and folds it again. The panel's height animates over
-0.36s, and the copy and steps fade in. Under reduced motion it switches instantly. In New, the card
-is always open and the chevron hides.
+**Folded or unfolded, never both (every state but New):** the card starts folded
+(`data-folded="true"`). Folded, it shows as `.sc-learning-chip` in the pinned top line, right of the
+logo: the same yellow-tinted panel, the title "Hi, I'm learning your home", a chevron, and the
+LEARNING progress pill. It has no mascot. The full card in the feed is hidden. Tapping the folded
+block hides it, scrolls to the top, and opens the full card (height and opacity animate over 0.36s),
+with focus on the card's chevron (`.sc-intro-fold`). That chevron folds the card away (0.28s) and
+brings the folded block back, with focus on it. Under reduced motion it switches instantly. In New,
+the card is always open, and the folded block and chevron hide.
 
 **Copy note:** the third step, "Your first Smart Cards: in about 14 hours", was written for New,
 where no cards exist yet. In Mixed it contradicts the cards below it, so it needs Mixed-specific
