@@ -29,6 +29,9 @@ const inspect=()=>{
     const win=frame.contentWindow;
     const doc=frame.contentDocument;
     if(!doc?.querySelector('.sc-grid>.sc-card[data-card-mode]')||!win.location.search.includes('view=smart-cards'))throw new Error('waiting');
+    // The page opens dark; record that, then switch to light so the light-theme checks below run as written.
+    const defaultDark=doc.querySelector('#smartCards').classList.contains('dark')&&!doc.body.classList.contains('sc-light-page')&&doc.querySelector('#sc-theme-toggle').getAttribute('aria-pressed')==='true';
+    doc.querySelector('#sc-theme-toggle').click();
     const setView=view=>{for(let guard=0;guard<4&&doc.querySelector('.sc-view-cycle').dataset.view!==view;guard++)doc.querySelector('.sc-view-cycle').click()};
     const mixedCards=[...doc.querySelectorAll('.sc-grid>.sc-card')];
     const mixedAlerts=mixedCards.filter(card=>card.dataset.cardMode==='alert');
@@ -56,6 +59,7 @@ const inspect=()=>{
       return controlsHidden&&brand.width>0&&icon.left-version.right>=0&&icon.left-version.right<=6&&Math.abs((icon.top+icon.bottom)/2-(version.top+version.bottom)/2)<=2&&icon.height<=20;
     };
     const initial={
+      defaultDark,
       path:win.location.pathname,
       search:win.location.search,
       title:doc.title,
@@ -454,7 +458,7 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     assert.equal(result.mixedDefault.newAfterAlerts,true);
     assert.equal(result.mixedDefault.criticalCue,true);
     assert.equal(result.mixedDefault.detailMatchesCard,true);
-    assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:9,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:247,landscapeCards:true,normalOrder:['security','garage','front','ev','bins','pets','wildlife','birds','health'],headerCompact:true,cardHeading:{text:'Now · 9 updates across 9 goals',aboveCards:true,sameStyle:true},refreshButtons:9,checkedTimeInsideTrigger:false,cardFeedbackRemoved:true,goLiveButtons:0,criticalCards:0,bottomEvidenceHidden:true,stateBlocksClear:true,goalTitlesClear:true,imageGradient:true,topOnlyGradient:true,goalTitleInside:true,stateBlockAligned:true,normalActive:true});
+    assert.deepEqual(result.initial,{defaultDark:true,path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:9,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:247,landscapeCards:true,normalOrder:['security','garage','front','ev','bins','pets','wildlife','birds','health'],headerCompact:true,cardHeading:{text:'Now · 9 updates across 9 goals',aboveCards:true,sameStyle:true},refreshButtons:9,checkedTimeInsideTrigger:false,cardFeedbackRemoved:true,goLiveButtons:0,criticalCards:0,bottomEvidenceHidden:true,stateBlocksClear:true,goalTitlesClear:true,imageGradient:true,topOnlyGradient:true,goalTitleInside:true,stateBlockAligned:true,normalActive:true});
     assert.deepEqual(result.viewControls,{count:1,labels:['List view. Switch to grid view'],icons:true,iconOnly:true,defaultView:{view:'wall',label:'Wall view. Switch to flip view',wall:true}});
     assert.deepEqual(result.storySummary,{tabs:{startHidden:true,switched:true,iconOnly:true,floating:true},heading:'6 key moments in last 12 hours',count:6,titles:['Cardinal at the feeder','Playtime on the rug','Blue jay visit','Water break','Raccoon in the yard','Goldfinch visit'],ratings:['5','5','4','4','5','4'],images:true});
     assert.deepEqual(result.storyRatingColors,{five:'rgb(246, 196, 83)',four:'rgb(113, 237, 190)'});

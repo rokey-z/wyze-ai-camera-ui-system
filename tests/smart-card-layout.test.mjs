@@ -46,7 +46,7 @@ test('every card keeps its in-image title and removes card-level rating controls
 test('the top line holds the wordmark with the theme icon after the version; view and state controls stay in the markup', () => {
   assert.match(html, /<div class="sc-mode-row">\s*<span class="sc-brand"><span class="sc-brand-name"><img class="sc-brand-logo" src="assets\/wyze-ai-logo\.png" alt="WYZE" width="36" height="36"><\/span><span class="sc-brand-line"><span class="sc-brand-version" data-version-source="VERSION">v[\d.]+<\/span><span class="sc-theme-mode"><button class="sc-theme-toggle"[\s\S]*?<\/button><\/span><\/span><\/span>\s*<div class="sc-view-mode"[\s\S]*?<div class="sc-state-mode"/);
   assert.match(html, /\.sc-mode-row\{display:flex;align-items:center;justify-content:space-between;gap:6px\}/);
-  assert.match(html, /class="sc-theme-toggle" id="sc-theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false"/);
+  assert.match(html, /class="sc-theme-toggle" id="sc-theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="true"/);
   assert.match(html, /class="sc-icon-sun"/);
   assert.match(html, /class="sc-icon-moon"/);
   assert.doesNotMatch(html, /data-sc-theme=/);
@@ -57,7 +57,7 @@ test('the top line holds the wordmark with the theme icon after the version; vie
   assert.match(html, /\.sc-mode-row \.sc-view-mode:has\(button:nth-child\(3\)\[aria-pressed="true"\]\)::before/);
   assert.match(html, /\.sc-mode-row \.sc-theme-toggle svg\{[^}]*transition:opacity \.24s/);
   assert.match(html, /@media\(prefers-reduced-motion:reduce\)\{\.sc-mode-row \.sc-theme-mode,[^}]*transition:none\}/);
-  assert.match(html, /<body class="sc-light-page">/);
+  assert.match(html, /<body>/);
 });
 
 test('list, grid, and flip use the same emergency-ordered cards', () => {
@@ -248,7 +248,7 @@ test('detail state stays unfilled and duration retains its pill treatment', () =
 });
 
 test('last-12-hours stories sit in the Devices & Events tab and open their rated video evidence', () => {
-  assert.match(html, /<section class="sc-card-feed" id="sc-panel-cards" role="tabpanel" aria-labelledby="sc-cards-heading">\s*<article class="sc-intro-card"[\s\S]*?<\/article>\s*<div class="sc-stories-head sc-cards-head"><h2 id="sc-cards-heading">Now · 9 updates across 9 goals<\/h2><\/div>\s*<div class="sc-shell">[\s\S]*?<div class="sc-grid">[\s\S]*?<\/div>\s*<span class="sc-flip-status" aria-live="polite"><\/span>\s*<\/div>\s*<\/section>\s*<section class="sc-stories" id="sc-panel-events" role="tabpanel" aria-labelledby="sc-stories-heading" hidden>[\s\S]*?<ol class="sc-story-list"><\/ol>/);
+  assert.match(html, /<section class="sc-card-feed" id="sc-panel-cards" role="tabpanel" aria-labelledby="sc-cards-heading">\s*<article class="sc-intro-card"[\s\S]*?<\/article>\s*<div class="sc-stories-head sc-cards-head"><h2 id="sc-cards-heading">Now · 9 updates across 9 goals<\/h2><\/div>\s*<div class="sc-shell">[\s\S]*?<div class="sc-grid">[\s\S]*?<\/div>\s*<span class="sc-flip-status" aria-live="polite"><\/span>\s*<\/div>\s*<button class="sc-new-goal" type="button">[\s\S]*?<\/button>\s*<\/section>\s*<section class="sc-stories" id="sc-panel-events" role="tabpanel" aria-labelledby="sc-stories-heading" hidden>[\s\S]*?<ol class="sc-story-list"><\/ol>/);
   assert.match(html, /\.sc-stories-head h2\{[^}]*font-family:var\(--sans\)/);
   assert.match(html, /smartCards\.querySelector\('#sc-cards-heading'\)\.textContent=isSuggested\?`\$\{cards\.length\} new suggestions across \$\{goals\} \$\{goals===1\?'goal':'goals'\}`:`Now · \$\{cards\.length\} \$\{cards\.length===1\?'update':'updates'\} across \$\{goals\} \$\{goals===1\?'goal':'goals'\}\$\{mixedSuggested\.size\?`\\u00a0·\\u00a0\$\{mixedSuggested\.size\}\\u00a0new`:''\}`/);
   assert.match(html, /\.sc-stories\{margin:65px 0 0;font-family:var\(--sans\)\}/);
@@ -444,7 +444,7 @@ test('intro card shows learned routines as pills that expand and accept user add
 });
 
 test('the page opens in wall view with the mixed state', () => {
-  assert.match(html, /<section class="smartcards sc-grid-view sc-wall-view" id="smartCards"/);
+  assert.match(html, /<section class="smartcards sc-grid-view sc-wall-view dark" id="smartCards"/);
   assert.match(html, /class="sc-view-cycle" type="button" data-view="wall" aria-label="Wall view\. Switch to flip view"/);
   assert.match(html, /setSmartCardState\('mixed'\);\nsetSmartCardView\('wall'\);/);
   assert.match(html, /<button class="active" type="button" data-sc-state="mixed" aria-pressed="true"/);
@@ -489,7 +489,13 @@ test('a floating icon-only tab bar switches between Smart Cards and Devices & Ev
 
 test('the cards tab is Mixed, with a small theme icon and a folded learning section on top', () => {
   assert.match(html, /\.sc-mode-row \.sc-view-mode,\.sc-mode-row \.sc-zoom-mode,\.sc-mode-row \.sc-state-mode\{display:none\}/);
-  assert.match(html, /\.smartcards \.sc-mode-row \.sc-brand\{display:block\}/);
+  assert.match(html, /\.smartcards \.sc-mode-row\{justify-content:center\}/);
+  assert.match(html, /\.smartcards \.sc-brand-name\{display:grid;place-items:center;width:44px;height:44px;margin:0 auto;[^}]*border-radius:50%;background:#0d1726b3;[^}]*backdrop-filter:blur\(20px\) saturate\(1\.8\);/);
+  assert.match(html, /body\.sc-light-page \.smartcards \.sc-brand-name\{[^}]*background:#ffffffb8/);
+  assert.match(html, /body \.smartcards \.sc-mode-row,body\.sc-light-page \.smartcards \.sc-mode-row\{background:none;box-shadow:none;/);
+  assert.match(html, /\.smartcards\.is-scrolled \.sc-brand-name\{transform:scale\(\.8\)\}/);
+  assert.match(html, /\.smartcards\.is-scrolled \.sc-brand-line\{opacity:0;visibility:hidden;/);
+  assert.match(html, /smartCards\.classList\.toggle\('is-scrolled',window\.scrollY>8\)/);
   assert.match(html, /\.smartcards \.sc-mode-row \.sc-theme-toggle,body\.sc-light-page \.smartcards \.sc-mode-row \.sc-theme-toggle\{position:relative;width:18px;min-width:18px;height:18px;/);
   assert.match(html, /\.smartcards \.sc-mode-row \.sc-theme-toggle::after\{content:'';position:absolute;inset:-8px\}/);
   assert.match(html, /<button class="active" type="button" data-sc-state="mixed" aria-pressed="true"/);
@@ -499,6 +505,14 @@ test('the cards tab is Mixed, with a small theme icon and a folded learning sect
   assert.match(html, /\.smartcards:not\(\.is-suggested\) \.sc-intro-fold\{display:grid\}/);
   assert.match(html, /fold\.setAttribute\('aria-expanded',String\(!folded\)\)/);
   assert.match(html, /@media\(prefers-reduced-motion:reduce\)\{\.sc-intro-fold svg\{transition:none\}\}/);
+});
+
+test('a Create new goal block ends the card feed and asks WYZE AI in chat', () => {
+  assert.match(html, /<button class="sc-new-goal" type="button"><span class="sc-new-goal-plus" aria-hidden="true">[\s\S]*?<strong>Create new goal<\/strong>/);
+  assert.match(html, /\.sc-new-goal\{display:flex;[^}]*border:1\.5px dashed #ffffff3d;border-radius:18px;/);
+  assert.match(html, /body\.sc-light-page \.sc-new-goal\{/);
+  assert.match(html, /@media\(prefers-reduced-motion:reduce\)\{\.sc-new-goal\{transition:none\}/);
+  assert.match(html, /initSmartCardNewGoal\(\);/);
 });
 
 test('mascot floats bottom left as a WYZE AI chat entry', () => {

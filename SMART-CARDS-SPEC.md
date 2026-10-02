@@ -55,9 +55,14 @@ this document in the same change.
 ## 2. Screen anatomy (top to bottom)
 
 1. **Top line** (`.sc-mode-row`), pinned on phones (≤620px) and on the standalone route:
-   - **WYZE AI logo** (`.sc-brand-logo` in `.sc-brand`): the constellation "W" from Wyze AI One
-     (`assets/wyze-ai-logo.png`, drawn at 36px as in that app's header, `alt="WYZE"`), with a
-     small version label under it. The label is read
+   - **WYZE AI logo** (`.sc-brand-logo` in `.sc-brand`), **centered**: the constellation "W" from
+     Wyze AI One (`assets/wyze-ai-logo.png`, 36px as in that app's header, `alt="WYZE"`) inside a
+     44px round glass backdrop (`.sc-brand-name`: dark glass `#0d1726b3` in dark, white glass
+     `#ffffffb8` in light, 20px backdrop blur), with a small version label under it.
+   - **No header background:** the sticky top line is transparent, and cards scroll under it.
+     Once the page scrolls past 8px (`.smartcards.is-scrolled`, set by `initSmartCardHeader`), the
+     logo circle scales to 0.8 and the version line fades out. Both use transforms, so the row's
+     height and the content below never move. Under reduced motion they switch instantly. The label is read
      from `VERSION`, and a test keeps the fallback in sync. Both show at every width, on both
      tabs.
    - **Theme icon** (`#sc-theme-toggle`): light or dark, a 12px sun or moon right after the
@@ -78,7 +83,10 @@ Events** tab.
    - `Now · {n} updates across {g} goals` (Mixed, Normal, Alert)
    - `· {k} new` appended when suggestions are mixed in, kept together with non-breaking spaces
    - `{n} new suggestions across {g} goals` (New)
-4. **Card feed** (`.sc-grid`), in the chosen view.
+4. **Card feed** (`.sc-grid`), in the chosen view, ending with a **Create new goal** block
+   (`.sc-new-goal`): a dashed, rounded button with a green plus. It opens the WYZE AI chat
+   (`smartCardBot.prompt`) to ask what to watch, with example chips. The reply confirms that WYZE
+   AI will start watching and add a card later. Production: route the answer to goal creation.
 5. **Key moments** (`.sc-stories`, on the Devices & Events tab): "{n} key moments in last 12
    hours". Rated highlight events that open the detail sheet on the matching video.
 6. **Floating layer:**
@@ -108,8 +116,9 @@ Events** tab.
 - **Production:** Devices & Events only holds key moments so far. Device lists and the event
   history belong there too; they are not designed yet.
 
-**Themes:** the page is light by default (`<body class="sc-light-page">`). Dark mode sets
-`.smartcards.dark` and removes `sc-light-page`. Every new style needs a
+**Themes:** the page is **dark by default** (`<body>` without `sc-light-page`, and
+`.smartcards.dark` in the markup, with the theme button pressed). Light mode adds `sc-light-page`
+and removes `.dark`. Every new style needs a
 `body.sc-light-page …` counterpart. The detail sheet is always dark.
 
 **Routes:** `index.html?view=smart-cards` (and `smart-cards.html`, which redirects there) adds

@@ -2112,9 +2112,10 @@
   #pane-smart{padding-bottom:64px}
   .smartcards [role="tabpanel"][hidden]{display:none!important}
   .sc-mode-row .sc-view-mode,.sc-mode-row .sc-zoom-mode,.sc-mode-row .sc-state-mode{display:none}
-  .smartcards .sc-mode-row .sc-brand{display:block}
-  .sc-brand-logo{display:block;width:36px;height:36px;margin:-9px 0 -6px -4px;object-fit:contain}
-  .sc-brand-line{display:flex;align-items:center;gap:2px;margin-top:3px}
+  .smartcards .sc-mode-row{justify-content:center}
+  .smartcards .sc-mode-row .sc-brand{display:block;margin:0}
+  .sc-brand-logo{display:block;width:36px;height:36px;object-fit:contain}
+  .sc-brand-line{display:flex;align-items:center;justify-content:center;gap:2px;margin-top:6px}
   .sc-brand-line .sc-brand-version{margin-top:0}
   .smartcards .sc-mode-row .sc-theme-mode{width:auto;height:auto;margin:0;padding:0;background:none}
   .smartcards .sc-mode-row .sc-theme-toggle,body.sc-light-page .smartcards .sc-mode-row .sc-theme-toggle{position:relative;width:18px;min-width:18px;height:18px;border-radius:50%;background:none;box-shadow:none;color:#8fa1b8}
@@ -2443,9 +2444,33 @@
     body:not(.sc-standalone) .sc-mode-row{position:sticky;z-index:20;top:0;margin:0 -12px 14px;padding:max(10px,env(safe-area-inset-top)) 12px 10px;background:rgba(13,23,38,.9);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 0 0 100vmax rgba(13,23,38,.9);clip-path:inset(0 -100vmax)}
     body.sc-light-page:not(.sc-standalone) .sc-mode-row{background:rgba(242,245,248,.92);box-shadow:0 0 0 100vmax rgba(242,245,248,.92)}
   }
+  /* Create new goal: the last block on the cards tab; it opens the WYZE AI chat. */
+  .sc-new-goal{display:flex;align-items:center;gap:14px;width:100%;margin:14px 0 0;padding:16px;border:1.5px dashed #ffffff3d;border-radius:18px;background:#ffffff0a;color:#f4f7fb;font-family:var(--sans);text-align:left;cursor:pointer;transition:background-color .2s ease,border-color .2s ease,transform .18s ease}
+  .sc-new-goal:hover{border-color:#71edbe;background:#71edbe14}
+  .sc-new-goal:active{transform:scale(.975)}
+  .sc-new-goal:focus-visible{outline:2px solid #71edbe;outline-offset:2px}
+  .sc-new-goal-plus{display:grid;flex:none;place-items:center;width:40px;height:40px;border-radius:50%;background:#71edbe;color:#09271e}
+  .sc-new-goal-plus svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
+  .sc-new-goal-copy{display:flex;min-width:0;flex-direction:column;gap:3px}
+  .sc-new-goal-copy strong{font-size:15px;font-weight:800;line-height:1.2}
+  .sc-new-goal-copy span{color:#a5bbcf;font-size:12.5px;font-weight:500;line-height:1.35}
+  body.sc-light-page .sc-new-goal{border-color:#1c35573d;background:#ffffff99;color:#172235}
+  body.sc-light-page .sc-new-goal:hover{border-color:#16a777;background:#16a77714}
+  body.sc-light-page .sc-new-goal:focus-visible{outline-color:#16a777}
+  body.sc-light-page .sc-new-goal-plus{background:#16a777;color:#fff}
+  body.sc-light-page .sc-new-goal-copy span{color:#56677c}
+  @media(prefers-reduced-motion:reduce){.sc-new-goal{transition:none}.sc-new-goal:active{transform:none}}
+  /* Header: no background; the logo shrinks and the version line fades once the page scrolls. */
+  body .smartcards .sc-mode-row,body.sc-light-page .smartcards .sc-mode-row{background:none;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+  .smartcards .sc-brand-name{display:grid;place-items:center;width:44px;height:44px;margin:0 auto;border:1px solid #ffffff2e;border-radius:50%;background:#0d1726b3;box-shadow:0 6px 18px #02081440;-webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);transform-origin:50% 0;transition:transform .32s cubic-bezier(.22,1,.36,1)}
+  body.sc-light-page .smartcards .sc-brand-name{border-color:#ffffffb3;background:#ffffffb8;box-shadow:0 6px 18px #1d2c4429}
+  .sc-brand-line{transition:opacity .2s ease,transform .32s cubic-bezier(.22,1,.36,1),visibility 0s}
+  .smartcards.is-scrolled .sc-brand-name{transform:scale(.8)}
+  .smartcards.is-scrolled .sc-brand-line{opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .2s ease,transform .32s cubic-bezier(.22,1,.36,1),visibility 0s .2s}
+  @media(prefers-reduced-motion:reduce){.smartcards .sc-brand-name,.sc-brand-line,.smartcards.is-scrolled .sc-brand-line{transition:none}}
 </style>
 </head>
-<body class="sc-light-page">
+<body>
 <div class="wrap">
   <header>
     <div class="tag">Interactive Mockup · Framework v4 · Research Preview</div>
@@ -3375,7 +3400,7 @@ Goal: *"Did the bins go out — and come back?"*
 
   <!-- ============ TAB: SMART CARDS — state, proof, action ============ -->
   <div class="tabpane on" id="pane-smart">
-    <section class="smartcards sc-grid-view sc-wall-view" id="smartCards" aria-label="Smart camera cards">
+    <section class="smartcards sc-grid-view sc-wall-view dark" id="smartCards" aria-label="Smart camera cards">
       <div class="sc-live" hidden><button class="sc-live-open" type="button"><span class="sc-live-frame"><img alt="" width="1672" height="941"></span><span class="sc-live-badge"><i aria-hidden="true"></i>LIVE</span><span class="sc-live-meta"><span class="sc-live-cam"></span><time class="sc-live-clock"></time></span></button><button class="sc-live-close" type="button" aria-label="Hide live view">&times;</button></div>
       <div class="sc-bot">
         <p class="sc-bot-hint" aria-hidden="true">Hi! Ask me about your home</p>
@@ -3388,7 +3413,7 @@ Goal: *"Did the bins go out — and come back?"*
         </section>
       </div>
       <div class="sc-mode-row">
-        <span class="sc-brand"><span class="sc-brand-name"><img class="sc-brand-logo" src="assets/wyze-ai-logo.png" alt="WYZE" width="36" height="36"></span><span class="sc-brand-line"><span class="sc-brand-version" data-version-source="VERSION">v0.12.0</span><span class="sc-theme-mode"><button class="sc-theme-toggle" id="sc-theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false" title="Switch to dark mode"><svg class="sc-icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg><svg class="sc-icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.5 8.5 0 1 0 20.2 15.2Z"/></svg></button></span></span></span>
+        <span class="sc-brand"><span class="sc-brand-name"><img class="sc-brand-logo" src="assets/wyze-ai-logo.png" alt="WYZE" width="36" height="36"></span><span class="sc-brand-line"><span class="sc-brand-version" data-version-source="VERSION">v0.12.0</span><span class="sc-theme-mode"><button class="sc-theme-toggle" id="sc-theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="true" title="Switch to light mode"><svg class="sc-icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg><svg class="sc-icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.5 8.5 0 1 0 20.2 15.2Z"/></svg></button></span></span></span>
         <div class="sc-view-mode" role="group" aria-label="Card view">
           <button class="sc-view-cycle" type="button" data-view="wall" aria-label="Wall view. Switch to flip view" title="Switch view"><span class="sc-view-icon" data-icon="list"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg></span><span class="sc-view-icon" data-icon="grid"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg></span><span class="sc-view-icon" data-icon="wall"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M12 4v16M4 12h16"/></svg></span><span class="sc-view-icon" data-icon="flip"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="7" width="14" height="13" rx="2"/><path d="M8 4h8a2 2 0 0 1 2 2"/></svg></span></button>
         </div>
@@ -3438,6 +3463,7 @@ Goal: *"Did the bins go out — and come back?"*
         </div>
         <span class="sc-flip-status" aria-live="polite"></span>
       </div>
+        <button class="sc-new-goal" type="button"><span class="sc-new-goal-plus" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span><span class="sc-new-goal-copy"><strong>Create new goal</strong><span>Tell WYZE AI what you want to keep an eye on</span></span></button>
       </section>
       <section class="sc-stories" id="sc-panel-events" role="tabpanel" aria-labelledby="sc-stories-heading" hidden>
         <div class="sc-stories-head"><h2 id="sc-stories-heading">6 key moments in last 12 hours</h2></div>
@@ -8943,6 +8969,28 @@ initSmartCardIntro();
 initSmartCardBot();
 initSmartCardLive();
 initSmartCardTabs();
+function initSmartCardHeader(){
+  const smartCards=$('smartCards');
+  const sync=()=>smartCards.classList.toggle('is-scrolled',window.scrollY>8);
+  window.addEventListener('scroll',sync,{passive:true});
+  sync();
+}
+initSmartCardHeader();
+function initSmartCardNewGoal(){
+  $('smartCards').querySelector('.sc-new-goal').addEventListener('click',()=>{
+    if(!smartCardBot)return;
+    smartCardBot.prompt({
+      message:'What should I keep an eye on? Describe it the way you’d ask, like “Tell me if the side gate is left open.”',
+      chips:[{label:'Side gate left open'},{label:'Mail delivered'},{label:'Kids home from school'}],
+      placeholder:'Describe a new goal…',
+      onReply:text=>{
+        const safe=text.slice(0,80).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+        return `Got it. I’ll start watching for <strong>${safe}</strong> and add a card once I know what normal looks like.`;
+      }
+    });
+  });
+}
+initSmartCardNewGoal();
 /* The version label reads the repo's VERSION file so it can never drift from releases. */
 fetch('VERSION',{cache:'no-store'}).then(response=>response.ok?response.text():'').then(text=>{
   const version=text.trim();
