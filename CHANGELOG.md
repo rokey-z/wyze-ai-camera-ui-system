@@ -20,8 +20,8 @@ the app (v1, v1.5, v2, v2.5, v3, v4) are design-system names and are unrelated.
 
 ### Changed
 - Smart Cards: key moments moved from below the card feed to the Devices & Events tab.
-- Smart Cards: the top line is the WYZE wordmark with a small light/dark icon after the version
-  label, on both tabs. The view, Auto zoom, and state controls are hidden, and the page always
+- Smart Cards: the top line is the Wyze AI One logo (the constellation "W") with a small
+  light/dark icon after the version label, on both tabs. The view, Auto zoom, and state controls are hidden, and the page always
   shows Mixed in Wall view with Auto zoom on.
 - Smart Cards: the learning intro card now also shows at the top in Mixed, folded to its title
   and progress pill, with a chevron to unfold it.

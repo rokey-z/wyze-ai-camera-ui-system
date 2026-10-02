@@ -2113,6 +2113,7 @@
   .smartcards [role="tabpanel"][hidden]{display:none!important}
   .sc-mode-row .sc-view-mode,.sc-mode-row .sc-zoom-mode,.sc-mode-row .sc-state-mode{display:none}
   .smartcards .sc-mode-row .sc-brand{display:block}
+  .sc-brand-logo{display:block;width:36px;height:36px;margin:-9px 0 -6px -4px;object-fit:contain}
   .sc-brand-line{display:flex;align-items:center;gap:2px;margin-top:3px}
   .sc-brand-line .sc-brand-version{margin-top:0}
   .smartcards .sc-mode-row .sc-theme-mode{width:auto;height:auto;margin:0;padding:0;background:none}
@@ -3387,7 +3388,7 @@ Goal: *"Did the bins go out — and come back?"*
         </section>
       </div>
       <div class="sc-mode-row">
-        <span class="sc-brand"><span class="sc-brand-name">WYZE</span><span class="sc-brand-line"><span class="sc-brand-version" data-version-source="VERSION">v0.12.0</span><span class="sc-theme-mode"><button class="sc-theme-toggle" id="sc-theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false" title="Switch to dark mode"><svg class="sc-icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg><svg class="sc-icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.5 8.5 0 1 0 20.2 15.2Z"/></svg></button></span></span></span>
+        <span class="sc-brand"><span class="sc-brand-name"><img class="sc-brand-logo" src="assets/wyze-ai-logo.png" alt="WYZE" width="36" height="36"></span><span class="sc-brand-line"><span class="sc-brand-version" data-version-source="VERSION">v0.12.0</span><span class="sc-theme-mode"><button class="sc-theme-toggle" id="sc-theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false" title="Switch to dark mode"><svg class="sc-icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg><svg class="sc-icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.5 8.5 0 1 0 20.2 15.2Z"/></svg></button></span></span></span>
         <div class="sc-view-mode" role="group" aria-label="Card view">
           <button class="sc-view-cycle" type="button" data-view="wall" aria-label="Wall view. Switch to flip view" title="Switch view"><span class="sc-view-icon" data-icon="list"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg></span><span class="sc-view-icon" data-icon="grid"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg></span><span class="sc-view-icon" data-icon="wall"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M12 4v16M4 12h16"/></svg></span><span class="sc-view-icon" data-icon="flip"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="7" width="14" height="13" rx="2"/><path d="M8 4h8a2 2 0 0 1 2 2"/></svg></span></button>
         </div>

@@ -55,7 +55,9 @@ this document in the same change.
 ## 2. Screen anatomy (top to bottom)
 
 1. **Top line** (`.sc-mode-row`), pinned on phones (≤620px) and on the standalone route:
-   - **WYZE wordmark** (`.sc-brand`), with a small version label under it. The label is read
+   - **WYZE AI logo** (`.sc-brand-logo` in `.sc-brand`): the constellation "W" from Wyze AI One
+     (`assets/wyze-ai-logo.png`, drawn at 36px as in that app's header, `alt="WYZE"`), with a
+     small version label under it. The label is read
      from `VERSION`, and a test keeps the fallback in sync. Both show at every width, on both
      tabs.
    - **Theme icon** (`#sc-theme-toggle`): light or dark, a 12px sun or moon right after the

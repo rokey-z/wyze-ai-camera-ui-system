@@ -44,7 +44,7 @@ test('every card keeps its in-image title and removes card-level rating controls
 });
 
 test('the top line holds the wordmark with the theme icon after the version; view and state controls stay in the markup', () => {
-  assert.match(html, /<div class="sc-mode-row">\s*<span class="sc-brand"><span class="sc-brand-name">WYZE<\/span><span class="sc-brand-line"><span class="sc-brand-version" data-version-source="VERSION">v[\d.]+<\/span><span class="sc-theme-mode"><button class="sc-theme-toggle"[\s\S]*?<\/button><\/span><\/span><\/span>\s*<div class="sc-view-mode"[\s\S]*?<div class="sc-state-mode"/);
+  assert.match(html, /<div class="sc-mode-row">\s*<span class="sc-brand"><span class="sc-brand-name"><img class="sc-brand-logo" src="assets\/wyze-ai-logo\.png" alt="WYZE" width="36" height="36"><\/span><span class="sc-brand-line"><span class="sc-brand-version" data-version-source="VERSION">v[\d.]+<\/span><span class="sc-theme-mode"><button class="sc-theme-toggle"[\s\S]*?<\/button><\/span><\/span><\/span>\s*<div class="sc-view-mode"[\s\S]*?<div class="sc-state-mode"/);
   assert.match(html, /\.sc-mode-row\{display:flex;align-items:center;justify-content:space-between;gap:6px\}/);
   assert.match(html, /class="sc-theme-toggle" id="sc-theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false"/);
   assert.match(html, /class="sc-icon-sun"/);
