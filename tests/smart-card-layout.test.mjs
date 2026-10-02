@@ -514,7 +514,7 @@ test('the cards tab is Mixed, with a small theme icon and a folded learning sect
 });
 
 test('a square Create new goal tile fills the last wall cell and asks WYZE AI in chat', () => {
-  assert.match(html, /<button class="sc-new-goal" type="button"><span class="sc-new-goal-plus" aria-hidden="true">[\s\S]*?<strong>Create new goal<\/strong>/);
+  assert.match(html, /<button class="sc-new-goal" type="button"><span class="sc-new-goal-plus" aria-hidden="true">[\s\S]*?<span class="sc-new-goal-copy"><strong>Tell me what you want to watch for<\/strong><\/span><\/button>/);
   assert.match(html, /\.sc-new-goal\{position:relative;display:flex;[^}]*aspect-ratio:1;/);
   assert.match(html, /\.sc-new-goal::before\{content:'';position:absolute;z-index:0;inset:10px;border-radius:14px;background:#ffffff0f;/);
   assert.doesNotMatch(html, /\.sc-new-goal::before\{[^}]*dashed/);

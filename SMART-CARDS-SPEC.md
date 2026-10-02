@@ -88,8 +88,8 @@ Events** tab.
      only.
 4. **Card feed** (`.sc-grid`), in the chosen view. Its last cell is a square **Create new goal**
    tile (`.sc-new-goal`, a child of `.sc-grid`, kept last after every reorder, hidden in list and
-   flip views): a dimmed rounded square fill, a green plus, "Create new goal", and "Just say what
-   you want to watch". Card code selects `:scope>.sc-card`, never every grid child. It opens the
+   flip views): a dimmed rounded square fill, a green plus, and one line: "Tell me what you want to
+   watch for". Card code selects `:scope>.sc-card`, never every grid child. It opens the
    WYZE AI chat
    (`smartCardBot.prompt`) to ask what to watch, with example chips. The reply confirms that WYZE
    AI will start watching and add a card later. Production: route the answer to goal creation.

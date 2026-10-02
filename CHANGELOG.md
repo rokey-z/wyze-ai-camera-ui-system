@@ -13,8 +13,8 @@ the app (v1, v1.5, v2, v2.5, v3, v4) are design-system names and are unrelated.
 ## [Unreleased]
 
 ### Added
-- Smart Cards: a square Create new goal tile in the last wall cell ("Just say what you want to
-  watch"), which asks WYZE AI in chat.
+- Smart Cards: a square Create new goal tile in the last wall cell ("Tell me what you want to
+  watch for"), which asks WYZE AI in chat.
 - Smart Cards: a floating, translucent white bottom tab bar with two icon-only tabs: Smart Cards
   (AI sparkles, the default) and Devices & Events (camera). The selected icon is filled, a
   highlight pill springs between the tabs, and the incoming panel slides in from the side of
