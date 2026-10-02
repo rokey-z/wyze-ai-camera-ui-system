@@ -43,8 +43,8 @@ test('every card keeps its in-image title and removes card-level rating controls
   assert.match(html, /goalFeedback\.remove\(\)/);
 });
 
-test('icon theme, view, and state toggles share one evenly spaced control row', () => {
-  assert.match(html, /<div class="sc-mode-row">\s*<span class="sc-brand"><span class="sc-brand-name">WYZE<\/span><span class="sc-brand-version" data-version-source="VERSION">v[\d.]+<\/span><\/span>\s*<div class="sc-theme-mode"[\s\S]*?<div class="sc-view-mode"[\s\S]*?<div class="sc-state-mode"/);
+test('the top line holds the wordmark with the theme icon after the version; view and state controls stay in the markup', () => {
+  assert.match(html, /<div class="sc-mode-row">\s*<span class="sc-brand"><span class="sc-brand-name">WYZE<\/span><span class="sc-brand-line"><span class="sc-brand-version" data-version-source="VERSION">v[\d.]+<\/span><span class="sc-theme-mode"><button class="sc-theme-toggle"[\s\S]*?<\/button><\/span><\/span><\/span>\s*<div class="sc-view-mode"[\s\S]*?<div class="sc-state-mode"/);
   assert.match(html, /\.sc-mode-row\{display:flex;align-items:center;justify-content:space-between;gap:6px\}/);
   assert.match(html, /class="sc-theme-toggle" id="sc-theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false"/);
   assert.match(html, /class="sc-icon-sun"/);
@@ -417,7 +417,7 @@ test('dedicated Pages entry opens the standalone Smart Cards view', () => {
 });
 
 test('New view opens with a Smart Cards introduction that shows learning progress', () => {
-  assert.match(html, /<article class="sc-intro-card" aria-labelledby="sc-intro-title">/);
+  assert.match(html, /<article class="sc-intro-card" aria-labelledby="sc-intro-title" data-folded="true">\s*<div class="sc-intro-panel">\s*<button class="sc-intro-fold" type="button" aria-expanded="false" aria-controls="sc-intro-steps" aria-label="Show what WYZE AI is learning">/);
   assert.match(html, /<img class="sc-intro-mascot" src="assets\/mascot\/wave\.webp"[^>]*>\s*<div class="sc-intro-bubble">\s*<h3 id="sc-intro-title">Hi, I’m learning your home<\/h3>/);
   assert.match(html, /<span class="sc-intro-badge" role="progressbar" aria-label="Learning progress" aria-valuemin="0" aria-valuemax="48" aria-valuenow="34" aria-valuetext="34 of 48 hours" style="--sc-progress:71%"><i class="sc-intro-badge-fill" aria-hidden="true"><\/i>/);
   assert.doesNotMatch(html, /sc-intro-bar/);
@@ -482,10 +482,22 @@ test('a floating icon-only tab bar switches between Smart Cards and Devices & Ev
   assert.match(html, /\.smartcards\[data-sc-tab="events"\] \.sc-tabbar-tabs::before\{transform:translateX\(68px\)\}/);
   assert.match(html, /\.sc-tabbar-tabs::before\{[^}]*transition:transform \.45s cubic-bezier\(\.34,1\.56,\.64,1\)\}/);
   assert.match(html, /@media\(prefers-reduced-motion:reduce\)\{\.sc-tab,\.sc-tab svg,\.sc-tabbar-tabs::before\{transition:none\}/);
-  assert.match(html, /\.smartcards\[data-sc-tab="events"\] \.sc-mode-row \.sc-view-mode,\.smartcards\[data-sc-tab="events"\] \.sc-mode-row \.sc-zoom-mode,\.smartcards\[data-sc-tab="events"\] \.sc-mode-row \.sc-state-mode\{display:none\}/);
   assert.match(html, /\.sc-toast\{position:fixed;left:50%;bottom:calc\(max\(14px,env\(safe-area-inset-bottom\)\) \+ 74px\);/);
   assert.match(html, /showSmartCardTab\('cards'\);\s*card\?\.scrollIntoView/);
   assert.match(html, /initSmartCardTabs\(\);/);
+});
+
+test('the cards tab is Mixed, with a small theme icon and a folded learning section on top', () => {
+  assert.match(html, /\.sc-mode-row \.sc-view-mode,\.sc-mode-row \.sc-zoom-mode,\.sc-mode-row \.sc-state-mode\{display:none\}/);
+  assert.match(html, /\.smartcards \.sc-mode-row \.sc-brand\{display:block\}/);
+  assert.match(html, /\.smartcards \.sc-mode-row \.sc-theme-toggle,body\.sc-light-page \.smartcards \.sc-mode-row \.sc-theme-toggle\{position:relative;width:18px;min-width:18px;height:18px;/);
+  assert.match(html, /\.smartcards \.sc-mode-row \.sc-theme-toggle::after\{content:'';position:absolute;inset:-8px\}/);
+  assert.match(html, /<button class="active" type="button" data-sc-state="mixed" aria-pressed="true"/);
+  assert.match(html, /\.smartcards\.is-mixed \.sc-intro-card\{display:block\}/);
+  assert.match(html, /\.smartcards:not\(\.is-suggested\) \.sc-intro-card\[data-folded="true"\] \.sc-intro-copy,\.smartcards:not\(\.is-suggested\) \.sc-intro-card\[data-folded="true"\] \.sc-intro-steps\{display:none\}/);
+  assert.match(html, /\.smartcards:not\(\.is-suggested\) \.sc-intro-fold\{display:grid\}/);
+  assert.match(html, /fold\.setAttribute\('aria-expanded',String\(!folded\)\)/);
+  assert.match(html, /@media\(prefers-reduced-motion:reduce\)\{\.sc-intro-fold svg\{transition:none\}\}/);
 });
 
 test('mascot floats bottom left as a WYZE AI chat entry', () => {

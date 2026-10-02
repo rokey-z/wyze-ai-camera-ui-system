@@ -56,21 +56,22 @@ this document in the same change.
 
 1. **Top line** (`.sc-mode-row`), pinned on phones (≤620px) and on the standalone route:
    - **WYZE wordmark** (`.sc-brand`), with a small version label under it. The label is read
-     from `VERSION`, and a test keeps the fallback in sync. Both are hidden at 400px wide or
-     less, so the controls fit.
-   - **Theme button** (`#sc-theme-toggle`): light or dark.
-   - **View button** (`.sc-view-cycle`): one button that cycles list → grid → wall → flip (§5).
-   - **Auto zoom button** (`.sc-zoom-toggle`): on by default (§5.5).
-   - **State switch** (`.sc-state-mode`): Mixed, Normal, Alert, New. Four equal segments fill the
-     rest of the row, and a sliding highlight marks the active one.
-   - On the Devices & Events tab, the view, Auto zoom, and state controls hide, since they only
-     apply to cards. The wordmark shows at every width there.
+     from `VERSION`, and a test keeps the fallback in sync. Both show at every width, on both
+     tabs.
+   - **Theme icon** (`#sc-theme-toggle`): light or dark, a 12px sun or moon right after the
+     version label (`.sc-brand-line`). The button is 18px, with an invisible 34px hit area.
+   - **Hidden demo controls:** the view button (`.sc-view-cycle`, list → grid → wall → flip, §5),
+     the Auto zoom button (`.sc-zoom-toggle`, §5.5), and the state switch (`.sc-state-mode`:
+     Mixed, Normal, Alert, New) stay in the markup but are `display:none`. The page always shows
+     **Mixed** in **Wall** view with Auto zoom on. The other states remain reachable from code and
+     the tests, and the design canvas still draws them.
    - The bar's background extends edge to edge (box-shadow plus clip-path trick) without widening
      the page.
 The page has two tabs (§2.1). Items 2–4 are the **Smart Cards** tab; item 5 is the **Devices &
 Events** tab.
 
-2. **Learning intro card** (`.sc-intro-card`). Shown only in New (§8).
+2. **Learning intro card** (`.sc-intro-card`). Shown at the top in Mixed, **folded**, and fully
+   open in New (§8).
 3. **Section title** (`#sc-cards-heading`). This is text, not a control. Format:
    - `Now · {n} updates across {g} goals` (Mixed, Normal, Alert)
    - `· {k} new` appended when suggestions are mixed in, kept together with non-breaking spaces
@@ -294,7 +295,18 @@ signal for future suggestions.
 
 ---
 
-## 8. Learning intro card (New only)
+## 8. Learning intro card (Mixed and New)
+
+**Folded state (Mixed):** the card starts folded (`data-folded="true"`): a 52px mascot, the title
+"Hi, I'm learning your home" at 16px, and the progress pill. The copy and the steps hide. A
+chevron button (`.sc-intro-fold`, `aria-expanded`, `aria-controls="sc-intro-steps"`) at the top
+right unfolds it to the full card below and folds it again. The panel's height animates over
+0.36s, and the copy and steps fade in. Under reduced motion it switches instantly. In New, the card
+is always open and the chevron hides.
+
+**Copy note:** the third step, "Your first Smart Cards: in about 14 hours", was written for New,
+where no cards exist yet. In Mixed it contradicts the cards below it, so it needs Mixed-specific
+copy before production.
 
 This card explains the goal-driven system to someone coming from a traditional camera, before any
 suggestions exist. Structure, inside one yellow-tinted panel:
@@ -427,7 +439,7 @@ or a Camera offline card:
   - The progress bar uses `role="progressbar"`.
   - Decisions are also announced through a visually hidden status (`.sc-suggestion-status`).
     Toasts are `aria-hidden`.
-  - Touch targets are at least 34px, and at least 42px in the top line.
+  - Touch targets are at least 34px. The theme icon's 34px hit area extends past its 18px button.
 
 ---
 

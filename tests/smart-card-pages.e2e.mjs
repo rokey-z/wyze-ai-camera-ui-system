@@ -48,14 +48,12 @@ const inspect=()=>{
     const hiddenSelectors=['.wrap>header','.tabs','.wrap>footer'];
     const initialCardBounds=doc.querySelector('.sc-grid>.sc-card').getBoundingClientRect();
     const initialScrollY=win.scrollY;
-    const controlsAligned=()=>{
-      const row=doc.querySelector('.sc-mode-row').getBoundingClientRect();
-      const theme=doc.querySelector('.sc-theme-mode').getBoundingClientRect();
-      const view=doc.querySelector('.sc-view-mode').getBoundingClientRect();
-      const state=doc.querySelector('.sc-state-mode').getBoundingClientRect();
-      const buttons=[...doc.querySelectorAll('.sc-view-mode button,.sc-state-mode button')].map(button=>button.getBoundingClientRect());
+    const headerCompact=()=>{
+      const brand=doc.querySelector('.sc-brand-name').getBoundingClientRect();
+      const version=doc.querySelector('.sc-brand-version').getBoundingClientRect();
       const icon=doc.querySelector('#sc-theme-toggle').getBoundingClientRect();
-      return Math.abs(theme.top-view.top)<=1&&Math.abs(view.top-state.top)<=1&&[theme,view,state].every(group=>Math.abs(group.height-42)<=1)&&view.left-theme.right>=8&&state.left-view.right>=8&&theme.left>=row.left&&state.right<=row.right&&buttons.every(button=>Math.abs(button.height-36)<=1)&&[...doc.querySelectorAll('.sc-state-mode button')].map(button=>button.getBoundingClientRect().width).every((width,index,widths)=>Math.abs(width-widths[0])<=1)&&Math.abs(icon.height-36)<=1;
+      const controlsHidden=['.sc-view-mode','.sc-zoom-mode','.sc-state-mode'].every(selector=>getComputedStyle(doc.querySelector(selector)).display==='none');
+      return controlsHidden&&brand.width>0&&icon.left-version.right>=0&&icon.left-version.right<=6&&Math.abs((icon.top+icon.bottom)/2-(version.top+version.bottom)/2)<=2&&icon.height<=20;
     };
     const initial={
       path:win.location.pathname,
@@ -70,7 +68,7 @@ const inspect=()=>{
       sceneHeight:Math.round(doc.querySelector('.sc-grid>.sc-card .sc-scene').getBoundingClientRect().height),
       landscapeCards:[...doc.querySelectorAll('.sc-grid>.sc-card')].every(card=>Math.abs(card.getBoundingClientRect().width/card.getBoundingClientRect().height-40/27)<.02),
       normalOrder:[...doc.querySelectorAll('.sc-grid>.sc-card')].map(card=>card.dataset.scene),
-      controlsUniformSpaced:controlsAligned(),
+      headerCompact:headerCompact(),
       cardHeading:(()=>{const heading=doc.querySelector('#sc-cards-heading');const storiesHeading=doc.querySelector('#sc-stories-heading');const headingStyle=getComputedStyle(heading);const storiesStyle=getComputedStyle(storiesHeading);return {text:heading.textContent,aboveCards:heading.getBoundingClientRect().bottom<doc.querySelector('.sc-grid>.sc-card').getBoundingClientRect().top,sameStyle:headingStyle.fontFamily===storiesStyle.fontFamily&&headingStyle.fontSize===storiesStyle.fontSize&&headingStyle.fontWeight===storiesStyle.fontWeight&&headingStyle.letterSpacing===storiesStyle.letterSpacing}})(),
       refreshButtons:doc.querySelectorAll('.sc-evidence-refresh').length,
       checkedTimeInsideTrigger:!!doc.querySelector('.sc-evidence-trigger .sc-evidence-time'),
@@ -357,10 +355,10 @@ const inspect=()=>{
     const listRestored={active:doc.querySelector('.sc-view-cycle').dataset.view==='list',inertCount:doc.querySelectorAll('.sc-grid>.sc-card[inert]').length,allVisible:[...doc.querySelectorAll('.sc-grid>.sc-card')].every(card=>getComputedStyle(card).visibility==='visible'),landscapeCards:[...doc.querySelectorAll('.sc-grid>.sc-card')].every(card=>Math.abs(card.offsetWidth/card.offsetHeight-40/27)<.02),transitionActive:win.matchMedia('(prefers-reduced-motion: reduce)').matches||doc.querySelector('.sc-grid>.sc-card[data-scene="garage"]').getAnimations().length>0,noDragging:!flipGrid.classList.contains('is-dragging'),focusBoxVisible:getComputedStyle(flipGrid.querySelector('.sc-card .sc-detection-box')).display!=='none'};
     const storyAfterFlip={heading:doc.querySelector('#sc-stories-heading').textContent,count:doc.querySelectorAll('.sc-story-list .sc-story').length,html:storyList.innerHTML};
     frame.style.width='320px';
-    const narrowControlsAligned=controlsAligned();
+    const narrowHeaderCompact=headerCompact();
     setView('grid');
     const narrowGrid={square:[...doc.querySelectorAll('.sc-grid>.sc-card')].every(card=>Math.abs(card.offsetWidth-card.offsetHeight)<=1),stateFont:parseFloat(getComputedStyle(doc.querySelector('.sc-grid>.sc-card .sc-state')).fontSize),noGoalFeedback:![...doc.querySelectorAll('.sc-grid>.sc-card')].some(card=>card.querySelector('.sc-feedback')),securityRow:securityGridRow()};
-    finish({mixedDefault,initial,viewControls,storySummary,storyRatingColors,storyTimeline,storyDetail,alertStoryTreatment,highlightCoverage,refreshed,alertStates,alertCritical,alertBlocksClear,alertBlockAligned,alertOrder,sheet,selectedVideo,lastVideo,expanded,expandedHighlightOutline,ratingOrder,ratingActive,timeOrder,timeActive,collapsed,closed,previewOpens,cardBodyOpens,newCardScrollLeft,normalTreatment,dark,evidenceCoverage,suggested,gridMode,flipStart,flipNext,flipRight,listRestored,narrowControlsAligned,narrowGrid,storiesUnchanged:JSON.stringify(storyBeforeFlip)===JSON.stringify(storyAfterFlip)});
+    finish({mixedDefault,initial,viewControls,storySummary,storyRatingColors,storyTimeline,storyDetail,alertStoryTreatment,highlightCoverage,refreshed,alertStates,alertCritical,alertBlocksClear,alertBlockAligned,alertOrder,sheet,selectedVideo,lastVideo,expanded,expandedHighlightOutline,ratingOrder,ratingActive,timeOrder,timeActive,collapsed,closed,previewOpens,cardBodyOpens,newCardScrollLeft,normalTreatment,dark,evidenceCoverage,suggested,gridMode,flipStart,flipNext,flipRight,listRestored,narrowHeaderCompact,narrowGrid,storiesUnchanged:JSON.stringify(storyBeforeFlip)===JSON.stringify(storyAfterFlip)});
   }catch(error){
     if(attempts<20)setTimeout(inspect,150);
     else finish({error:String(error)});
@@ -456,7 +454,7 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     assert.equal(result.mixedDefault.newAfterAlerts,true);
     assert.equal(result.mixedDefault.criticalCue,true);
     assert.equal(result.mixedDefault.detailMatchesCard,true);
-    assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:9,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:247,landscapeCards:true,normalOrder:['security','garage','front','ev','bins','pets','wildlife','birds','health'],controlsUniformSpaced:true,cardHeading:{text:'Now · 9 updates across 9 goals',aboveCards:true,sameStyle:true},refreshButtons:9,checkedTimeInsideTrigger:false,cardFeedbackRemoved:true,goLiveButtons:0,criticalCards:0,bottomEvidenceHidden:true,stateBlocksClear:true,goalTitlesClear:true,imageGradient:true,topOnlyGradient:true,goalTitleInside:true,stateBlockAligned:true,normalActive:true});
+    assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:9,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:247,landscapeCards:true,normalOrder:['security','garage','front','ev','bins','pets','wildlife','birds','health'],headerCompact:true,cardHeading:{text:'Now · 9 updates across 9 goals',aboveCards:true,sameStyle:true},refreshButtons:9,checkedTimeInsideTrigger:false,cardFeedbackRemoved:true,goLiveButtons:0,criticalCards:0,bottomEvidenceHidden:true,stateBlocksClear:true,goalTitlesClear:true,imageGradient:true,topOnlyGradient:true,goalTitleInside:true,stateBlockAligned:true,normalActive:true});
     assert.deepEqual(result.viewControls,{count:1,labels:['List view. Switch to grid view'],icons:true,iconOnly:true,defaultView:{view:'wall',label:'Wall view. Switch to flip view',wall:true}});
     assert.deepEqual(result.storySummary,{tabs:{startHidden:true,switched:true,iconOnly:true,floating:true},heading:'6 key moments in last 12 hours',count:6,titles:['Cardinal at the feeder','Playtime on the rug','Blue jay visit','Water break','Raccoon in the yard','Goldfinch visit'],ratings:['5','5','4','4','5','4'],images:true});
     assert.deepEqual(result.storyRatingColors,{five:'rgb(246, 196, 83)',four:'rgb(113, 237, 190)'});
@@ -508,7 +506,7 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     assert.deepEqual(result.flipNext,{current:'garage',dragged:true,exitFollowsDrag:true,clickSuppressed:true,announced:true});
     assert.deepEqual(result.flipRight,{current:'garage',dragged:true,movesPastDeck:true,viewportStable:true});
     assert.deepEqual(result.listRestored,{active:true,inertCount:0,allVisible:true,landscapeCards:true,transitionActive:true,noDragging:true,focusBoxVisible:true});
-    assert.equal(result.narrowControlsAligned,true);
+    assert.equal(result.narrowHeaderCompact,true);
     assert.deepEqual(result.narrowGrid,{square:true,stateFont:18,noGoalFeedback:true,securityRow:true});
     assert.equal(result.storiesUnchanged,true);
   }finally{

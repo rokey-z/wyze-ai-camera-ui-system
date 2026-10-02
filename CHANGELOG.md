@@ -19,8 +19,12 @@ the app (v1, v1.5, v2, v2.5, v3, v4) are design-system names and are unrelated.
   the tapped tab. All of this motion is skipped under reduced motion.
 
 ### Changed
-- Smart Cards: key moments moved from below the card feed to the Devices & Events tab. On that
-  tab the top line shows only the wordmark and the theme button.
+- Smart Cards: key moments moved from below the card feed to the Devices & Events tab.
+- Smart Cards: the top line is the WYZE wordmark with a small light/dark icon after the version
+  label, on both tabs. The view, Auto zoom, and state controls are hidden, and the page always
+  shows Mixed in Wall view with Auto zoom on.
+- Smart Cards: the learning intro card now also shows at the top in Mixed, folded to its title
+  and progress pill, with a chevron to unfold it.
 - Smart Cards: the toast and the mascot's hint bubble sit higher, clear of the tab bar.
 
 ## [0.12.0] - 2026-10-01
