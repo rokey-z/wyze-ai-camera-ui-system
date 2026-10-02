@@ -493,7 +493,8 @@ test('the cards tab is Mixed, with a small theme icon and a folded learning sect
   assert.match(html, /\.smartcards \.sc-mode-row \.sc-theme-toggle,body\.sc-light-page \.smartcards \.sc-mode-row \.sc-theme-toggle\{position:relative;width:18px;min-width:18px;height:18px;/);
   assert.match(html, /\.smartcards \.sc-mode-row \.sc-theme-toggle::after\{content:'';position:absolute;inset:-8px\}/);
   assert.match(html, /<button class="active" type="button" data-sc-state="mixed" aria-pressed="true"/);
-  assert.match(html, /\.smartcards\.is-mixed \.sc-intro-card\{display:block\}/);
+  assert.match(html, /\.smartcards\.is-mixed \.sc-intro-card\{display:block;margin-top:0\}/);
+  assert.match(html, /body\.sc-standalone \.smartcards\.is-mixed \.sc-mode-row\{margin-bottom:14px\}/);
   assert.match(html, /\.smartcards:not\(\.is-suggested\) \.sc-intro-card\[data-folded="true"\] \.sc-intro-copy,\.smartcards:not\(\.is-suggested\) \.sc-intro-card\[data-folded="true"\] \.sc-intro-steps\{display:none\}/);
   assert.match(html, /\.smartcards:not\(\.is-suggested\) \.sc-intro-fold\{display:grid\}/);
   assert.match(html, /fold\.setAttribute\('aria-expanded',String\(!folded\)\)/);
