@@ -12,6 +12,8 @@ the app (v1, v1.5, v2, v2.5, v3, v4) are design-system names and are unrelated.
 
 ## [Unreleased]
 
+## [0.13.0] - 2026-10-02
+
 ### Added
 - Smart Cards: a square Create new goal tile in the last wall cell ("Tell me what you want to
   watch for"), which asks WYZE AI in chat.
@@ -21,19 +23,18 @@ the app (v1, v1.5, v2, v2.5, v3, v4) are design-system names and are unrelated.
   the tapped tab. All of this motion is skipped under reduced motion.
 
 ### Changed
+- Smart Cards: the page opens in dark mode, always in Mixed (reshuffled on every load) and Wall
+  view with Auto zoom on. The view, Auto zoom, and state controls are hidden.
+- Smart Cards: the header has no background. On the left is the Wyze AI One logo (the
+  constellation "W", 56px) in a round glass backdrop, which shrinks on scroll. On the right is the
+  folded learning block.
+- Smart Cards: the learning intro card is always present. Folded, it is a pinned block in the
+  header (title, chevron, and progress pill, no mascot). Unfolded, it becomes the full card at the
+  top of the feed, and the folded block hides. New still shows the full card.
+- Smart Cards: the wall title is now just "{n} goals" in dimmed text, with the version label and
+  a small light/dark icon at its right.
 - Smart Cards: key moments moved from below the card feed to the Devices & Events tab.
-- Smart Cards: the top line is the Wyze AI One logo (the constellation "W") with a small
-  light/dark icon after the version label, on both tabs. The view, Auto zoom, and state controls are hidden, and the page always
-  shows Mixed in Wall view with Auto zoom on.
-- Smart Cards: the learning intro card is always present. Folded, it sits in the pinned top line
-  to the right of the logo (title, chevron and progress pill, no mascot). Unfolded, it becomes the
-  full card at the top of the feed, and the folded block hides.
 - Smart Cards: the toast and the mascot's hint bubble sit higher, clear of the tab bar.
-- Smart Cards: the page opens in dark mode.
-- Smart Cards: the wall title is now just "{n} goals" in dimmed text, with the version and theme
-  icon at its right.
-- Smart Cards: the header logo (56px) sits in a round glass backdrop on the left, the header has no
-  background, and on scroll the logo shrinks while the version and theme icon fade.
 
 ## [0.12.0] - 2026-10-01
 
@@ -185,7 +186,8 @@ the app (v1, v1.5, v2, v2.5, v3, v4) are design-system names and are unrelated.
   OpenAI, Gemini, and xAI as providers.
 - Mobile layout support and the Sa action strip placement.
 
-[Unreleased]: https://github.com/rokey-z/wyze-ai-camera-ui-system/compare/v0.12.0...HEAD
+[Unreleased]: https://github.com/rokey-z/wyze-ai-camera-ui-system/compare/v0.13.0...HEAD
+[0.13.0]: https://github.com/rokey-z/wyze-ai-camera-ui-system/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/rokey-z/wyze-ai-camera-ui-system/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/rokey-z/wyze-ai-camera-ui-system/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/rokey-z/wyze-ai-camera-ui-system/compare/v0.9.0...v0.10.0

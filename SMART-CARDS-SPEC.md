@@ -2,7 +2,7 @@
 
 **Audience:** the coding agent that plugs the Smart Cards experience from this mockup into the
 real Wyze system. Read this file first, before `index.html`.
-**Version:** matches [`VERSION`](VERSION) (0.12.x). Change history is in [`CHANGELOG.md`](CHANGELOG.md).
+**Version:** matches [`VERSION`](VERSION) (0.13.x). Change history is in [`CHANGELOG.md`](CHANGELOG.md).
 **Live reference:** https://rokey-z.github.io/wyze-ai-camera-ui-system/smart-cards.html
 
 The mockup is the behavioral reference. This document explains *why* it behaves that way and which

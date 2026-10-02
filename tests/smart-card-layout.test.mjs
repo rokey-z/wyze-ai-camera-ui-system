@@ -545,7 +545,7 @@ test('a high alert shows a live stream window in the bottom corner', () => {
   assert.match(html, /syncSmartCardView\(\);\s*syncSmartCardLive\(\);\s*\}/);
 });
 
-test('the version under the WYZE wordmark matches the VERSION file', () => {
+test('the version label beside the wall title matches the VERSION file', () => {
   const version = readFileSync(new URL('../VERSION', import.meta.url), 'utf8').trim();
   assert.match(html, new RegExp(`<span class="sc-brand-version" data-version-source="VERSION">v${version.replaceAll('.', '\\.')}<\\/span>`));
 });
