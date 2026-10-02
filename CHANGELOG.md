@@ -12,6 +12,17 @@ the app (v1, v1.5, v2, v2.5, v3, v4) are design-system names and are unrelated.
 
 ## [Unreleased]
 
+### Added
+- Smart Cards: a floating, translucent white bottom tab bar with two icon-only tabs: Smart Cards
+  (AI sparkles, the default) and Devices & Events (camera). The selected icon is filled, a
+  highlight pill springs between the tabs, and the incoming panel slides in from the side of
+  the tapped tab. All of this motion is skipped under reduced motion.
+
+### Changed
+- Smart Cards: key moments moved from below the card feed to the Devices & Events tab. On that
+  tab the top line shows only the wordmark and the theme button.
+- Smart Cards: the toast and the mascot's hint bubble sit higher, clear of the tab bar.
+
 ## [0.12.0] - 2026-10-01
 
 ### Added

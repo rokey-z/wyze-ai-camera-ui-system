@@ -63,20 +63,47 @@ this document in the same change.
    - **Auto zoom button** (`.sc-zoom-toggle`): on by default (§5.5).
    - **State switch** (`.sc-state-mode`): Mixed, Normal, Alert, New. Four equal segments fill the
      rest of the row, and a sliding highlight marks the active one.
+   - On the Devices & Events tab, the view, Auto zoom, and state controls hide, since they only
+     apply to cards. The wordmark shows at every width there.
    - The bar's background extends edge to edge (box-shadow plus clip-path trick) without widening
      the page.
+The page has two tabs (§2.1). Items 2–4 are the **Smart Cards** tab; item 5 is the **Devices &
+Events** tab.
+
 2. **Learning intro card** (`.sc-intro-card`). Shown only in New (§8).
 3. **Section title** (`#sc-cards-heading`). This is text, not a control. Format:
    - `Now · {n} updates across {g} goals` (Mixed, Normal, Alert)
    - `· {k} new` appended when suggestions are mixed in, kept together with non-breaking spaces
    - `{n} new suggestions across {g} goals` (New)
 4. **Card feed** (`.sc-grid`), in the chosen view.
-5. **Key moments** (`.sc-stories`): "{n} key moments in last 12 hours". Rated highlight events
-   that open the detail sheet on the matching video.
+5. **Key moments** (`.sc-stories`, on the Devices & Events tab): "{n} key moments in last 12
+   hours". Rated highlight events that open the detail sheet on the matching video.
 6. **Floating layer:**
-   - The **mascot chat entry**, bottom left (§10).
-   - A **toast**, bottom center, for confirmations.
+   - The **tab bar** (`.sc-tabbar`), bottom center (§2.1).
+   - The **mascot chat entry**, bottom left (§10), level with the tab bar.
+   - A **toast**, bottom center above the tab bar, for confirmations.
    - The **live window**, inside the critical card (§9).
+
+### 2.1 Tab bar
+
+- **Tabs:** Smart Cards (`#sc-tab-cards`, AI sparkles icon, the default) and Devices & Events
+  (`#sc-tab-events`, camera icon). Both are icon-only, with the name in `aria-label` and `title`.
+  They control the panels `#sc-panel-cards` (`.sc-card-feed`) and `#sc-panel-events`
+  (`.sc-stories`).
+- **Look:** a floating pill centered at the bottom, `bottom: safe area + 6px`, vertically centered
+  on the 68px mascot. Translucent white with a 20px backdrop blur: `#ffffffb8` on the light
+  page, `#ffffff1f` in dark. Tabs are 64 × 44 (touch targets ≥ 44px).
+- **Selected tab:** its icon is filled (`fill: currentColor`), and the rest stay outlined. A
+  highlight pill (`.sc-tabbar-tabs::before`) springs to it (`cubic-bezier(.34,1.56,.64,1)`,
+  0.45s).
+- **Switching** (`showSmartCardTab(name)`): sets `#smartCards[data-sc-tab]`, `aria-selected`,
+  roving `tabindex`, and `hidden` on the panels, then scrolls to the top. The incoming panel
+  fades in from 24px toward the side of the tapped tab (0.34s). Returning to cards re-runs
+  `zoomSmartCardWall()`. Left and right arrow keys move between tabs.
+- **Chat:** the mascot's **View card** button switches to Smart Cards before scrolling to the card.
+- **Reduced motion:** no pill spring, panel slide, or icon press.
+- **Production:** Devices & Events only holds key moments so far. Device lists and the event
+  history belong there too; they are not designed yet.
 
 **Themes:** the page is light by default (`<body class="sc-light-page">`). Dark mode sets
 `.smartcards.dark` and removes `sc-light-page`. Every new style needs a
@@ -317,7 +344,8 @@ or a Camera offline card:
 
 - **Entry:**
   - A 68px mascot at the bottom left with an idle bob.
-  - On load, it pops in with a wave and shows a one-time "Hi! Ask me about your home" bubble.
+  - On load, it pops in with a wave and shows a one-time "Hi! Ask me about your home" bubble,
+    raised to clear the tab bar.
   - Every 4–8s it plays a random gesture (wave, laugh, wink & point, peek-wave, cheer) for about
     2.2s, then returns to rest. It never repeats the same gesture twice in a row.
   - Hover triggers a gesture.
@@ -466,6 +494,7 @@ type CardEvent =
 | Cards and detail | `initSmartCardEvidence` (builds the card chrome, detail sheet, keep, drop, delete, feedback), `videoEvidenceStrip`, `videoEvidenceDuration`, `evidenceFeedback`, `cameraSourceSummary`, `dismissSmartCard`, `askSmartCardDrop` |
 | Health and live | `renderSmartCardHealth`, `smartCardOfflineCameras`, `smartCardOfflineState`, `syncSmartCardOfflineNote`, `syncSmartCardLive`, `initSmartCardLive` |
 | Intro | `initSmartCardIntro` |
+| Tabs | `showSmartCardTab`, `initSmartCardTabs`, `.sc-tabbar`, `.sc-tab` |
 | Chat | `initSmartCardBot`, `SMART_CARD_BOT_TOPICS`, `smartCardBot.prompt` |
 | Styles | `.sc-*`. Views are scoped by `.smartcards.sc-grid-view`, `.sc-wall-view` (always with `sc-grid-view`), and `.sc-flip-view`. Page states use `.is-mixed`, `.is-alert`, `.is-suggested`, `.is-highlights`. |
 

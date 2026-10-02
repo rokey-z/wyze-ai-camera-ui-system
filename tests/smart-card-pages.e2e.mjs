@@ -102,10 +102,14 @@ const inspect=()=>{
       defaultView,
     };
     const firstCard=doc.querySelector('.sc-grid>.sc-card');
-    const lastCard=doc.querySelector('.sc-grid>.sc-card:last-child');
     const dialog=doc.querySelector('.sc-detail-dialog');
+    const storiesStartHidden=doc.querySelector('#sc-panel-events').hidden&&!doc.querySelector('#sc-panel-cards').hidden;
+    doc.querySelector('#sc-tab-events').click();
+    doc.querySelectorAll('[role="tabpanel"]').forEach(panel=>panel.getAnimations().forEach(animation=>animation.finish()));
+    const tabBar=doc.querySelector('.sc-tabbar').getBoundingClientRect();
+    const tabs={startHidden:storiesStartHidden,switched:doc.querySelector('#sc-panel-cards').hidden&&!doc.querySelector('#sc-panel-events').hidden&&doc.querySelector('#sc-tab-events').getAttribute('aria-selected')==='true',iconOnly:[...doc.querySelectorAll('.sc-tab')].every(tab=>!!tab.querySelector('svg')&&!tab.textContent.trim()&&!!tab.getAttribute('aria-label')),floating:getComputedStyle(doc.querySelector('.sc-tabbar')).position==='fixed'&&Math.abs((tabBar.left+tabBar.right)/2-win.innerWidth/2)<=1&&tabBar.bottom<win.innerHeight};
     const storyButtons=[...doc.querySelectorAll('.sc-story-list .sc-story')];
-    const storySummary={belowCards:doc.querySelector('.sc-stories').getBoundingClientRect().top>lastCard.getBoundingClientRect().bottom,heading:doc.querySelector('#sc-stories-heading').textContent.trim(),count:storyButtons.length,titles:storyButtons.map(button=>button.querySelector('strong').textContent),ratings:storyButtons.map(button=>button.querySelector('.sc-story-score').textContent),images:storyButtons.every(button=>!!button.querySelector('img').getAttribute('src'))};
+    const storySummary={tabs,heading:doc.querySelector('#sc-stories-heading').textContent.trim(),count:storyButtons.length,titles:storyButtons.map(button=>button.querySelector('strong').textContent),ratings:storyButtons.map(button=>button.querySelector('.sc-story-score').textContent),images:storyButtons.every(button=>!!button.querySelector('img').getAttribute('src'))};
     const storyRatingColors={five:getComputedStyle(storyButtons[0].querySelector('.sc-story-score')).backgroundColor,four:getComputedStyle(storyButtons[2].querySelector('.sc-story-score')).backgroundColor};
     const storyList=doc.querySelector('.sc-story-list');
     const firstStory=storyButtons[0];
@@ -118,6 +122,8 @@ const inspect=()=>{
     storyButtons[2].click();
     const storyDetail={mode:dialog.dataset.mode,title:dialog.querySelector('.sc-detail-title').textContent,state:dialog.querySelector('.sc-detail-state strong').textContent,age:dialog.querySelector('.sc-detail-state span').textContent,checked:dialog.querySelector('.sc-detail-checked').textContent,selected:dialog.querySelector('.sc-video-thumb[aria-pressed="true"]').dataset.videoIndex,image:dialog.querySelector('.sc-detail-preview-card .sc-photo').getAttribute('src'),caption:dialog.querySelector('.sc-detail-preview-caption p').textContent,rating:dialog.querySelector('.sc-detail-preview-score').textContent};
     dialog.close();
+    doc.querySelector('#sc-tab-cards').click();
+    doc.querySelectorAll('[role="tabpanel"]').forEach(panel=>panel.getAnimations().forEach(animation=>animation.finish()));
     const highlightCoverage=[];
     for(const scene of ['birds','pets','wildlife']){
       const card=doc.querySelector('.sc-grid>.sc-card[data-scene="'+scene+'"]');
@@ -452,7 +458,7 @@ test('standalone Pages route works as a mobile Smart Cards app', {timeout:20000}
     assert.equal(result.mixedDefault.detailMatchesCard,true);
     assert.deepEqual(result.initial,{path:'/index.html',search:'?view=smart-cards',title:'WYZE Smart Cards',standalone:true,light:true,cards:9,hiddenChrome:true,brokenImages:[],cardWidth:366,sceneHeight:247,landscapeCards:true,normalOrder:['security','garage','front','ev','bins','pets','wildlife','birds','health'],controlsUniformSpaced:true,cardHeading:{text:'Now · 9 updates across 9 goals',aboveCards:true,sameStyle:true},refreshButtons:9,checkedTimeInsideTrigger:false,cardFeedbackRemoved:true,goLiveButtons:0,criticalCards:0,bottomEvidenceHidden:true,stateBlocksClear:true,goalTitlesClear:true,imageGradient:true,topOnlyGradient:true,goalTitleInside:true,stateBlockAligned:true,normalActive:true});
     assert.deepEqual(result.viewControls,{count:1,labels:['List view. Switch to grid view'],icons:true,iconOnly:true,defaultView:{view:'wall',label:'Wall view. Switch to flip view',wall:true}});
-    assert.deepEqual(result.storySummary,{belowCards:true,heading:'6 key moments in last 12 hours',count:6,titles:['Cardinal at the feeder','Playtime on the rug','Blue jay visit','Water break','Raccoon in the yard','Goldfinch visit'],ratings:['5','5','4','4','5','4'],images:true});
+    assert.deepEqual(result.storySummary,{tabs:{startHidden:true,switched:true,iconOnly:true,floating:true},heading:'6 key moments in last 12 hours',count:6,titles:['Cardinal at the feeder','Playtime on the rug','Blue jay visit','Water break','Raccoon in the yard','Goldfinch visit'],ratings:['5','5','4','4','5','4'],images:true});
     assert.deepEqual(result.storyRatingColors,{five:'rgb(246, 196, 83)',four:'rgb(113, 237, 190)'});
     assert.deepEqual(result.storyTimeline,{oneSurface:true,line:true,dots:true,timestamps:true,timeAboveTitle:true,cameraRatio:true,twoLineTitle:true,noDividers:true,compactRows:true,feedbackButtons:12,feedbackSelected:true,feedbackKeepsDetailClosed:true});
     assert.deepEqual(result.storyDetail,{mode:'highlights',title:'Bird watcher',state:'BLUE JAY',age:'2 hours ago',checked:'2 hours ago',selected:'1',image:'assets/smart-bird-bluejay.webp?v=1',caption:'A blue jay stopped at the feeder earlier today.',rating:'4'});

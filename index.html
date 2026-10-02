@@ -2043,7 +2043,7 @@
   .sc-bot-button:focus-visible{outline:2px solid #71edbe;outline-offset:3px}
   .sc-bot.is-open .sc-bot-button{animation:none}
   @keyframes sc-bot-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-  .sc-bot-hint{position:absolute;left:58px;bottom:52px;margin:0;padding:8px 12px;border-radius:14px 14px 14px 4px;background:#101925;color:#f4f7fb;font:700 12px/1.2 var(--sans);white-space:nowrap;box-shadow:0 8px 20px #02081440;opacity:0;transform:translateY(6px) scale(.95);transform-origin:left bottom;pointer-events:none;transition:opacity .25s ease,transform .3s cubic-bezier(.34,1.56,.64,1)}
+  .sc-bot-hint{position:absolute;left:58px;bottom:72px;margin:0;padding:8px 12px;border-radius:14px 14px 14px 4px;background:#101925;color:#f4f7fb;font:700 12px/1.2 var(--sans);white-space:nowrap;box-shadow:0 8px 20px #02081440;opacity:0;transform:translateY(6px) scale(.95);transform-origin:left bottom;pointer-events:none;transition:opacity .25s ease,transform .3s cubic-bezier(.34,1.56,.64,1)}
   .sc-bot-hint.is-visible{opacity:1;transform:none}
   .sc-bot-panel{position:absolute;left:0;bottom:78px;display:flex;flex-direction:column;width:min(340px,calc(100vw - 28px));height:min(460px,calc(100dvh - 140px));overflow:hidden;border:1px solid #ffffff1f;border-radius:20px;background:#101925;color:#f4f7fb;box-shadow:0 18px 50px #02081473;transform-origin:left bottom}
   .sc-bot-panel[hidden]{display:none}
@@ -2086,12 +2086,35 @@
   body.sc-light-page .sc-bot-form input:focus{outline-color:#16a777}
   body.sc-light-page .sc-bot-form button{background:#16a777;color:#fff}
   @media(prefers-reduced-motion:reduce){.sc-bot-button,.sc-bot-typing i{animation:none}.sc-bot-hint{transition:opacity .2s ease}}
-  .sc-toast{position:fixed;left:50%;bottom:max(24px,env(safe-area-inset-bottom));z-index:70;display:flex;align-items:center;gap:10px;width:max-content;max-width:calc(100% - 32px);box-sizing:border-box;padding:11px 16px 11px 11px;border-radius:999px;background:#0d1622f2;color:#f4f7fb;font:700 13px/1.3 var(--sans);box-shadow:0 12px 32px #02081466;opacity:0;transform:translate(-50%,16px) scale(.96);pointer-events:none;transition:opacity .22s ease,transform .32s cubic-bezier(.22,1,.36,1)}
+  .sc-toast{position:fixed;left:50%;bottom:calc(max(14px,env(safe-area-inset-bottom)) + 74px);z-index:70;display:flex;align-items:center;gap:10px;width:max-content;max-width:calc(100% - 32px);box-sizing:border-box;padding:11px 16px 11px 11px;border-radius:999px;background:#0d1622f2;color:#f4f7fb;font:700 13px/1.3 var(--sans);box-shadow:0 12px 32px #02081466;opacity:0;transform:translate(-50%,16px) scale(.96);pointer-events:none;transition:opacity .22s ease,transform .32s cubic-bezier(.22,1,.36,1)}
   .sc-toast.is-visible{opacity:1;transform:translate(-50%,0) scale(1)}
   .sc-toast-check{display:grid;place-items:center;flex:none;width:24px;height:24px;border-radius:50%;background:#71edbe;color:#09271e}
   .sc-toast-check svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
   body.sc-light-page .sc-toast{background:#172235f2;color:#fff;box-shadow:0 12px 32px #1d2c4440}
   @media(prefers-reduced-motion:reduce){.sc-toast{transition:opacity .2s ease;transform:translate(-50%,0)}}
+  .sc-tabbar{position:fixed;z-index:55;left:50%;bottom:calc(max(14px,env(safe-area-inset-bottom)) + 6px);padding:5px;border:1px solid #ffffff29;border-radius:28px;transform:translateX(-50%);background:#ffffff1f;box-shadow:0 10px 30px #02081452;-webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8)}
+  .sc-tabbar-tabs{position:relative;display:flex;gap:4px}
+  .sc-tabbar-tabs::before{content:'';position:absolute;top:0;left:0;width:64px;height:44px;border-radius:22px;background:#ffffff24;transition:transform .45s cubic-bezier(.34,1.56,.64,1)}
+  .smartcards[data-sc-tab="events"] .sc-tabbar-tabs::before{transform:translateX(68px)}
+  .sc-tab{position:relative;z-index:1;display:grid;place-items:center;width:64px;height:44px;padding:0;border:0;border-radius:22px;background:none;color:#f4f7fbad;cursor:pointer;transition:color .25s ease}
+  .sc-tab:active svg{transform:scale(.88)}
+  .sc-tab svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
+  .sc-tab:hover{color:#fff}
+  .sc-tab[aria-selected="true"]{color:#fff}
+  .sc-tab[aria-selected="true"] svg{fill:currentColor}
+  .sc-tab:focus-visible{outline:2px solid #71edbe;outline-offset:1px}
+  body.sc-light-page .sc-tabbar{border-color:#ffffffb3;background:#ffffffb8;box-shadow:0 10px 30px #1d2c4429}
+  body.sc-light-page .sc-tab{color:#56677c}
+  body.sc-light-page .sc-tab:hover{color:#172235}
+  body.sc-light-page .sc-tab[aria-selected="true"]{color:#172235}
+  body.sc-light-page .sc-tabbar-tabs::before{background:#17223512}
+  body.sc-light-page .sc-tab:focus-visible{outline-color:#16a777}
+  #pane-smart{padding-bottom:64px}
+  .smartcards [role="tabpanel"][hidden]{display:none!important}
+  .smartcards[data-sc-tab="events"] .sc-mode-row .sc-view-mode,.smartcards[data-sc-tab="events"] .sc-mode-row .sc-zoom-mode,.smartcards[data-sc-tab="events"] .sc-mode-row .sc-state-mode{display:none}
+  .smartcards[data-sc-tab="events"] .sc-mode-row .sc-brand{display:block}
+  .smartcards[data-sc-tab="events"] .sc-stories{margin-top:0}
+  @media(prefers-reduced-motion:reduce){.sc-tab,.sc-tab svg,.sc-tabbar-tabs::before{transition:none}.sc-tab:active svg{transform:none}}
   .sc-suggestion-delete-content{padding:20px 18px 18px}
   .sc-suggestion-delete-content h2{margin:0;color:#fff;font-size:18px;line-height:1.2}
   .sc-suggestion-delete-content>p{margin:7px 0 16px;color:#aebdd0;font-size:13px;line-height:1.45}
@@ -3352,7 +3375,7 @@ Goal: *"Did the bins go out — and come back?"*
           <button type="button" data-sc-state="suggested" aria-label="New AI-suggested cards" title="New AI-suggested cards" aria-pressed="false">New</button>
         </div>
       </div>
-      <section class="sc-card-feed" aria-labelledby="sc-cards-heading">
+      <section class="sc-card-feed" id="sc-panel-cards" role="tabpanel" aria-labelledby="sc-cards-heading">
         <article class="sc-intro-card" aria-labelledby="sc-intro-title">
           <div class="sc-intro-panel">
             <div class="sc-intro-say">
@@ -3390,10 +3413,16 @@ Goal: *"Did the bins go out — and come back?"*
         <span class="sc-flip-status" aria-live="polite"></span>
       </div>
       </section>
-      <section class="sc-stories" aria-labelledby="sc-stories-heading">
+      <section class="sc-stories" id="sc-panel-events" role="tabpanel" aria-labelledby="sc-stories-heading" hidden>
         <div class="sc-stories-head"><h2 id="sc-stories-heading">6 key moments in last 12 hours</h2></div>
         <ol class="sc-story-list"></ol>
       </section>
+      <nav class="sc-tabbar" aria-label="Smart Cards sections">
+        <div class="sc-tabbar-tabs" role="tablist">
+          <button class="sc-tab" id="sc-tab-cards" type="button" role="tab" aria-selected="true" aria-controls="sc-panel-cards" data-sc-tab="cards" aria-label="Smart Cards" title="Smart Cards"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 1.25 4.25L17.5 8.5l-4.25 1.25L12 14l-1.25-4.25L6.5 8.5l4.25-1.25L12 3Z"/><path d="m18.5 14 .75 2.25L21.5 17l-2.25.75L18.5 20l-.75-2.25L15.5 17l2.25-.75L18.5 14Z"/><path d="m5 13 .65 1.85L7.5 15.5l-1.85.65L5 18l-.65-1.85-1.85-.65 1.85-.65L5 13Z"/></svg></button>
+          <button class="sc-tab" id="sc-tab-events" type="button" role="tab" aria-selected="false" aria-controls="sc-panel-events" data-sc-tab="events" aria-label="Devices &amp; Events" title="Devices &amp; Events" tabindex="-1"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6.5" width="12.5" height="11" rx="2"/><path d="m15.5 10.5 5-3v9l-5-3"/></svg></button>
+        </div>
+      </nav>
     </section>
   </div>
 
@@ -8828,6 +8857,7 @@ function initSmartCardBot(){
     if(!view)return;
     const card=cardFor(view.dataset.scene);
     setOpen(false);
+    showSmartCardTab('cards');
     card?.scrollIntoView({block:'center',behavior:motion()?'smooth':'auto'});
     if(card&&motion())card.animate({scale:['1','1.03','1']},{duration:520,delay:300,easing:'cubic-bezier(.22,1,.36,1)'});
   });
@@ -8837,10 +8867,42 @@ function initSmartCardBot(){
   setTimeout(()=>hint.classList.remove('is-visible'),6200);
   scheduleGesture();
 }
+function showSmartCardTab(name){
+  const smartCards=$('smartCards');
+  if((smartCards.dataset.scTab||'cards')===name)return;
+  smartCards.dataset.scTab=name;
+  smartCards.querySelectorAll('.sc-tab').forEach(tab=>{
+    const selected=tab.dataset.scTab===name;
+    tab.setAttribute('aria-selected',String(selected));
+    tab.tabIndex=selected?0:-1;
+    $(tab.getAttribute('aria-controls')).hidden=!selected;
+  });
+  window.scrollTo({top:0});
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+    const from=name==='events'?24:-24;
+    $(name==='events'?'sc-panel-events':'sc-panel-cards').animate([{opacity:0,transform:`translateX(${from}px)`},{opacity:1,transform:'none'}],{duration:340,easing:'cubic-bezier(.22,1,.36,1)'});
+  }
+  if(name==='cards')requestAnimationFrame(zoomSmartCardWall);
+}
+function initSmartCardTabs(){
+  const tabs=[...$('smartCards').querySelectorAll('.sc-tab')];
+  tabs.forEach((tab,index)=>{
+    tab.addEventListener('click',()=>showSmartCardTab(tab.dataset.scTab));
+    tab.addEventListener('keydown',event=>{
+      const step={ArrowRight:1,ArrowLeft:-1}[event.key];
+      if(!step)return;
+      event.preventDefault();
+      const next=tabs[(index+step+tabs.length)%tabs.length];
+      next.focus();
+      showSmartCardTab(next.dataset.scTab);
+    });
+  });
+}
 initSmartCardEvidence();
 initSmartCardIntro();
 initSmartCardBot();
 initSmartCardLive();
+initSmartCardTabs();
 /* The version label reads the repo's VERSION file so it can never drift from releases. */
 fetch('VERSION',{cache:'no-store'}).then(response=>response.ok?response.text():'').then(text=>{
   const version=text.trim();

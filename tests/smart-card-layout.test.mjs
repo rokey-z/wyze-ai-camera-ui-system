@@ -247,8 +247,8 @@ test('detail state stays unfilled and duration retains its pill treatment', () =
   assert.match(html, /detailDialog\.dataset\.scene=scene/);
 });
 
-test('last-12-hours stories follow the card feed and open their rated video evidence', () => {
-  assert.match(html, /<section class="sc-card-feed" aria-labelledby="sc-cards-heading">\s*<article class="sc-intro-card"[\s\S]*?<\/article>\s*<div class="sc-stories-head sc-cards-head"><h2 id="sc-cards-heading">Now · 9 updates across 9 goals<\/h2><\/div>\s*<div class="sc-shell">[\s\S]*?<div class="sc-grid">[\s\S]*?<\/div>\s*<span class="sc-flip-status" aria-live="polite"><\/span>\s*<\/div>\s*<\/section>\s*<section class="sc-stories" aria-labelledby="sc-stories-heading">[\s\S]*?<ol class="sc-story-list"><\/ol>/);
+test('last-12-hours stories sit in the Devices & Events tab and open their rated video evidence', () => {
+  assert.match(html, /<section class="sc-card-feed" id="sc-panel-cards" role="tabpanel" aria-labelledby="sc-cards-heading">\s*<article class="sc-intro-card"[\s\S]*?<\/article>\s*<div class="sc-stories-head sc-cards-head"><h2 id="sc-cards-heading">Now · 9 updates across 9 goals<\/h2><\/div>\s*<div class="sc-shell">[\s\S]*?<div class="sc-grid">[\s\S]*?<\/div>\s*<span class="sc-flip-status" aria-live="polite"><\/span>\s*<\/div>\s*<\/section>\s*<section class="sc-stories" id="sc-panel-events" role="tabpanel" aria-labelledby="sc-stories-heading" hidden>[\s\S]*?<ol class="sc-story-list"><\/ol>/);
   assert.match(html, /\.sc-stories-head h2\{[^}]*font-family:var\(--sans\)/);
   assert.match(html, /smartCards\.querySelector\('#sc-cards-heading'\)\.textContent=isSuggested\?`\$\{cards\.length\} new suggestions across \$\{goals\} \$\{goals===1\?'goal':'goals'\}`:`Now · \$\{cards\.length\} \$\{cards\.length===1\?'update':'updates'\} across \$\{goals\} \$\{goals===1\?'goal':'goals'\}\$\{mixedSuggested\.size\?`\\u00a0·\\u00a0\$\{mixedSuggested\.size\}\\u00a0new`:''\}`/);
   assert.match(html, /\.sc-stories\{margin:65px 0 0;font-family:var\(--sans\)\}/);
@@ -469,6 +469,23 @@ test('camera health card shows every camera with its status', () => {
   assert.match(html, /SMART_CARD_STATES\.alert\.health=\{state:'1 OFFLINE'/);
   assert.match(html, /alert:\{Backyard:\{status:'offline',note:'Offline 25m'\},Feeder:\{status:'battery',note:'Battery 12%'\}\}/);
   assert.match(html, /renderSmartCardHealth\(card,cardMode\);/);
+});
+
+test('a floating icon-only tab bar switches between Smart Cards and Devices & Events', () => {
+  assert.match(html, /<nav class="sc-tabbar" aria-label="Smart Cards sections">\s*<div class="sc-tabbar-tabs" role="tablist">/);
+  assert.match(html, /<button class="sc-tab" id="sc-tab-cards" type="button" role="tab" aria-selected="true" aria-controls="sc-panel-cards" data-sc-tab="cards" aria-label="Smart Cards" title="Smart Cards"><svg[^>]*>[\s\S]*?<\/svg><\/button>/);
+  assert.match(html, /<button class="sc-tab" id="sc-tab-events" type="button" role="tab" aria-selected="false" aria-controls="sc-panel-events" data-sc-tab="events" aria-label="Devices &amp; Events" title="Devices &amp; Events" tabindex="-1"><svg[^>]*>[\s\S]*?<\/svg><\/button>/);
+  assert.match(html, /\.sc-tabbar\{position:fixed;z-index:55;left:50%;bottom:calc\(max\(14px,env\(safe-area-inset-bottom\)\) \+ 6px\);[^}]*background:#ffffff1f;[^}]*backdrop-filter:blur\(20px\) saturate\(1\.8\)\}/);
+  assert.match(html, /body\.sc-light-page \.sc-tabbar\{[^}]*background:#ffffffb8/);
+  assert.match(html, /\.sc-tab\{position:relative;z-index:1;display:grid;place-items:center;width:64px;height:44px;/);
+  assert.match(html, /\.sc-tab\[aria-selected="true"\] svg\{fill:currentColor\}/);
+  assert.match(html, /\.smartcards\[data-sc-tab="events"\] \.sc-tabbar-tabs::before\{transform:translateX\(68px\)\}/);
+  assert.match(html, /\.sc-tabbar-tabs::before\{[^}]*transition:transform \.45s cubic-bezier\(\.34,1\.56,\.64,1\)\}/);
+  assert.match(html, /@media\(prefers-reduced-motion:reduce\)\{\.sc-tab,\.sc-tab svg,\.sc-tabbar-tabs::before\{transition:none\}/);
+  assert.match(html, /\.smartcards\[data-sc-tab="events"\] \.sc-mode-row \.sc-view-mode,\.smartcards\[data-sc-tab="events"\] \.sc-mode-row \.sc-zoom-mode,\.smartcards\[data-sc-tab="events"\] \.sc-mode-row \.sc-state-mode\{display:none\}/);
+  assert.match(html, /\.sc-toast\{position:fixed;left:50%;bottom:calc\(max\(14px,env\(safe-area-inset-bottom\)\) \+ 74px\);/);
+  assert.match(html, /showSmartCardTab\('cards'\);\s*card\?\.scrollIntoView/);
+  assert.match(html, /initSmartCardTabs\(\);/);
 });
 
 test('mascot floats bottom left as a WYZE AI chat entry', () => {
