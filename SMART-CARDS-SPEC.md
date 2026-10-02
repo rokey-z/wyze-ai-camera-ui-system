@@ -57,18 +57,14 @@ this document in the same change.
 1. **Top line** (`.sc-mode-row`), pinned on phones (≤620px) and on the standalone route:
    - **Layout:** the logo cluster sits on the left, and the folded learning block
      (`.sc-learning-chip`, §8) fills the rest of the row to its right. Both stay pinned.
-   - **WYZE AI logo** (`.sc-brand-logo` in `.sc-brand`): the constellation "W" from
-     Wyze AI One (`assets/wyze-ai-logo.png`, 36px as in that app's header, `alt="WYZE"`) inside a
-     44px round glass backdrop (`.sc-brand-name`: dark glass `#0d1726b3` in dark, white glass
-     `#ffffffb8` in light, 20px backdrop blur), with a small version label under it.
+   - **WYZE AI logo** (`.sc-brand-logo` in `.sc-brand`): the constellation "W" from Wyze AI One
+     (`assets/wyze-ai-logo.png`, 46px, `alt="WYZE"`) inside a 56px round glass backdrop
+     (`.sc-brand-name`: dark glass `#0d1726b3` in dark, white glass `#ffffffb8` in light, 20px
+     backdrop blur).
    - **No header background:** the sticky top line is transparent, and cards scroll under it.
      Once the page scrolls past 8px (`.smartcards.is-scrolled`, set by `initSmartCardHeader`), the
-     logo circle scales to 0.8 and the version line fades out. Both use transforms, so the row's
-     height and the content below never move. Under reduced motion they switch instantly. The label is read
-     from `VERSION`, and a test keeps the fallback in sync. Both show at every width, on both
-     tabs.
-   - **Theme icon** (`#sc-theme-toggle`): light or dark, a 12px sun or moon right after the
-     version label (`.sc-brand-line`). The button is 18px, with an invisible 34px hit area.
+     logo circle scales to 0.8 with a transform, so the row's height and the content below never
+     move. Under reduced motion it switches instantly.
    - **Hidden demo controls:** the view button (`.sc-view-cycle`, list → grid → wall → flip, §5),
      the Auto zoom button (`.sc-zoom-toggle`, §5.5), and the state switch (`.sc-state-mode`:
      Mixed, Normal, Alert, New) stay in the markup but are `display:none`. The page always shows
@@ -82,10 +78,14 @@ Events** tab.
 2. **Learning intro card** (`.sc-intro-card`, §8). Folded, it lives in the pinned top line as
    `.sc-learning-chip`. Unfolded, it is the full card at the top of the feed. It is always present:
    folded in Mixed, Normal, and Alert, and fully open in New.
-3. **Section title** (`#sc-cards-heading`). This is text, not a control. Format:
-   - `Now · {n} updates across {g} goals` (Mixed, Normal, Alert)
-   - `· {k} new` appended when suggestions are mixed in, kept together with non-breaking spaces
-   - `{n} new suggestions across {g} goals` (New)
+3. **Section title row** (`.sc-cards-head`): the title `#sc-cards-heading` on the left, which is
+   text, not a control: `{g} goals` in dimmed 13px/700 (`#8fa1b8` dark, `#6b7c93` light), in
+   every state. On the right is `.sc-brand-line`:
+   - The **version label** (`.sc-brand-version`), read from `VERSION`. A test keeps the fallback
+     in sync.
+   - The **theme icon** (`#sc-theme-toggle`): light or dark, a 12px sun or moon right after the
+     version. The button is 18px, with an invisible 34px hit area. It sits on the Smart Cards tab
+     only.
 4. **Card feed** (`.sc-grid`), in the chosen view. Its last cell is a square **Create new goal**
    tile (`.sc-new-goal`, a child of `.sc-grid`, kept last after every reorder, hidden in list and
    flip views): a dimmed rounded square fill, a green plus, "Create new goal", and "Just say what

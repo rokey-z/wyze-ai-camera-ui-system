@@ -1929,8 +1929,8 @@
   body.sc-light-page .sc-view-mode{background:#dfe5ed;color:#58677d}
   body.sc-light-page .sc-view-mode button[aria-pressed="true"]{background:#fff;color:#172235;box-shadow:0 1px 4px #1b2c4418}
   .sc-mode-row{display:flex;align-items:center;justify-content:space-between;gap:6px}
-  .sc-mode-row .sc-theme-mode,.sc-mode-row .sc-view-mode,.sc-mode-row .sc-state-mode{display:flex;align-items:center;flex:0 0 auto;height:42px;margin:0;padding:3px;gap:2px;border-radius:12px}
-  .sc-mode-row .sc-theme-mode,.sc-mode-row .sc-zoom-mode{width:42px}
+  .sc-theme-mode,.sc-mode-row .sc-view-mode,.sc-mode-row .sc-state-mode{display:flex;align-items:center;flex:0 0 auto;height:42px;margin:0;padding:3px;gap:2px;border-radius:12px}
+  .sc-theme-mode,.sc-mode-row .sc-zoom-mode{width:42px}
   .sc-mode-row .sc-zoom-mode{display:flex;align-items:center;flex:0 0 auto;height:42px;margin:0;padding:3px;box-sizing:border-box;border-radius:12px}
   .sc-zoom-toggle{display:grid;place-items:center;width:36px;height:36px;padding:0;border:0;border-radius:9px;background:#364961;color:#aab9cd;cursor:pointer;transition:background-color .2s ease,color .2s ease}
   .sc-zoom-toggle svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
@@ -1938,12 +1938,12 @@
   .sc-zoom-toggle:focus-visible{outline:2px solid #71edbe;outline-offset:2px}
   body.sc-light-page .sc-zoom-toggle{background:#fff;color:#58677d;box-shadow:0 1px 4px #1b2c4418}
   body.sc-light-page .sc-zoom-toggle[aria-checked="true"]{background:#16a777;color:#fff}
-  .sc-mode-row .sc-theme-toggle{display:grid;place-items:center;width:36px;min-width:36px;height:36px;padding:0;border:0;border-radius:9px;background:#364961;color:#fff;cursor:pointer;box-shadow:none}
+  .sc-theme-toggle{display:grid;place-items:center;width:36px;min-width:36px;height:36px;padding:0;border:0;border-radius:9px;background:#364961;color:#fff;cursor:pointer;box-shadow:none}
   .sc-theme-toggle svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
   .sc-theme-toggle .sc-icon-moon{display:none}
   .smartcards.dark .sc-theme-toggle .sc-icon-sun{display:none}
   .smartcards.dark .sc-theme-toggle .sc-icon-moon{display:block}
-  body.sc-light-page .sc-mode-row .sc-theme-toggle{background:#fff;color:#172235;box-shadow:0 1px 4px #1b2c4418}
+  body.sc-light-page .sc-theme-toggle{background:#fff;color:#172235;box-shadow:0 1px 4px #1b2c4418}
   .sc-mode-row .sc-view-mode button,.sc-mode-row .sc-state-mode button{width:40px;min-width:40px;height:36px;min-height:36px;padding:0;border-radius:9px;font-size:10px;line-height:1}
   .sc-mode-row .sc-view-mode button{display:grid;place-items:center}
   .sc-view-cycle{position:relative;overflow:hidden}
@@ -1954,7 +1954,7 @@
   .sc-mode-row .sc-view-mode svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
   @media(max-width:380px){.sc-mode-row .sc-view-mode button,.sc-mode-row .sc-state-mode button{width:35px;min-width:35px;font-size:9px}}
   @media(max-width:360px){.sc-mode-row .sc-view-mode button,.sc-mode-row .sc-state-mode button{width:28px;min-width:28px;font-size:8px}.sc-mode-row .sc-view-mode svg{width:15px;height:15px}}
-  .sc-mode-row .sc-theme-mode,.sc-mode-row .sc-view-mode,.sc-mode-row .sc-state-mode{transition:background-color .24s ease,color .24s ease}
+  .sc-theme-mode,.sc-mode-row .sc-view-mode,.sc-mode-row .sc-state-mode{transition:background-color .24s ease,color .24s ease}
   .sc-mode-row .sc-view-mode,.sc-mode-row .sc-state-mode{position:relative;isolation:isolate}
   .sc-mode-row .sc-view-mode::before,.sc-mode-row .sc-state-mode::before{content:'';position:absolute;z-index:0;top:3px;left:3px;width:40px;height:36px;border-radius:9px;background:#364961;box-shadow:0 1px 4px #0209142e;transition:transform .28s cubic-bezier(.22,1,.36,1),background-color .24s ease,box-shadow .24s ease}
   .sc-mode-row .sc-view-mode:has(button:nth-child(2)[aria-pressed="true"])::before,.sc-mode-row .sc-state-mode:has(button:nth-child(2).active)::before{transform:translateX(42px)}
@@ -1971,13 +1971,13 @@
   body.sc-light-page .sc-mode-row .sc-state-mode button[data-sc-state="alert"].active{color:#172235}
   body.sc-light-page .sc-mode-row .sc-state-mode button[data-sc-state="suggested"].active{color:#fff}
   .sc-mode-row .sc-view-mode button:active,.sc-mode-row .sc-state-mode button:active{transform:scale(.93)}
-  .sc-mode-row .sc-theme-toggle{transition:background-color .24s ease,color .24s ease,box-shadow .24s ease,transform .18s ease}
-  .sc-mode-row .sc-theme-toggle:active{transform:scale(.92)}
-  .sc-mode-row .sc-theme-toggle svg{grid-area:1/1;pointer-events:none;transition:opacity .24s ease,transform .28s cubic-bezier(.22,1,.36,1)}
-  .sc-mode-row .sc-theme-toggle .sc-icon-sun{display:block;opacity:1;transform:rotate(0) scale(1)}
-  .sc-mode-row .sc-theme-toggle .sc-icon-moon{display:block;opacity:0;transform:rotate(-45deg) scale(.72)}
-  .smartcards.dark .sc-mode-row .sc-theme-toggle .sc-icon-sun{display:block;opacity:0;transform:rotate(45deg) scale(.72)}
-  .smartcards.dark .sc-mode-row .sc-theme-toggle .sc-icon-moon{display:block;opacity:1;transform:rotate(0) scale(1)}
+  .sc-theme-toggle{transition:background-color .24s ease,color .24s ease,box-shadow .24s ease,transform .18s ease}
+  .sc-theme-toggle:active{transform:scale(.92)}
+  .sc-theme-toggle svg{grid-area:1/1;pointer-events:none;transition:opacity .24s ease,transform .28s cubic-bezier(.22,1,.36,1)}
+  .sc-theme-toggle .sc-icon-sun{display:block;opacity:1;transform:rotate(0) scale(1)}
+  .sc-theme-toggle .sc-icon-moon{display:block;opacity:0;transform:rotate(-45deg) scale(.72)}
+  .smartcards.dark .sc-theme-toggle .sc-icon-sun{display:block;opacity:0;transform:rotate(45deg) scale(.72)}
+  .smartcards.dark .sc-theme-toggle .sc-icon-moon{display:block;opacity:1;transform:rotate(0) scale(1)}
   @media(max-width:380px){.sc-mode-row .sc-view-mode::before,.sc-mode-row .sc-state-mode::before{width:35px}}
   @media(max-width:380px){.sc-mode-row .sc-view-mode:has(button:nth-child(2)[aria-pressed="true"])::before,.sc-mode-row .sc-state-mode:has(button:nth-child(2).active)::before{transform:translateX(37px)}.sc-mode-row .sc-view-mode:has(button:nth-child(3)[aria-pressed="true"])::before,.sc-mode-row .sc-state-mode:has(button:nth-child(3).active)::before{transform:translateX(74px)}.sc-mode-row .sc-state-mode:has(button:nth-child(4).active)::before{transform:translateX(111px)}}
   @media(max-width:360px){.sc-mode-row .sc-view-mode::before,.sc-mode-row .sc-state-mode::before{width:28px}.sc-mode-row .sc-view-mode:has(button:nth-child(2)[aria-pressed="true"])::before,.sc-mode-row .sc-state-mode:has(button:nth-child(2).active)::before{transform:translateX(30px)}.sc-mode-row .sc-view-mode:has(button:nth-child(3)[aria-pressed="true"])::before,.sc-mode-row .sc-state-mode:has(button:nth-child(3).active)::before{transform:translateX(60px)}.sc-mode-row .sc-state-mode:has(button:nth-child(4).active)::before{transform:translateX(90px)}}
@@ -1991,7 +1991,7 @@
   .sc-mode-row .sc-state-mode:has(button:nth-child(3).active)::before{transform:translateX(200%)}
   .sc-mode-row .sc-state-mode:has(button:nth-child(4).active)::before{transform:translateX(300%)}
   @media(max-width:360px){.sc-mode-row .sc-state-mode{margin-left:0}.sc-mode-row .sc-state-mode button{font-size:9.5px}}
-  @media(prefers-reduced-motion:reduce){.sc-mode-row .sc-theme-mode,.sc-mode-row .sc-view-mode,.sc-mode-row .sc-state-mode,.sc-mode-row .sc-view-mode::before,.sc-mode-row .sc-state-mode::before,.sc-mode-row .sc-view-mode button,.sc-mode-row .sc-state-mode button,.sc-mode-row .sc-theme-toggle,.sc-mode-row .sc-theme-toggle svg{transition:none}}
+  @media(prefers-reduced-motion:reduce){.sc-theme-mode,.sc-mode-row .sc-view-mode,.sc-mode-row .sc-state-mode,.sc-mode-row .sc-view-mode::before,.sc-mode-row .sc-state-mode::before,.sc-mode-row .sc-view-mode button,.sc-mode-row .sc-state-mode button,.sc-theme-toggle,.sc-theme-toggle svg{transition:none}}
   .smartcards:not(.sc-flip-view):not(.sc-grid-view) .sc-grid>.sc-card{aspect-ratio:40/27}
   .sc-suggestion-reason{display:none}
   .smartcards:not(.sc-flip-view):not(.sc-grid-view) .sc-grid>.sc-card.is-suggested-card{aspect-ratio:auto;overflow:hidden;border:1px solid #f6c45352;background:#142135;box-shadow:0 10px 24px #07101f35}
@@ -2114,16 +2114,20 @@
   .sc-mode-row .sc-view-mode,.sc-mode-row .sc-zoom-mode,.sc-mode-row .sc-state-mode{display:none}
   .smartcards .sc-mode-row{justify-content:flex-start;gap:10px}
   .smartcards .sc-mode-row .sc-brand{display:block;margin:0}
-  .sc-brand-logo{display:block;width:36px;height:36px;object-fit:contain}
+  .sc-brand-logo{display:block;width:46px;height:46px;object-fit:contain}
   .sc-brand-line{display:flex;align-items:center;justify-content:center;gap:2px;margin-top:6px}
+  .smartcards .sc-cards-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .smartcards .sc-cards-head h2{min-width:0;color:#8fa1b8;font-size:13px;font-weight:700}
+  body.sc-light-page .smartcards .sc-cards-head h2{color:#6b7c93}
+  .smartcards .sc-cards-head .sc-brand-line{flex:none;margin:0}
   .sc-brand-line .sc-brand-version{margin-top:0}
-  .smartcards .sc-mode-row .sc-theme-mode{width:auto;height:auto;margin:0;padding:0;background:none}
-  .smartcards .sc-mode-row .sc-theme-toggle,body.sc-light-page .smartcards .sc-mode-row .sc-theme-toggle{position:relative;width:18px;min-width:18px;height:18px;border-radius:50%;background:none;box-shadow:none;color:#8fa1b8}
-  .smartcards .sc-mode-row .sc-theme-toggle::after{content:'';position:absolute;inset:-8px}
-  .smartcards .sc-mode-row .sc-theme-toggle svg{width:12px;height:12px}
-  .smartcards .sc-mode-row .sc-theme-toggle:hover{color:#f3f7ff}
-  body.sc-light-page .smartcards .sc-mode-row .sc-theme-toggle{color:#6b7c93}
-  body.sc-light-page .smartcards .sc-mode-row .sc-theme-toggle:hover{color:#172235}
+  .smartcards .sc-cards-head .sc-theme-mode{width:auto;height:auto;margin:0;padding:0;background:none}
+  .smartcards .sc-cards-head .sc-theme-toggle,body.sc-light-page .smartcards .sc-cards-head .sc-theme-toggle{position:relative;width:18px;min-width:18px;height:18px;border-radius:50%;background:none;box-shadow:none;color:#8fa1b8}
+  .smartcards .sc-cards-head .sc-theme-toggle::after{content:'';position:absolute;inset:-8px}
+  .smartcards .sc-cards-head .sc-theme-toggle svg{width:12px;height:12px}
+  .smartcards .sc-cards-head .sc-theme-toggle:hover{color:#f3f7ff}
+  body.sc-light-page .smartcards .sc-cards-head .sc-theme-toggle{color:#6b7c93}
+  body.sc-light-page .smartcards .sc-cards-head .sc-theme-toggle:hover{color:#172235}
   .smartcards:not(.is-suggested) .sc-intro-card{display:block;margin-top:0}
   body.sc-standalone .smartcards .sc-mode-row{margin-bottom:14px}
   .sc-intro-fold{display:none;position:absolute;z-index:2;top:8px;right:8px;place-items:center;width:34px;height:34px;padding:0;border:0;border-radius:50%;background:none;color:#c9d5e3;cursor:pointer}
@@ -2471,12 +2475,10 @@
   @media(prefers-reduced-motion:reduce){.sc-new-goal,.sc-new-goal::before,.sc-new-goal-plus{transition:none}.sc-new-goal:active .sc-new-goal-plus{transform:none}}
   /* Header: no background; the logo shrinks and the version line fades once the page scrolls. */
   body .smartcards .sc-mode-row,body.sc-light-page .smartcards .sc-mode-row{background:none;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
-  .smartcards .sc-brand-name{display:grid;place-items:center;width:44px;height:44px;margin:0 auto;border:1px solid #ffffff2e;border-radius:50%;background:#0d1726b3;box-shadow:0 6px 18px #02081440;-webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);transform-origin:50% 0;transition:transform .32s cubic-bezier(.22,1,.36,1)}
+  .smartcards .sc-brand-name{display:grid;place-items:center;width:56px;height:56px;margin:0 auto;border:1px solid #ffffff2e;border-radius:50%;background:#0d1726b3;box-shadow:0 6px 18px #02081440;-webkit-backdrop-filter:blur(20px) saturate(1.8);backdrop-filter:blur(20px) saturate(1.8);transform-origin:50% 0;transition:transform .32s cubic-bezier(.22,1,.36,1)}
   body.sc-light-page .smartcards .sc-brand-name{border-color:#ffffffb3;background:#ffffffb8;box-shadow:0 6px 18px #1d2c4429}
-  .sc-brand-line{transition:opacity .2s ease,transform .32s cubic-bezier(.22,1,.36,1),visibility 0s}
   .smartcards.is-scrolled .sc-brand-name{transform:scale(.8)}
-  .smartcards.is-scrolled .sc-brand-line{opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .2s ease,transform .32s cubic-bezier(.22,1,.36,1),visibility 0s .2s}
-  @media(prefers-reduced-motion:reduce){.smartcards .sc-brand-name,.sc-brand-line,.smartcards.is-scrolled .sc-brand-line{transition:none}}
+  @media(prefers-reduced-motion:reduce){.smartcards .sc-brand-name{transition:none}}
 </style>
 </head>
 <body>
@@ -3422,7 +3424,7 @@ Goal: *"Did the bins go out — and come back?"*
         </section>
       </div>
       <div class="sc-mode-row">
-        <span class="sc-brand"><span class="sc-brand-name"><img class="sc-brand-logo" src="assets/wyze-ai-logo.png" alt="WYZE" width="36" height="36"></span><span class="sc-brand-line"><span class="sc-brand-version" data-version-source="VERSION">v0.12.0</span><span class="sc-theme-mode"><button class="sc-theme-toggle" id="sc-theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="true" title="Switch to light mode"><svg class="sc-icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg><svg class="sc-icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.5 8.5 0 1 0 20.2 15.2Z"/></svg></button></span></span></span>
+        <span class="sc-brand"><span class="sc-brand-name"><img class="sc-brand-logo" src="assets/wyze-ai-logo.png" alt="WYZE" width="46" height="46"></span></span>
         <button class="sc-learning-chip" type="button" aria-expanded="false" aria-controls="sc-intro"><span class="sc-learning-chip-head"><strong>Hi, I’m learning your home</strong><svg class="sc-learning-chip-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></span><span class="sc-intro-badge" aria-hidden="true" style="--sc-progress:71%"><i class="sc-intro-badge-fill"></i><span class="sc-intro-pulse"></span>Learning<span class="sc-intro-badge-day">34 of 48 hours</span></span></button>
         <div class="sc-view-mode" role="group" aria-label="Card view">
           <button class="sc-view-cycle" type="button" data-view="wall" aria-label="Wall view. Switch to flip view" title="Switch view"><span class="sc-view-icon" data-icon="list"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg></span><span class="sc-view-icon" data-icon="grid"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg></span><span class="sc-view-icon" data-icon="wall"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M12 4v16M4 12h16"/></svg></span><span class="sc-view-icon" data-icon="flip"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="7" width="14" height="13" rx="2"/><path d="M8 4h8a2 2 0 0 1 2 2"/></svg></span></button>
@@ -3458,7 +3460,7 @@ Goal: *"Did the bins go out — and come back?"*
             </ol>
           </div>
         </article>
-        <div class="sc-stories-head sc-cards-head"><h2 id="sc-cards-heading">Now · 9 updates across 9 goals</h2></div>
+        <div class="sc-stories-head sc-cards-head"><h2 id="sc-cards-heading">9 goals</h2><span class="sc-brand-line"><span class="sc-brand-version" data-version-source="VERSION">v0.12.0</span><span class="sc-theme-mode"><button class="sc-theme-toggle" id="sc-theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="true" title="Switch to light mode"><svg class="sc-icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg><svg class="sc-icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 15.2A8.5 8.5 0 0 1 8.8 3.8 8.5 8.5 0 1 0 20.2 15.2Z"/></svg></button></span></span></div>
       <div class="sc-shell">
         <div class="sc-grid">
 <article class="sc-card sc-hero" data-scene="security" data-checked="8 secs ago"><span class="sc-label">Home security</span><div class="sc-card-top"><div class="sc-state">SAFE</div><p class="sc-sub">for 2 hours</p></div><div class="sc-scene sc-security-cameras"><img class="sc-photo sc-security-main" src="assets/smart-security-secure.webp?v=1" alt="Side gate camera: closed gate with the secured path clear" width="1672" height="941" loading="eager"><img class="sc-camera-thumb" src="assets/smart-garage-closed.webp?v=2" alt="Garage camera: door closed" width="1672" height="941" loading="lazy"><img class="sc-camera-thumb" src="assets/smart-front-door-clear.webp?v=2" alt="Delivery camera: porch clear" width="1672" height="941" loading="lazy"><img class="sc-camera-thumb" src="assets/smart-trash-bins-out.webp?v=2" alt="Driveway camera: bins at the curb" width="1672" height="941" loading="lazy"><span class="sc-detection-box" aria-hidden="true"></span></div><div class="sc-actions"><div class="sc-feedback" aria-label="Was this result helpful?"><button aria-label="Correct result"><svg viewBox="0 0 24 24"><path d="M7 10v11H3V10h4Zm2 11V10l4-7c.8-1.4 2.9-.8 2.9.8v3.7H20c1.1 0 1.9 1 1.7 2.1l-1.2 9c-.1.8-.8 1.4-1.7 1.4H9Z"/></svg></button><button aria-label="Incorrect result"><svg viewBox="0 0 24 24"><path d="M7 14V3H3v11h4Zm2-11v11l4 7c.8 1.4 2.9.8 2.9-.8v-3.7H20c1.1 0 1.9-1 1.7-2.1l-1.2-9C20.4 4.6 19.7 4 18.8 4H9Z"/></svg></button></div></div></article>
@@ -8010,8 +8012,7 @@ function initSmartCardEvidence(){
   function updateSmartCardHeading(){
     const cards=[...smartCards.querySelectorAll('.sc-grid>.sc-card[data-scene]')];
     const goals=new Set(cards.map(card=>card.dataset.scene)).size;
-    const newCount=cards.filter(card=>card.dataset.cardMode==='suggested').length;
-    smartCards.querySelector('#sc-cards-heading').textContent=smartCards.classList.contains('is-suggested')?(cards.length?`${cards.length} new suggestions across ${goals} ${goals===1?'goal':'goals'}`:'No new suggestions'):`Now · ${cards.length} ${cards.length===1?'update':'updates'} across ${goals} ${goals===1?'goal':'goals'}${newCount?`\u00a0·\u00a0${newCount}\u00a0new`:''}`;
+    smartCards.querySelector('#sc-cards-heading').textContent=`${goals} ${goals===1?'goal':'goals'}`;
   }
   const collapseSuggestionReason=(card,suggestion)=>{
     const done=()=>{card.dataset.suggestionDecision='kept'};
@@ -8694,7 +8695,7 @@ function setSmartCardState(mode){
     card.setAttribute('aria-label',`${critical?'Urgent alert: ':''}${card.classList.contains('is-camera-offline')?'Camera offline: ':''}Open details for ${card.querySelector(':scope>.sc-label').textContent.trim()}`);
   });
   const goals=new Set(cards.map(card=>card.dataset.scene)).size;
-  smartCards.querySelector('#sc-cards-heading').textContent=isSuggested?`${cards.length} new suggestions across ${goals} ${goals===1?'goal':'goals'}`:`Now · ${cards.length} ${cards.length===1?'update':'updates'} across ${goals} ${goals===1?'goal':'goals'}${mixedSuggested.size?`\u00a0·\u00a0${mixedSuggested.size}\u00a0new`:''}`;
+  smartCards.querySelector('#sc-cards-heading').textContent=`${goals} ${goals===1?'goal':'goals'}`;
   if($('smartCards').classList.contains('sc-flip-view'))smartCardFlipScene=smartCardGrid.firstElementChild.dataset.scene;
   syncSmartCardView();
   syncSmartCardLive();

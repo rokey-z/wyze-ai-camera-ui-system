@@ -30,7 +30,9 @@ the app (v1, v1.5, v2, v2.5, v3, v4) are design-system names and are unrelated.
   full card at the top of the feed, and the folded block hides.
 - Smart Cards: the toast and the mascot's hint bubble sit higher, clear of the tab bar.
 - Smart Cards: the page opens in dark mode.
-- Smart Cards: the header logo sits in a round glass backdrop on the left, the header has no
+- Smart Cards: the wall title is now just "{n} goals" in dimmed text, with the version and theme
+  icon at its right.
+- Smart Cards: the header logo (56px) sits in a round glass backdrop on the left, the header has no
   background, and on scroll the logo shrinks while the version and theme icon fade.
 
 ## [0.12.0] - 2026-10-01
